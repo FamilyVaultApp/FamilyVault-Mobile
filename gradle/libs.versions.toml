@@ -11,13 +11,27 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.3"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
+androidxUiTextGoogleFonts = "1.0.0"
 compose-multiplatform = "1.7.0"
 junit = "4.13.2"
+koinAndroid = "3.2.0"
+koinCore = "3.2.0"
 kotlin = "2.0.21"
+uiTextGoogleFonts = "1.7.6"
 voyagerVersion = "1.1.0-beta02"
+uiTextGoogleFontsVersion = "1.7.7"
 
 
 [libraries]
+androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+androidx-ui-text-google-fonts-v100 = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "androidxUiTextGoogleFonts" }
+insert-koin-koin-android = { module = "io.insert-koin:koin-android" }
+insert-koin-koin-core = { module = "io.insert-koin:koin-core" }
+io-insert-koin-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+io-insert-koin-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-ios = { module = "io.insert-koin:koin-ios" }
+koin-core = { module = "io.insert-koin:koin-core" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,12 +44,14 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyagerVersion" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyagerVersion" }
 voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyagerVersion" }
 voyager-bottom-sheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyagerVersion" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyagerVersion" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyagerVersion" }
+ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFontsVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
