@@ -12,10 +12,11 @@ object Constants {
     val mutedColor = Color(0xFF6d6d6d)
 
     // Spacing
-    val xlSpacing = 50.dp
-    val lSpacing = 40.dp
+    val largeSpacing = 40.dp
+    val mediumSpacing = 10.dp
+    val smallSpacing = 5.dp
 
-    val normalPaddingSize = 10.dp
+    val normalPaddingSize = 13.dp
     val screenPaddingSize = 25.dp
 
     // Round

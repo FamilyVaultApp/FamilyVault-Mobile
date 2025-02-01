@@ -57,7 +57,8 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
                 )
             }
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(Constants.smallSpacing)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

@@ -28,11 +28,11 @@ class InitialScreen : Screen {
                 .padding(horizontal = Constants.screenPaddingSize),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(Constants.xlSpacing))
+            Spacer(modifier = Modifier.height(Constants.largeSpacing))
             AppIcon()
-            Spacer(modifier = Modifier.height(Constants.lSpacing))
+            Spacer(modifier = Modifier.height(Constants.largeSpacing))
             Headline1(stringResource(Res.string.app_name))
-            Spacer(modifier = Modifier.height(Constants.lSpacing))
+            Spacer(modifier = Modifier.height(Constants.largeSpacing))
             InfoBox(title = stringResource(Res.string.connection_modes_title), content = stringResource(Res.string.connection_modes_content))
         }
     }
