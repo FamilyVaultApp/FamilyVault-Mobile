@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -29,36 +28,38 @@ kotlin {
     }
     
     sourceSets {
-        
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.io.insert.koin.koin.android)
         }
         commonMain.dependencies {
+            implementation(libs.voyager.bottom.sheet.navigator)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.screenmodel)
-            implementation(libs.voyager.bottom.sheet.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
 
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.runtime)
+            implementation(compose.ui)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.io.insert.koin.koin.core)
         }
     }
 }
 
 android {
-    namespace = "com.github.familyconnector"
+    namespace = "com.github.familyvault"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.github.familyconnector"
+        applicationId = "com.github.familyvault"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -81,6 +82,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.ui.text.google.fonts)
     debugImplementation(compose.uiTooling)
 }
 

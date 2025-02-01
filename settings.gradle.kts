@@ -1,4 +1,4 @@
-rootProject.name = "FamilyConnector"
+rootProject.name = "FamilyVault"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
