@@ -25,7 +25,6 @@ import familyconnector.composeapp.generated.resources.info_icon_alt
 import familyconnector.composeapp.generated.resources.open_link_alt
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link: String? = null) {
     val uriHandler = LocalUriHandler.current

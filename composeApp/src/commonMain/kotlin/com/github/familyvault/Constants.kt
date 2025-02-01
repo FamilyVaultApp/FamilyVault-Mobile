@@ -10,6 +10,12 @@ object Constants {
     val secondaryColor = Color(0xFF69aaff)
     val tertiaryColor = Color(0xFFe5f1ff)
     val mutedColor = Color(0xFF6d6d6d)
+    var borderColor = Color(0xFFe6e6e6)
+
+    val firstOptionPrimaryColor = Color(0xff378eff)
+    val firstOptionSecondaryColor = Color(0xffe5f1ff)
+    val secondOptionPrimaryColor = Color(0xff5ed8bf)
+    val secondOptionSecondaryColor = Color(0xffe1f8f4)
 
     // Spacing
     val largeSpacing = 40.dp
