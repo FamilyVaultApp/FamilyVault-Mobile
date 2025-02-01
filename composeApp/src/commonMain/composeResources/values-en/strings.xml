@@ -1,4 +1,14 @@
 <resources>
+    <!-- General -->
     <string name="app_name">FamilyVault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
+
+    <!-- Icon descriptions -->
+    <string name="info_icon_alt">Information icon</string>
+    <string name="open_link_alt">Open website</string>
+
+    <!-- Connection modes -->
+    <!-- TODO: Translate to english  -->
+    <string name="connection_modes_title"></string>
+    <string name="connection_modes_content"></string>
 </resources>

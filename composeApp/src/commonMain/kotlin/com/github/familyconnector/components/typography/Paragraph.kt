@@ -7,11 +7,12 @@ import androidx.compose.ui.text.font.FontWeight
 import com.github.familyconnector.Constants
 
 @Composable
-fun Headline1(text: String, modifier: Modifier = Modifier) {
+fun Paragraph(text: String, modifier: Modifier = Modifier) {
     Text(
         text,
         modifier = modifier,
-        fontSize = Constants.headline1FontSize,
-        fontWeight = FontWeight.Bold,
+        fontSize = Constants.headline3FontSize,
+        fontWeight = FontWeight.Normal,
+        color = Constants.mutedColor
     )
 }

@@ -13,7 +13,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AppIcon(iconSize: Dp = 150.dp, modifier: Modifier = Modifier) {
+fun AppIcon(iconSize: Dp = 125.dp, modifier: Modifier = Modifier) {
     Image(
         contentDescription = stringResource(Res.string.app_icon_alt),
         modifier = modifier.then(Modifier.size(iconSize)),
