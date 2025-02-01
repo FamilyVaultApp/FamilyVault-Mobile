@@ -1,4 +1,4 @@
-package com.github.familyconnector.components
+package com.github.familyvault.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size

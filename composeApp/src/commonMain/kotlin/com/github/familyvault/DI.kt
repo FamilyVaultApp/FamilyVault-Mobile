@@ -1,4 +1,4 @@
-package com.github.familyconnector;
+package com.github.familyvault;
 
 import org.koin.core.context.startKoin
 import org.koin.dsl.module

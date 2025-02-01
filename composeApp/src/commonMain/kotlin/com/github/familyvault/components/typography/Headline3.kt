@@ -1,11 +1,11 @@
-package com.github.familyconnector.components.typography
+package com.github.familyvault.components.typography
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import com.github.familyconnector.Constants
+import com.github.familyvault.Constants
 
 @Composable
 fun Headline3(

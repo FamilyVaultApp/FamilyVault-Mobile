@@ -29,7 +29,6 @@ kotlin {
     }
     
     sourceSets {
-
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -57,11 +56,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.github.familyconnector"
+    namespace = "com.github.familyvault"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.github.familyconnector"
+        applicationId = "com.github.familyvault"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

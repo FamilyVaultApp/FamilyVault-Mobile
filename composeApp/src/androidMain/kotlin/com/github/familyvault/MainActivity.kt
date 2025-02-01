@@ -1,4 +1,4 @@
-package com.github.familyconnector
+package com.github.familyvault
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

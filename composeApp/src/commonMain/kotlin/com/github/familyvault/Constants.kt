@@ -1,4 +1,4 @@
-package com.github.familyconnector
+package com.github.familyvault
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp

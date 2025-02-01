@@ -1,4 +1,4 @@
-package com.github.familyconnector.components
+package com.github.familyvault.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,10 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.font.FontWeight
-import com.github.familyconnector.Constants
-import com.github.familyconnector.components.typography.Headline3
-import com.github.familyconnector.components.typography.Paragraph
+import com.github.familyvault.Constants
+import com.github.familyvault.components.typography.Headline3
+import com.github.familyvault.components.typography.Paragraph
 import familyconnector.composeapp.generated.resources.Res
 import familyconnector.composeapp.generated.resources.info_icon_alt
 import familyconnector.composeapp.generated.resources.open_link_alt

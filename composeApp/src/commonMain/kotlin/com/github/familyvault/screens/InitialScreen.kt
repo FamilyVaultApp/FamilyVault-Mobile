@@ -1,4 +1,4 @@
-package com.github.familyconnector.screens
+package com.github.familyvault.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
-import com.github.familyconnector.Constants
-import com.github.familyconnector.components.AppIcon
-import com.github.familyconnector.components.InfoBox
-import com.github.familyconnector.components.typography.Headline1
+import com.github.familyvault.Constants
+import com.github.familyvault.components.AppIcon
+import com.github.familyvault.components.InfoBox
+import com.github.familyvault.components.typography.Headline1
 import familyconnector.composeapp.generated.resources.Res
 import familyconnector.composeapp.generated.resources.app_name
 import familyconnector.composeapp.generated.resources.connection_modes_content

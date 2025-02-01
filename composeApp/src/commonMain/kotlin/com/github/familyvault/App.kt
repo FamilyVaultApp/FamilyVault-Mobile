@@ -1,10 +1,10 @@
-package com.github.familyconnector
+package com.github.familyvault
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.navigator.Navigator
-import com.github.familyconnector.screens.InitialScreen
+import com.github.familyvault.screens.InitialScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
