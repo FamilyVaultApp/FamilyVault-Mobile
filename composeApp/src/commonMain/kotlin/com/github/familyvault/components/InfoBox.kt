@@ -20,9 +20,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import com.github.familyvault.Constants
 import com.github.familyvault.components.typography.Headline3
 import com.github.familyvault.components.typography.Paragraph
-import familyconnector.composeapp.generated.resources.Res
-import familyconnector.composeapp.generated.resources.info_icon_alt
-import familyconnector.composeapp.generated.resources.open_link_alt
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.info_icon_alt
+import familyvault.composeapp.generated.resources.open_link_alt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

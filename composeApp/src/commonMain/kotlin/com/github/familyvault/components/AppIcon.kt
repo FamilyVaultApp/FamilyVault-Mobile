@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import familyconnector.composeapp.generated.resources.Res
-import familyconnector.composeapp.generated.resources.app_icon
-import familyconnector.composeapp.generated.resources.app_icon_alt
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.app_icon
+import familyvault.composeapp.generated.resources.app_icon_alt
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
