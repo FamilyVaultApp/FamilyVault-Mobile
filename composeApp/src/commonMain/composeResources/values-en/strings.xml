@@ -16,4 +16,8 @@
     <string name="cloud_connection_mode_content">Wykorzystaj rozwiązanie chmurowe. Nie musisz nic wcześniej konfigurować.</string>
     <string name="self_hosted_connection_mode_title">PrivMX Bridge</string>
     <string name="self_hosted_connection_mode_content">Wykorzystaj swój serwer PrivMX Bridge. Musisz wcześniej taki serwer skonfigurować.</string>
+    <string name="create_new_family_group_title">Create a new group</string>
+    <string name="create_new_family_group_content">If you don't have a family group set up in the FamilyVault application yet.</string>
+    <string name="join_existing_family_group_title">Join an existing group</string>
+    <string name="join_existing_family_group_content">If you already have a family group set up in the FamilyVault application.</string>
 </resources>
