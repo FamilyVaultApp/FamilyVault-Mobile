@@ -20,4 +20,5 @@
     <string name="create_new_family_group_content">If you don't have a family group set up in the FamilyVault application yet.</string>
     <string name="join_existing_family_group_title">Join an existing group</string>
     <string name="join_existing_family_group_content">If you already have a family group set up in the FamilyVault application.</string>
+    <string name="next_button_content">Next</string>
 </resources>

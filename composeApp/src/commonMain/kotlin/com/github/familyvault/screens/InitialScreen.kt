@@ -29,6 +29,7 @@ import familyvault.composeapp.generated.resources.cloud_connection_mode_content
 import familyvault.composeapp.generated.resources.cloud_connection_mode_title
 import familyvault.composeapp.generated.resources.connection_modes_content
 import familyvault.composeapp.generated.resources.connection_modes_title
+import familyvault.composeapp.generated.resources.next_button_content
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_content
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_title
 import org.jetbrains.compose.resources.stringResource
@@ -70,7 +71,7 @@ class InitialScreen : Screen {
                 )
 
                 Button(
-                    "Dalej",
+                    content = stringResource(Res.string.next_button_content),
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         navigator.push(FamilyGroupChooseScreen())

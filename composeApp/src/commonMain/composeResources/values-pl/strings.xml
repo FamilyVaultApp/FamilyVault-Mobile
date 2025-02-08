@@ -19,5 +19,6 @@
     <string name="create_new_family_group_content">Jeżeli nie masz jeszcze założonej grupy rodzinnej w aplikacji FamilyVault.</string>
     <string name="join_existing_family_group_title">Dołącz do istniejącej grupy</string>
     <string name="join_existing_family_group_content">Jeżeli masz już założoną grupę rodzinną w aplikacji FamilyVault.</string>
+    <string name="next_button_content">Dalej</string>
 
 </resources>

@@ -35,6 +35,7 @@ import familyvault.composeapp.generated.resources.create_new_family_group_conten
 import familyvault.composeapp.generated.resources.create_new_family_group_title
 import familyvault.composeapp.generated.resources.join_existing_family_group_content
 import familyvault.composeapp.generated.resources.join_existing_family_group_title
+import familyvault.composeapp.generated.resources.next_button_content
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_content
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_title
 import org.jetbrains.compose.resources.stringResource
@@ -75,7 +76,7 @@ class FamilyGroupChooseScreen : Screen {
                     )
                 }
                 Button(
-                    "Dalej",
+                    content = stringResource(Res.string.next_button_content),
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         navigator.push(InitialScreen())
