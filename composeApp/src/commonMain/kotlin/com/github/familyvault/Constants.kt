@@ -34,4 +34,9 @@ object Constants {
     val headline1FontSize = 40.sp
     val headline3FontSize = 17.sp
     val paragraphSize = 15.sp
+
+    // Line heights
+    val headline1LineHeight = 48.sp
+    val headline3LineHeight = 22.sp
+    val paragraphLineHeight = 20.sp
 }

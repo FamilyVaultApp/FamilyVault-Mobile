@@ -28,4 +28,8 @@
 
     <string name="family_group_create_screen_title">Creating a family group</string>
 
+    <string name="text_field_name_label">Name</string>
+    <string name="text_field_surname_label">Surname</string>
+    <string name="text_field_group_name_label">Family group name</string>
+
 </resources>

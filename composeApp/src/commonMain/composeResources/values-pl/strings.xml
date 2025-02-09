@@ -27,4 +27,8 @@
 
     <string name="family_group_create_screen_title">Tworzenie grupy rodzinnej</string>
 
+    <string name="text_field_name_label">Imię</string>
+    <string name="text_field_surname_label">Nazwisko</string>
+    <string name="text_field_group_name_label">Nazwa grupy rodzinnej</string>
+
 </resources>

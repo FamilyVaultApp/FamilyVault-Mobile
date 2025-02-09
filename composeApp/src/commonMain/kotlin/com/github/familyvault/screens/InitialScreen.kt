@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.Constants
 import com.github.familyvault.components.AppIcon
@@ -74,7 +73,7 @@ class InitialScreen : Screen {
                     content = stringResource(Res.string.next_button_content),
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        navigator.push(FamilyGroupChooseScreen())
+                        navigator.push(FamilyGroupCreateOrJoinScreen())
                     }
                 )
             }
