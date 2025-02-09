@@ -19,8 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
-import com.github.familyvault.Constants
 import com.github.familyvault.components.typography.Paragraph
+import com.github.familyvault.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.info_icon_alt
 import familyvault.composeapp.generated.resources.open_link_alt
@@ -38,37 +38,37 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
     Box(
         modifier = modifier.then(
             Modifier
-                .clip(RoundedCornerShape(Constants.normalRoundPercent))
+                .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
                 .then(clickableModifier)
                 .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-                .padding(Constants.normalPaddingSize)
+                .padding(AdditionalTheme.spacings.normalPadding)
         ),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Constants.normalPaddingSize),
+            horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.normalPadding),
         ) {
             Column {
                 Icon(
                     imageVector = Icons.Outlined.Info,
                     contentDescription = stringResource(Res.string.info_icon_alt),
-                    tint = MaterialTheme.colorScheme.primaryContainer
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(Constants.smallSpacing)
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(title, color = MaterialTheme.colorScheme.primaryContainer, style = MaterialTheme.typography.titleLarge)
+                    Text(title, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
                     link?.let {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                             contentDescription = stringResource(Res.string.open_link_alt),
-                            tint = MaterialTheme.colorScheme.primaryContainer
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
