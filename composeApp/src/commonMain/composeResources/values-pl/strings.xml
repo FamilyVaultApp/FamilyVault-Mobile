@@ -15,7 +15,4 @@
     <string name="cloud_connection_mode_content">Wykorzystaj nasze rozwiązanie chmurowe. Nie wymaga żadnej konfiguracji.</string>
     <string name="self_hosted_connection_mode_title">PrivMX Bridge</string>
     <string name="self_hosted_connection_mode_content">Wykorzystaj swój serwer PrivMX Bridge. Musisz wcześniej taki serwer skonfigurować.</string>
-
-    <!-- Button descriptions -->
-    <string name="button_next">Dalej</string>
 </resources>
