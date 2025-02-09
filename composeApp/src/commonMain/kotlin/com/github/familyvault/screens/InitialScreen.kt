@@ -54,7 +54,7 @@ class InitialScreen : Screen {
                 Headline1(stringResource(Res.string.app_name))
                 Column(
                     modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
+                    verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.normalPadding)
                 ) {
                     InfoBox(
                         title = stringResource(Res.string.connection_modes_title),
@@ -73,9 +73,10 @@ class InitialScreen : Screen {
                         type = OptionButtonType.Second
                     )
                     Button(
-                        "Siema",
+                        onClick = { },
+                        content = "Siema",
                         modifier = Modifier.fillMaxWidth()
-                    ) { }
+                    )
                 }
             }
         }
