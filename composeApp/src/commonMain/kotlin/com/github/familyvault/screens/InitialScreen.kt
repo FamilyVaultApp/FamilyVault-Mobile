@@ -22,6 +22,7 @@ import com.github.familyvault.components.OptionButtonType
 import com.github.familyvault.components.typography.Headline1
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.app_name
+import familyvault.composeapp.generated.resources.button_next
 import familyvault.composeapp.generated.resources.cloud_connection_mode_content
 import familyvault.composeapp.generated.resources.cloud_connection_mode_title
 import familyvault.composeapp.generated.resources.connection_modes_content
@@ -64,7 +65,7 @@ class InitialScreen : Screen {
                     type = OptionButtonType.Second
                 )
                 Button(
-                    "Siema",
+                    content = stringResource(Res.string.button_next),
                     modifier = Modifier.fillMaxWidth()
                 ) { }
             }
