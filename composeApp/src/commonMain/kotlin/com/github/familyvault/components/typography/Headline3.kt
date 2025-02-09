@@ -1,11 +1,11 @@
 package com.github.familyvault.components.typography
 
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import com.github.familyvault.Constants
 
 @Composable
 fun Headline3(
@@ -16,9 +16,7 @@ fun Headline3(
 ) {
     Text(
         text,
-        modifier = modifier,
-        fontSize = Constants.headline3FontSize,
-        fontWeight = fontWeight,
+        style = MaterialTheme.typography.titleLarge,
         color = color
     )
 }

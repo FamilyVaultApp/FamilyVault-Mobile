@@ -1,5 +1,6 @@
 package com.github.familyvault.components
 
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +40,7 @@ fun OptionButton(
         modifier = Modifier
             .clip(RoundedCornerShape(Constants.normalRoundPercent))
             .border(
-                BorderStroke(1.dp, Constants.borderColor),
+                BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
                 RoundedCornerShape(Constants.normalRoundPercent)
             )
             .padding(Constants.normalPaddingSize)
@@ -51,8 +53,8 @@ fun OptionButton(
                 .size(40.dp)
                 .background(
                     if (type == OptionButtonType.First)
-                        Constants.firstOptionSecondaryColor
-                    else Constants.secondOptionSecondaryColor
+                        MaterialTheme.colorScheme.tertiaryContainer
+                    else MaterialTheme.colorScheme.tertiaryContainer
                 ),
             contentAlignment = Alignment.Center
         )
@@ -62,8 +64,8 @@ fun OptionButton(
                 title,
                 modifier = Modifier.size(25.dp),
                 tint = if (type == OptionButtonType.First)
-                    Constants.firstOptionPrimaryColor
-                else Constants.secondOptionPrimaryColor
+                    MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.primary
             )
         }
         Column {

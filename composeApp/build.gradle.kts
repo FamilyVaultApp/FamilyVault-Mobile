@@ -39,11 +39,11 @@ kotlin {
             implementation(libs.voyager.screenmodel)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
-
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.foundation)
             implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.runtime)
             implementation(compose.ui)
@@ -83,6 +83,8 @@ android {
 
 dependencies {
     implementation(libs.ui.text.google.fonts)
+    implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.material3.android)
     debugImplementation(compose.uiTooling)
 }
 

@@ -10,15 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import com.github.familyvault.Constants
-import com.github.familyvault.components.typography.Headline3
 import com.github.familyvault.components.typography.Paragraph
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.info_icon_alt
@@ -39,7 +40,7 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
             Modifier
                 .clip(RoundedCornerShape(Constants.normalRoundPercent))
                 .then(clickableModifier)
-                .background(color = Constants.tertiaryColor)
+                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
                 .padding(Constants.normalPaddingSize)
         ),
     ) {
@@ -51,7 +52,7 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
                 Icon(
                     imageVector = Icons.Outlined.Info,
                     contentDescription = stringResource(Res.string.info_icon_alt),
-                    tint = Constants.primaryColor
+                    tint = MaterialTheme.colorScheme.primaryContainer
                 )
             }
             Column(
@@ -62,12 +63,12 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Headline3(title, color = Constants.primaryColor)
+                    Text(title, color = MaterialTheme.colorScheme.primaryContainer, style = MaterialTheme.typography.titleLarge)
                     link?.let {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                             contentDescription = stringResource(Res.string.open_link_alt),
-                            tint = Constants.primaryColor
+                            tint = MaterialTheme.colorScheme.primaryContainer
                         )
                     }
                 }
