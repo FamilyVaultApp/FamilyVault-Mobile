@@ -65,7 +65,7 @@ class InitialScreen : Screen {
                     type = OptionButtonType.Second
                 )
                 Button(
-                    content = stringResource(Res.string.button_next),
+                    "Siema",
                     modifier = Modifier.fillMaxWidth()
                 ) { }
             }
