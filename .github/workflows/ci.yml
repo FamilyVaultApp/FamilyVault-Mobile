@@ -1,0 +1,24 @@
+name: "FamilyVault Android CI"
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    name: "Build Android application"
+    runs-on: "familyvault-server"
+    container:
+      image: "pawl0wski/androidci"
+      options: --cpus=2 --memory=4gb
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Sync Gradle project"
+        run: "bash gradlew"
+      - name: "Build debug application"
+        run: "bash gradlew assembleDebug"
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build_artifact
+          path: ./composeApp/build/outputs/
