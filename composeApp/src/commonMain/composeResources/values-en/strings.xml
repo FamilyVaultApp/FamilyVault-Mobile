@@ -1,6 +1,6 @@
 <resources>
     <!-- General -->
-    <string name="app_name">FamilyVault</string>
+    <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
 
     <!-- Icon descriptions -->
@@ -8,12 +8,10 @@
     <string name="open_link_alt">Open website</string>
 
     <!-- Connection modes -->
-    <!-- TODO: Translate to english  -->
-    <string name="connection_modes_title">Tryby aplikacji</string>
-    <string name="connection_modes_content">Aplikacja może działać w dwóch trybach. Więcej o konfiguracji PrixMV Bridge, możesz przeczytać klikając w te powiadomienie.</string>
-
-    <string name="cloud_connection_mode_title">Chmura</string>
-    <string name="cloud_connection_mode_content">Wykorzystaj rozwiązanie chmurowe. Nie musisz nic wcześniej konfigurować.</string>
+    <string name="connection_modes_title">Connection modes</string>
+    <string name="connection_modes_content">This app provides two connection modes. To learn more about PrivMX Bridge configuration, tap on this notification.</string>
+    <string name="cloud_connection_mode_title">Cloud</string>
+    <string name="cloud_connection_mode_content">Use our cloud solution. No configuration required.</string>
     <string name="self_hosted_connection_mode_title">PrivMX Bridge</string>
-    <string name="self_hosted_connection_mode_content">Wykorzystaj swój serwer PrivMX Bridge. Musisz wcześniej taki serwer skonfigurować.</string>
+    <string name="self_hosted_connection_mode_content">Use your own PrivMX Bridge, which you need to configure first.</string>
 </resources>
