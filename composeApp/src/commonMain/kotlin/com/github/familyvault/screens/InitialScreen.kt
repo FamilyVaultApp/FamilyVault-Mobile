@@ -22,7 +22,7 @@ import com.github.familyvault.components.InfoBox
 import com.github.familyvault.components.OptionButton
 import com.github.familyvault.components.OptionButtonType
 import com.github.familyvault.components.typography.Headline1
-import com.github.familyvault.theme.AdditionalTheme
+import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.app_name
 import familyvault.composeapp.generated.resources.cloud_connection_mode_content

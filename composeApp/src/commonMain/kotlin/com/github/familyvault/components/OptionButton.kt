@@ -22,7 +22,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.components.typography.Headline3
 import com.github.familyvault.components.typography.Paragraph
-import com.github.familyvault.theme.AdditionalTheme
+import com.github.familyvault.ui.theme.AdditionalColors
+import com.github.familyvault.ui.theme.AdditionalTheme
 
 enum class OptionButtonType {
     First,
@@ -40,7 +41,7 @@ fun OptionButton(
         modifier = Modifier
             .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
             .border(
-                BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+                BorderStroke(1.dp, AdditionalTheme.colors.borderColor),
                 RoundedCornerShape(AdditionalTheme.roundness.normalPercent)
             )
             .padding(AdditionalTheme.spacings.normalPadding)

@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import com.github.familyvault.components.typography.Paragraph
-import com.github.familyvault.theme.AdditionalTheme
+import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.info_icon_alt
 import familyvault.composeapp.generated.resources.open_link_alt
@@ -40,7 +40,7 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
             Modifier
                 .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
                 .then(clickableModifier)
-                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
                 .padding(AdditionalTheme.spacings.normalPadding)
         ),
     ) {
@@ -52,7 +52,7 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
                 Icon(
                     imageVector = Icons.Outlined.Info,
                     contentDescription = stringResource(Res.string.info_icon_alt),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
             Column(
@@ -63,16 +63,16 @@ fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link:
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(title, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
+                    Text(title, color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge)
                     link?.let {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                             contentDescription = stringResource(Res.string.open_link_alt),
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
-                Paragraph(content)
+                Paragraph(content, color = AdditionalTheme.colors.mutedColor)
             }
         }
     }
