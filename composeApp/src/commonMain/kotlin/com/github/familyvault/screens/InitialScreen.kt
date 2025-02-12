@@ -68,14 +68,19 @@ class InitialScreen : Screen {
                     Icons.Outlined.Home,
                     type = OptionButtonType.Second
                 )
-
-                Button(
-                    content = stringResource(Res.string.next_button_content),
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        navigator.push(FamilyGroupCreateOrJoinScreen())
-                    }
+                Column(
+                    modifier = Modifier.fillMaxHeight().padding(bottom = Constants.smallSpacing),
+                    verticalArrangement = Arrangement.Bottom,
                 )
+                {
+                    Button(
+                        content = stringResource(Res.string.next_button_content),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            navigator.push(FamilyGroupCreateOrJoinScreen())
+                        }
+                    )
+                }
             }
         }
     }

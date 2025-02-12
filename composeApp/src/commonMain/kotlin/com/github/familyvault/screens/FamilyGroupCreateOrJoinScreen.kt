@@ -46,12 +46,13 @@ class FamilyGroupCreateOrJoinScreen : Screen {
             AppIcon()
             Headline1(stringResource(Res.string.app_name))
             Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(top = Constants.largeSpacing),
+                verticalArrangement = Arrangement.spacedBy(Constants.mediumSpacing)
+
             ) {
-                Column(
-                    verticalArrangement = Arrangement.SpaceBetween,
-                ) {
+
                     OptionButton(
                         title = stringResource(Res.string.join_existing_family_group_title),
                         content = stringResource(Res.string.join_existing_family_group_content),
@@ -64,14 +65,19 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                         Icons.Outlined.GroupAdd,
                         type = OptionButtonType.Second
                     )
-                }
-                Button(
-                    content = stringResource(Res.string.next_button_content),
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                        navigator.push(FamilyGroupCreateScreen())
-                    }
+                Column(
+                    modifier = Modifier.fillMaxHeight().padding(bottom = Constants.smallSpacing),
+                    verticalArrangement = Arrangement.Bottom,
                 )
+                {
+                    Button(
+                        content = stringResource(Res.string.next_button_content),
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            navigator.push(FamilyGroupCreateScreen())
+                        }
+                    )
+                }
             }
         }
     }
