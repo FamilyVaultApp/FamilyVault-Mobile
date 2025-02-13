@@ -1,4 +1,5 @@
 package com.github.familyvault.ui.theme
+
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -9,7 +10,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -32,8 +32,6 @@ private val darkScheme = darkColorScheme(
     secondaryContainer = secondaryContainerDark,
     onSecondaryContainer = onSecondaryContainerDark,
 )
-
-
 
 @Immutable
 data class AdditionalColors(

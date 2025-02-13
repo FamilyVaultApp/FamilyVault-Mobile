@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun Headline3(
     text: String,
-    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
 ) {
     Text(

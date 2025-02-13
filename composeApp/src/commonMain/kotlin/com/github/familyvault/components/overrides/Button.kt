@@ -1,4 +1,4 @@
-package com.github.familyvault.components
+package com.github.familyvault.components.overrides
 
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text

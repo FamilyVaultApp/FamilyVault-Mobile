@@ -10,7 +10,6 @@ import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun Headline1(
     text: String,
-    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
 ) {
     Text(
