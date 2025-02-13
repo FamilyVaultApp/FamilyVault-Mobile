@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.github.familyvault.Constants
 import com.github.familyvault.components.typography.Headline3
 import com.github.familyvault.components.typography.Paragraph
+import com.github.familyvault.ui.theme.AdditionalTheme
 
 enum class OptionButtonType {
     First,
@@ -36,14 +36,14 @@ fun OptionButton(
 ) {
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(Constants.normalRoundPercent))
+            .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
             .border(
-                BorderStroke(1.dp, Constants.borderColor),
-                RoundedCornerShape(Constants.normalRoundPercent)
+                BorderStroke(1.dp, AdditionalTheme.colors.borderColor),
+                RoundedCornerShape(AdditionalTheme.roundness.normalPercent)
             )
-            .padding(Constants.normalPaddingSize)
+            .padding(AdditionalTheme.spacings.normalPadding)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Constants.normalPaddingSize)
+        horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.normalPadding)
     ) {
         Box(
             modifier = Modifier
@@ -51,8 +51,8 @@ fun OptionButton(
                 .size(40.dp)
                 .background(
                     if (type == OptionButtonType.First)
-                        Constants.firstOptionSecondaryColor
-                    else Constants.secondOptionSecondaryColor
+                        AdditionalTheme.colors.firstOptionSecondaryColor
+                    else AdditionalTheme.colors.secondOptionSecondaryColor
                 ),
             contentAlignment = Alignment.Center
         )
@@ -62,8 +62,8 @@ fun OptionButton(
                 title,
                 modifier = Modifier.size(25.dp),
                 tint = if (type == OptionButtonType.First)
-                    Constants.firstOptionPrimaryColor
-                else Constants.secondOptionPrimaryColor
+                    AdditionalTheme.colors.firstOptionPrimaryColor
+                else AdditionalTheme.colors.secondOptionPrimaryColor
             )
         }
         Column {
