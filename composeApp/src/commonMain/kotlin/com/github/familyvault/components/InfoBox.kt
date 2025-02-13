@@ -26,7 +26,12 @@ import familyvault.composeapp.generated.resources.open_link_alt
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun InfoBox(title: String, content: String, modifier: Modifier = Modifier, link: String? = null) {
+fun InfoBox(
+    title: String,
+    content: String,
+    modifier: Modifier = Modifier,
+    link: String? = null
+) {
     val uriHandler = LocalUriHandler.current
     val clickableModifier = Modifier.clickable {
         link?.let {

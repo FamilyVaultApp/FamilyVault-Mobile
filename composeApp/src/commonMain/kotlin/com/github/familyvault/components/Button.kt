@@ -6,7 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material.Button as MaterialButton
 
 @Composable
-fun Button(content: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun Button(
+    content: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     MaterialButton(
         onClick = onClick,
         modifier = modifier

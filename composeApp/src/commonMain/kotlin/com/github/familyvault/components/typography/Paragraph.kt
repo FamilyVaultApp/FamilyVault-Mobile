@@ -7,7 +7,10 @@ import androidx.compose.ui.text.font.FontWeight
 import com.github.familyvault.Constants
 
 @Composable
-fun Paragraph(text: String, modifier: Modifier = Modifier) {
+fun Paragraph(
+    text: String,
+    modifier: Modifier = Modifier
+) {
     Text(
         text,
         modifier = modifier,
