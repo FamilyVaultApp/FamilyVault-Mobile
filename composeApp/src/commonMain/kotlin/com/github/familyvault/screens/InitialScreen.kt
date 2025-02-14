@@ -9,6 +9,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -35,11 +38,11 @@ class InitialScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         StartScreen {
-            AppIconAndName()
             Column(
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight().verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Bottom
             ) {
+                AppIconAndName()
                 InfoBoxAndButtons()
                 NextScreenButton(onClick = { navigator.push(FamilyGroupCreateOrJoinScreen()) })
             }
@@ -50,6 +53,7 @@ class InitialScreen : Screen {
     private fun InfoBoxAndButtons() {
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
+            
         ) {
             InfoBox(
                 title = stringResource(Res.string.connection_modes_title),
