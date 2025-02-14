@@ -7,11 +7,27 @@
     <string name="info_icon_alt">Information icon</string>
     <string name="open_link_alt">Open website</string>
 
+    <!-- Next Button -->
+    <string name="next_button_content">Next</string>
+
     <!-- Connection modes -->
     <string name="connection_modes_title">Connection modes</string>
     <string name="connection_modes_content">This app provides two connection modes. To learn more about PrivMX Bridge configuration, tap on this notification.</string>
+
     <string name="cloud_connection_mode_title">Cloud</string>
     <string name="cloud_connection_mode_content">Use our cloud solution. No configuration required.</string>
     <string name="self_hosted_connection_mode_title">PrivMX Bridge</string>
     <string name="self_hosted_connection_mode_content">Use your own PrivMX Bridge, which you need to configure first.</string>
+
+    <!-- Group creation -->
+    <string name="create_new_family_group_title">Create a new group</string>
+    <string name="create_new_family_group_content">If you don't have a family group set up in the FamilyVault application yet.</string>
+    <string name="join_existing_family_group_title">Join an existing group</string>
+    <string name="join_existing_family_group_content">If you already have a family group set up in the FamilyVault application.</string>
+
+    <string name="family_group_create_screen_title">Creating a family group</string>
+
+    <string name="text_field_name_label">Name</string>
+    <string name="text_field_surname_label">Surname</string>
+    <string name="text_field_group_name_label">Family group name</string>
 </resources>
