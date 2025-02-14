@@ -12,6 +12,8 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import com.github.familyvault.components.AppIcon
@@ -51,7 +53,9 @@ class InitialScreen : Screen {
                 AppIcon()
                 Headline1(stringResource(Res.string.app_name))
                 Column(
-                    modifier = Modifier.fillMaxHeight(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.normalPadding)
                 ) {
                     InfoBox(
