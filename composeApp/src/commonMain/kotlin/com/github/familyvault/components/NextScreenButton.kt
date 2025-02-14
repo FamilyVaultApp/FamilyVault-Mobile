@@ -1,0 +1,26 @@
+package com.github.familyvault.components
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.github.familyvault.components.overrides.Button
+import com.github.familyvault.ui.theme.AdditionalTheme
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.next_button_content
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun NextScreenButton(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxWidth().padding(
+            vertical = AdditionalTheme.spacings.large,
+        ),
+    ) {
+        Button(content = stringResource(Res.string.next_button_content),
+            modifier = Modifier.fillMaxWidth(),
+            onClick = { onClick() }
+        )
+    }
+}
