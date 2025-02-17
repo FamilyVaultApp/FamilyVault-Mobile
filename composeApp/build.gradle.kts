@@ -15,7 +15,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -26,24 +26,20 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.io.insert.koin.koin.android)
+
+            implementation(libs.koin.android)
+
+            implementation(libs.privmx.endpoint.extra)
+            implementation(libs.privmx.endpoint)
+        }
+        iosMain.dependencies {
         }
         commonMain.dependencies {
-            implementation(libs.voyager.bottom.sheet.navigator)
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.screenmodel)
-            implementation(libs.voyager.tab.navigator)
-            implementation(libs.voyager.transitions)
-
-            implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.io.insert.koin.koin.core)
-
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.foundation)
@@ -52,6 +48,18 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.runtime)
             implementation(compose.ui)
+
+            implementation(libs.voyager.bottom.sheet.navigator)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.tab.navigator)
+            implementation(libs.voyager.transitions)
+
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.navigation.compose)
         }
     }
 }
@@ -60,6 +68,7 @@ android {
     namespace = "com.github.familyvault"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    sourceSets["main"].jniLibs.srcDirs("src/main/jniLibs")
     defaultConfig {
         applicationId = "com.github.familyvault"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -89,4 +98,3 @@ dependencies {
     implementation(libs.androidx.material3.android)
     debugImplementation(compose.uiTooling)
 }
-
