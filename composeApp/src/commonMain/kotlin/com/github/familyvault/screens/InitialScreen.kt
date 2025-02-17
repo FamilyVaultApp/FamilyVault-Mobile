@@ -19,6 +19,7 @@ import com.github.familyvault.components.NextScreenButton
 import com.github.familyvault.components.OptionButton
 import com.github.familyvault.components.OptionButtonType
 import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.services.IPrivMxEndpointService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cloud_connection_mode_content
@@ -28,11 +29,13 @@ import familyvault.composeapp.generated.resources.connection_modes_title
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_content
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_title
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 class InitialScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val privMxService = koinInject<IPrivMxEndpointService>()
 
         StartScreen {
             AppIconAndName()
@@ -41,7 +44,10 @@ class InitialScreen : Screen {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 InfoBoxAndButtons()
-                NextScreenButton(onClick = { navigator.push(FamilyGroupCreateOrJoinScreen()) })
+                NextScreenButton(onClick = {
+                    println(privMxService.generatePrivateKey("Test"))
+                    navigator.push(FamilyGroupCreateOrJoinScreen())
+                })
             }
         }
     }
