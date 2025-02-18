@@ -12,7 +12,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.AppIconAndName
-import com.github.familyvault.components.NextScreenButton
+import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.OptionButton
 import com.github.familyvault.components.OptionButtonType
 import com.github.familyvault.components.screen.StartScreen
@@ -37,7 +37,7 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 OptionButtons()
-                NextScreenButton(onClick = { navigator.push(FamilyGroupCreateScreen()) })
+                InitialScreenButton(onClick = { navigator.push(FamilyGroupCreateScreen()) })
             }
         }
     }

@@ -12,14 +12,18 @@ import familyvault.composeapp.generated.resources.next_button_content
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun NextScreenButton(onClick: () -> Unit) {
+fun InitialScreenButton(
+    text: String = stringResource(Res.string.next_button_content),
+    enabled: Boolean = true,
+    onClick: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxWidth().padding(
             vertical = AdditionalTheme.spacings.large,
         ),
     ) {
-        Button(content = stringResource(Res.string.next_button_content),
+        Button(content = text,
             modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
             onClick = { onClick() }
         )
     }

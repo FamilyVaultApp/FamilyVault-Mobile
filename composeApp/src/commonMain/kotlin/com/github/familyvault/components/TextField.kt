@@ -8,12 +8,14 @@ import androidx.compose.ui.Modifier
 fun TextField(
     value: String = "",
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: @Composable () -> Unit,
     onValueChange: (String) -> Unit = {}
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
+        enabled = enabled,
         label = label,
         modifier = modifier
     )
