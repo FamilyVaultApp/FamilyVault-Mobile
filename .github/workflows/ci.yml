@@ -10,7 +10,7 @@ jobs:
     runs-on: "familyvault-server"
     container:
       image: "pawl0wski/androidci"
-      options: --cpus=2 --memory=4gb
+      options: --cpus=2 --memory=6gb
     steps:
       - uses: actions/checkout@v4
       - name: "Sync Gradle project"
