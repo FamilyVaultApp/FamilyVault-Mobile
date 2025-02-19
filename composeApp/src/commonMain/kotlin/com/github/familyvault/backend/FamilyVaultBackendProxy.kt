@@ -27,7 +27,7 @@ class FamilyVaultBackendProxy {
     }
 
     suspend fun createFamilyGroup(req: CreateFamilyGroupRequest) : CreateFamilyGroupResponse {
-        return client.post(getEndpointUrl("/FamilyGroup/Create")) {
+        return client.post(getEndpointUrl("/FamilyGroup/CreateFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
         }.body<CreateFamilyGroupResponse>();
