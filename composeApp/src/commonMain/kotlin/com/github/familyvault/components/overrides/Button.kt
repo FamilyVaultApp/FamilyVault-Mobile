@@ -9,12 +9,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material.Button as MaterialButton
 
 @Composable
-fun Button(content: String, modifier: Modifier = Modifier, onClick: () -> Unit, containerColor: Color = MaterialTheme.colorScheme.primary, contentColor: Color = MaterialTheme.colorScheme.onSurface) {
+fun Button(
+    content: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    onClick: () -> Unit
+) {
     MaterialButton(
         onClick = onClick,
         modifier = modifier,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor  = containerColor,
+            backgroundColor = containerColor,
             contentColor = contentColor
         )
     ) {
