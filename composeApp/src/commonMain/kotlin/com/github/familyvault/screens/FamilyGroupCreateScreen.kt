@@ -1,6 +1,9 @@
 package com.github.familyvault.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,6 +29,7 @@ import com.github.familyvault.components.TextField
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
+import com.github.familyvault.models.formDatas.FamilyGroupFormData
 import com.github.familyvault.services.IFamilyGroupManagerService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -46,51 +51,31 @@ class FamilyGroupCreateScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val coroutineScope = rememberCoroutineScope()
 
-        var firstname by remember { mutableStateOf("") }
-        var surname by remember { mutableStateOf("") }
-        var familyGroupName by remember { mutableStateOf("") }
+        var formData by remember { mutableStateOf(FamilyGroupFormData()) }
         var isCreatingFamilyGroup by remember { mutableStateOf(false) }
 
         StartScreen {
-            CreateFamilyGroupHeader()
-            Icon(
-                Icons.Filled.AccountCircle,
-                stringResource(Res.string.app_icon_alt),
-                modifier = Modifier.size(125.dp),
-                tint = AdditionalTheme.colors.firstOptionPrimaryColor
-            )
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = firstname,
-                label = { Text(stringResource(Res.string.text_field_name_label)) },
-                onValueChange = { firstname = it },
-            )
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = surname,
-                label = { Text(stringResource(Res.string.text_field_surname_label)) },
-                onValueChange = { surname = it },
-            )
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = familyGroupName,
-                label = { Text(stringResource(Res.string.text_field_group_name_label)) },
-                enabled = !isCreatingFamilyGroup,
-                onValueChange = { familyGroupName = it },
-            )
-
             if (isCreatingFamilyGroup) {
                 FamilyGroupCreatingDialog()
             }
-
-            InitialScreenButton(
-                text = stringResource(Res.string.create_new_family_group_title)
+            CreateFamilyGroupHeader()
+            UserProfilePicture()
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Bottom
             ) {
-                isCreatingFamilyGroup = true
-                coroutineScope.launch {
-                    familyGroupManager.createFamilyGroup(familyGroupName)
-                    isCreatingFamilyGroup = false
-                    navigator.replaceAll(DebugScreenContextId())
+                FamilyGroupCreateForm(formData, !isCreatingFamilyGroup) {
+                    formData = it
+                }
+                InitialScreenButton(
+                    text = stringResource(Res.string.create_new_family_group_title)
+                ) {
+                    isCreatingFamilyGroup = true
+                    coroutineScope.launch {
+                        familyGroupManager.createFamilyGroup(formData.familyGroupName)
+                        isCreatingFamilyGroup = false
+                        navigator.replaceAll(DebugScreenContextId())
+                    }
                 }
             }
         }
@@ -108,4 +93,51 @@ class FamilyGroupCreateScreen : Screen {
         }
     }
 
+    @Composable
+    private fun UserProfilePicture() {
+        return Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                Icons.Filled.AccountCircle,
+                stringResource(Res.string.app_icon_alt),
+                modifier = Modifier.size(125.dp),
+                tint = AdditionalTheme.colors.firstOptionPrimaryColor
+            )
+        }
+    }
+
+    @Composable
+    private fun FamilyGroupCreateForm(
+        formData: FamilyGroupFormData,
+        isFormEnabled: Boolean = true,
+        onFormChange: (formData: FamilyGroupFormData) -> Unit
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
+        ) {
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = formData.firstname,
+                label = { Text(stringResource(Res.string.text_field_name_label)) },
+                onValueChange = { onFormChange(formData.copy(firstname = it)) },
+                enabled = isFormEnabled
+            )
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = formData.lastname,
+                label = { Text(stringResource(Res.string.text_field_surname_label)) },
+                onValueChange = { onFormChange(formData.copy(lastname = it)) },
+                enabled = isFormEnabled
+            )
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = formData.familyGroupName,
+                label = { Text(stringResource(Res.string.text_field_group_name_label)) },
+                onValueChange = { onFormChange(formData.copy(familyGroupName = it)) },
+                enabled = isFormEnabled
+            )
+        }
+    }
 }

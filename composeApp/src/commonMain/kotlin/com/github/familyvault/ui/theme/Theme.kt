@@ -45,7 +45,7 @@ data class AdditionalColors(
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
     AdditionalColors(
-         firstOptionPrimaryColor = Color(0xff378eff),
+        firstOptionPrimaryColor = Color(0xff378eff),
         firstOptionSecondaryColor = Color(0xffe5f1ff),
         secondOptionPrimaryColor = Color(0xff5ed8bf),
         secondOptionSecondaryColor = Color(0xffe1f8f4),
