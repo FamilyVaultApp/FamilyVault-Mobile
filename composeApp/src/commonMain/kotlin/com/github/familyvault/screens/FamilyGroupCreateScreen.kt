@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.Composable
@@ -25,6 +24,7 @@ import com.github.familyvault.components.TextField
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
+import com.github.familyvault.components.typography.Paragraph
 import com.github.familyvault.services.IFamilyGroupManagerService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -62,19 +62,19 @@ class FamilyGroupCreateScreen : Screen {
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = firstname,
-                label = { Text(stringResource(Res.string.text_field_name_label)) },
+                label = { Paragraph(stringResource(Res.string.text_field_name_label)) },
                 onValueChange = { firstname = it },
             )
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = surname,
-                label = { Text(stringResource(Res.string.text_field_surname_label)) },
+                label = { Paragraph(stringResource(Res.string.text_field_surname_label)) },
                 onValueChange = { surname = it },
             )
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = familyGroupName,
-                label = { Text(stringResource(Res.string.text_field_group_name_label)) },
+                label = { Paragraph(stringResource(Res.string.text_field_group_name_label)) },
                 enabled = !isCreatingFamilyGroup,
                 onValueChange = { familyGroupName = it },
             )

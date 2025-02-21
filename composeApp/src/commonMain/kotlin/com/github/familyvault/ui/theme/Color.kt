@@ -2,7 +2,7 @@ package com.github.familyvault.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF368dff)
-val onPrimaryLight = Color(0xFF368DFF)
+val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFD6E3FF)
 val onPrimaryContainerLight = Color(0xFF274777)
 val secondaryLight = Color(0xFF3C6090)
@@ -12,7 +12,7 @@ val onSecondaryContainerLight = Color(0xFF214876)
 
 
 val primaryDark = Color(0xFF368dff)
-val onPrimaryDark = Color(0xFF328dfc)
+val onPrimaryDark = Color(0xFFFFFFFF)
 val primaryContainerDark = Color(0xFF274777)
 val onPrimaryContainerDark = Color(0xFF8ca9df)
 val secondaryDark = Color(0xFFA5C8FF)
