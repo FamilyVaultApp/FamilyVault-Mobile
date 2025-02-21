@@ -1,9 +1,6 @@
 package com.github.familyvault.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,18 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.NextScreenButton
 import com.github.familyvault.components.TextField
-import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.app_icon_alt
 import familyvault.composeapp.generated.resources.family_group_create_screen_title
-import familyvault.composeapp.generated.resources.next_button_content
 import familyvault.composeapp.generated.resources.text_field_group_name_label
 import familyvault.composeapp.generated.resources.text_field_name_label
 import familyvault.composeapp.generated.resources.text_field_surname_label
