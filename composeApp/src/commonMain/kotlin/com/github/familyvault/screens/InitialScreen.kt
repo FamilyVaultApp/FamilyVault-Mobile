@@ -33,12 +33,12 @@ import familyvault.composeapp.generated.resources.self_hosted_connection_mode_co
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_title
 import org.jetbrains.compose.resources.stringResource
 
-enum class SelectedConnectionMode {
-    Cloud,
-    SelfHosted
-}
-
 class InitialScreen : Screen {
+    private enum class SelectedConnectionMode {
+        Cloud,
+        SelfHosted
+    }
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow

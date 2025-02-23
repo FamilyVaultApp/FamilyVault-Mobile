@@ -28,12 +28,12 @@ import familyvault.composeapp.generated.resources.join_existing_family_group_con
 import familyvault.composeapp.generated.resources.join_existing_family_group_title
 import org.jetbrains.compose.resources.stringResource
 
-enum class SelectedFamilyGroupAction {
-    Join,
-    Create
-}
-
 class FamilyGroupCreateOrJoinScreen : Screen {
+    private enum class SelectedFamilyGroupAction {
+        Join,
+        Create
+    }
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow

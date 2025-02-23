@@ -55,7 +55,6 @@ fun OptionButton(
             AdditionalTheme.colors.firstOptionSecondaryColor
         else AdditionalTheme.colors.secondOptionSecondaryColor
 
-    // odwracanie koloru ikonki
     val iconTint = if (isSelected)
         if (type == OptionButtonType.First)
             AdditionalTheme.colors.firstOptionSecondaryColor
