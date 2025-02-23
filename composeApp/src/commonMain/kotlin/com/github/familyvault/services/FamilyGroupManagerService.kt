@@ -1,16 +1,36 @@
 package com.github.familyvault.services
 
-import com.github.familyvault.backend.FamilyVaultBackendProxy
+import com.github.familyvault.AppConfig
+import com.github.familyvault.backend.client.FamilyVaultBackendClient
+import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 
-class FamilyGroupManagerService(private val familyGroupContextService: FamilyGroupContextService) : IFamilyGroupManagerService {
-    private val familyVaultBackendProxy = FamilyVaultBackendProxy()
+class FamilyGroupManagerService(
+    private val privMxClient: IPrivMxClient,
+    private val currentSessionContextStore: CurrentSessionContextStore
+) :
+    IFamilyGroupManagerService {
+    private val familyVaultBackendProxy = FamilyVaultBackendClient()
 
-    override suspend fun createFamilyGroup(name: String, description: String?) {
-        val response = familyVaultBackendProxy.createFamilyGroup(
-            CreateFamilyGroupRequest(name, description ?: "Test description")
+    override suspend fun createFamilyGroup(
+        firstname: String,
+        surname: String,
+        secret: String,
+        familyGroupName: String,
+        familyGroupDescription: String?
+    ) {
+        val pairOfKeys = privMxClient.generatePairOfPrivateAndPublicKey(secret, AppConfig.SALT)
+        val username = "$firstname $surname"
+
+        val createFamilyGroupResponse = familyVaultBackendProxy.createFamilyGroup(
+            CreateFamilyGroupRequest(familyGroupName, familyGroupDescription ?: "Test description")
+        )
+        familyVaultBackendProxy.addGuardianToFamilyGroup(
+            AddMemberToFamilyRequest(createFamilyGroupResponse.contextId, username, pairOfKeys.publicKey)
         )
 
-        familyGroupContextService.setCurrentFamilyGroupId(response.contextId)
+        currentSessionContextStore.setPairOfKeys(pairOfKeys)
+        currentSessionContextStore.setCurrentFamilyGroupId(createFamilyGroupResponse.contextId)
     }
 }

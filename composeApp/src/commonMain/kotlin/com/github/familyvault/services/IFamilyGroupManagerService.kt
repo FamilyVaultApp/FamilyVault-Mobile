@@ -1,5 +1,11 @@
 package com.github.familyvault.services
 
 interface IFamilyGroupManagerService {
-    suspend fun createFamilyGroup(name: String, description: String? = null)
+    suspend fun createFamilyGroup(
+        firstname: String,
+        surname: String,
+        secret: String,
+        familyGroupName: String,
+        familyGroupDescription: String? = null
+    )
 }

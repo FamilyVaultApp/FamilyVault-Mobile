@@ -88,7 +88,7 @@ class FamilyGroupCreateScreen : Screen {
             ) {
                 isCreatingFamilyGroup = true
                 coroutineScope.launch {
-                    familyGroupManager.createFamilyGroup(familyGroupName)
+                    familyGroupManager.createFamilyGroup(firstname, surname, "secret", familyGroupName, "test")
                     isCreatingFamilyGroup = false
                     navigator.replaceAll(DebugScreenContextId())
                 }
