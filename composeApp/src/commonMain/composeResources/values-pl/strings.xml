@@ -37,6 +37,6 @@
     <!-- Form validation errors-->
 
     <string name="initial_form_empty_error">To pole nie może być puste</string>
-    <string name="initial_form_overfill_error">Możesz wprowadzić maksymalnie 64 znaki</string>
+    <string name="initial_form_overfill_error">Możesz wprowadzić maksymalnie %1$d znaki</string>
     
 </resources>

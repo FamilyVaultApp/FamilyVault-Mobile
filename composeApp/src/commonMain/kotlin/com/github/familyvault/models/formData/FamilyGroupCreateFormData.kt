@@ -1,13 +1,10 @@
 package com.github.familyvault.models.formData
 
-data class FamilyGroupFormData(
-    var firstname: String = "",
-    var lastname: String = "",
-    var familyGroupName: String = "",
+class FamilyGroupFormData(
+    var firstname: FormDataEntry<String> = FormDataEntry(""),
+    var lastname: FormDataEntry<String> = FormDataEntry(""),
+    var familyGroupName: FormDataEntry<String> = FormDataEntry(""),
 
-    var firstNameError: String? = "",
-    var lastNameError: String? = "",
-    var familyGroupNameError: String? = "",
     var formIsCorrect: Boolean = false,
 
     var editedFields: MutableSet<String> = mutableSetOf()
@@ -15,31 +12,44 @@ data class FamilyGroupFormData(
     val fullname: String
         get() = "$firstname $lastname"
 
-    private val validator = FormValidator()
 
-    fun validateForm(): FamilyGroupFormData {
-        return copy(
-            firstNameError = if ("firstname" in editedFields) validator.validateEntry(firstname) else null,
-            lastNameError = if ("lastname" in editedFields) validator.validateEntry(lastname) else null,
-            familyGroupNameError = if ("familyGroupName" in editedFields) validator.validateEntry(familyGroupName) else null,
-            formIsCorrect = editedFields.containsAll(listOf("firstname", "lastname", "familyGroupName")) &&
-                    listOf(firstNameError, lastNameError, familyGroupNameError).all { it.isNullOrBlank() }
-        )
-    }
-
-}
-
-
-class FormValidator {
-
-    fun validateEntry(formEntry: String): String? {
+    fun validateCreateFamilyGroupFormEntry(formEntry: String): String? {
         if (formEntry.isEmpty())
         {
             return "Empty"
         }
-        if (formEntry.length > 64) {
+        if (formEntry.length >= 64) {
             return "Overfill"
         }
         return null
     }
+
+    fun validateForm(): FamilyGroupFormData {
+        formIsCorrect = true
+
+        if (editedFields.contains("firstname")) validateField(firstname, "firstname")
+        if (editedFields.contains("lastname")) validateField(lastname, "lastname")
+        if (editedFields.contains("familyGroupName")) validateField(familyGroupName, "familyGroupName")
+
+        return this
+    }
+
+    private fun validateField(formEntry: FormDataEntry<String>, fieldName: String) {
+        val error = validateCreateFamilyGroupFormEntry(formEntry.value)
+
+        if (error != null) {
+            formEntry.validationError = error
+            formIsCorrect = false
+            editedFields.add(fieldName)
+        } else {
+            formEntry.validationError = null
+        }
+    }
+
 }
+
+data class FormDataEntry<T>(
+    var value: T,
+    var validationError: String? = null
+)
+

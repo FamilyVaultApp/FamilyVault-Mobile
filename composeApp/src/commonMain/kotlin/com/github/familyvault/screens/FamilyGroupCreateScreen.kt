@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.AppConfig
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.TextField
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
@@ -76,7 +77,7 @@ class FamilyGroupCreateScreen : Screen {
                 ) {
                     isCreatingFamilyGroup = true
                     coroutineScope.launch {
-                        familyGroupManager.createFamilyGroup(formData.firstname, formData.lastname, "sec", formData.familyGroupName, "...")
+                        familyGroupManager.createFamilyGroup(formData.firstname.value, formData.lastname.value, "sec", formData.familyGroupName.value, "...")
                         isCreatingFamilyGroup = false
                         navigator.replaceAll(DebugScreenContextId())
                     }
@@ -123,79 +124,86 @@ class FamilyGroupCreateScreen : Screen {
         ) {
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = formData.firstname,
+                value = formData.firstname.value,
                 label = { Paragraph(stringResource(Res.string.text_field_name_label)) },
-                onValueChange = {
-                    if (formData.firstname.length <= 64 || it.length < formData.firstname.length)
-                    {
-                        val updatedForm = formData.copy(firstname = it).validateForm()
+                onValueChange = { newValue ->
+                    if (newValue.length <= 64) {
+                        // Tworzymy nową instancję formularza z zaktualizowaną wartością firstname
+                        val updatedForm = FamilyGroupFormData(
+                            firstname = formData.firstname.copy(value = newValue),
+                            lastname = formData.lastname,
+                            familyGroupName = formData.familyGroupName,
+                            formIsCorrect = formData.formIsCorrect,
+                            editedFields = formData.editedFields
+                        )
                         updatedForm.editedFields.add("firstname")
-                        onFormChange(updatedForm)
+                        // Walidacja formularza
+                        val validatedForm = updatedForm.validateForm()
+                        onFormChange(validatedForm)
                     }
-                     },
+                },
                 enabled = isFormEnabled,
-                supportingText = {
-                    if (!formData.firstNameError.isNullOrBlank())
-                    {
-                        if (formData.firstNameError == "Empty")
-                        {
-                            Paragraph(text = stringResource(Res.string.initial_form_empty_error), color = Color.Red)
-                        } else if (formData.firstNameError == "Overfill") {
-                            Paragraph(text = stringResource(Res.string.initial_form_overfill_error), color = Color.Red)
-                        }
-                    }
-                }
+                supportingText = { ValidationErrorMessage(formData.firstname.validationError) }
             )
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = formData.lastname,
+                value = formData.lastname.value,
                 label = { Paragraph(stringResource(Res.string.text_field_surname_label)) },
-                onValueChange = {
-                    if (formData.lastname.length <= 64 || it.length < formData.lastname.length)
-                    {
-                        val updatedForm = formData.copy(lastname = it).validateForm()
+                onValueChange = { newValue ->
+                    if (newValue.length <= 64) {
+                        val updatedForm = FamilyGroupFormData(
+                            firstname = formData.firstname,
+                            lastname = formData.lastname.copy(value = newValue),
+                            familyGroupName = formData.familyGroupName,
+                            formIsCorrect = formData.formIsCorrect,
+                            editedFields = formData.editedFields
+                        )
                         updatedForm.editedFields.add("lastname")
-                        onFormChange(updatedForm)
+                        // Walidacja formularza
+                        val validatedForm = updatedForm.validateForm()
+                        onFormChange(validatedForm)
                     }
-                                },
+                },
                 enabled = isFormEnabled,
-                supportingText = {
-                    if (!formData.lastNameError.isNullOrBlank())
-                    {
-                        if (formData.lastNameError == "Empty")
-                        {
-                            Paragraph(text = stringResource(Res.string.initial_form_empty_error), color = Color.Red)
-                        } else if (formData.lastNameError == "Overfill") {
-                            Paragraph(text = stringResource(Res.string.initial_form_overfill_error), color = Color.Red)
-                        }
-                    }
-                }
+                supportingText = { ValidationErrorMessage(formData.lastname.validationError) }
             )
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = formData.familyGroupName,
+                value = formData.familyGroupName.value,
                 label = { Paragraph(stringResource(Res.string.text_field_group_name_label)) },
-                onValueChange = {
-                    if (formData.familyGroupName.length <= 64 || it.length < formData.familyGroupName.length)
-                    {
-                        val updatedForm = formData.copy(familyGroupName = it).validateForm()
+                onValueChange = { newValue ->
+                    if (newValue.length <= 64) {
+                        val updatedForm = FamilyGroupFormData(
+                            firstname = formData.firstname,
+                            lastname = formData.lastname,
+                            familyGroupName = formData.familyGroupName.copy(value = newValue),
+                            formIsCorrect = formData.formIsCorrect,
+                            editedFields = formData.editedFields
+                        )
                         updatedForm.editedFields.add("familyGroupName")
-                        onFormChange(updatedForm)
+                        // Walidacja formularza
+                        val validatedForm = updatedForm.validateForm()
+                        onFormChange(validatedForm)
                     }
-                                },
+                },
                 enabled = isFormEnabled,
-                supportingText = {
-                    if (!formData.familyGroupNameError.isNullOrBlank())
-                    {
-                        if (formData.familyGroupNameError == "Empty")
-                        {
-                            Paragraph(stringResource(Res.string.initial_form_empty_error), color = Color.Red)
-                        } else if (formData.familyGroupNameError == "Overfill") {
-                            Paragraph(stringResource(Res.string.initial_form_overfill_error), color = Color.Red)
-                        }
-                    }
-                }
+                supportingText = { ValidationErrorMessage(formData.familyGroupName.validationError) }
             )
         }
     }
+
+    @Composable
+    fun ValidationErrorMessage(error: String?) {
+        if (!error.isNullOrBlank()) {
+            val errorMessage = when (error) {
+                "Empty" -> stringResource(Res.string.initial_form_empty_error, AppConfig.MAX_NAME_INPUT_LENGTH)
+                "Overfill" -> stringResource(Res.string.initial_form_overfill_error, AppConfig.MAX_NAME_INPUT_LENGTH)
+                else -> ""
+            }
+            if (errorMessage.isNotEmpty()) {
+                Paragraph(text = errorMessage, color = Color.Red)
+            }
+        }
+    }
+
 }

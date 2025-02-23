@@ -36,5 +36,5 @@
     <!-- Form validation errors-->
 
     <string name="initial_form_empty_error">This field cannot be empty</string>
-    <string name="initial_form_overfill_error">You can enter maximum of 64 characters</string>
+    <string name="initial_form_overfill_error">You can enter maximum of %1$d characters</string>
 </resources>
