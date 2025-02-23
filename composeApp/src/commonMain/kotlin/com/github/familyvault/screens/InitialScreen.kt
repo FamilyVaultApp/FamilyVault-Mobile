@@ -33,11 +33,16 @@ import familyvault.composeapp.generated.resources.self_hosted_connection_mode_co
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_title
 import org.jetbrains.compose.resources.stringResource
 
+enum class SelectedConnectionMode {
+    Cloud,
+    SelfHosted
+}
+
 class InitialScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        var selectedOption by remember { mutableStateOf<OptionButtonType?>(null) }
+        var selectedConnectionMode by remember { mutableStateOf<SelectedConnectionMode?>(null) }
 
         StartScreen {
             AppIconAndName()
@@ -45,12 +50,14 @@ class InitialScreen : Screen {
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
-                InfoBoxAndButtons(
-                    selectedOption = selectedOption,
-                    onOptionSelected = { selectedOption = it }
+                InfoBoxComponent()
+                Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
+                OptionButtons(
+                    selectedMode = selectedConnectionMode,
+                    onModeSelected = { selectedConnectionMode = it }
                 )
                 InitialScreenButton(
-                    enabled = selectedOption != null,
+                    enabled = selectedConnectionMode != null,
                     onClick = {
                         navigator.push(FamilyGroupCreateOrJoinScreen())
                     }
@@ -60,35 +67,36 @@ class InitialScreen : Screen {
     }
 
     @Composable
-    private fun InfoBoxAndButtons(
-        selectedOption: OptionButtonType?,
-        onOptionSelected: (OptionButtonType) -> Unit
+    private fun InfoBoxComponent() {
+        InfoBox(
+            title = stringResource(Res.string.connection_modes_title),
+            content = stringResource(Res.string.connection_modes_content)
+        )
+    }
+
+    @Composable
+    private fun OptionButtons(
+        selectedMode: SelectedConnectionMode?,
+        onModeSelected: (SelectedConnectionMode) -> Unit
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
-            InfoBox(
-                title = stringResource(Res.string.connection_modes_title),
-                content = stringResource(Res.string.connection_modes_content)
-            )
-            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
-
             OptionButton(
                 title = stringResource(Res.string.cloud_connection_mode_title),
                 content = stringResource(Res.string.cloud_connection_mode_content),
                 icon = Icons.Outlined.Cloud,
                 type = OptionButtonType.First,
-                isSelected = selectedOption == OptionButtonType.First,
-                onClick = { onOptionSelected(OptionButtonType.First) }
+                isSelected = selectedMode == SelectedConnectionMode.Cloud,
+                onClick = { onModeSelected(SelectedConnectionMode.Cloud) }
             )
-
             OptionButton(
                 title = stringResource(Res.string.self_hosted_connection_mode_title),
                 content = stringResource(Res.string.self_hosted_connection_mode_content),
                 icon = Icons.Outlined.Home,
                 type = OptionButtonType.Second,
-                isSelected = selectedOption == OptionButtonType.Second,
-                onClick = { onOptionSelected(OptionButtonType.Second) }
+                isSelected = selectedMode == SelectedConnectionMode.SelfHosted,
+                onClick = { onModeSelected(SelectedConnectionMode.SelfHosted) }
             )
         }
     }

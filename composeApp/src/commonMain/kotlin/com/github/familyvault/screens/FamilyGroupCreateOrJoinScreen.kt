@@ -28,11 +28,16 @@ import familyvault.composeapp.generated.resources.join_existing_family_group_con
 import familyvault.composeapp.generated.resources.join_existing_family_group_title
 import org.jetbrains.compose.resources.stringResource
 
+enum class SelectedFamilyGroupAction {
+    Join,
+    Create
+}
+
 class FamilyGroupCreateOrJoinScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        var selectedOption by remember { mutableStateOf<OptionButtonType?>(null) }
+        var selectedAction by remember { mutableStateOf<SelectedFamilyGroupAction?>(null) }
 
         StartScreen {
             AppIconAndName()
@@ -41,11 +46,11 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 OptionButtons(
-                    selectedOption = selectedOption,
-                    onOptionSelected = { selectedOption = it }
+                    selectedAction = selectedAction,
+                    onActionSelected = { selectedAction = it }
                 )
                 InitialScreenButton(
-                    enabled = selectedOption != null,
+                    enabled = selectedAction != null,
                     onClick = {
                         navigator.push(FamilyGroupCreateScreen())
                     }
@@ -56,8 +61,8 @@ class FamilyGroupCreateOrJoinScreen : Screen {
 
     @Composable
     private fun OptionButtons(
-        selectedOption: OptionButtonType?,
-        onOptionSelected: (OptionButtonType) -> Unit
+        selectedAction: SelectedFamilyGroupAction?,
+        onActionSelected: (SelectedFamilyGroupAction) -> Unit
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
@@ -67,16 +72,16 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                 content = stringResource(Res.string.join_existing_family_group_content),
                 icon = Icons.AutoMirrored.Outlined.Login,
                 type = OptionButtonType.First,
-                isSelected = selectedOption == OptionButtonType.First,
-                onClick = { onOptionSelected(OptionButtonType.First) }
+                isSelected = selectedAction == SelectedFamilyGroupAction.Join,
+                onClick = { onActionSelected(SelectedFamilyGroupAction.Join) }
             )
             OptionButton(
                 title = stringResource(Res.string.create_new_family_group_title),
                 content = stringResource(Res.string.create_new_family_group_content),
                 icon = Icons.Outlined.GroupAdd,
                 type = OptionButtonType.Second,
-                isSelected = selectedOption == OptionButtonType.Second,
-                onClick = { onOptionSelected(OptionButtonType.Second) }
+                isSelected = selectedAction == SelectedFamilyGroupAction.Create,
+                onClick = { onActionSelected(SelectedFamilyGroupAction.Create) }
             )
         }
     }

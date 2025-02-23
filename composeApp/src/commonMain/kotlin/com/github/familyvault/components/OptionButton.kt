@@ -69,7 +69,7 @@ fun OptionButton(
         modifier = Modifier
             .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
             .border(
-                BorderStroke(1.dp, borderColor),
+                BorderStroke(2.dp, borderColor),
                 RoundedCornerShape(AdditionalTheme.roundness.normalPercent)
             )
             .clickable { onClick() }
