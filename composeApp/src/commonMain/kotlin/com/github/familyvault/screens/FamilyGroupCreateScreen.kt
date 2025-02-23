@@ -29,7 +29,7 @@ import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Paragraph
-import com.github.familyvault.models.formDatas.FamilyGroupFormData
+import com.github.familyvault.models.formData.FamilyGroupFormData
 import com.github.familyvault.services.IFamilyGroupManagerService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -72,7 +72,7 @@ class FamilyGroupCreateScreen : Screen {
                 ) {
                     isCreatingFamilyGroup = true
                     coroutineScope.launch {
-                        familyGroupManager.createFamilyGroup(formData.familyGroupName)
+                        familyGroupManager.createFamilyGroup(formData.firstname, formData.lastname, "sec", formData.familyGroupName, "...")
                         isCreatingFamilyGroup = false
                         navigator.replaceAll(DebugScreenContextId())
                     }
