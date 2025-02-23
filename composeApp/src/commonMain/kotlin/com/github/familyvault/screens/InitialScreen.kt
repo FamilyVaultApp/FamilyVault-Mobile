@@ -9,6 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -30,9 +34,15 @@ import familyvault.composeapp.generated.resources.self_hosted_connection_mode_ti
 import org.jetbrains.compose.resources.stringResource
 
 class InitialScreen : Screen {
+    private enum class SelectedConnectionMode {
+        Cloud,
+        SelfHosted
+    }
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        var selectedConnectionMode by remember { mutableStateOf<SelectedConnectionMode?>(null) }
 
         StartScreen {
             AppIconAndName()
@@ -40,37 +50,54 @@ class InitialScreen : Screen {
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
-                InfoBoxAndButtons()
-                InitialScreenButton(onClick = {
-                    navigator.push(FamilyGroupCreateOrJoinScreen())
-                })
+                InfoBoxComponent()
+                Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
+                OptionButtons(
+                    selectedMode = selectedConnectionMode,
+                    onModeSelected = { selectedConnectionMode = it }
+                )
+                InitialScreenButton(
+                    enabled = selectedConnectionMode != null,
+                    onClick = {
+                        navigator.push(FamilyGroupCreateOrJoinScreen())
+                    }
+                )
             }
         }
     }
 
     @Composable
-    private fun InfoBoxAndButtons() {
+    private fun InfoBoxComponent() {
+        InfoBox(
+            title = stringResource(Res.string.connection_modes_title),
+            content = stringResource(Res.string.connection_modes_content)
+        )
+    }
+
+    @Composable
+    private fun OptionButtons(
+        selectedMode: SelectedConnectionMode?,
+        onModeSelected: (SelectedConnectionMode) -> Unit
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
-            InfoBox(
-                title = stringResource(Res.string.connection_modes_title),
-                content = stringResource(Res.string.connection_modes_content)
-            )
-            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
             OptionButton(
                 title = stringResource(Res.string.cloud_connection_mode_title),
                 content = stringResource(Res.string.cloud_connection_mode_content),
-                Icons.Outlined.Cloud,
-                type = OptionButtonType.First
+                icon = Icons.Outlined.Cloud,
+                type = OptionButtonType.First,
+                isSelected = selectedMode == SelectedConnectionMode.Cloud,
+                onClick = { onModeSelected(SelectedConnectionMode.Cloud) }
             )
             OptionButton(
                 title = stringResource(Res.string.self_hosted_connection_mode_title),
                 content = stringResource(Res.string.self_hosted_connection_mode_content),
-                Icons.Outlined.Home,
-                type = OptionButtonType.Second
+                icon = Icons.Outlined.Home,
+                type = OptionButtonType.Second,
+                isSelected = selectedMode == SelectedConnectionMode.SelfHosted,
+                onClick = { onModeSelected(SelectedConnectionMode.SelfHosted) }
             )
         }
     }
 }
-

@@ -7,6 +7,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.outlined.GroupAdd
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -25,39 +29,59 @@ import familyvault.composeapp.generated.resources.join_existing_family_group_tit
 import org.jetbrains.compose.resources.stringResource
 
 class FamilyGroupCreateOrJoinScreen : Screen {
+    private enum class SelectedFamilyGroupAction {
+        Join,
+        Create
+    }
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        var selectedAction by remember { mutableStateOf<SelectedFamilyGroupAction?>(null) }
 
         StartScreen {
             AppIconAndName()
             Column(
-                modifier = Modifier
-                    .fillMaxHeight(),
+                modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
-                OptionButtons()
-                InitialScreenButton(onClick = { navigator.push(FamilyGroupCreateScreen()) })
+                OptionButtons(
+                    selectedAction = selectedAction,
+                    onActionSelected = { selectedAction = it }
+                )
+                InitialScreenButton(
+                    enabled = selectedAction != null,
+                    onClick = {
+                        navigator.push(FamilyGroupCreateScreen())
+                    }
+                )
             }
         }
     }
 
     @Composable
-    private fun OptionButtons() {
+    private fun OptionButtons(
+        selectedAction: SelectedFamilyGroupAction?,
+        onActionSelected: (SelectedFamilyGroupAction) -> Unit
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
             OptionButton(
                 title = stringResource(Res.string.join_existing_family_group_title),
                 content = stringResource(Res.string.join_existing_family_group_content),
-                Icons.AutoMirrored.Outlined.Login,
-                type = OptionButtonType.First
+                icon = Icons.AutoMirrored.Outlined.Login,
+                type = OptionButtonType.First,
+                isSelected = selectedAction == SelectedFamilyGroupAction.Join,
+                onClick = { onActionSelected(SelectedFamilyGroupAction.Join) }
             )
             OptionButton(
                 title = stringResource(Res.string.create_new_family_group_title),
                 content = stringResource(Res.string.create_new_family_group_content),
-                Icons.Outlined.GroupAdd,
-                type = OptionButtonType.Second
+                icon = Icons.Outlined.GroupAdd,
+                type = OptionButtonType.Second,
+                isSelected = selectedAction == SelectedFamilyGroupAction.Create,
+                onClick = { onActionSelected(SelectedFamilyGroupAction.Create) }
             )
         }
     }
