@@ -5,10 +5,11 @@ import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
+import com.github.familyvault.models.FamilyGroupSession
 
 class FamilyGroupManagerService(
     private val privMxClient: IPrivMxClient,
-    private val currentSessionContextStore: CurrentSessionContextStore
+    private val familyGroupSessionService: FamilyGroupSessionService
 ) :
     IFamilyGroupManagerService {
     private val familyVaultBackendProxy = FamilyVaultBackendClient()
@@ -20,6 +21,7 @@ class FamilyGroupManagerService(
         familyGroupName: String,
         familyGroupDescription: String?
     ) {
+        val solutionId = familyVaultBackendProxy.getSolutionId().solutionId
         val pairOfKeys = privMxClient.generatePairOfPrivateAndPublicKey(secret, AppConfig.SALT)
         val username = "$firstname $surname"
 
@@ -27,10 +29,21 @@ class FamilyGroupManagerService(
             CreateFamilyGroupRequest(familyGroupName, familyGroupDescription ?: "Test description")
         )
         familyVaultBackendProxy.addGuardianToFamilyGroup(
-            AddMemberToFamilyRequest(createFamilyGroupResponse.contextId, username, pairOfKeys.publicKey)
+            AddMemberToFamilyRequest(
+                createFamilyGroupResponse.contextId,
+                username,
+                pairOfKeys.publicKey
+            )
         )
 
-        currentSessionContextStore.setPairOfKeys(pairOfKeys)
-        currentSessionContextStore.setCurrentFamilyGroupId(createFamilyGroupResponse.contextId)
+        familyGroupSessionService.assignNewSession(
+            FamilyGroupSession(
+                AppConfig.PRIVMX_BRIDGE_URL,
+                solutionId,
+                createFamilyGroupResponse.contextId,
+                pairOfKeys
+            )
+        )
+        familyGroupSessionService.connect()
     }
 }

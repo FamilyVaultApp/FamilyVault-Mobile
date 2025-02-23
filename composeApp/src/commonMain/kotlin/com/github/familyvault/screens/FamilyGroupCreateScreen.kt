@@ -72,7 +72,7 @@ class FamilyGroupCreateScreen : Screen {
                 ) {
                     isCreatingFamilyGroup = true
                     coroutineScope.launch {
-                        familyGroupManager.createFamilyGroup(formData.firstname, formData.lastname, "", formData.familyGroupName, "fsa")
+                        familyGroupManager.createFamilyGroup(formData.firstname, formData.lastname, "sec", formData.familyGroupName, "...")
                         isCreatingFamilyGroup = false
                         navigator.replaceAll(DebugScreenContextId())
                     }

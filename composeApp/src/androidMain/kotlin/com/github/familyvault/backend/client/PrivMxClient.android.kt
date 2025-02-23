@@ -1,20 +1,21 @@
 package com.github.familyvault.backend.client
 
-import com.github.familyvault.AppConfig
 import com.github.familyvault.models.PublicPrivateKeyPair
-import com.github.familyvault.services.CurrentSessionContextStore
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 
-private class AndroidPrivMxClient(private val familyGroupContextService: CurrentSessionContextStore) :
+private class AndroidPrivMxClient :
     IPrivMxClient {
     private val initModules = setOf(
         Modules.THREAD,
         Modules.STORE,
         Modules.INBOX
     )
-    private val container: PrivmxEndpointContainer = PrivmxEndpointContainer()
+    private val container: PrivmxEndpointContainer = PrivmxEndpointContainer().also {
+        // TODO: Ustawić jakiś normalny katalog certyfikatów ew. obsłużyć dodawanie certyfikatów
+        it.setCertsPath("/tmp")
+    }
     private var connection: PrivmxEndpoint? = null
 
     override fun generatePairOfPrivateAndPublicKey(
@@ -27,15 +28,14 @@ private class AndroidPrivMxClient(private val familyGroupContextService: Current
         return PublicPrivateKeyPair(publicKey, privateKey)
     }
 
-    override fun establishConnection() {
+    override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
         connection = container.connect(
             initModules,
-            familyGroupContextService.getCurrentSolutionId(),
-            familyGroupContextService.getPrivateKey(),
-            AppConfig.PRIVMX_BRIDGE_URL,
+            privateKey,
+            solutionId,
+            bridgeUrl
         )
     }
 }
 
-actual fun createPrivMxClient(familyGroupContextService: CurrentSessionContextStore): IPrivMxClient =
-    AndroidPrivMxClient(familyGroupContextService)
+actual fun createPrivMxClient(): IPrivMxClient = AndroidPrivMxClient()

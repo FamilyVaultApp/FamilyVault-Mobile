@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
-import com.github.familyvault.services.ICurrentSessionContextStore
+import com.github.familyvault.services.IFamilyGroupSessionService
 import org.koin.compose.koinInject
 
 class DebugScreenContextId : Screen {
     @Composable
     override fun Content() {
-        val familyGroupContext = koinInject<ICurrentSessionContextStore>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -23,7 +23,7 @@ class DebugScreenContextId : Screen {
         ) {
             Text("ContextId")
             Text(
-                familyGroupContext.getCurrentFamilyGroupId()
+                familyGroupSessionService.getContextId()
             )
         }
     }
