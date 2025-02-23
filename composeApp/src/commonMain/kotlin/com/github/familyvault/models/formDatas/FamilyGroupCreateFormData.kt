@@ -1,10 +1,5 @@
 package com.github.familyvault.models.formDatas
 
-import androidx.compose.runtime.Composable
-import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.stringResource
-
 data class FamilyGroupFormData(
     var firstname: String = "",
     var lastname: String = "",
@@ -14,6 +9,8 @@ data class FamilyGroupFormData(
     var lastNameError: String? = "",
     var familyGroupNameError: String? = "",
     var formIsCorrect: Boolean = false,
+
+    var editedFields: MutableSet<String> = mutableSetOf()
 ) {
     val fullname: String
         get() = "$firstname $lastname"
@@ -21,25 +18,15 @@ data class FamilyGroupFormData(
     private val validator = FormValidator()
 
     fun validateForm(): FamilyGroupFormData {
-        val firstNameError = validator.validateEntry(firstname)
-        val lastNameError = validator.validateEntry(lastname)
-        val familyGroupNameError = validator.validateEntry(familyGroupName)
-        if (firstNameError.isNullOrBlank() && lastNameError.isNullOrBlank() && familyGroupNameError.isNullOrBlank())
-        {
-            formIsCorrect = true
-        } else {
-            formIsCorrect = false
-        }
-        return FamilyGroupFormData(
-            firstname = firstname,
-            lastname = lastname,
-            familyGroupName = familyGroupName,
-            firstNameError = firstNameError,
-            lastNameError = lastNameError,
-            familyGroupNameError = familyGroupNameError,
-            formIsCorrect = formIsCorrect
+        return copy(
+            firstNameError = if ("firstname" in editedFields) validator.validateEntry(firstname) else null,
+            lastNameError = if ("lastname" in editedFields) validator.validateEntry(lastname) else null,
+            familyGroupNameError = if ("familyGroupName" in editedFields) validator.validateEntry(familyGroupName) else null,
+            formIsCorrect = editedFields.containsAll(listOf("firstname", "lastname", "familyGroupName")) &&
+                    listOf(firstNameError, lastNameError, familyGroupNameError).all { it.isNullOrBlank() }
         )
     }
+
 }
 
 

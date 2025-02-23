@@ -126,8 +126,13 @@ class FamilyGroupCreateScreen : Screen {
                 value = formData.firstname,
                 label = { Paragraph(stringResource(Res.string.text_field_name_label)) },
                 onValueChange = {
-                    val updatedForm = formData.copy(firstname = it).validateForm()
-                    onFormChange(updatedForm) },
+                    if (formData.firstname.length <= 64 || it.length < formData.firstname.length)
+                    {
+                        val updatedForm = formData.copy(firstname = it).validateForm()
+                        updatedForm.editedFields.add("firstname")
+                        onFormChange(updatedForm)
+                    }
+                     },
                 enabled = isFormEnabled,
                 supportingText = {
                     if (!formData.firstNameError.isNullOrBlank())
@@ -146,8 +151,13 @@ class FamilyGroupCreateScreen : Screen {
                 value = formData.lastname,
                 label = { Paragraph(stringResource(Res.string.text_field_surname_label)) },
                 onValueChange = {
-                    val updatedForm = formData.copy(lastname = it).validateForm()
-                    onFormChange(updatedForm) },
+                    if (formData.lastname.length <= 64 || it.length < formData.lastname.length)
+                    {
+                        val updatedForm = formData.copy(lastname = it).validateForm()
+                        updatedForm.editedFields.add("lastname")
+                        onFormChange(updatedForm)
+                    }
+                                },
                 enabled = isFormEnabled,
                 supportingText = {
                     if (!formData.lastNameError.isNullOrBlank())
@@ -166,8 +176,13 @@ class FamilyGroupCreateScreen : Screen {
                 value = formData.familyGroupName,
                 label = { Paragraph(stringResource(Res.string.text_field_group_name_label)) },
                 onValueChange = {
-                    val updatedForm = formData.copy(familyGroupName = it).validateForm()
-                    onFormChange(updatedForm) },
+                    if (formData.familyGroupName.length <= 64 || it.length < formData.familyGroupName.length)
+                    {
+                        val updatedForm = formData.copy(familyGroupName = it).validateForm()
+                        updatedForm.editedFields.add("familyGroupName")
+                        onFormChange(updatedForm)
+                    }
+                                },
                 enabled = isFormEnabled,
                 supportingText = {
                     if (!formData.familyGroupNameError.isNullOrBlank())
