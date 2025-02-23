@@ -1,4 +1,4 @@
-package com.github.familyvault.models.formDatas
+package com.github.familyvault.models.formData
 
 data class FamilyGroupFormData(
     var firstname: String = "",
