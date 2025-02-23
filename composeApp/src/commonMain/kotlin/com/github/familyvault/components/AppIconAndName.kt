@@ -2,6 +2,7 @@ package com.github.familyvault.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,7 +16,9 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AppIconAndName() {
     Column(
-        modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large),
+        modifier = Modifier
+            .padding(vertical = AdditionalTheme.spacings.large)
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.large)
     ) {
