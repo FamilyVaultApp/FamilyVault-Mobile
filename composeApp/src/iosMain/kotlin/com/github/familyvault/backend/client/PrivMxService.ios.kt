@@ -9,4 +9,4 @@ private class IOSPrivMxClient : IPrivMxClient {
 
 }
 
-actual fun createPrivMxClient(familyGroupContextService: CurrentSessionContextStore): IPrivMxClient = IOSPrivMxClient();
+actual fun createPrivMxClient(familyGroupContextService: CurrentSessionContextStore): IPrivMxClient = IOSPrivMxClient()

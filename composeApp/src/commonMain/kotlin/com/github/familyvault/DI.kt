@@ -1,11 +1,11 @@
-package com.github.familyvault;
+package com.github.familyvault
 
+import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.backend.client.createPrivMxClient
 import com.github.familyvault.services.CurrentSessionContextStore
 import com.github.familyvault.services.FamilyGroupManagerService
 import com.github.familyvault.services.ICurrentSessionContextStore
 import com.github.familyvault.services.IFamilyGroupManagerService
-import com.github.familyvault.backend.client.IPrivMxClient
-import com.github.familyvault.backend.client.createPrivMxClient
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
