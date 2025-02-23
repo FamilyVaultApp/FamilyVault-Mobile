@@ -18,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -36,6 +37,8 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.app_icon_alt
 import familyvault.composeapp.generated.resources.create_new_family_group_title
 import familyvault.composeapp.generated.resources.family_group_create_screen_title
+import familyvault.composeapp.generated.resources.initial_form_empty_error
+import familyvault.composeapp.generated.resources.initial_form_overfill_error
 import familyvault.composeapp.generated.resources.text_field_group_name_label
 import familyvault.composeapp.generated.resources.text_field_name_label
 import familyvault.composeapp.generated.resources.text_field_surname_label
@@ -68,7 +71,8 @@ class FamilyGroupCreateScreen : Screen {
                     formData = it
                 }
                 InitialScreenButton(
-                    text = stringResource(Res.string.create_new_family_group_title)
+                    text = stringResource(Res.string.create_new_family_group_title),
+                    enabled = formData.formIsCorrect
                 ) {
                     isCreatingFamilyGroup = true
                     coroutineScope.launch {
@@ -121,22 +125,61 @@ class FamilyGroupCreateScreen : Screen {
                 modifier = Modifier.fillMaxWidth(),
                 value = formData.firstname,
                 label = { Paragraph(stringResource(Res.string.text_field_name_label)) },
-                onValueChange = { onFormChange(formData.copy(firstname = it)) },
-                enabled = isFormEnabled
+                onValueChange = {
+                    val updatedForm = formData.copy(firstname = it).validateForm()
+                    onFormChange(updatedForm) },
+                enabled = isFormEnabled,
+                supportingText = {
+                    if (!formData.firstNameError.isNullOrBlank())
+                    {
+                        if (formData.firstNameError == "Empty")
+                        {
+                            Paragraph(text = stringResource(Res.string.initial_form_empty_error), color = Color.Red)
+                        } else if (formData.firstNameError == "Overfill") {
+                            Paragraph(text = stringResource(Res.string.initial_form_overfill_error), color = Color.Red)
+                        }
+                    }
+                }
             )
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = formData.lastname,
                 label = { Paragraph(stringResource(Res.string.text_field_surname_label)) },
-                onValueChange = { onFormChange(formData.copy(lastname = it)) },
-                enabled = isFormEnabled
+                onValueChange = {
+                    val updatedForm = formData.copy(lastname = it).validateForm()
+                    onFormChange(updatedForm) },
+                enabled = isFormEnabled,
+                supportingText = {
+                    if (!formData.lastNameError.isNullOrBlank())
+                    {
+                        if (formData.lastNameError == "Empty")
+                        {
+                            Paragraph(text = stringResource(Res.string.initial_form_empty_error), color = Color.Red)
+                        } else if (formData.lastNameError == "Overfill") {
+                            Paragraph(text = stringResource(Res.string.initial_form_overfill_error), color = Color.Red)
+                        }
+                    }
+                }
             )
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = formData.familyGroupName,
                 label = { Paragraph(stringResource(Res.string.text_field_group_name_label)) },
-                onValueChange = { onFormChange(formData.copy(familyGroupName = it)) },
-                enabled = isFormEnabled
+                onValueChange = {
+                    val updatedForm = formData.copy(familyGroupName = it).validateForm()
+                    onFormChange(updatedForm) },
+                enabled = isFormEnabled,
+                supportingText = {
+                    if (!formData.familyGroupNameError.isNullOrBlank())
+                    {
+                        if (formData.familyGroupNameError == "Empty")
+                        {
+                            Paragraph(stringResource(Res.string.initial_form_empty_error), color = Color.Red)
+                        } else if (formData.familyGroupNameError == "Overfill") {
+                            Paragraph(stringResource(Res.string.initial_form_overfill_error), color = Color.Red)
+                        }
+                    }
+                }
             )
         }
     }
