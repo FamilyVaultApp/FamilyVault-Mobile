@@ -3,6 +3,7 @@ package com.github.familyvault.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.github.familyvault.components.overrides.Button
@@ -24,7 +25,11 @@ fun InitialScreenButton(
         Button(content = text,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
-            onClick = { onClick() }
+            onClick = { onClick() },
+            containerColor = AdditionalTheme.colors.firstOptionPrimaryColor,
+            contentColor = AdditionalTheme.colors.contentColor,
+            disabledContainerColor = AdditionalTheme.colors.mutedColor,
+            disabledContentColor = AdditionalTheme.colors.contentColor
         )
     }
 }

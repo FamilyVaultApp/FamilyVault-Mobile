@@ -19,6 +19,8 @@ fun Button(
     shape: Shape = RoundedCornerShape(8.dp),
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    disabledContentColor: Color = MaterialTheme.colorScheme.primary,
+    disabledContainerColor: Color = MaterialTheme.colorScheme.onPrimary,
     onClick: () -> Unit
 ) {
     MaterialButton(
@@ -28,7 +30,9 @@ fun Button(
         shape = shape,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = containerColor,
-            contentColor = contentColor
+            contentColor = contentColor,
+            disabledContentColor = disabledContentColor,
+            disabledBackgroundColor = disabledContainerColor
         )
     ) {
         Text(content)

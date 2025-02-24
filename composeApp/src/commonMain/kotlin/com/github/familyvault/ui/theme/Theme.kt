@@ -40,28 +40,31 @@ data class AdditionalColors(
     val secondOptionPrimaryColor: Color,
     val secondOptionSecondaryColor: Color,
     val mutedColor: Color,
-    val borderColor: Color
+    val borderColor: Color,
+    val contentColor: Color
 )
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
     AdditionalColors(
-        firstOptionPrimaryColor = Color(0xff378eff),
+        firstOptionPrimaryColor = Color(0xff338cff),
         firstOptionSecondaryColor = Color(0xffe5f1ff),
-        secondOptionPrimaryColor = Color(0xff5ed8bf),
-        secondOptionSecondaryColor = Color(0xffe1f8f4),
-        mutedColor = Color(0xFF6d6d6d),
-        borderColor = Color(0xFFe6e6e6)
+        secondOptionPrimaryColor = Color(0xff5bd7be),
+        secondOptionSecondaryColor = Color(0xffeafaf7),
+        mutedColor = Color(0xFF999999),
+        borderColor = Color(0xFFe6e6e6),
+        contentColor = Color(0xff333333)
     )
 }
 
 private val LocalCustomColorsDark = staticCompositionLocalOf {
     AdditionalColors(
-        firstOptionPrimaryColor = Color(0xff2871d1),
-        firstOptionSecondaryColor = Color(0xffc1cad6),
-        secondOptionPrimaryColor = Color(0xff4dab98),
-        secondOptionSecondaryColor = Color(0xffb8ccc8),
-        mutedColor = Color(0xFFcccbda),
-        borderColor = Color(0xFF262626)
+        firstOptionPrimaryColor = Color(0xff0059cc),
+        firstOptionSecondaryColor = Color(0xff000c1a),
+        secondOptionPrimaryColor = Color(0xff28a48b),
+        secondOptionSecondaryColor = Color(0xff051512),
+        mutedColor = Color(0xFF666666),
+        borderColor = Color(0xFF1a1a1a),
+        contentColor = Color(0xffcccccc)
     )
 }
 
