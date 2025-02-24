@@ -13,7 +13,7 @@ class FamilyGroupFormData(
         get() = "$firstname $lastname"
 
 
-    fun validateCreateFamilyGroupFormEntry(formEntry: String): String? {
+    private fun validateCreateFamilyGroupFormEntry(formEntry: String): String? {
         if (formEntry.isEmpty())
         {
             return "Empty"
