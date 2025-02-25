@@ -20,6 +20,8 @@ private val lightScheme = lightColorScheme(
     onSecondary = onSecondaryLight,
     secondaryContainer = secondaryContainerLight,
     onSecondaryContainer = onSecondaryContainerLight,
+    background = backgroundLight,
+    onBackground = onBackgroundLight
 )
 
 private val darkScheme = darkColorScheme(
@@ -31,6 +33,8 @@ private val darkScheme = darkColorScheme(
     onSecondary = onSecondaryDark,
     secondaryContainer = secondaryContainerDark,
     onSecondaryContainer = onSecondaryContainerDark,
+    background = backgroundDark,
+    onBackground = onBackgroundDark
 )
 
 @Immutable
