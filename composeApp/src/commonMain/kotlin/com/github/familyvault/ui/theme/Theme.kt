@@ -21,7 +21,7 @@ private val lightScheme = lightColorScheme(
     secondaryContainer = secondaryContainerLight,
     onSecondaryContainer = onSecondaryContainerLight,
     background = backgroundLight,
-    onBackground = onBackgroundLight
+    onBackground = onBackgroundLight,
 )
 
 private val darkScheme = darkColorScheme(
@@ -34,7 +34,7 @@ private val darkScheme = darkColorScheme(
     secondaryContainer = secondaryContainerDark,
     onSecondaryContainer = onSecondaryContainerDark,
     background = backgroundDark,
-    onBackground = onBackgroundDark
+    onBackground = onBackgroundDark,
 )
 
 @Immutable
@@ -45,7 +45,8 @@ data class AdditionalColors(
     val secondOptionSecondaryColor: Color,
     val mutedColor: Color,
     val borderColor: Color,
-    val contentColor: Color
+    val onMutedColor: Color,
+    val onSecondaryContainerSecondColor: Color
 )
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
@@ -54,9 +55,10 @@ private val LocalCustomColorsLight = staticCompositionLocalOf {
         firstOptionSecondaryColor = Color(0xffe5f1ff),
         secondOptionPrimaryColor = Color(0xff5bd7be),
         secondOptionSecondaryColor = Color(0xffeafaf7),
-        mutedColor = Color(0xFF999999),
+        mutedColor = Color(0xFFB3B3B3),
         borderColor = Color(0xFFe6e6e6),
-        contentColor = Color(0xff333333)
+        onMutedColor = Color(0xff5f666d),
+        onSecondaryContainerSecondColor = Color(0xff474C52)
     )
 }
 
@@ -66,9 +68,10 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
         firstOptionSecondaryColor = Color(0xff000c1a),
         secondOptionPrimaryColor = Color(0xff28a48b),
         secondOptionSecondaryColor = Color(0xff051512),
-        mutedColor = Color(0xFF666666),
-        borderColor = Color(0xFF1a1a1a),
-        contentColor = Color(0xffcccccc)
+        mutedColor = Color(0xFF4D4D4D),
+        borderColor = Color(0xFF191919),
+        onMutedColor = Color(0xff9299a0),
+        onSecondaryContainerSecondColor = Color(0xffADB2B8)
     )
 }
 

@@ -45,7 +45,7 @@ fun InfoBox(
             Modifier
                 .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
                 .then(clickableModifier)
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
+                .background(color = MaterialTheme.colorScheme.secondaryContainer)
                 .padding(AdditionalTheme.spacings.normalPadding)
         ),
     ) {
@@ -57,7 +57,7 @@ fun InfoBox(
                 Icon(
                     imageVector = Icons.Outlined.Info,
                     contentDescription = stringResource(Res.string.info_icon_alt),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
             Column(
@@ -68,16 +68,16 @@ fun InfoBox(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(title, color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge)
+                    Text(title, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleLarge)
                     link?.let {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                             contentDescription = stringResource(Res.string.open_link_alt),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
-                Paragraph(content, color = AdditionalTheme.colors.mutedColor)
+                Paragraph(content, color = AdditionalTheme.colors.onSecondaryContainerSecondColor)
             }
         }
     }
