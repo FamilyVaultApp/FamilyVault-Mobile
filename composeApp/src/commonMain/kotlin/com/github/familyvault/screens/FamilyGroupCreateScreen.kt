@@ -1,5 +1,6 @@
 package com.github.familyvault.screens
 
+import CustomProfileIcon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,7 +65,11 @@ class FamilyGroupCreateScreen : Screen {
                 FamilyGroupCreatingDialog()
             }
             CreateFamilyGroupHeader()
-            UserProfilePicture()
+            CustomProfileIcon(
+                icon = Icons.Filled.AccountCircle,
+                contentDescription = "UserProfilePicture"
+            )
+
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
@@ -95,21 +100,6 @@ class FamilyGroupCreateScreen : Screen {
             Headline1(
                 stringResource(Res.string.family_group_create_screen_title),
                 textAlign = TextAlign.Center,
-            )
-        }
-    }
-
-    @Composable
-    private fun UserProfilePicture() {
-        return Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.Filled.AccountCircle,
-                stringResource(Res.string.app_icon_alt),
-                modifier = Modifier.size(125.dp),
-                tint = AdditionalTheme.colors.firstOptionPrimaryColor
             )
         }
     }
