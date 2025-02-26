@@ -11,7 +11,7 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 @Composable
 fun CustomProfileIcon(
     icon: ImageVector,
-    contentDescription: String?,
+    contentDescription: String? = "",
 ) {
     Box(
         modifier = Modifier.fillMaxWidth(),

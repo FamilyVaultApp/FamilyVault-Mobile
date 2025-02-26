@@ -66,8 +66,7 @@ class FamilyGroupCreateScreen : Screen {
             }
             CreateFamilyGroupHeader()
             CustomProfileIcon(
-                icon = Icons.Filled.AccountCircle,
-                contentDescription = "UserProfilePicture"
+                icon = Icons.Filled.AccountCircle
             )
 
             Column(
