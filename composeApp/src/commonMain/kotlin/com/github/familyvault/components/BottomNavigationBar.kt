@@ -12,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +38,7 @@ fun BottomNavigationBar(navigator: Navigator) {
         listOf(Icons.Outlined.Chat, Icons.Outlined.Task, Icons.Outlined.Folder)
     val items = listOf("Chat", "Tasks", "Cabinet")
     val screens = listOf(HomeScreen(), TaskList(), FilesCabinetScreen())
-    val NavigationBarDefaultColors = NavigationBarItemDefaults.colors().copy( selectedIconColor = AdditionalTheme.colors.firstOptionPrimaryColor, unselectedIconColor = MaterialTheme.colorScheme.onSurface )
+    val navigationBarDefaultColors = NavigationBarItemDefaults.colors().copy( selectedIconColor = AdditionalTheme.colors.firstOptionPrimaryColor, unselectedIconColor = MaterialTheme.colorScheme.onSurface )
 
 
     NavigationBar(
@@ -49,7 +48,7 @@ fun BottomNavigationBar(navigator: Navigator) {
             ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
-                colors = NavigationBarDefaultColors,
+                colors = navigationBarDefaultColors,
                 icon = {
                     Icon(
                         if (selectedItem == index) selectedIcons[index] else unselectedIcons[index],
