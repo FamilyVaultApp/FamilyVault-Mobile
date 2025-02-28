@@ -1,6 +1,6 @@
 package com.github.familyvault.screens
 
-import CustomProfileIcon
+import CustomIcon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +12,8 @@ import androidx.compose.material.Icon
 import com.github.familyvault.ui.theme.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,8 +67,8 @@ class FamilyGroupCreateScreen : Screen {
                 FamilyGroupCreatingDialog()
             }
             CreateFamilyGroupHeader()
-            CustomProfileIcon(
-                icon = Icons.Filled.AccountCircle
+            CustomIcon(
+                icon = Icons.Filled.Group
             )
 
             Column(
