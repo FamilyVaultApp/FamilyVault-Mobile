@@ -7,14 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
-import com.github.familyvault.components.BottomNavigationBar
+import com.github.familyvault.components.AppNavigationBar
 
 class MainScreen : Screen {
     @Composable
     override fun Content() {
-        Navigator(HomeScreen()) { navigator ->
+        Navigator(ChatsMainScreen()) { navigator ->
             Scaffold(
-                bottomBar = { BottomNavigationBar(navigator) }
+                bottomBar = { AppNavigationBar(navigator) }
             ) { paddingValues ->
                 Box(Modifier.padding(paddingValues)) {
                     navigator.lastItem.Content()

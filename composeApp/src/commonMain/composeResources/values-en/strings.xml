@@ -37,4 +37,10 @@
 
     <string name="initial_form_empty_error">This field cannot be empty</string>
     <string name="initial_form_overfill_error">You can enter maximum of %1$d characters</string>
+
+    <!-- Bottom navigation bar items-->
+    <string name="bottom_navigation_bar_chats">Chats</string>
+    <string name="bottom_navigation_bar_cabinet">File cabinet</string>
+    <string name="bottom_navigation_bar_task_board">Task board</string>
+
 </resources>

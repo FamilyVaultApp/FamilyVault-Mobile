@@ -4,13 +4,9 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import com.github.familyvault.components.typography.Headline3
 
-class HomeScreen : Screen {
-
+class ChatsMainScreen : Screen {
     @Composable
     override fun Content() {
-
-
-        Headline3("Home screen")
-
+        Headline3("Chat main screen")
     }
 }

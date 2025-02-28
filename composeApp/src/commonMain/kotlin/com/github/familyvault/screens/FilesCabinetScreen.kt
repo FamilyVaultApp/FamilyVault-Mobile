@@ -7,8 +7,6 @@ import com.github.familyvault.components.typography.Headline3
 class FilesCabinetScreen : Screen {
     @Composable
     override fun Content() {
-
         Headline3("Files Cabinet screen")
     }
-
 }
