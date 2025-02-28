@@ -78,10 +78,22 @@ class FamilyGroupCreateScreen : Screen {
                 ) {
                     isCreatingFamilyGroup = true
                     coroutineScope.launch {
-                        familyGroupManager.createFamilyGroup(formData.firstname.value, formData.lastname.value, "sec", formData.familyGroupName.value, "...")
-                        isCreatingFamilyGroup = false
-                        navigator.replaceAll(DebugScreenContextId())
+                        try {
+                            familyGroupManager.createFamilyGroup(
+                                formData.firstname.value,
+                                formData.lastname.value,
+                                "sec",
+                                formData.familyGroupName.value,
+                                "..."
+                            )
+                            navigator.replaceAll(DebugScreenContextId())
+                        } catch (e: Exception) {
+                            navigator.push(DebugExceptionScreen(e))
+                        } finally {
+                            isCreatingFamilyGroup = false
+                        }
                     }
+
                 }
             }
         }
@@ -128,8 +140,8 @@ class FamilyGroupCreateScreen : Screen {
                 value = formData.firstname.value,
                 label = { Paragraph(stringResource(Res.string.text_field_name_label)) },
                 onValueChange = { newValue ->
-                        val validatedForm = updateForm(formData, "firstname", newValue)
-                        onFormChange(validatedForm)
+                    val validatedForm = updateForm(formData, "firstname", newValue)
+                    onFormChange(validatedForm)
                 },
                 enabled = isFormEnabled,
                 supportingText = { ValidationErrorMessage(formData.firstname.validationError) }
@@ -140,7 +152,7 @@ class FamilyGroupCreateScreen : Screen {
                 label = { Paragraph(stringResource(Res.string.text_field_surname_label)) },
                 onValueChange = { newValue ->
                     val validatedForm = updateForm(formData, "lastname", newValue)
-                        onFormChange(validatedForm)
+                    onFormChange(validatedForm)
                 },
                 enabled = isFormEnabled,
                 supportingText = { ValidationErrorMessage(formData.lastname.validationError) }
@@ -163,8 +175,16 @@ class FamilyGroupCreateScreen : Screen {
     fun ValidationErrorMessage(error: String?) {
         if (!error.isNullOrBlank()) {
             val errorMessage = when (error) {
-                "Empty" -> stringResource(Res.string.initial_form_empty_error, AppConfig.MAX_NAME_INPUT_LENGTH)
-                "Overfill" -> stringResource(Res.string.initial_form_overfill_error, AppConfig.MAX_NAME_INPUT_LENGTH)
+                "Empty" -> stringResource(
+                    Res.string.initial_form_empty_error,
+                    AppConfig.MAX_NAME_INPUT_LENGTH
+                )
+
+                "Overfill" -> stringResource(
+                    Res.string.initial_form_overfill_error,
+                    AppConfig.MAX_NAME_INPUT_LENGTH
+                )
+
                 else -> ""
             }
             if (errorMessage.isNotEmpty()) {
@@ -173,41 +193,44 @@ class FamilyGroupCreateScreen : Screen {
         }
     }
 
-    private fun updateForm(currentFormState: FamilyGroupFormData, editedFieldName: String, newValue: String): FamilyGroupFormData
-    {
-         val updatedForm = when(editedFieldName) {
-             "firstname" -> FamilyGroupFormData(
-                 firstname = if (newValue.length <= 64) currentFormState.firstname.copy(
-                     value = newValue
-                 ) else currentFormState.firstname,
-                 lastname = currentFormState.lastname,
-                 familyGroupName = currentFormState.familyGroupName,
-                 formIsCorrect = currentFormState.formIsCorrect,
-                 editedFields = currentFormState.editedFields
-             )
+    private fun updateForm(
+        currentFormState: FamilyGroupFormData,
+        editedFieldName: String,
+        newValue: String
+    ): FamilyGroupFormData {
+        val updatedForm = when (editedFieldName) {
+            "firstname" -> FamilyGroupFormData(
+                firstname = if (newValue.length <= 64) currentFormState.firstname.copy(
+                    value = newValue
+                ) else currentFormState.firstname,
+                lastname = currentFormState.lastname,
+                familyGroupName = currentFormState.familyGroupName,
+                formIsCorrect = currentFormState.formIsCorrect,
+                editedFields = currentFormState.editedFields
+            )
 
-             "lastname" -> FamilyGroupFormData(
-                 firstname = currentFormState.firstname,
-                 lastname = if (newValue.length <= 64) currentFormState.lastname.copy(
-                     value = newValue
-                 ) else currentFormState.lastname,
-                 familyGroupName = currentFormState.familyGroupName,
-                 formIsCorrect = currentFormState.formIsCorrect,
-                 editedFields = currentFormState.editedFields
-             )
+            "lastname" -> FamilyGroupFormData(
+                firstname = currentFormState.firstname,
+                lastname = if (newValue.length <= 64) currentFormState.lastname.copy(
+                    value = newValue
+                ) else currentFormState.lastname,
+                familyGroupName = currentFormState.familyGroupName,
+                formIsCorrect = currentFormState.formIsCorrect,
+                editedFields = currentFormState.editedFields
+            )
 
-             "familyGroupName" ->  FamilyGroupFormData(
-                 firstname = currentFormState.firstname,
-                 lastname = currentFormState.lastname,
-                 familyGroupName = if (newValue.length <= 64) currentFormState.familyGroupName.copy(
-                     value = newValue
-                 ) else currentFormState.familyGroupName,
-                 formIsCorrect = currentFormState.formIsCorrect,
-                 editedFields = currentFormState.editedFields
-             )
+            "familyGroupName" -> FamilyGroupFormData(
+                firstname = currentFormState.firstname,
+                lastname = currentFormState.lastname,
+                familyGroupName = if (newValue.length <= 64) currentFormState.familyGroupName.copy(
+                    value = newValue
+                ) else currentFormState.familyGroupName,
+                formIsCorrect = currentFormState.formIsCorrect,
+                editedFields = currentFormState.editedFields
+            )
 
-             else -> currentFormState
-         }
+            else -> currentFormState
+        }
         updatedForm.editedFields.add(editedFieldName)
         val validatedForm = updatedForm.validateForm()
         return validatedForm
