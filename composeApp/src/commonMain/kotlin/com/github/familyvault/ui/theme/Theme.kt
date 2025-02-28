@@ -43,35 +43,35 @@ data class AdditionalColors(
     val firstOptionSecondaryColor: Color,
     val secondOptionPrimaryColor: Color,
     val secondOptionSecondaryColor: Color,
-    val mutedColor: Color,
     val borderColor: Color,
+    val mutedColor: Color,
     val onMutedColor: Color,
-    val onSecondaryContainerSecondColor: Color
+    val onPrimaryContainerSecondColor: Color
 )
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
     AdditionalColors(
-        firstOptionPrimaryColor = Color(0xff338cff),
-        firstOptionSecondaryColor = Color(0xffe5f1ff),
-        secondOptionPrimaryColor = Color(0xff5bd7be),
-        secondOptionSecondaryColor = Color(0xffeafaf7),
+        firstOptionPrimaryColor = Color(0xff368DFF),
+        firstOptionSecondaryColor = Color(0xffE5F1FF),
+        secondOptionPrimaryColor = Color(0xff40D0B3),
+        secondOptionSecondaryColor = Color(0xffE1F8F4),
+        borderColor = Color(0xFFE7E7E7),
         mutedColor = Color(0xFFB3B3B3),
-        borderColor = Color(0xFFe6e6e6),
-        onMutedColor = Color(0xff5f666d),
-        onSecondaryContainerSecondColor = Color(0xff474C52)
+        onMutedColor = Color(0xff6D6D6D),
+        onPrimaryContainerSecondColor = Color(0xff6D6D6D)
     )
 }
 
 private val LocalCustomColorsDark = staticCompositionLocalOf {
     AdditionalColors(
-        firstOptionPrimaryColor = Color(0xff0059cc),
-        firstOptionSecondaryColor = Color(0xff000c1a),
-        secondOptionPrimaryColor = Color(0xff28a48b),
-        secondOptionSecondaryColor = Color(0xff051512),
+        firstOptionPrimaryColor = Color(0xff006EFF),
+        firstOptionSecondaryColor = Color(0xff002752),
+        secondOptionPrimaryColor = Color(0xff47D2B6),
+        secondOptionSecondaryColor = Color(0xff196255),
+        borderColor = Color(0xFF282828),
         mutedColor = Color(0xFF4D4D4D),
-        borderColor = Color(0xFF191919),
-        onMutedColor = Color(0xff9299a0),
-        onSecondaryContainerSecondColor = Color(0xffADB2B8)
+        onMutedColor = Color(0xffB3B3B3),
+        onPrimaryContainerSecondColor = Color(0xffB3B3B3)
     )
 }
 

@@ -92,7 +92,10 @@ fun OptionButton(
         }
         Column {
             Headline3(title)
-            Paragraph(content)
+            Paragraph(
+                content,
+                color = AdditionalTheme.colors.onPrimaryContainerSecondColor
+            )
         }
     }
 }

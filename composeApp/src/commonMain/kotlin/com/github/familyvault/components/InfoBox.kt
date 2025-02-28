@@ -45,7 +45,7 @@ fun InfoBox(
             Modifier
                 .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
                 .then(clickableModifier)
-                .background(color = MaterialTheme.colorScheme.secondaryContainer)
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
                 .padding(AdditionalTheme.spacings.normalPadding)
         ),
     ) {
@@ -77,7 +77,7 @@ fun InfoBox(
                         )
                     }
                 }
-                Paragraph(content, color = AdditionalTheme.colors.onSecondaryContainerSecondColor)
+                Paragraph(content, color = AdditionalTheme.colors.onPrimaryContainerSecondColor)
             }
         }
     }
