@@ -32,4 +32,16 @@
     <string name="text_field_surname_label">Nazwisko</string>
     <string name="text_field_group_name_label">Nazwa grupy rodzinnej</string>
     <string name="creating_family_group_label">Tworzenie grupy rodzinnej</string>
+
+
+    <!-- Form validation errors-->
+
+    <string name="initial_form_empty_error">To pole nie może być puste</string>
+    <string name="initial_form_overfill_error">Możesz wprowadzić maksymalnie %1$d znaki</string>
+    
+    <!-- Bottom navigation bar items-->
+    <string name="bottom_navigation_bar_chats">Wiadomości</string>
+    <string name="bottom_navigation_bar_cabinet">Szuflada</string>
+    <string name="bottom_navigation_bar_task_board">Lista zadań</string>
+    
 </resources>
