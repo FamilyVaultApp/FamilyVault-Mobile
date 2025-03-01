@@ -1,12 +1,12 @@
-package com.github.familyvault.screens
+package com.github.familyvault.screens.main
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import com.github.familyvault.components.typography.Headline3
 
-class ChatsMainScreen : Screen {
+class TaskList : Screen {
     @Composable
     override fun Content() {
-        Headline3("Chat main screen")
+        Headline3("Task list screen")
     }
 }
