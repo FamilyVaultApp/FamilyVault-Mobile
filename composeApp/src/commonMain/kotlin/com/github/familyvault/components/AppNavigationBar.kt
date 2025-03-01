@@ -40,11 +40,14 @@ fun AppNavigationBar(navigator: Navigator) {
         AppNavigationBarItem(stringResource(Res.string.bottom_navigation_bar_cabinet), Icons.Filled.Folder)
     )
     val screens = listOf(ChatsMainScreen(), TaskList(), FilesCabinetScreen())
-    val navigationBarColors = NavigationBarItemDefaults.colors().copy( selectedIconColor = AdditionalTheme.colors.firstOptionPrimaryColor, unselectedIconColor = MaterialTheme.colorScheme.onSurface )
+    val navigationBarColors = NavigationBarItemDefaults.colors().copy(
+        selectedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
+        selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        unselectedIconColor = MaterialTheme.colorScheme.onBackground)
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface,
-        contentColor = AdditionalTheme.colors.firstOptionPrimaryColor,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.primaryContainer,
         modifier = Modifier.border(1.dp, AdditionalTheme.colors.borderColor, RectangleShape)
     ) {
         items.forEachIndexed { index, item ->
