@@ -41,6 +41,7 @@ fun AppNavigationBar(navigator: Navigator) {
     )
     val screens = listOf(ChatsMainScreen(), TaskList(), FilesCabinetScreen())
     val navigationBarColors = NavigationBarItemDefaults.colors().copy(
+        selectedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
         selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
         unselectedIconColor = MaterialTheme.colorScheme.onBackground)
 
