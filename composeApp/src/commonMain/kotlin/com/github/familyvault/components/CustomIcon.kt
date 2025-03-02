@@ -1,3 +1,5 @@
+package com.github.familyvault.components
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -18,21 +20,16 @@ fun CustomIcon(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .size(140.dp)
+            .background(AdditionalTheme.colors.firstOptionSecondaryColor, CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier
-                .size(140.dp)
-                .background(AdditionalTheme.colors.firstOptionSecondaryColor, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = rememberVectorPainter(icon),
-                contentDescription = contentDescription,
-                modifier = Modifier.size(85.dp),
-                tint = AdditionalTheme.colors.firstOptionPrimaryColor
-            )
-        }
+        Icon(
+            painter = rememberVectorPainter(icon),
+            contentDescription = contentDescription,
+            modifier = Modifier.size(85.dp),
+            tint = AdditionalTheme.colors.firstOptionPrimaryColor
+        )
     }
 }
