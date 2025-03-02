@@ -10,7 +10,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.github.familyvault.components.overrides.TopAppBar
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.chats_tab
+import familyvault.composeapp.generated.resources.chat_tab
 import org.jetbrains.compose.resources.stringResource
 
 object ChatTab : Tab {
@@ -18,7 +18,7 @@ object ChatTab : Tab {
     override fun Content() {
         Column {
             TopAppBar(
-                stringResource(Res.string.chats_tab)
+                stringResource(Res.string.chat_tab)
             )
         }
     }
@@ -26,7 +26,7 @@ object ChatTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = stringResource(Res.string.chats_tab)
+            val title = stringResource(Res.string.chat_tab)
             val icon = rememberVectorPainter(Icons.Filled.Folder)
 
             return remember {

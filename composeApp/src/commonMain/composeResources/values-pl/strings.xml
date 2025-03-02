@@ -47,7 +47,7 @@
     <string name="form_too_short_error">Wartość musi być dłuższe niż %1$d znaków</string>
 
     <!-- Bottom navigation bar items-->
-    <string name="chats_tab">Wiadomości</string>
+    <string name="chat_tab">Wiadomości</string>
     <string name="file_cabinet_tab">Szuflada</string>
     <string name="task_board_tab">Lista zadań</string>
 
