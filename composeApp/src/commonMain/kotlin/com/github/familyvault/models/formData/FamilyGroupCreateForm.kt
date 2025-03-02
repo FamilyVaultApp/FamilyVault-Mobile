@@ -25,24 +25,25 @@ class FamilyGroupFormData(
     }
 
     fun validateForm(): FamilyGroupFormData {
-        formIsCorrect = true
-
-        if (editedFields.contains("firstname")) validateField(firstname, "firstname")
-        if (editedFields.contains("lastname")) validateField(lastname, "lastname")
-        if (editedFields.contains("familyGroupName")) validateField(familyGroupName, "familyGroupName")
-
+        var firstnameIsCorrect = false;
+        var lastnameIsCorrect = false;
+        var familyGroupNameIsCorrect = false;
+        if (editedFields.contains("firstname")) firstnameIsCorrect = validateField(firstname)
+        if (editedFields.contains("lastname")) lastnameIsCorrect = validateField(lastname)
+        if (editedFields.contains("familyGroupName")) familyGroupNameIsCorrect = validateField(familyGroupName)
+        formIsCorrect = firstnameIsCorrect && lastnameIsCorrect && familyGroupNameIsCorrect
         return this
     }
 
-    private fun validateField(formEntry: FormDataEntry<String>, fieldName: String) {
+    private fun validateField(formEntry: FormDataEntry<String>): Boolean {
         val error = validateCreateFamilyGroupFormEntry(formEntry.value)
 
         if (error != null) {
             formEntry.validationError = error
-            formIsCorrect = false
-            editedFields.add(fieldName)
+            return false
         } else {
             formEntry.validationError = null
+            return true
         }
     }
 
