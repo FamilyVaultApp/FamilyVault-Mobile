@@ -21,9 +21,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
-import com.github.familyvault.screens.FilesCabinetScreen
-import com.github.familyvault.screens.ChatsMainScreen
-import com.github.familyvault.screens.TaskList
+import com.github.familyvault.screens.main.FilesCabinetScreen
+import com.github.familyvault.screens.main.ChatsMainScreen
+import com.github.familyvault.screens.main.TaskList
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.bottom_navigation_bar_cabinet

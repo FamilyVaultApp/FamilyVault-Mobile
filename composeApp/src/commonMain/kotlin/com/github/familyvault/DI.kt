@@ -1,27 +1,40 @@
 package com.github.familyvault
 
-import com.github.familyvault.backend.client.IPrivMxClient
-import com.github.familyvault.backend.client.createPrivMxClient
-import com.github.familyvault.services.FamilyGroupManagerService
+import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
+import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
+import com.github.familyvault.services.FamilyGroupService
 import com.github.familyvault.services.FamilyGroupSessionService
-import com.github.familyvault.services.IFamilyGroupManagerService
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import org.koin.core.context.startKoin
+import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+expect fun getPlatformModules(): Module
+
 val sharedModules = module {
-    single {
-        createPrivMxClient()
-    }.bind<IPrivMxClient>()
+    // Repositories
+    single { FamilyGroupCredentialsRepository(get()) }.bind<IFamilyGroupCredentialsRepository>()
+
+    // Services
     single { FamilyGroupSessionService(get()) }.bind<IFamilyGroupSessionService>()
-    single { FamilyGroupManagerService(get(), get()) }.bind<IFamilyGroupManagerService>()
+    single {
+        FamilyGroupService(
+            get(),
+            get(),
+            get()
+        )
+    }.bind<IFamilyGroupService>()
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
-        modules(sharedModules)
+        modules(
+            sharedModules,
+            getPlatformModules()
+        )
     }
 }

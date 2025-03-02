@@ -2,6 +2,7 @@
     <!-- General -->
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
+    <string name="loading">Ładowanie...</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -41,12 +42,20 @@
 
     <!-- Form validation errors-->
 
-    <string name="initial_form_empty_error">This field cannot be empty</string>
-    <string name="initial_form_overfill_error">You can enter maximum of %1$d characters</string>
+    <string name="form_empty_error">This field cannot be empty</string>
+    <string name="form_overfill_error">You can enter maximum of %1$d characters</string>
+    <string name="form_password_not_equal_error">Hasła nie są zgodne ze sobą</string>
+    <string name="form_too_short_error">Wartość musi być dłuższa niż %1$d znaków</string>
 
     <!-- Bottom navigation bar items-->
     <string name="bottom_navigation_bar_chats">Chats</string>
     <string name="bottom_navigation_bar_cabinet">File cabinet</string>
     <string name="bottom_navigation_bar_task_board">Task board</string>
 
+    <string name="private_key_assign_password_title">Zabezpieczanie klucza</string>
+    <string name="private_key_about_title">Klucz prywatny</string>
+    <string name="private_key_about_content">Klucz prywatny chroni Twoje dane poprzez szyfrowanie. Ustaw silne hasło, aby go bezpiecznie przechować i uniknąć zagrożeń.</string>
+
+    <string name="password_label">Hasło</string>
+    <string name="repeat_password_label">Powtórz hasło</string>
 </resources>
