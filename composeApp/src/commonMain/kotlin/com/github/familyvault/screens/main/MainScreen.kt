@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.github.familyvault.components.AppNavigationBar
+import com.github.familyvault.components.overrides.NavigationBar
 
 class MainScreen : Screen {
     @Composable
@@ -14,7 +14,7 @@ class MainScreen : Screen {
             Scaffold(
                 content = { CurrentTab() },
                 bottomBar = {
-                    AppNavigationBar(ChatTab, FilesCabinetTab, TaskTab)
+                    NavigationBar(ChatTab, FilesCabinetTab, TaskTab)
                 }
             )
         }
