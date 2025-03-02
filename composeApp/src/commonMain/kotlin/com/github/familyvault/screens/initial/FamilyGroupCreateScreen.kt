@@ -93,9 +93,7 @@ class FamilyGroupCreateScreen : Screen {
         form: FamilyGroupCreateForm,
         isFormEnabled: Boolean = true,
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
-        ) {
+        Column{
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = form.firstname,

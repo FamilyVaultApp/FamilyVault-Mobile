@@ -5,7 +5,7 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 
-private class AndroidPrivMxClient :
+internal class AndroidPrivMxClient(certsPath: String) :
     IPrivMxClient {
     private val initModules = setOf(
         Modules.THREAD,
@@ -13,8 +13,7 @@ private class AndroidPrivMxClient :
         Modules.INBOX
     )
     private val container: PrivmxEndpointContainer = PrivmxEndpointContainer().also {
-        // TODO: Ustawić jakiś normalny katalog certyfikatów ew. obsłużyć dodawanie certyfikatów
-        it.setCertsPath("/tmp")
+        it.setCertsPath(certsPath)
     }
     private var connection: PrivmxEndpoint? = null
 
@@ -37,5 +36,3 @@ private class AndroidPrivMxClient :
         )
     }
 }
-
-actual fun createPrivMxClient(): IPrivMxClient = AndroidPrivMxClient()

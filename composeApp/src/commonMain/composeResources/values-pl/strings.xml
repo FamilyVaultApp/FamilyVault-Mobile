@@ -2,6 +2,7 @@
     <!-- General -->
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">Ikona aplikacji Family Vault</string>
+    <string name="loading">Ładowanie...</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>

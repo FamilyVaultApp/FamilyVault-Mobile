@@ -6,5 +6,3 @@ interface IPrivMxClient {
     fun generatePairOfPrivateAndPublicKey(secret: String, salt: String): PublicPrivateKeyPair
     fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String)
 }
-
-expect fun createPrivMxClient(): IPrivMxClient

@@ -3,8 +3,8 @@ package com.github.familyvault.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.github.familyvault.components.typography.Paragraph
-import com.github.familyvault.utils.form.FormValidatorError
-import com.github.familyvault.utils.form.validationErrorToString
+import com.github.familyvault.forms.validator.FormValidatorError
+import com.github.familyvault.forms.validator.validationErrorToString
 
 @Composable
 fun ValidationErrorMessage(error: FormValidatorError?) {

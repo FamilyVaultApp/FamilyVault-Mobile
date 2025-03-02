@@ -1,4 +1,4 @@
-package com.github.familyvault.utils.form
+package com.github.familyvault.forms.validator
 
 import androidx.compose.runtime.Composable
 import familyvault.composeapp.generated.resources.Res

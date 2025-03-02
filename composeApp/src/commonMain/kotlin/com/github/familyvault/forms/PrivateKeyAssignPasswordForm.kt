@@ -1,8 +1,8 @@
 package com.github.familyvault.forms
 
 import com.github.familyvault.models.forms.FormDataStringEntry
-import com.github.familyvault.utils.form.FormValidator
-import com.github.familyvault.utils.form.FormValidatorError
+import com.github.familyvault.forms.validator.FormValidator
+import com.github.familyvault.forms.validator.FormValidatorError
 
 data class PrivateKeyAssignPasswordFormData(
     val password: FormDataStringEntry = FormDataStringEntry(),

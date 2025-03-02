@@ -27,7 +27,7 @@ import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Paragraph
 import com.github.familyvault.forms.FamilyGroupCreateFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
-import com.github.familyvault.services.IFamilyGroupManagerService
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.password_label
@@ -39,11 +39,11 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class PrivateKeyAssignPasswordScreen(val familyGroupDraft: FamilyGroupCreateFormData) :
+class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCreateFormData) :
     Screen {
     @Composable
     override fun Content() {
-        val familyGroupManager = koinInject<IFamilyGroupManagerService>()
+        val familyGroupService = koinInject<IFamilyGroupService>()
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
 
@@ -63,17 +63,13 @@ class PrivateKeyAssignPasswordScreen(val familyGroupDraft: FamilyGroupCreateForm
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
-                ) {
-                    PrivateKeyAssignForm(form)
-                }
+                PrivateKeyAssignForm(form)
                 InitialScreenButton(
                     enabled = form.isFormValid()
                 ) {
                     isCreatingFamilyGroup = true
                     coroutineScope.launch {
-                        familyGroupManager.createFamilyGroup(
+                        familyGroupService.createFamilyGroupAndAssign(
                             familyGroupDraft.firstname.value,
                             familyGroupDraft.surname.value,
                             form.password,
@@ -102,22 +98,24 @@ class PrivateKeyAssignPasswordScreen(val familyGroupDraft: FamilyGroupCreateForm
 
     @Composable
     private fun PrivateKeyAssignForm(form: PrivateKeyAssignPasswordForm) {
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = form.password,
-            label = { Paragraph(stringResource(Res.string.password_label)) },
-            isPassword = true,
-            onValueChange = { form.setPassword(it) },
-            supportingText = { ValidationErrorMessage(form.passwordValidationError) }
+        Column {
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = form.password,
+                label = { Paragraph(stringResource(Res.string.password_label)) },
+                isPassword = true,
+                onValueChange = { form.setPassword(it) },
+                supportingText = { ValidationErrorMessage(form.passwordValidationError) }
 
-        )
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = form.repeatPassword,
-            label = { Paragraph(stringResource(Res.string.repeat_password_label)) },
-            isPassword = true,
-            onValueChange = { form.setRepeatPassword(it) },
-            supportingText = { ValidationErrorMessage(form.passwordRepeatValidationError) }
-        )
+            )
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = form.repeatPassword,
+                label = { Paragraph(stringResource(Res.string.repeat_password_label)) },
+                isPassword = true,
+                onValueChange = { form.setRepeatPassword(it) },
+                supportingText = { ValidationErrorMessage(form.passwordRepeatValidationError) }
+            )
+        }
     }
 }
