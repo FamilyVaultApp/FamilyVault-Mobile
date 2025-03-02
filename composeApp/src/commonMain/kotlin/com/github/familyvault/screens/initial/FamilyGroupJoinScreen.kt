@@ -1,6 +1,5 @@
 package com.github.familyvault.screens.initial
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import com.github.familyvault.components.overrides.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
@@ -24,19 +22,20 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Headline3
 import com.github.familyvault.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.join_family_group_content
 import familyvault.composeapp.generated.resources.join_family_group_title
-import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 
-class FamilyGroupJoinScreen: Screen {
+class FamilyGroupJoinScreen : Screen {
     @Composable
     override fun Content() {
 
@@ -72,7 +71,12 @@ class FamilyGroupJoinScreen: Screen {
                 modifier = Modifier.size(128.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-            Headline3(stringResource(Res.string.join_family_group_content), MaterialTheme.colorScheme.onBackground, TextAlign.Center, Modifier.padding(AdditionalTheme.spacings.normalPadding))
+            Headline3(
+                stringResource(Res.string.join_family_group_content),
+                MaterialTheme.colorScheme.onBackground,
+                TextAlign.Center,
+                Modifier.padding(AdditionalTheme.spacings.normalPadding)
+            )
 
             JoinFamilyGroupContentButtons()
         }
@@ -91,9 +95,16 @@ class FamilyGroupJoinScreen: Screen {
                 verticalAlignment = Alignment.CenterVertically
             )
             {
-                Button(stringResource(Res.string.cancel_button_content), onClick =  { navigator.replaceAll(InitialScreen()) }, modifier = Modifier.weight(1f)
+                Button(
+                    stringResource(Res.string.cancel_button_content),
+                    onClick = { navigator.replaceAll(InitialScreen()) },
+                    modifier = Modifier.weight(1f)
                 )
-                Button(stringResource(Res.string.scan_qr_code_button_content), onClick =  { navigator.replaceAll(MainScreen())  }, modifier = Modifier.weight(1f)  ) // Placeholder dla komunikacji NFC i odczytu kodu QR
+                Button(
+                    stringResource(Res.string.scan_qr_code_button_content),
+                    onClick = { navigator.replaceAll(MainScreen()) },
+                    modifier = Modifier.weight(1f)
+                ) // Placeholder dla komunikacji NFC i odczytu kodu QR
             }
         }
     }

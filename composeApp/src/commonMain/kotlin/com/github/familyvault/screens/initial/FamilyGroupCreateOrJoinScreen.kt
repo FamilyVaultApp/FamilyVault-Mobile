@@ -52,7 +52,10 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                 InitialScreenButton(
                     enabled = selectedAction != null,
                     onClick = {
-                        val nextScreen = if (selectedAction == SelectedFamilyGroupAction.Join) FamilyGroupJoinScreen() else FamilyGroupCreateScreen()
+                        val nextScreen =
+                            if (selectedAction == SelectedFamilyGroupAction.Join)
+                                FamilyGroupJoinScreen()
+                            else FamilyGroupCreateScreen()
                         navigator.push(nextScreen)
                     }
                 )
