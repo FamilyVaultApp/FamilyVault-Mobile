@@ -11,7 +11,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.InitialScreenButton
-import com.github.familyvault.screens.main.MainScreen
+import com.github.familyvault.screens.main.ChatsMainScreen
 import com.github.familyvault.services.IFamilyGroupSessionService
 import org.koin.compose.koinInject
 
@@ -33,7 +33,7 @@ class DebugScreenContextId : Screen {
 
             InitialScreenButton(
                 onClick = {
-                    navigator.replaceAll(MainScreen())
+                    navigator.replaceAll(ChatsMainScreen())
                 }
             )
         }

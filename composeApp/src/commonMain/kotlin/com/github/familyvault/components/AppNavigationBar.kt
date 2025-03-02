@@ -17,6 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -33,13 +35,20 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AppNavigationBar(navigator: Navigator) {
-    var selectedItem by rememberSaveable { mutableStateOf(0) }
+    val borderColor = AdditionalTheme.colors.borderColor
     val items = listOf(
         AppNavigationBarItem(stringResource(Res.string.bottom_navigation_bar_chats), Icons.AutoMirrored.Filled.Chat),
         AppNavigationBarItem(stringResource(Res.string.bottom_navigation_bar_task_board), Icons.Filled.Task),
         AppNavigationBarItem(stringResource(Res.string.bottom_navigation_bar_cabinet), Icons.Filled.Folder)
     )
     val screens = listOf(ChatsMainScreen(), TaskList(), FilesCabinetScreen())
+
+    val currentScreen = navigator.lastItem
+    var selectedItem by rememberSaveable {
+        mutableStateOf(screens.indexOfFirst { it::class == currentScreen::class })
+    }
+
+
     val navigationBarColors = NavigationBarItemDefaults.colors().copy(
         selectedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
         selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -48,7 +57,15 @@ fun AppNavigationBar(navigator: Navigator) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primaryContainer,
-        modifier = Modifier.border(1.dp, AdditionalTheme.colors.borderColor, RectangleShape)
+        modifier = Modifier.drawBehind {
+                val borderSize = 1.dp.toPx()
+                drawLine (
+                    color = borderColor,
+                    start = Offset(x = 0.dp.toPx(), y = 0.dp.toPx()),
+                    end = Offset(x = size.width, y = 0.dp.toPx()),
+                    strokeWidth = borderSize
+                )
+        }
     ) {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -58,7 +75,7 @@ fun AppNavigationBar(navigator: Navigator) {
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
-                    navigator.replace(screens[index])
+                    navigator.replaceAll(screens[index])
                 }
             )
         }

@@ -26,7 +26,7 @@ import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Headline3
-import com.github.familyvault.screens.main.MainScreen
+import com.github.familyvault.screens.main.ChatsMainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cancel_button_content
@@ -102,7 +102,7 @@ class FamilyGroupJoinScreen : Screen {
                 )
                 Button(
                     stringResource(Res.string.scan_qr_code_button_content),
-                    onClick = { navigator.replaceAll(MainScreen()) },
+                    onClick = { navigator.replaceAll(ChatsMainScreen()) },
                     modifier = Modifier.weight(1f)
                 ) // Placeholder dla komunikacji NFC i odczytu kodu QR
             }
