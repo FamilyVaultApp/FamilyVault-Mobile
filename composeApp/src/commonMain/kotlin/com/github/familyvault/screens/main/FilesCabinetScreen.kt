@@ -1,4 +1,4 @@
-package com.github.familyvault.screens
+package com.github.familyvault.screens.main
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
