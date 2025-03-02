@@ -20,16 +20,21 @@ fun CustomIcon(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .size(140.dp)
-            .background(AdditionalTheme.colors.firstOptionSecondaryColor, CircleShape),
-        contentAlignment = Alignment.Center
+        .fillMaxWidth(),
+    contentAlignment = Alignment.Center
     ) {
-        Icon(
-            painter = rememberVectorPainter(icon),
-            contentDescription = contentDescription,
-            modifier = Modifier.size(85.dp),
-            tint = AdditionalTheme.colors.firstOptionPrimaryColor
-        )
+        Box(
+            modifier = Modifier
+                .size(140.dp)
+                .background(AdditionalTheme.colors.firstOptionSecondaryColor, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = rememberVectorPainter(icon),
+                contentDescription = contentDescription,
+                modifier = Modifier.size(85.dp),
+                tint = AdditionalTheme.colors.firstOptionPrimaryColor
+            )
+        }
     }
 }
