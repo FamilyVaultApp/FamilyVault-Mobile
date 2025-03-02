@@ -10,6 +10,8 @@
     <!-- Button contents -->
     <string name="next_button_content">Next</string>
     <string name="create_button_content">Create</string>
+    <string name="cancel_button_content">Cancel</string>
+    <string name="scan_qr_code_button_content">Scan QR code</string>
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Connection modes</string>
@@ -32,6 +34,10 @@
     <string name="text_field_surname_label">Surname</string>
     <string name="text_field_group_name_label">Family group name</string>
     <string name="creating_family_group_label">Creating family group</string>
+
+    <!-- Joining family group-->
+    <string name="join_family_group_title">Join family group</string>
+    <string name="join_family_group_content">Tap your phone to your parent's phone to join the family group.</string>
 
     <!-- Form validation errors-->
 
