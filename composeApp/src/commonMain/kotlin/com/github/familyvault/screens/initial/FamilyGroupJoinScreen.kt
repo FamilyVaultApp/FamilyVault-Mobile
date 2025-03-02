@@ -1,10 +1,14 @@
-package com.github.familyvault.screens
+package com.github.familyvault.screens.initial
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import com.github.familyvault.components.overrides.Button
@@ -23,6 +27,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Headline3
+import com.github.familyvault.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.join_family_group_content
@@ -34,33 +39,11 @@ import org.jetbrains.compose.resources.stringResource
 class FamilyGroupJoinScreen: Screen {
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
 
         StartScreen {
             JoinFamilyGroupHeader()
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             JoinFamilyGroupContent()
-
-            Column(
-                modifier = Modifier.fillMaxSize().padding(bottom = AdditionalTheme.spacings.large),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-
-                )
-                {
-                    Button(stringResource(Res.string.cancel_button_content), onClick =  {
-                            navigator.replaceAll(InitialScreen())
-                        }, modifier = Modifier.weight(1f)
-                    )
-                    Button(stringResource(Res.string.scan_qr_code_button_content), onClick =  {
-                        navigator.replaceAll(MainScreen()) // Placeholder dla komunikacji NFC i odczytu kodu QR
-                    }, modifier = Modifier.weight(1f)
-                    )
-                }
-            }
         }
     }
 
@@ -79,15 +62,39 @@ class FamilyGroupJoinScreen: Screen {
     @Composable
     private fun JoinFamilyGroupContent() {
         return Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 Icons.Filled.Sensors,
                 contentDescription = stringResource(Res.string.join_family_group_content),
-                modifier = Modifier.size(196.dp),
+                modifier = Modifier.size(128.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-            Headline3(stringResource(Res.string.join_family_group_content))
+            Headline3(stringResource(Res.string.join_family_group_content), MaterialTheme.colorScheme.onBackground, TextAlign.Center, Modifier.padding(AdditionalTheme.spacings.normalPadding))
+
+            JoinFamilyGroupContentButtons()
+        }
+    }
+
+    @Composable
+    private fun JoinFamilyGroupContentButtons() {
+        val navigator = LocalNavigator.currentOrThrow
+        return Column(
+            modifier = Modifier.fillMaxSize().padding(bottom = AdditionalTheme.spacings.large),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Button(stringResource(Res.string.cancel_button_content), onClick =  { navigator.replaceAll(InitialScreen()) }, modifier = Modifier.weight(1f)
+                )
+                Button(stringResource(Res.string.scan_qr_code_button_content), onClick =  { navigator.replaceAll(MainScreen())  }, modifier = Modifier.weight(1f)  ) // Placeholder dla komunikacji NFC i odczytu kodu QR
+            }
         }
     }
 }
