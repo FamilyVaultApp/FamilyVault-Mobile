@@ -1,0 +1,22 @@
+package com.github.familyvault.components.overrides
+
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
+import com.github.familyvault.components.FamilyGroupManagementIcon
+import com.github.familyvault.components.typography.Paragraph
+import androidx.compose.material3.TopAppBar as MdTopAppBar
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopAppBar(
+    title: String,
+    showManagementButton: Boolean = true,
+) {
+    return MdTopAppBar(
+        title = { Paragraph(title) },
+        actions = {
+            if (showManagementButton)
+                FamilyGroupManagementIcon()
+        }
+    )
+}

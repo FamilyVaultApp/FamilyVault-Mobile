@@ -41,16 +41,15 @@
     <string name="join_family_group_content">Tap your phone to your parent's phone to join the family group.</string>
 
     <!-- Form validation errors-->
-
     <string name="form_empty_error">This field cannot be empty</string>
     <string name="form_overfill_error">You can enter maximum of %1$d characters</string>
     <string name="form_password_not_equal_error">Hasła nie są zgodne ze sobą</string>
     <string name="form_too_short_error">Wartość musi być dłuższa niż %1$d znaków</string>
 
     <!-- Bottom navigation bar items-->
-    <string name="bottom_navigation_bar_chats">Chats</string>
-    <string name="bottom_navigation_bar_cabinet">File cabinet</string>
-    <string name="bottom_navigation_bar_task_board">Task board</string>
+    <string name="chat_tab">Chats</string>
+    <string name="file_cabinet_tab">File cabinet</string>
+    <string name="task_board_tab">Task board</string>
 
     <string name="private_key_assign_password_title">Zabezpieczanie klucza</string>
     <string name="private_key_about_title">Klucz prywatny</string>
@@ -58,4 +57,7 @@
 
     <string name="password_label">Hasło</string>
     <string name="repeat_password_label">Powtórz hasło</string>
+
+    <!-- Family group management-->
+    <string name="family_group_management_title">Ustawienia grupy rodzinnej</string>
 </resources>
