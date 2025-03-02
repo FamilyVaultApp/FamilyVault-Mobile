@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class FamilyGroupCredential(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val name: String,
     val solutionId: String,
     val contextId: String,

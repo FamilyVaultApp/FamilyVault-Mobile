@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
@@ -20,6 +21,7 @@ import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -28,12 +30,15 @@ class AssignDefaultContextScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(familyGroupService) {
-            if (familyGroupService.assignDefaultStoredFamilyGroup()) {
-                navigator.replaceAll(DebugScreenContextId())
-            } else {
-                navigator.replaceAll(InitialScreen())
+            coroutineScope.launch {
+                if (familyGroupService.assignDefaultStoredFamilyGroup()) {
+                    navigator.replaceAll(DebugScreenContextId())
+                } else {
+                    navigator.replaceAll(InitialScreen())
+                }
             }
         }
 
