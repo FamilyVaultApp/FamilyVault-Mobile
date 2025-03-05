@@ -5,6 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
@@ -22,7 +27,11 @@ class QRCodeScan: Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val qrCodeScanner = koinInject<IQRCodeScanner>()
-        val scannedCodeRawValue = qrCodeScanner.ScanQRCode()
+        var scannedCodeRawValue by remember { mutableStateOf("") }
+
+
+        scannedCodeRawValue = qrCodeScanner.ScanQRCode() // Oczekiwanie na wynik
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
