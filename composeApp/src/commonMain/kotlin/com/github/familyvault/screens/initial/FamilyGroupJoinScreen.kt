@@ -102,7 +102,7 @@ class FamilyGroupJoinScreen : Screen {
                 )
                 Button(
                     stringResource(Res.string.scan_qr_code_button_content),
-                    onClick = { navigator.replaceAll(MainScreen()) },
+                    onClick = { navigator.replaceAll(QRCodeScan()) },
                     modifier = Modifier.weight(1f)
                 ) // Placeholder dla komunikacji NFC i odczytu kodu QR
             }

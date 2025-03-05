@@ -41,6 +41,8 @@ kotlin {
             implementation(libs.privmx.endpoint)
 
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.room.ktx)
+            implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -72,7 +74,6 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
 
             implementation(libs.room.runtime)
-            implementation(libs.room.ktx)
             implementation(libs.sqlite.bundled)
         }
     }
