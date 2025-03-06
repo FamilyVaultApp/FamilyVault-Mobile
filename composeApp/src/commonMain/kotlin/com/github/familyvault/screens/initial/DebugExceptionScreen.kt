@@ -1,4 +1,4 @@
-package com.github.familyvault.screens
+package com.github.familyvault.screens.initial
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

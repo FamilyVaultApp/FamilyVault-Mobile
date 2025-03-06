@@ -2,8 +2,8 @@ package com.github.familyvault.screens.initial
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -78,15 +78,21 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
                 ) {
                     isCreatingFamilyGroup = true
                     coroutineScope.launch {
-                        familyGroupService.createFamilyGroupAndAssign(
-                            familyGroupDraft.firstname.value,
-                            familyGroupDraft.surname.value,
-                            form.password,
-                            familyGroupDraft.familyGroupName.value,
-                            "Description"
-                        )
-                        isCreatingFamilyGroup = false
-                        navigator.replaceAll(DebugScreenContextId())
+                        try {
+                            familyGroupService.createFamilyGroupAndAssign(
+                                familyGroupDraft.firstname.value,
+                                familyGroupDraft.surname.value,
+                                form.password,
+                                familyGroupDraft.familyGroupName.value,
+                                "Description"
+                            )
+                            navigator.replaceAll(DebugScreenContextId())
+                        } catch (e: Exception) {
+                            navigator.push(DebugExceptionScreen(e))
+                        } finally {
+                            isCreatingFamilyGroup = false
+                        }
+
                     }
                 }
             }
