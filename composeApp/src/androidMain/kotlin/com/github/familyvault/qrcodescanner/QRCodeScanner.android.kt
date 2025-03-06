@@ -1,42 +1,32 @@
 package com.github.familyvault.qrcodescanner
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
+
+import android.content.Context
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-internal class QRCodeScanner(): IQRCodeScanner {
+actual class QRCodeScanner(private val context: Context) {
 
-    @Composable
-    override fun ScanQRCode(): String {
-        val context = LocalContext.current
-        var rawValue by remember { mutableStateOf("") }
-
-        LaunchedEffect(Unit) {
-            val scanner = GmsBarcodeScanning.getClient(context)
+    actual suspend fun scanQRCode(): String {
+        return suspendCoroutine { continuation ->
             val scannerOptions = GmsBarcodeScannerOptions.Builder()
                 .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                 .build()
+            val scanner = GmsBarcodeScanning.getClient(context, scannerOptions)
 
             scanner.startScan()
                 .addOnSuccessListener { barcode ->
-                    rawValue = barcode.rawValue ?: "No data"
+                    continuation.resume(barcode.rawValue ?: "No data")
                 }
                 .addOnCanceledListener {
-                    rawValue = "Canceled"
+                    continuation.resume("Canceled")
                 }
                 .addOnFailureListener { e ->
-                    rawValue = e.message ?: "Error"
+                    continuation.resume(e.message ?: "Error")
                 }
         }
-
-        return rawValue
     }
-
 }

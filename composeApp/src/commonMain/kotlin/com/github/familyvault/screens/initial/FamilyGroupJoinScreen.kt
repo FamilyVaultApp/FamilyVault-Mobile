@@ -15,6 +15,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -26,7 +31,7 @@ import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Headline3
-import com.github.familyvault.screens.main.MainScreen
+import com.github.familyvault.qrcodescanner.QRCodeScanner
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cancel_button_content
@@ -34,6 +39,7 @@ import familyvault.composeapp.generated.resources.join_family_group_content
 import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 class FamilyGroupJoinScreen : Screen {
     @Composable
@@ -85,6 +91,19 @@ class FamilyGroupJoinScreen : Screen {
     @Composable
     private fun JoinFamilyGroupContentButtons() {
         val navigator = LocalNavigator.currentOrThrow
+        val qrCodeScanner = koinInject<QRCodeScanner>()
+        var scannedCodeRawValue by remember { mutableStateOf("") }
+        var scannerEnabled by remember { mutableStateOf(false) }
+
+        if (scannerEnabled)
+        {
+            LaunchedEffect(Unit) {
+                scannedCodeRawValue = qrCodeScanner.scanQRCode()
+            }
+        }
+        if (scannedCodeRawValue.isNotEmpty()) {
+            navigator.replaceAll(QRCodeScanDebugScreen(scannedCodeRawValue))
+        }
         return Column(
             modifier = Modifier.fillMaxSize().padding(bottom = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
@@ -102,9 +121,11 @@ class FamilyGroupJoinScreen : Screen {
                 )
                 Button(
                     stringResource(Res.string.scan_qr_code_button_content),
-                    onClick = { navigator.replaceAll(QRCodeScan()) },
+                    onClick = {
+                        scannerEnabled = true
+                    },
                     modifier = Modifier.weight(1f)
-                ) // Placeholder dla komunikacji NFC i odczytu kodu QR
+                )
             }
         }
     }
