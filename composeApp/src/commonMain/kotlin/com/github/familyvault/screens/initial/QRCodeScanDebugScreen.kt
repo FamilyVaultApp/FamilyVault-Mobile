@@ -13,13 +13,10 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.screens.main.MainScreen
 
-class QRCodeScanDebugScreen(): Screen {
+class QRCodeScanDebugScreen(scanResult: String): Screen {
 
-    constructor(scanResult: String) : this() {
-        scan = scanResult
-    }
+    private val scan = scanResult
 
-    var scan: String = ""
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
