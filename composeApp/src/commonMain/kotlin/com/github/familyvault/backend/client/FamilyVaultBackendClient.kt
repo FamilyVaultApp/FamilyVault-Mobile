@@ -28,8 +28,15 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
             contentType(ContentType.Application.Json)
             setBody(req)
         }
-        if (response.status.isSuccess()) return response.body<T>()
-        else throw BackendBadResponseException(response.status, response.body<String>())
+        if (response.status.isSuccess()) {
+            return response.body<T>()
+        } else {
+            throw FamilyVaultBackendErrorResponseException(
+                response.status,
+                response.body<String>()
+            )
+        }
+
     }
 
     override suspend fun getSolutionId(): PrivMxSolutionIdResponse {
