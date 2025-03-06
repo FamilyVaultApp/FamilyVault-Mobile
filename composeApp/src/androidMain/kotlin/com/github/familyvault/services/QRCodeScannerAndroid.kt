@@ -1,5 +1,4 @@
-package com.github.familyvault.qrcodescanner
-
+package com.github.familyvault.services
 
 import android.content.Context
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -8,15 +7,14 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-actual class QRCodeScanner(private val context: Context) {
+class QRCodeScannerService(private val context: Context): IQRCodeScannerService {
 
-    actual suspend fun scanQRCode(): String {
+    override suspend fun scanQRCode(): String {
         return suspendCoroutine { continuation ->
             val scannerOptions = GmsBarcodeScannerOptions.Builder()
                 .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                 .build()
             val scanner = GmsBarcodeScanning.getClient(context, scannerOptions)
-
             scanner.startScan()
                 .addOnSuccessListener { barcode ->
                     continuation.resume(barcode.rawValue ?: "No data")
