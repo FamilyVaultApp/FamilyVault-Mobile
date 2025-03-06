@@ -43,8 +43,8 @@ fun OptionButton(
         else AdditionalTheme.colors.secondOptionPrimaryColor
     else
         if (type == OptionButtonType.First)
-            AdditionalTheme.colors.firstOptionSecondaryColor
-        else AdditionalTheme.colors.secondOptionSecondaryColor
+            AdditionalTheme.colors.borderColor
+        else AdditionalTheme.colors.borderColor
 
     val backgroundColor = if (isSelected)
         if (type == OptionButtonType.First)
@@ -92,7 +92,10 @@ fun OptionButton(
         }
         Column {
             Headline3(title)
-            Paragraph(content)
+            Paragraph(
+                content,
+                color = AdditionalTheme.colors.onPrimaryContainerSecondColor
+            )
         }
     }
 }

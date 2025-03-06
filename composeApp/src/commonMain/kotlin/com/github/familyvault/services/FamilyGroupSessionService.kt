@@ -4,9 +4,22 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyGroupSession
 import com.github.familyvault.models.PublicPrivateKeyPair
 
-class FamilyGroupSessionService(private val privMxClient: IPrivMxClient) :
+class FamilyGroupSessionService(
+    private val privMxClient: IPrivMxClient
+) :
     IFamilyGroupSessionService {
     private var session: FamilyGroupSession? = null
+
+    override fun assignSession(
+        bridgeUrl: String,
+        solutionId: String,
+        contextId: String,
+        keyPair: PublicPrivateKeyPair
+    ) {
+        session = FamilyGroupSession(
+            bridgeUrl, solutionId, contextId, keyPair
+        )
+    }
 
     override fun connect() {
         requireNotNull(session)
@@ -18,24 +31,8 @@ class FamilyGroupSessionService(private val privMxClient: IPrivMxClient) :
         )
     }
 
-    override fun assignNewSession(newSession: FamilyGroupSession) {
-        session = newSession
+    override fun getContextId(): String {
+        requireNotNull(session?.contextId)
+        return session!!.contextId
     }
-
-    override fun assignNewSession(
-        bridgeUrl: String,
-        solutionId: String,
-        contextId: String,
-        keyPair: PublicPrivateKeyPair
-    ) {
-        session = FamilyGroupSession(
-            bridgeUrl, solutionId, contextId, keyPair
-        )
-    }
-
-    override fun getPrivateKey(): String = session!!.keyPair.privateKey
-
-    override fun getPublicKey(): String = session!!.keyPair.publicKey
-
-    override fun getContextId(): String = session!!.contextId
 }

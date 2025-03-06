@@ -1,4 +1,4 @@
-package com.github.familyvault.screens
+package com.github.familyvault.screens.initial
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,7 +52,11 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                 InitialScreenButton(
                     enabled = selectedAction != null,
                     onClick = {
-                        navigator.push(FamilyGroupCreateScreen())
+                        val nextScreen =
+                            if (selectedAction == SelectedFamilyGroupAction.Join)
+                                FamilyGroupJoinScreen()
+                            else FamilyGroupCreateScreen()
+                        navigator.push(nextScreen)
                     }
                 )
             }

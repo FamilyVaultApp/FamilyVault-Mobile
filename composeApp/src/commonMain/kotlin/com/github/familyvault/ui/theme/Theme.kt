@@ -20,6 +20,8 @@ private val lightScheme = lightColorScheme(
     onSecondary = onSecondaryLight,
     secondaryContainer = secondaryContainerLight,
     onSecondaryContainer = onSecondaryContainerLight,
+    background = backgroundLight,
+    onBackground = onBackgroundLight,
 )
 
 private val darkScheme = darkColorScheme(
@@ -31,6 +33,8 @@ private val darkScheme = darkColorScheme(
     onSecondary = onSecondaryDark,
     secondaryContainer = secondaryContainerDark,
     onSecondaryContainer = onSecondaryContainerDark,
+    background = backgroundDark,
+    onBackground = onBackgroundDark,
 )
 
 @Immutable
@@ -39,29 +43,35 @@ data class AdditionalColors(
     val firstOptionSecondaryColor: Color,
     val secondOptionPrimaryColor: Color,
     val secondOptionSecondaryColor: Color,
+    val borderColor: Color,
     val mutedColor: Color,
-    val borderColor: Color
+    val onMutedColor: Color,
+    val onPrimaryContainerSecondColor: Color
 )
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
     AdditionalColors(
-        firstOptionPrimaryColor = Color(0xff378eff),
-        firstOptionSecondaryColor = Color(0xffe5f1ff),
-        secondOptionPrimaryColor = Color(0xff5ed8bf),
-        secondOptionSecondaryColor = Color(0xffe1f8f4),
-        mutedColor = Color(0xFF6d6d6d),
-        borderColor = Color(0xFFe6e6e6)
+        firstOptionPrimaryColor = Color(0xff368DFF),
+        firstOptionSecondaryColor = Color(0xffE5F1FF),
+        secondOptionPrimaryColor = Color(0xff40D0B3),
+        secondOptionSecondaryColor = Color(0xffE1F8F4),
+        borderColor = Color(0xFFE7E7E7),
+        mutedColor = Color(0xFFB3B3B3),
+        onMutedColor = Color(0xff6D6D6D),
+        onPrimaryContainerSecondColor = Color(0xff6D6D6D)
     )
 }
 
 private val LocalCustomColorsDark = staticCompositionLocalOf {
     AdditionalColors(
-        firstOptionPrimaryColor = Color(0xff2871d1),
-        firstOptionSecondaryColor = Color(0xffc1cad6),
-        secondOptionPrimaryColor = Color(0xff4dab98),
-        secondOptionSecondaryColor = Color(0xffb8ccc8),
-        mutedColor = Color(0xFFcccbda),
-        borderColor = Color(0xFF262626)
+        firstOptionPrimaryColor = Color(0xff006EFF),
+        firstOptionSecondaryColor = Color(0xff002752),
+        secondOptionPrimaryColor = Color(0xff47D2B6),
+        secondOptionSecondaryColor = Color(0xff196255),
+        borderColor = Color(0xFF282828),
+        mutedColor = Color(0xFF4D4D4D),
+        onMutedColor = Color(0xffB3B3B3),
+        onPrimaryContainerSecondColor = Color(0xffB3B3B3)
     )
 }
 
@@ -93,17 +103,6 @@ data class Roundness(
     val normalPercent: Int
 )
 
-@Immutable
-data class ColorFamily(
-    val color: Color,
-    val onColor: Color,
-    val colorContainer: Color,
-    val onColorContainer: Color
-)
-
-val unspecified_scheme = ColorFamily(
-    Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
-)
 
 @Composable
 fun AppTheme(
