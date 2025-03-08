@@ -1,4 +1,4 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,13 +12,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.screens.main.MainScreen
-import com.github.familyvault.services.IFamilyGroupSessionService
-import org.koin.compose.koinInject
 
-class DebugScreenContextId : Screen {
+class QRCodeScanDebugScreen(val scanResult: String): Screen {
+
     @Composable
     override fun Content() {
-        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val navigator = LocalNavigator.currentOrThrow
 
         Column(
@@ -26,11 +24,10 @@ class DebugScreenContextId : Screen {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("ContextId")
+            Text("Scanned message")
             Text(
-                familyGroupSessionService.getContextId()
+                scanResult
             )
-
             InitialScreenButton(
                 onClick = {
                     navigator.replaceAll(MainScreen())

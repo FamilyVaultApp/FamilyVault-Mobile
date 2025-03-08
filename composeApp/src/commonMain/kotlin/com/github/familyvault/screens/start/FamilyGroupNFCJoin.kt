@@ -1,4 +1,4 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,10 +23,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.overrides.Button
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Headline3
-import com.github.familyvault.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cancel_button_content
@@ -35,11 +34,11 @@ import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 
-class FamilyGroupJoinScreen : Screen {
+class FamilyGroupNFCJoin : Screen {
     @Composable
     override fun Content() {
 
-        StartScreen {
+        StartScreenScaffold {
             JoinFamilyGroupHeader()
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             JoinFamilyGroupContent()
@@ -85,6 +84,7 @@ class FamilyGroupJoinScreen : Screen {
     @Composable
     private fun JoinFamilyGroupContentButtons() {
         val navigator = LocalNavigator.currentOrThrow
+
         return Column(
             modifier = Modifier.fillMaxSize().padding(bottom = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
@@ -93,18 +93,17 @@ class FamilyGroupJoinScreen : Screen {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
-            )
-            {
+            ) {
                 Button(
                     stringResource(Res.string.cancel_button_content),
-                    onClick = { navigator.replaceAll(InitialScreen()) },
+                    onClick = { navigator.replaceAll(StartScreen()) },
                     modifier = Modifier.weight(1f)
                 )
                 Button(
-                    stringResource(Res.string.scan_qr_code_button_content),
-                    onClick = { navigator.replaceAll(MainScreen()) },
-                    modifier = Modifier.weight(1f)
-                ) // Placeholder dla komunikacji NFC i odczytu kodu QR
+                    stringResource(Res.string.scan_qr_code_button_content), onClick = {
+                        navigator.push(FamilyGroupQRCodeJoin())
+                    }, modifier = Modifier.weight(1f)
+                )
             }
         }
     }
