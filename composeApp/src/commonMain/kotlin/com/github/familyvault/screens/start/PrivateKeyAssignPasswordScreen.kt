@@ -1,4 +1,4 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,7 +27,7 @@ import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.overrides.TextField
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Paragraph
 import com.github.familyvault.forms.FamilyGroupCreateFormData
@@ -55,7 +55,7 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
         val coroutineScope = rememberCoroutineScope()
         var isCreatingFamilyGroup by remember { mutableStateOf(false) }
 
-        StartScreen {
+        StartScreenScaffold {
             if (isCreatingFamilyGroup) {
                 FamilyGroupCreatingDialog()
             }

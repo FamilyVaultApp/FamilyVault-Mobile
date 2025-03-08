@@ -1,4 +1,4 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,7 @@ import com.github.familyvault.components.InfoBox
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.OptionButton
 import com.github.familyvault.components.OptionButtonType
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cloud_connection_mode_content
@@ -33,7 +33,7 @@ import familyvault.composeapp.generated.resources.self_hosted_connection_mode_co
 import familyvault.composeapp.generated.resources.self_hosted_connection_mode_title
 import org.jetbrains.compose.resources.stringResource
 
-class InitialScreen : Screen {
+class StartScreen : Screen {
     private enum class SelectedConnectionMode {
         Cloud,
         SelfHosted
@@ -44,7 +44,7 @@ class InitialScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         var selectedConnectionMode by remember { mutableStateOf<SelectedConnectionMode?>(null) }
 
-        StartScreen {
+        StartScreenScaffold {
             AppIconAndName()
             Column(
                 modifier = Modifier.fillMaxHeight(),

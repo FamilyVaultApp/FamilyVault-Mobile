@@ -60,4 +60,7 @@
 
     <!-- Family group management-->
     <string name="family_group_management_title">Ustawienia grupy rodzinnej</string>
+
+    <!-- QRCode scan  -->
+    <string name="qr_code_scanning">Uruchamianie skanera</string>
 </resources>

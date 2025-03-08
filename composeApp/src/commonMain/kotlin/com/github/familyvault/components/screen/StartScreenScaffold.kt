@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun StartScreen(content: @Composable () -> Unit) {
+fun StartScreenScaffold(content: @Composable () -> Unit) {
     Scaffold{
         Box(
             modifier = Modifier
