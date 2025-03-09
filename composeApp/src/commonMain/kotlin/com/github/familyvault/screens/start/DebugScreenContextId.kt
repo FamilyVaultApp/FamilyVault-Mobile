@@ -1,5 +1,6 @@
 package com.github.familyvault.screens.start
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +14,16 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.screens.main.MainScreen
 import com.github.familyvault.services.IFamilyGroupSessionService
+import com.github.familyvault.services.IQRCodeService
 import org.koin.compose.koinInject
 
 class DebugScreenContextId : Screen {
     @Composable
     override fun Content() {
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val qrCodeGenerationService = koinInject<IQRCodeService>()
         val navigator = LocalNavigator.currentOrThrow
-
+        val contextId = familyGroupSessionService.getContextId()
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -28,7 +31,12 @@ class DebugScreenContextId : Screen {
         ) {
             Text("ContextId")
             Text(
-                familyGroupSessionService.getContextId()
+                contextId
+            )
+            Text("Debug QR code from ContextId:")
+            Image(
+                bitmap = qrCodeGenerationService.generateQRCode(contextId)!!,
+                contentDescription = "QR Code"
             )
 
             InitialScreenButton(

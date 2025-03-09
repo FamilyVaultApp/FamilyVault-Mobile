@@ -11,7 +11,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.LoaderWithText
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.models.QrCodeScanResponseStatus
-import com.github.familyvault.services.IQRCodeScannerService
+import com.github.familyvault.services.IQRCodeService
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.qr_code_scanning
 import kotlinx.coroutines.isActive
@@ -23,7 +23,7 @@ class FamilyGroupQRCodeJoin : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val qrCodeScanner = koinInject<IQRCodeScannerService>()
+        val qrCodeScanner = koinInject<IQRCodeService>()
         val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(qrCodeScanner) {

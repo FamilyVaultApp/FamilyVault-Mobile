@@ -42,6 +42,7 @@ kotlin {
 
             implementation(libs.ktor.client.okhttp)
             implementation(libs.play.services.code.scanner)
+            implementation(libs.zxing)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
