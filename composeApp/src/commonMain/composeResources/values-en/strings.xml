@@ -64,6 +64,7 @@
     <string name="family_group_members">Family Group members</string>
     <string name="family_group_add_new_member">Add new member</string>
     <string name="family_group_delete_member">Remove member</string>
+    <string name="family_group_management_loading">Loading Family Group information...</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>
