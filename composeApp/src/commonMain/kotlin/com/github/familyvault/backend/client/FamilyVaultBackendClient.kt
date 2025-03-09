@@ -5,7 +5,7 @@ import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
-import com.github.familyvault.backend.responses.CreateListMembersFromFamilyGroupResponse
+import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -57,11 +57,11 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         }
     }
 
-    override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): CreateListMembersFromFamilyGroupResponse {
+    override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
         return client.post(getEndpointUrl("/FamilyGroup/ListMembersFromFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
-        }.body<CreateListMembersFromFamilyGroupResponse>()
+        }.body<ListMembersFromFamilyGroupResponse>()
     }
 
     private fun getEndpointUrl(endpoint: String): String {

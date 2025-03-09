@@ -70,7 +70,7 @@ class FamilyGroupService(
         return false
     }
 
-    override suspend fun retrieveFamilyGroupMembersList(): MutableList<FamilyMember> {
+    override suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember> {
         val contextId = familyGroupSessionService.getContextId()
 
         return familyVaultBackendProxy.listMembersOfFamilyGroup(ListMembersFromFamilyGroupRequest(contextId)).members

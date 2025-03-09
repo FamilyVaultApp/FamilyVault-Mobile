@@ -1,24 +1,26 @@
 package com.github.familyvault.screens.main
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.github.familyvault.components.FamilyMemberEntry
-import com.github.familyvault.components.dialogs.FamilyGroupManagementLoadingDialog
 import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.overrides.TopAppBar
@@ -32,7 +34,6 @@ import familyvault.composeapp.generated.resources.family_group_add_new_member
 import familyvault.composeapp.generated.resources.family_group_management_title
 import familyvault.composeapp.generated.resources.family_group_members
 import familyvault.composeapp.generated.resources.text_field_group_name_label
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -77,30 +78,35 @@ class FamilyGroupManagementScreen : Screen {
     @Composable
     private fun FamilyGroupMembers() {
         val familyGroupService = koinInject<IFamilyGroupService>()
-        val familyGroupMembers = remember { mutableStateOf(mutableListOf<FamilyMember>()) }
+        val familyGroupMembers = remember { mutableStateListOf<FamilyMember>() }
+
 
         var isLoadingMembers by remember { mutableStateOf(true) }
 
         LaunchedEffect(Unit) {
-            familyGroupMembers.value = familyGroupService.retrieveFamilyGroupMembersList()
+            familyGroupMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
             isLoadingMembers = false
         }
-        if (isLoadingMembers) {
-            FamilyGroupManagementLoadingDialog()
-        } else {
             Column {
                 Headline3(stringResource(Res.string.family_group_members))
-
                 Column(
                     modifier = Modifier.padding(vertical = 15.dp)
                 ) {
-                    familyGroupMembers.value.forEach {
-                        FamilyMemberEntry(it)
+                    if (isLoadingMembers) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    } else {
+                        familyGroupMembers.forEach {
+                            FamilyMemberEntry(it)
+                        }
                     }
+
                 }
             }
-        }
-
     }
 
     @Composable

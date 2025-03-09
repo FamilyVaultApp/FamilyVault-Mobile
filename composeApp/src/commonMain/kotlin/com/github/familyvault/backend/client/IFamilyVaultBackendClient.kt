@@ -4,7 +4,7 @@ import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
-import com.github.familyvault.backend.responses.CreateListMembersFromFamilyGroupResponse
+import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
 
 interface IFamilyVaultBackendClient {
@@ -13,5 +13,5 @@ interface IFamilyVaultBackendClient {
     suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyRequest)
     suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyRequest)
     suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyRequest)
-    suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): CreateListMembersFromFamilyGroupResponse
+    suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse
 }

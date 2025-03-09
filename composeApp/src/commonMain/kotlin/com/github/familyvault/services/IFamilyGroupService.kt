@@ -12,5 +12,5 @@ interface IFamilyGroupService {
     )
     suspend fun assignDefaultStoredFamilyGroup(): Boolean
 
-    suspend fun retrieveFamilyGroupMembersList(): MutableList<FamilyMember>
+    suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember>
 }
