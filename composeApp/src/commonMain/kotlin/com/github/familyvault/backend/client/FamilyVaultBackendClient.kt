@@ -1,9 +1,11 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
-import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
+import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
+import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
+import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -34,25 +36,32 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         }.body<CreateFamilyGroupResponse>()
     }
 
-    override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
         }
     }
 
-    override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
         }
     }
 
-    override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
         }
+    }
+
+    override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
+        return client.post(getEndpointUrl("/FamilyGroup/ListMembersFromFamilyGroup")) {
+            contentType(ContentType.Application.Json)
+            setBody(Json.encodeToString(req))
+        }.body<ListMembersFromFamilyGroupResponse>()
     }
 
     private fun getEndpointUrl(endpoint: String): String {
