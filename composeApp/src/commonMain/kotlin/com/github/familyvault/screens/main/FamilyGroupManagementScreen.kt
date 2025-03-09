@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.FamilyMemberEntry
 import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.overrides.TextField
@@ -79,12 +81,14 @@ class FamilyGroupManagementScreen : Screen {
 
     @Composable
     private fun AddFamilyGroupMemberButton() {
+        val navigator = LocalNavigator.currentOrThrow
+
         Button(
             text = stringResource(Res.string.family_group_add_new_member),
             icon = Icons.Filled.Add,
             modifier = Modifier.fillMaxWidth(),
             onClick = {
-
+                navigator.push(AddMemberToFamilyGroupScreen())
             }
         )
     }

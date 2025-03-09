@@ -1,4 +1,4 @@
-package com.github.familyvault.screens.start
+package com.github.familyvault.screens.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,63 +28,67 @@ import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Headline3
+import com.github.familyvault.screens.start.FamilyGroupQRCodeJoin
+import com.github.familyvault.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.add_member_to_family_group_header
+import familyvault.composeapp.generated.resources.add_member_to_family_group_content
 import familyvault.composeapp.generated.resources.cancel_button_content
-import familyvault.composeapp.generated.resources.join_family_group_content
-import familyvault.composeapp.generated.resources.join_family_group_title
-import familyvault.composeapp.generated.resources.show_qr_code_button_content
+import familyvault.composeapp.generated.resources.scan_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 
-class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
+class AddMemberToFamilyGroupScreen: Screen {
+
     @Composable
     override fun Content() {
 
-        StartScreenScaffold {
-            JoinFamilyGroupHeader()
+        StartScreenScaffold()
+        {
+            AddMemberToFamilyHeader()
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
-            JoinFamilyGroupContent()
+            AddMemberToFamilyGroupContent()
         }
     }
 
     @Composable
-    private fun JoinFamilyGroupHeader() {
+    private fun AddMemberToFamilyHeader() {
         return Box(
             modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)
         ) {
             Headline1(
-                stringResource(Res.string.join_family_group_title),
+                stringResource(Res.string.add_member_to_family_group_header),
                 textAlign = TextAlign.Center,
             )
         }
     }
 
     @Composable
-    private fun JoinFamilyGroupContent() {
+    private fun AddMemberToFamilyGroupContent() {
         return Column(
             modifier = Modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
-                Icons.Filled.Sensors,
-                contentDescription = stringResource(Res.string.join_family_group_content),
+                Icons.Filled.Add,
+                contentDescription = stringResource(Res.string.add_member_to_family_group_content),
                 modifier = Modifier.size(128.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
             Headline3(
-                stringResource(Res.string.join_family_group_content),
+                stringResource(Res.string.add_member_to_family_group_content),
                 MaterialTheme.colorScheme.onBackground,
                 TextAlign.Center,
                 Modifier.padding(AdditionalTheme.spacings.normalPadding)
             )
 
-            JoinFamilyGroupContentButtons()
+            AddMemberToFamilyGroupContentButtons()
         }
     }
 
     @Composable
-    private fun JoinFamilyGroupContentButtons() {
+    private fun AddMemberToFamilyGroupContentButtons() {
         val navigator = LocalNavigator.currentOrThrow
 
         return Column(
@@ -96,12 +102,12 @@ class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
             ) {
                 Button(
                     stringResource(Res.string.cancel_button_content),
-                    onClick = { navigator.replaceAll(StartScreen()) },
+                    onClick = { navigator.replaceAll(MainScreen()) },
                     modifier = Modifier.weight(1f)
                 )
                 Button(
-                    stringResource(Res.string.show_qr_code_button_content), onClick = {
-                        navigator.push(DisplayKeyPairQrCodeScreen(newMemberData))
+                    stringResource(Res.string.scan_qr_code_button_content), onClick = {
+                        navigator.push(FamilyGroupQRCodeJoin())
                     }, modifier = Modifier.weight(1f)
                 )
             }

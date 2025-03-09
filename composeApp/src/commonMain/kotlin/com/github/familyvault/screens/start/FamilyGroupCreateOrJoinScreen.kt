@@ -20,6 +20,9 @@ import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.OptionButton
 import com.github.familyvault.components.OptionButtonType
 import com.github.familyvault.components.screen.StartScreenScaffold
+import com.github.familyvault.forms.FamilyGroupCreateFormData
+import com.github.familyvault.models.SelectedFamilyGroupAction
+import com.github.familyvault.models.forms.FormDataStringEntry
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.create_new_family_group_content
@@ -53,8 +56,9 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                     enabled = selectedAction != null,
                     onClick = {
                         val nextScreen =
-                            if (selectedAction == SelectedFamilyGroupAction.Join)
-                                FamilyGroupNFCJoin()
+                            if (selectedAction == SelectedFamilyGroupAction.Join) {
+                                JoinFamilyGroupNameFormScreen()
+                            }
                             else FamilyGroupCreateScreen()
                         navigator.push(nextScreen)
                     }
