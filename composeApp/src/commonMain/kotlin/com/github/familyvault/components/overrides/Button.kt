@@ -1,19 +1,24 @@
 package com.github.familyvault.components.overrides
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.github.familyvault.components.typography.Paragraph
 import androidx.compose.material.Button as MaterialButton
 
 @Composable
 fun Button(
-    content: String,
+    text: String,
+    icon: ImageVector? = null,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(8.dp),
@@ -35,6 +40,13 @@ fun Button(
             disabledBackgroundColor = disabledContainerColor
         )
     ) {
-        Text(content)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (icon != null) {
+                Icon(icon, text)
+            }
+            Paragraph(text)
+        }
     }
 }

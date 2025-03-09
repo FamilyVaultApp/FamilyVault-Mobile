@@ -103,7 +103,6 @@ data class Roundness(
     val normalPercent: Int
 )
 
-
 @Composable
 fun AppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),

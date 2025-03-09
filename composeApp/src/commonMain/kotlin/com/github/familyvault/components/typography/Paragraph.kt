@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun Paragraph(
     text: String,
-    color: Color = MaterialTheme.colorScheme.onSurface,
+    color: Color = Color.Unspecified,
     modifier: Modifier = Modifier
 ) {
     Text(
