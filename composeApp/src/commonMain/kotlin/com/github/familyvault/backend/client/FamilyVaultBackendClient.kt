@@ -1,7 +1,7 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
-import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
+import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
@@ -36,21 +36,21 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         }.body<CreateFamilyGroupResponse>()
     }
 
-    override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
         }
     }
 
-    override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
         }
     }
 
-    override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
             contentType(ContentType.Application.Json)
             setBody(Json.encodeToString(req))
