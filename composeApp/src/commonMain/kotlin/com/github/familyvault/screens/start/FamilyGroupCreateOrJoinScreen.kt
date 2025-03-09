@@ -1,4 +1,4 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,7 @@ import com.github.familyvault.components.AppIconAndName
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.OptionButton
 import com.github.familyvault.components.OptionButtonType
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.create_new_family_group_content
@@ -39,7 +39,7 @@ class FamilyGroupCreateOrJoinScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         var selectedAction by remember { mutableStateOf<SelectedFamilyGroupAction?>(null) }
 
-        StartScreen {
+        StartScreenScaffold {
             AppIconAndName()
             Column(
                 modifier = Modifier.fillMaxHeight(),
@@ -54,7 +54,7 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                     onClick = {
                         val nextScreen =
                             if (selectedAction == SelectedFamilyGroupAction.Join)
-                                FamilyGroupJoinScreen()
+                                FamilyGroupNFCJoin()
                             else FamilyGroupCreateScreen()
                         navigator.push(nextScreen)
                     }

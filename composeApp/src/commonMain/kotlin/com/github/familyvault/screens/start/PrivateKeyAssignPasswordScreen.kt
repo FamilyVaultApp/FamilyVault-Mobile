@@ -1,10 +1,14 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Key
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,12 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.components.CustomIcon
 import com.github.familyvault.components.InfoBox
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.overrides.TextField
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.forms.FamilyGroupCreateFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
@@ -48,11 +53,15 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
         val coroutineScope = rememberCoroutineScope()
         var isCreatingFamilyGroup by remember { mutableStateOf(false) }
 
-        StartScreen {
+        StartScreenScaffold {
             if (isCreatingFamilyGroup) {
                 FamilyGroupCreatingDialog()
             }
             PrivateKeyAssignPasswordHeader()
+            CustomIcon(
+                icon = Icons.Outlined.Key
+            )
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             InfoBox(
                 title = stringResource(Res.string.private_key_about_title),
                 content = stringResource(Res.string.private_key_about_content)

@@ -1,10 +1,9 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Groups
@@ -18,7 +17,7 @@ import com.github.familyvault.components.CustomIcon
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
 import com.github.familyvault.components.overrides.TextField
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.forms.FamilyGroupCreateForm
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -38,7 +37,7 @@ class FamilyGroupCreateScreen : Screen {
 
         val form = FamilyGroupCreateForm()
 
-        StartScreen {
+        StartScreenScaffold {
             CreateFamilyGroupHeader()
             CustomIcon(
                 icon = Icons.Filled.Groups

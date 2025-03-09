@@ -5,7 +5,7 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 
-internal class AndroidPrivMxClient(certsPath: String) :
+internal class PrivMxClient(certsPath: String) :
     IPrivMxClient {
     private val initModules = setOf(
         Modules.THREAD,
