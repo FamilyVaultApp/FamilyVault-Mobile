@@ -21,8 +21,8 @@ import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.forms.NewFamilyGroupMemberForm
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.create_new_family_group_title
-import familyvault.composeapp.generated.resources.family_group_create_screen_title
+import familyvault.composeapp.generated.resources.join_family_group_title
+import familyvault.composeapp.generated.resources.next_button_content
 import familyvault.composeapp.generated.resources.text_field_name_label
 import familyvault.composeapp.generated.resources.text_field_surname_label
 import org.jetbrains.compose.resources.stringResource
@@ -47,7 +47,7 @@ class JoinFamilyGroupNameFormScreen: Screen {
             ) {
                 FamilyGroupCreateForm(form)
                 InitialScreenButton(
-                    text = stringResource(Res.string.create_new_family_group_title),
+                    text = stringResource(Res.string.next_button_content),
                     enabled = form.isFormValid()
                 ) {
                     navigator.replaceAll(JoinFamilyGroupPasswordAssignScreen(form.formData))
@@ -62,7 +62,7 @@ class JoinFamilyGroupNameFormScreen: Screen {
             modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)
         ) {
             Headline1(
-                stringResource(Res.string.family_group_create_screen_title),
+                stringResource(Res.string.join_family_group_title),
                 textAlign = TextAlign.Center,
             )
         }
