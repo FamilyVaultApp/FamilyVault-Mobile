@@ -5,6 +5,10 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.github.familyvault.models.QrCodeScanResponse
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
@@ -12,8 +16,31 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.common.CharacterSetECI
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import java.util.EnumMap
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-class QrCodeGeneratorService(private val context: Context): IQRCodeGenerationService {
+class QRCodeService(private val context: Context) : IQRCodeService {
+
+    override suspend fun scanQRCode(): QrCodeScanResponse {
+        return suspendCoroutine { continuation ->
+            val scannerOptions = GmsBarcodeScannerOptions.Builder()
+                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+                .build()
+            val scanner = GmsBarcodeScanning.getClient(context, scannerOptions)
+
+            scanner.startScan()
+                .addOnSuccessListener { barcode ->
+                    continuation.resume(QrCodeScanResponse.success(barcode.rawValue))
+                }
+                .addOnCanceledListener {
+                    continuation.resume(QrCodeScanResponse.canceled())
+                }
+                .addOnFailureListener { e ->
+                    continuation.resume(QrCodeScanResponse.error(e.message))
+                }
+        }
+    }
+
     override fun generateQRCode(qrCodeContent: String): ImageBitmap? {
         val bitMatrix: BitMatrix
         try {
@@ -53,5 +80,4 @@ class QrCodeGeneratorService(private val context: Context): IQRCodeGenerationSer
         val imageBitmap: ImageBitmap = Bitmap.createBitmap(pixels, bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_8888).asImageBitmap()
         return imageBitmap
     }
-
 }
