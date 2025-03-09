@@ -13,6 +13,7 @@
     <string name="create_button_content">Create</string>
     <string name="cancel_button_content">Cancel</string>
     <string name="scan_qr_code_button_content">Scan QR code</string>
+    <string name="change_name_content">Zmień nazwe</string>
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Connection modes</string>
@@ -60,4 +61,7 @@
 
     <!-- Family group management-->
     <string name="family_group_management_title">Ustawienia grupy rodzinnej</string>
+    <string name="family_group_members">Członkowie grupy rodzinnej</string>
+    <string name="family_group_add_new_member">Dodaj nowego członka</string>
+    <string name="family_group_delete_member">Usuń członka</string>
 </resources>

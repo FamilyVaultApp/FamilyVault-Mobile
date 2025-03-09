@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,7 +23,6 @@ import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.screen.StartScreen
 import com.github.familyvault.components.typography.Headline1
-import com.github.familyvault.components.typography.Paragraph
 import com.github.familyvault.forms.FamilyGroupCreateFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.services.IFamilyGroupService
@@ -100,18 +98,16 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
     private fun PrivateKeyAssignForm(form: PrivateKeyAssignPasswordForm) {
         Column {
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = form.password,
-                label = { Paragraph(stringResource(Res.string.password_label)) },
+                label = stringResource(Res.string.password_label),
                 isPassword = true,
                 onValueChange = { form.setPassword(it) },
                 supportingText = { ValidationErrorMessage(form.passwordValidationError) }
 
             )
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = form.repeatPassword,
-                label = { Paragraph(stringResource(Res.string.repeat_password_label)) },
+                label = stringResource(Res.string.repeat_password_label),
                 isPassword = true,
                 onValueChange = { form.setRepeatPassword(it) },
                 supportingText = { ValidationErrorMessage(form.passwordRepeatValidationError) }
