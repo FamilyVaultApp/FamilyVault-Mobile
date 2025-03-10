@@ -11,17 +11,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon.Companion.Text
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.components.getNFCManager
 import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
@@ -32,6 +38,8 @@ import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.join_family_group_content
 import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 class FamilyGroupNFCJoin : Screen {
@@ -39,7 +47,31 @@ class FamilyGroupNFCJoin : Screen {
     override fun Content() {
 
         StartScreenScaffold {
+            val scope = rememberCoroutineScope()
+            val nfcManager = getNFCManager()
+
+            val trigger = remember { mutableStateOf(true) }
+            val showDialog = remember { mutableStateOf(false) }
+            val tag = remember { mutableStateOf("") }
+
+            scope.launch {
+                nfcManager.tags.collectLatest { tagData ->
+                    println("Test: I have detected a tag  $tagData")
+                    tag.value = tagData
+                    showDialog.value = true
+                }
+            }
+
+            if (trigger.value) {
+                nfcManager.registerApp()
+                trigger.value = false
+            }
+
             JoinFamilyGroupHeader()
+            Column {
+                Text("NFC tag value is: ")
+                Text(tag.value)
+            }
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             JoinFamilyGroupContent()
         }
