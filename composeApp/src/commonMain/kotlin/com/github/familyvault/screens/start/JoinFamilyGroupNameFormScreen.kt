@@ -45,7 +45,7 @@ class JoinFamilyGroupNameFormScreen: Screen {
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
-                FamilyGroupCreateForm(form)
+                JoinFamilyGroupForm(form)
                 InitialScreenButton(
                     text = stringResource(Res.string.next_button_content),
                     enabled = form.isFormValid()
@@ -69,7 +69,7 @@ class JoinFamilyGroupNameFormScreen: Screen {
     }
 
     @Composable
-    private fun FamilyGroupCreateForm(
+    private fun JoinFamilyGroupForm(
         form: NewFamilyGroupMemberForm,
         isFormEnabled: Boolean = true,
     ) {
