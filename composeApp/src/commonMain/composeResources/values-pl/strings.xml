@@ -59,6 +59,8 @@
     <string name="password_label">Hasło</string>
     <string name="repeat_password_label">Powtórz hasło</string>
 
+    <string name="creating_family_group_error">Wystąpił błąd</string>
+
     <!-- Family group management-->
     <string name="family_group_management_title">Ustawienia grupy rodzinnej</string>
     <string name="family_group_members">Członkowie grupy rodzinnej</string>
