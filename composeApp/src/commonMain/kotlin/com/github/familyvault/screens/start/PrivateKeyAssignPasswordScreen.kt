@@ -24,6 +24,7 @@ import com.github.familyvault.components.CustomIcon
 import com.github.familyvault.components.InfoBox
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
+import com.github.familyvault.components.dialogs.DialogState
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.screen.StartScreenScaffold
@@ -51,12 +52,11 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
 
         val coroutineScope = rememberCoroutineScope()
-        var isCreatingFamilyGroup by remember { mutableStateOf(false) }
+        var dialogState by remember { mutableStateOf(DialogState.HIDDEN) }
 
         StartScreenScaffold {
-            if (isCreatingFamilyGroup) {
-                FamilyGroupCreatingDialog()
-            }
+            FamilyGroupCreatingDialog(dialogState, { dialogState = DialogState.HIDDEN })
+
             PrivateKeyAssignPasswordHeader()
             CustomIcon(
                 icon = Icons.Outlined.Key
@@ -74,7 +74,7 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
                 InitialScreenButton(
                     enabled = form.isFormValid()
                 ) {
-                    isCreatingFamilyGroup = true
+                    dialogState = DialogState.LOADING
                     coroutineScope.launch {
                         try {
                             familyGroupService.createFamilyGroupAndAssign(
@@ -86,11 +86,8 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
                             )
                             navigator.replaceAll(DebugScreenContextId())
                         } catch (e: Exception) {
-                            navigator.push(DebugExceptionScreen(e))
-                        } finally {
-                            isCreatingFamilyGroup = false
+                            dialogState = DialogState.ERROR
                         }
-
                     }
                 }
             }
