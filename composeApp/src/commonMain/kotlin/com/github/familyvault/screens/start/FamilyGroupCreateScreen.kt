@@ -1,10 +1,9 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Groups
@@ -18,9 +17,8 @@ import com.github.familyvault.components.CustomIcon
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
 import com.github.familyvault.components.overrides.TextField
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
-import com.github.familyvault.components.typography.Paragraph
 import com.github.familyvault.forms.FamilyGroupCreateForm
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -39,7 +37,7 @@ class FamilyGroupCreateScreen : Screen {
 
         val form = FamilyGroupCreateForm()
 
-        StartScreen {
+        StartScreenScaffold {
             CreateFamilyGroupHeader()
             CustomIcon(
                 icon = Icons.Filled.Groups
@@ -77,27 +75,24 @@ class FamilyGroupCreateScreen : Screen {
         form: FamilyGroupCreateForm,
         isFormEnabled: Boolean = true,
     ) {
-        Column{
+        Column {
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = form.firstname,
-                label = { Paragraph(stringResource(Res.string.text_field_name_label)) },
+                label = stringResource(Res.string.text_field_name_label),
                 onValueChange = { form.setFirstname(it) },
                 enabled = isFormEnabled,
                 supportingText = { ValidationErrorMessage(form.firstnameValidationError) }
             )
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = form.surname,
-                label = { Paragraph(stringResource(Res.string.text_field_surname_label)) },
+                label = stringResource(Res.string.text_field_surname_label),
                 onValueChange = { form.setSurname(it) },
                 enabled = isFormEnabled,
                 supportingText = { ValidationErrorMessage(form.surnameValidationError) }
             )
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = form.familyGroupName,
-                label = { Paragraph(stringResource(Res.string.text_field_group_name_label)) },
+                label = stringResource(Res.string.text_field_group_name_label),
                 onValueChange = { form.setFamilyGroupName(it) },
                 enabled = isFormEnabled,
                 supportingText = { ValidationErrorMessage(form.familyGroupNameValidationError) }

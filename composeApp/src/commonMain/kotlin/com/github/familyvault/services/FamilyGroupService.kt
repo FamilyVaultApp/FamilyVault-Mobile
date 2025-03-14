@@ -3,8 +3,10 @@ package com.github.familyvault.services
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
-import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
+import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
+import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
+import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicPrivateKeyPair
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 
@@ -31,7 +33,7 @@ class FamilyGroupService(
             CreateFamilyGroupRequest(familyGroupName, familyGroupDescription ?: "Test description")
         ).contextId
         familyVaultBackendProxy.addGuardianToFamilyGroup(
-            AddMemberToFamilyRequest(
+            AddMemberToFamilyGroupRequest(
                 contextId,
                 username,
                 pairOfKeys.publicKey
@@ -66,5 +68,11 @@ class FamilyGroupService(
             return true
         }
         return false
+    }
+
+    override suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember> {
+        val contextId = familyGroupSessionService.getContextId()
+
+        return familyVaultBackendProxy.listMembersOfFamilyGroup(ListMembersFromFamilyGroupRequest(contextId)).members
     }
 }

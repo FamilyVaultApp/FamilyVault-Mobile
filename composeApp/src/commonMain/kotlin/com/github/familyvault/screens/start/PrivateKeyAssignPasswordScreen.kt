@@ -1,11 +1,10 @@
-package com.github.familyvault.screens.initial
+package com.github.familyvault.screens.start
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -27,9 +26,8 @@ import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.overrides.TextField
-import com.github.familyvault.components.screen.StartScreen
+import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
-import com.github.familyvault.components.typography.Paragraph
 import com.github.familyvault.forms.FamilyGroupCreateFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.services.IFamilyGroupService
@@ -55,7 +53,7 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
         val coroutineScope = rememberCoroutineScope()
         var isCreatingFamilyGroup by remember { mutableStateOf(false) }
 
-        StartScreen {
+        StartScreenScaffold {
             if (isCreatingFamilyGroup) {
                 FamilyGroupCreatingDialog()
             }
@@ -115,18 +113,16 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
     private fun PrivateKeyAssignForm(form: PrivateKeyAssignPasswordForm) {
         Column {
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = form.password,
-                label = { Paragraph(stringResource(Res.string.password_label)) },
+                label = stringResource(Res.string.password_label),
                 isPassword = true,
                 onValueChange = { form.setPassword(it) },
                 supportingText = { ValidationErrorMessage(form.passwordValidationError) }
 
             )
             TextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = form.repeatPassword,
-                label = { Paragraph(stringResource(Res.string.repeat_password_label)) },
+                label = stringResource(Res.string.repeat_password_label),
                 isPassword = true,
                 onValueChange = { form.setRepeatPassword(it) },
                 supportingText = { ValidationErrorMessage(form.passwordRepeatValidationError) }

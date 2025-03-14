@@ -1,30 +1,31 @@
 package com.github.familyvault.components.overrides
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.github.familyvault.components.typography.Paragraph
 
 @Composable
 fun TextField(
+    label: String,
+    modifier: Modifier = Modifier,
     value: String = "",
     enabled: Boolean = true,
-    label: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    singleLine: Boolean = true,
     isPassword: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null,
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
+    supportingText: @Composable (() -> Unit)? = null
 ) {
     OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
         enabled = enabled,
-        visualTransformation = if (!isPassword) VisualTransformation.None else PasswordVisualTransformation(),
-        label = label,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth().then(modifier),
+        value = value,
+        label = { Paragraph(label) },
         supportingText = supportingText,
-        singleLine = singleLine,
+        onValueChange = onValueChange,
+        singleLine = true,
+        visualTransformation = if (!isPassword) VisualTransformation.None else PasswordVisualTransformation(),
     )
 }

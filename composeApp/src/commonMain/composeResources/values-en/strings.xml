@@ -2,7 +2,8 @@
     <!-- General -->
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
-    <string name="loading">Ładowanie...</string>
+    <string name="loading">Loading...</string>
+    
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -13,6 +14,7 @@
     <string name="create_button_content">Create</string>
     <string name="cancel_button_content">Cancel</string>
     <string name="scan_qr_code_button_content">Scan QR code</string>
+    <string name="change_name_content">Change group name</string>
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Connection modes</string>
@@ -51,13 +53,19 @@
     <string name="file_cabinet_tab">File cabinet</string>
     <string name="task_board_tab">Task board</string>
 
-    <string name="private_key_assign_password_title">Zabezpieczanie klucza</string>
-    <string name="private_key_about_title">Klucz prywatny</string>
-    <string name="private_key_about_content">Klucz prywatny chroni Twoje dane poprzez szyfrowanie. Ustaw silne hasło, aby go bezpiecznie przechować i uniknąć zagrożeń.</string>
+    <string name="private_key_assign_password_title">Protect your key</string>
+    <string name="private_key_about_title">Private key</string>
+    <string name="private_key_about_content">Private key protects your data through encryption. Set strong password to maintain its security.</string>
 
-    <string name="password_label">Hasło</string>
-    <string name="repeat_password_label">Powtórz hasło</string>
+    <string name="password_label">Password</string>
+    <string name="repeat_password_label">Repeat password</string>
 
     <!-- Family group management-->
-    <string name="family_group_management_title">Ustawienia grupy rodzinnej</string>
+    <string name="family_group_management_title">Family Group settings</string>
+    <string name="family_group_members">Family Group members</string>
+    <string name="family_group_add_new_member">Add new member</string>
+    <string name="family_group_delete_member">Remove member</string>
+
+    <!-- QRCode scan  -->
+    <string name="qr_code_scanning">Initiate QR scanner</string>
 </resources>

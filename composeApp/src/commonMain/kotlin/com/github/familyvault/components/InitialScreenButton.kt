@@ -22,7 +22,7 @@ fun InitialScreenButton(
             vertical = AdditionalTheme.spacings.large,
         ),
     ) {
-        Button(content = text,
+        Button(text = text,
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             onClick = { onClick() },
