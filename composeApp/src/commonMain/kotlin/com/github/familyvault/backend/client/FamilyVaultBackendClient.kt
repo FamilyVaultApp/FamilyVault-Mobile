@@ -1,9 +1,11 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
-import com.github.familyvault.backend.requests.AddMemberToFamilyRequest
+import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
+import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
+import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -49,16 +51,22 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         )
     }
 
-    override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         postRequest<Unit>("/FamilyGroup/AddGuardianToFamilyGroup", req)
     }
 
-    override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         postRequest<Unit>("/FamilyGroup/AddMemberToFamilyGroup", req)
     }
 
-    override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyRequest) {
+    override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         postRequest<Unit>("/FamilyGroup/AddGuestToFamilyGroup", req)
+    }
+
+    override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
+        return postRequest<ListMembersFromFamilyGroupResponse>(
+            "/FamilyGroup/ListMembersFromFamilyGroup", req
+        )
     }
 
     private fun getEndpointUrl(endpoint: String): String {
