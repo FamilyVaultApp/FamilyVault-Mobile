@@ -10,7 +10,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.LoaderWithText
 import com.github.familyvault.components.screen.StartScreenScaffold
-import com.github.familyvault.models.QrCodeScanResponseStatus
+import com.github.familyvault.models.enums.QrCodeScanResponseStatus
 import com.github.familyvault.services.IQRCodeService
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.qr_code_scanning
