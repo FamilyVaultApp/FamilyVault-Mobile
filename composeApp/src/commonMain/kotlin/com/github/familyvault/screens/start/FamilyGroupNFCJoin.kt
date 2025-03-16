@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.components.NFCWriteStatus
 import com.github.familyvault.components.getNFCManager
 import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreenScaffold
@@ -64,6 +67,37 @@ class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
             if (trigger.value) {
                 nfcManager.registerApp()
                 trigger.value = false
+            }
+
+            LaunchedEffect(Unit) {
+                nfcManager.prepareWrite(newMemberData)
+            }
+            LaunchedEffect(nfcManager.writeStatus) {
+                nfcManager.writeStatus.collect { status ->
+                    when (status) {
+                        is NFCWriteStatus.Success -> {
+                            println("Zapisano dane przez NFC!")
+                            showDialog.value = true
+                        }
+                        is NFCWriteStatus.Error -> {
+                            println("Błąd: ${status.message}")
+                        }
+                    }
+                }
+            }
+
+            if (showDialog.value) {
+                AlertDialog(
+                    onDismissRequest = { showDialog.value = false },
+                    title = { Text("Sukces!") },
+                    text = { Text("Dane zostały przesłane") },
+                    confirmButton = {
+                        Button(
+                            text = "OK",
+                            onClick = { showDialog.value = false }
+                        )
+                    }
+                )
             }
 
             JoinFamilyGroupHeader()

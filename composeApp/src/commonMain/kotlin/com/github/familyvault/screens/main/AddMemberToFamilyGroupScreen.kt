@@ -13,8 +13,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -22,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.components.NFCManager
+import com.github.familyvault.components.getNFCManager
 import com.github.familyvault.components.overrides.Button
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
@@ -33,35 +42,91 @@ import familyvault.composeapp.generated.resources.add_member_to_family_group_hea
 import familyvault.composeapp.generated.resources.add_member_to_family_group_content
 import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-class AddMemberToFamilyGroupScreen: Screen {
+class AddMemberToFamilyGroupScreen : Screen {
 
     @Composable
     override fun Content() {
-        StartScreenScaffold()
-        {
+        val nfcManager = getNFCManager()
+        val navigator = LocalNavigator.currentOrThrow
+
+        val trigger = remember { mutableStateOf(true) }
+
+
+        val nfcData = remember { mutableStateOf("") }
+        val showDialog = remember { mutableStateOf(false) }
+        val showError = remember { mutableStateOf<String?>(null) }
+
+        if (trigger.value) {
+            nfcManager.registerApp()
+            trigger.value = false
+        }
+
+        // Obserwacja tagów NFC
+        LaunchedEffect(Unit) {
+            nfcManager.tags.collect { tagData ->
+                if (tagData.startsWith("Błąd")) {
+                    showError.value = tagData
+                } else {
+                    nfcData.value = tagData
+                    showDialog.value = true
+                }
+            }
+        }
+
+        StartScreenScaffold {
             AddMemberToFamilyGroupHeader()
-            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
+            Spacer(Modifier.height(AdditionalTheme.spacings.large))
             AddMemberToFamilyGroupContent()
+        }
+
+        // Dialog z danymi NFC
+        if (showDialog.value) {
+            AlertDialog(
+                onDismissRequest = { showDialog.value = false },
+                title = { Text("Dodaj członka") },
+                text = { Text("Czy dodać członka z danymi:\n${nfcData.value}?") },
+                confirmButton = {
+                    Button("Tak") {
+                        // Tutaj logika dodawania
+                        navigator.replaceAll(MainScreen())
+                    }
+                },
+                dismissButton = {
+                    Button("Anuluj") { showDialog.value = false }
+                }
+            )
+        }
+
+        // Dialog z błędami
+        showError.value?.let { error ->
+            AlertDialog(
+                onDismissRequest = { showError.value = null },
+                title = { Text("Błąd NFC") },
+                text = { Text(error) },
+                confirmButton = {
+                    Button("OK") { showError.value = null }
+                }
+            )
         }
     }
 
     @Composable
     private fun AddMemberToFamilyGroupHeader() {
-        return Box(
-            modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)
-        ) {
+        Box(Modifier.padding(vertical = AdditionalTheme.spacings.large)) {
             Headline1(
                 stringResource(Res.string.add_member_to_family_group_header),
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         }
     }
 
     @Composable
     private fun AddMemberToFamilyGroupContent() {
-        return Column(
+        Column(
             modifier = Modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -78,7 +143,6 @@ class AddMemberToFamilyGroupScreen: Screen {
                 TextAlign.Center,
                 Modifier.padding(AdditionalTheme.spacings.normalPadding)
             )
-
             AddMemberToFamilyGroupContentButtons()
         }
     }
@@ -87,8 +151,10 @@ class AddMemberToFamilyGroupScreen: Screen {
     private fun AddMemberToFamilyGroupContentButtons() {
         val navigator = LocalNavigator.currentOrThrow
 
-        return Column(
-            modifier = Modifier.fillMaxSize().padding(bottom = AdditionalTheme.spacings.large),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

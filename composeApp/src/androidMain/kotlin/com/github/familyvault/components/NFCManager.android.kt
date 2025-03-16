@@ -2,6 +2,7 @@ package com.github.familyvault.components
 
 import android.app.Activity
 import android.nfc.NdefMessage
+import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
@@ -16,48 +17,92 @@ import kotlinx.coroutines.launch
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class NFCManager : NfcAdapter.ReaderCallback {
-    private var mNfcAdapter: NfcAdapter? = null
+    // Odczyt
+    private val _tags = MutableSharedFlow<String>()
+    actual val tags: SharedFlow<String> = _tags
 
-    private val _tagData = MutableSharedFlow<String>()
+    // Zapis
+    private val _writeStatus = MutableSharedFlow<NFCWriteStatus>()
+    actual val writeStatus: SharedFlow<NFCWriteStatus> = _writeStatus
+
+    private var nfcAdapter: NfcAdapter? = null
+    private var dataToWrite: String? = null
     private val scope = CoroutineScope(SupervisorJob())
-
-    actual val tags: SharedFlow<String> = _tagData
 
     @Composable
     actual fun registerApp() {
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(LocalContext.current)
+        nfcAdapter = NfcAdapter.getDefaultAdapter(LocalContext.current)
+        nfcAdapter?.enableReaderMode(
+            LocalContext.current as Activity,
+            this,
+            NfcAdapter.FLAG_READER_NFC_A or
+                    NfcAdapter.FLAG_READER_NFC_B or
+                    NfcAdapter.FLAG_READER_NFC_F or
+                    NfcAdapter.FLAG_READER_NFC_V or
+                    NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS,
+            Bundle().apply {
+                putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 500)
+            }
+        )
+    }
 
-        if (mNfcAdapter != null) {
-            val options = Bundle()
-            // Work around for some broken Nfc firmware implementations that poll the card too fast
-            options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 500)
-
-            // Enable ReaderMode for all types of card and disable platform sounds
-            // the option NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK is NOT set
-            // to get the data of the tag after reading
-            mNfcAdapter!!.enableReaderMode(
-                LocalContext.current as Activity,
-                this,
-                NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B or NfcAdapter.FLAG_READER_NFC_F or NfcAdapter.FLAG_READER_NFC_V or NfcAdapter.FLAG_READER_NFC_BARCODE or NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS,
-                options
-            )
-        }
+    actual fun prepareWrite(data: String) {
+        dataToWrite = data
     }
 
     override fun onTagDiscovered(tag: Tag?) {
-        val mNdef = Ndef.get(tag)
-        val mNdefMessage: NdefMessage = mNdef.cachedNdefMessage
-        val record = mNdefMessage.records
-        val ndefRecordsCount = record.size
-
-        if (ndefRecordsCount > 0) {
-            for (i in 0 until ndefRecordsCount) {
-                val payload = String(record[i].payload, Charsets.UTF_8)
-                scope.launch {
-                    _tagData.emit(payload.toString())
-                }
+        tag?.let {
+            if (dataToWrite != null) {
+                writeToTag(it, dataToWrite!!)
+            } else {
+                readFromTag(it)
             }
         }
+    }
+
+    private fun readFromTag(tag: Tag) {
+        try {
+            Ndef.get(tag)?.let { ndef ->
+                ndef.connect()
+                ndef.cachedNdefMessage?.records?.forEach { record ->
+                    scope.launch {
+                        _tags.emit(String(record.payload, Charsets.UTF_8))
+                    }
+                }
+                ndef.close()
+            }
+        } catch (e: Exception) {
+            scope.launch {
+                _tags.emit("Błąd odczytu: ${e.message}")
+            }
+        }
+    }
+
+    private fun writeToTag(tag: Tag, data: String) {
+        scope.launch {
+            try {
+                val ndef = Ndef.get(tag)
+                ndef?.connect()
+
+                if (ndef?.isWritable == true) {
+                    val message = createNdefMessage(data)
+                    ndef.writeNdefMessage(message)
+                    _writeStatus.emit(NFCWriteStatus.Success)
+                } else {
+                    _writeStatus.emit(NFCWriteStatus.Error("Tag nie jest zapisywalny"))
+                }
+
+                ndef?.close()
+                dataToWrite = null
+            } catch (e: Exception) {
+                _writeStatus.emit(NFCWriteStatus.Error("Błąd zapisu: ${e.message ?: "Nieznany błąd"}"))
+            }
+        }
+    }
+
+    private fun createNdefMessage(data: String): NdefMessage {
+        val textRecord = NdefRecord.createTextRecord("en", data)
+        return NdefMessage(arrayOf(textRecord))
     }
 }
 
