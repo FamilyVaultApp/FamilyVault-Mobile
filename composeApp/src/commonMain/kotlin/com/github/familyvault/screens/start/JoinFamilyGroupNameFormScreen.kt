@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -15,7 +15,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.CustomIcon
 import com.github.familyvault.components.InitialScreenButton
-import com.github.familyvault.components.ValidationErrorMessage
 import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
@@ -23,56 +22,55 @@ import com.github.familyvault.forms.FamilyGroupCreateForm
 import com.github.familyvault.models.SelectedFamilyGroupAction
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.create_new_family_group_title
-import familyvault.composeapp.generated.resources.family_group_create_screen_title
-import familyvault.composeapp.generated.resources.text_field_group_name_label
+import familyvault.composeapp.generated.resources.join_family_group_title
+import familyvault.composeapp.generated.resources.next_button_content
 import familyvault.composeapp.generated.resources.text_field_name_label
 import familyvault.composeapp.generated.resources.text_field_surname_label
 import org.jetbrains.compose.resources.stringResource
 
-class FamilyGroupCreateScreen : Screen {
+class JoinFamilyGroupNameFormScreen: Screen {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val form = FamilyGroupCreateForm(SelectedFamilyGroupAction.Create)
+        val form = FamilyGroupCreateForm(SelectedFamilyGroupAction.Join)
 
         StartScreenScaffold {
-            CreateFamilyGroupHeader()
+            JoinFamilyGroupHeader()
             CustomIcon(
-                icon = Icons.Filled.Groups
+                icon = Icons.Filled.Person
             )
 
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
-                FamilyGroupCreateForm(form)
+                JoinFamilyGroupForm(form)
                 InitialScreenButton(
-                    text = stringResource(Res.string.create_new_family_group_title),
+                    text = stringResource(Res.string.next_button_content),
                     enabled = form.isFormValid()
                 ) {
-                    navigator.replaceAll(PrivateKeyPasswordAssignScreen(form.formData, SelectedFamilyGroupAction.Create))
+                    navigator.replaceAll(PrivateKeyPasswordAssignScreen(form.formData, SelectedFamilyGroupAction.Join))
                 }
             }
         }
     }
 
     @Composable
-    private fun CreateFamilyGroupHeader() {
+    private fun JoinFamilyGroupHeader() {
         return Box(
             modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)
         ) {
             Headline1(
-                stringResource(Res.string.family_group_create_screen_title),
+                stringResource(Res.string.join_family_group_title),
                 textAlign = TextAlign.Center,
             )
         }
     }
 
     @Composable
-    private fun FamilyGroupCreateForm(
+    private fun JoinFamilyGroupForm(
         form: FamilyGroupCreateForm,
         isFormEnabled: Boolean = true,
     ) {
@@ -82,21 +80,12 @@ class FamilyGroupCreateScreen : Screen {
                 label = stringResource(Res.string.text_field_name_label),
                 onValueChange = { form.setFirstname(it) },
                 enabled = isFormEnabled,
-                supportingText = { ValidationErrorMessage(form.firstnameValidationError) }
             )
             TextField(
                 value = form.surname,
                 label = stringResource(Res.string.text_field_surname_label),
                 onValueChange = { form.setSurname(it) },
                 enabled = isFormEnabled,
-                supportingText = { ValidationErrorMessage(form.surnameValidationError) }
-            )
-            TextField(
-                value = form.familyGroupName,
-                label = stringResource(Res.string.text_field_group_name_label),
-                onValueChange = { form.setFamilyGroupName(it) },
-                enabled = isFormEnabled,
-                supportingText = { ValidationErrorMessage(form.familyGroupNameValidationError) }
             )
         }
     }

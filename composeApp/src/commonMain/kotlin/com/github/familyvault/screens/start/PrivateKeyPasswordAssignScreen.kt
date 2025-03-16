@@ -20,18 +20,20 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.AppConfig
+import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.components.CustomIcon
 import com.github.familyvault.components.InfoBox
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
-import com.github.familyvault.components.dialogs.ErrorDialog
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.forms.FamilyGroupCreateFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
-import com.github.familyvault.models.enums.FormSubmitStateEnum
+import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.SelectedFamilyGroupAction
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -41,31 +43,27 @@ import familyvault.composeapp.generated.resources.private_key_about_title
 import familyvault.composeapp.generated.resources.private_key_assign_password_title
 import familyvault.composeapp.generated.resources.repeat_password_label
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCreateFormData) :
+class PrivateKeyPasswordAssignScreen(private val familyGroupDraft: FamilyGroupCreateFormData, private val selectedFamilyGroupAction: SelectedFamilyGroupAction) :
     Screen {
+
     @Composable
     override fun Content() {
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val privMxClient = koinInject<IPrivMxClient>()
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
 
         val coroutineScope = rememberCoroutineScope()
-        var createFamilyGroupState by remember { mutableStateOf(FormSubmitStateEnum.IDLE) }
+        var isCreatingFamilyGroup by remember { mutableStateOf(false) }
 
         StartScreenScaffold {
-            when (createFamilyGroupState) {
-                FormSubmitStateEnum.PENDING -> FamilyGroupCreatingDialog()
-                
-                FormSubmitStateEnum.ERROR -> ErrorDialog {
-                    createFamilyGroupState = FormSubmitStateEnum.IDLE
-                }
-
-                else -> Unit
+            if (isCreatingFamilyGroup) {
+                FamilyGroupCreatingDialog()
             }
-
             PrivateKeyAssignPasswordHeader()
             CustomIcon(
                 icon = Icons.Outlined.Key
@@ -83,9 +81,9 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
                 InitialScreenButton(
                     enabled = form.isFormValid()
                 ) {
-                    coroutineScope.launch {
-                        createFamilyGroupState = FormSubmitStateEnum.PENDING
-                        try {
+                    if (selectedFamilyGroupAction == SelectedFamilyGroupAction.Create) {
+                        isCreatingFamilyGroup = true
+                        coroutineScope.launch {
                             familyGroupService.createFamilyGroupAndAssign(
                                 familyGroupDraft.firstname.value,
                                 familyGroupDraft.surname.value,
@@ -93,11 +91,26 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
                                 familyGroupDraft.familyGroupName.value,
                                 "Description"
                             )
+                            isCreatingFamilyGroup = false
                             navigator.replaceAll(DebugScreenContextId())
-                            createFamilyGroupState = FormSubmitStateEnum.IDLE
-                        } catch (e: Exception) {
-                            createFamilyGroupState = FormSubmitStateEnum.ERROR
                         }
+                    } else {
+                        val keyPair = privMxClient.generatePairOfPrivateAndPublicKey(
+                            form.password,
+                            AppConfig.SALT
+                        )
+                        val newFamilyMemberData = NewFamilyMemberData(
+                            firstname = familyGroupDraft.firstname.value,
+                            surname = familyGroupDraft.surname.value,
+                            keyPair = keyPair
+                        )
+                        navigator.replaceAll(
+                            FamilyGroupNFCJoin(
+                                Json.encodeToString(
+                                    newFamilyMemberData
+                                )
+                            )
+                        )
                     }
                 }
             }

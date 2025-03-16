@@ -3,15 +3,17 @@ package com.github.familyvault.forms
 import com.github.familyvault.models.forms.FormDataStringEntry
 import com.github.familyvault.forms.validator.FormValidator
 import com.github.familyvault.forms.validator.FormValidatorError
+import com.github.familyvault.models.SelectedFamilyGroupAction
 
 data class FamilyGroupCreateFormData(
     val firstname: FormDataStringEntry = FormDataStringEntry(),
     val surname: FormDataStringEntry = FormDataStringEntry(),
     val familyGroupName: FormDataStringEntry = FormDataStringEntry(),
+    val selectedFamilyGroupAction: SelectedFamilyGroupAction
 )
 
-class FamilyGroupCreateForm : BasicForm() {
-    var formData = FamilyGroupCreateFormData()
+class FamilyGroupCreateForm(selectedFamilyGroupAction: SelectedFamilyGroupAction) : BasicForm() {
+    var formData = FamilyGroupCreateFormData(selectedFamilyGroupAction = selectedFamilyGroupAction)
         private set
 
     val firstname: String
@@ -66,9 +68,15 @@ class FamilyGroupCreateForm : BasicForm() {
     }
 
     override fun isFormValid(): Boolean {
-        return formData.firstname.isValid() &&
-                formData.surname.isValid() &&
-                formData.familyGroupName.isValid()
+        if (formData.selectedFamilyGroupAction == SelectedFamilyGroupAction.Create)
+        {
+            return formData.firstname.isValid() &&
+                    formData.surname.isValid() &&
+                    formData.familyGroupName.isValid()
+        } else {
+            return formData.firstname.isValid() &&
+                    formData.surname.isValid()
+        }
     }
 }
 

@@ -53,8 +53,9 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                     enabled = selectedAction != null,
                     onClick = {
                         val nextScreen =
-                            if (selectedAction == SelectedFamilyGroupAction.Join)
-                                FamilyGroupNFCJoin()
+                            if (selectedAction == SelectedFamilyGroupAction.Join) {
+                                JoinFamilyGroupNameFormScreen()
+                            }
                             else FamilyGroupCreateScreen()
                         navigator.push(nextScreen)
                     }

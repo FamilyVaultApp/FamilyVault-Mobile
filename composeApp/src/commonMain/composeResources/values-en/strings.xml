@@ -13,6 +13,7 @@
     <string name="create_button_content">Create</string>
     <string name="cancel_button_content">Cancel</string>
     <string name="scan_qr_code_button_content">Scan QR code</string>
+    <string name="show_qr_code_button_content">Show QR code</string>
     <string name="change_name_content">Change group name</string>
 
     <!-- Connection modes -->
@@ -66,6 +67,10 @@
     <string name="family_group_members">Family Group members</string>
     <string name="family_group_add_new_member">Add new member</string>
     <string name="family_group_delete_member">Remove member</string>
+
+    <!-- Add member to family group-->
+    <string name="add_member_to_family_group_header">Add new member</string>
+    <string name="add_member_to_family_group_content">Tap your phone to new member's phone to add them to family group.</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>
