@@ -1,0 +1,26 @@
+package com.github.familyvault.ui.screens.main
+
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.tab.CurrentTab
+import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.github.familyvault.ui.components.overrides.NavigationBar
+
+class MainScreen : Screen {
+    @Composable
+    override fun Content() {
+        TabNavigator(ChatTab) {
+            Scaffold(
+                content = { CurrentTab() },
+                bottomBar = {
+                    NavigationBar(
+                        ChatTab,
+                        FilesCabinetTab,
+                        TaskTab
+                    )
+                }
+            )
+        }
+    }
+}
