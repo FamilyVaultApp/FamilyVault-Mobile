@@ -24,12 +24,14 @@ import com.github.familyvault.components.CustomIcon
 import com.github.familyvault.components.InfoBox
 import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.ValidationErrorMessage
+import com.github.familyvault.components.dialogs.ErrorDialog
 import com.github.familyvault.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.forms.FamilyGroupCreateFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
+import com.github.familyvault.models.enums.FormSubmitStateEnum
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -51,12 +53,19 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
 
         val coroutineScope = rememberCoroutineScope()
-        var isCreatingFamilyGroup by remember { mutableStateOf(false) }
+        var createFamilyGroupState by remember { mutableStateOf(FormSubmitStateEnum.IDLE) }
 
         StartScreenScaffold {
-            if (isCreatingFamilyGroup) {
-                FamilyGroupCreatingDialog()
+            when (createFamilyGroupState) {
+                FormSubmitStateEnum.PENDING -> FamilyGroupCreatingDialog()
+                
+                FormSubmitStateEnum.ERROR -> ErrorDialog {
+                    createFamilyGroupState = FormSubmitStateEnum.IDLE
+                }
+
+                else -> Unit
             }
+
             PrivateKeyAssignPasswordHeader()
             CustomIcon(
                 icon = Icons.Outlined.Key
@@ -74,17 +83,21 @@ class PrivateKeyAssignPasswordScreen(private val familyGroupDraft: FamilyGroupCr
                 InitialScreenButton(
                     enabled = form.isFormValid()
                 ) {
-                    isCreatingFamilyGroup = true
                     coroutineScope.launch {
-                        familyGroupService.createFamilyGroupAndAssign(
-                            familyGroupDraft.firstname.value,
-                            familyGroupDraft.surname.value,
-                            form.password,
-                            familyGroupDraft.familyGroupName.value,
-                            "Description"
-                        )
-                        isCreatingFamilyGroup = false
-                        navigator.replaceAll(DebugScreenContextId())
+                        createFamilyGroupState = FormSubmitStateEnum.PENDING
+                        try {
+                            familyGroupService.createFamilyGroupAndAssign(
+                                familyGroupDraft.firstname.value,
+                                familyGroupDraft.surname.value,
+                                form.password,
+                                familyGroupDraft.familyGroupName.value,
+                                "Description"
+                            )
+                            navigator.replaceAll(DebugScreenContextId())
+                            createFamilyGroupState = FormSubmitStateEnum.IDLE
+                        } catch (e: Exception) {
+                            createFamilyGroupState = FormSubmitStateEnum.ERROR
+                        }
                     }
                 }
             }

@@ -15,8 +15,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
 
 class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     private val client = HttpClient {
@@ -25,46 +25,51 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         }
     }
 
+    private suspend inline fun <reified T> postRequest(endpoint: String, req: Any): T {
+        val response = client.post(getEndpointUrl(endpoint)) {
+            contentType(ContentType.Application.Json)
+            setBody(req)
+        }
+        if (response.status.isSuccess()) {
+            return response.body<T>()
+        } else {
+            throw FamilyVaultBackendErrorResponseException(
+                response.status,
+                response.body<String>()
+            )
+        }
+
+    }
+
     override suspend fun getSolutionId(): PrivMxSolutionIdResponse {
         return client.get(getEndpointUrl("/ApplicationConfig/GetSolutionId")).body()
     }
 
     override suspend fun createFamilyGroup(req: CreateFamilyGroupRequest): CreateFamilyGroupResponse {
-        return client.post(getEndpointUrl("/FamilyGroup/CreateFamilyGroup")) {
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToString(req))
-        }.body<CreateFamilyGroupResponse>()
+        return postRequest<CreateFamilyGroupResponse>(
+            "/FamilyGroup/CreateFamilyGroup", req
+        )
     }
 
     override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
-        client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToString(req))
-        }
+        postRequest<Unit>("/FamilyGroup/AddGuardianToFamilyGroup", req)
     }
 
     override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
-        client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToString(req))
-        }
+        postRequest<Unit>("/FamilyGroup/AddMemberToFamilyGroup", req)
     }
 
     override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
-        client.post(getEndpointUrl("/FamilyGroup/AddGuardianToFamilyGroup")) {
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToString(req))
-        }
+        postRequest<Unit>("/FamilyGroup/AddGuestToFamilyGroup", req)
     }
 
     override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
-        return client.post(getEndpointUrl("/FamilyGroup/ListMembersFromFamilyGroup")) {
-            contentType(ContentType.Application.Json)
-            setBody(Json.encodeToString(req))
-        }.body<ListMembersFromFamilyGroupResponse>()
+        return postRequest<ListMembersFromFamilyGroupResponse>(
+            "/FamilyGroup/ListMembersFromFamilyGroup", req
+        )
     }
 
     private fun getEndpointUrl(endpoint: String): String {
-        return "${AppConfig.BACKEND_URL}${endpoint}"
+        return "${AppConfig.BACKEND_URL}$endpoint"
     }
 }

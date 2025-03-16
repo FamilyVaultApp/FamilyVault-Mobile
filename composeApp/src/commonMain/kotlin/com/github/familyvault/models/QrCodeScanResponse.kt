@@ -1,5 +1,7 @@
 package com.github.familyvault.models
 
+import com.github.familyvault.models.enums.QrCodeScanResponseStatus
+
 data class QrCodeScanResponse(
     val content: String?, val error: String?, val status: QrCodeScanResponseStatus
 ) {

@@ -3,7 +3,6 @@
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
     <string name="loading">Loading...</string>
-    
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -59,6 +58,8 @@
 
     <string name="password_label">Password</string>
     <string name="repeat_password_label">Repeat password</string>
+
+    <string name="error_occurred_label">Error occurred</string>
 
     <!-- Family group management-->
     <string name="family_group_management_title">Family Group settings</string>
