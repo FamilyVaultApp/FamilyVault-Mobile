@@ -11,7 +11,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyGroupNameForm
-import com.github.familyvault.forms.NewFamilyMemberForm
+import com.github.familyvault.forms.FamilyGroupNewMemberForm
 import com.github.familyvault.ui.components.HeaderWithIcon
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.ValidationErrorMessage
@@ -30,7 +30,7 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val newFamilyMemberForm = NewFamilyMemberForm()
+        val newFamilyMemberForm = FamilyGroupNewMemberForm()
         val familyGroupNameForm = FamilyGroupNameForm()
 
         StartScreenScaffold {
@@ -67,7 +67,7 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
 
     @Composable
     private fun FamilyGroupCreateForm(
-        newFamilyMemberForm: NewFamilyMemberForm,
+        newFamilyMemberForm: FamilyGroupNewMemberForm,
         familyGroupNameForm: FamilyGroupNameForm,
         isFormEnabled: Boolean = true,
     ) {

@@ -4,13 +4,13 @@ import com.github.familyvault.models.forms.FormDataStringEntry
 import com.github.familyvault.forms.validator.FormValidator
 import com.github.familyvault.forms.validator.FormValidatorError
 
-data class NewFamilyMemberFormData(
+data class FamilyMemberNewMemberFormData(
     val firstname: FormDataStringEntry = FormDataStringEntry(),
     val surname: FormDataStringEntry = FormDataStringEntry(),
 )
 
-class NewFamilyMemberForm : BasicForm() {
-    var formData = NewFamilyMemberFormData()
+class FamilyGroupNewMemberForm : BasicForm() {
+    var formData = FamilyMemberNewMemberFormData()
         private set
 
     val firstname: String

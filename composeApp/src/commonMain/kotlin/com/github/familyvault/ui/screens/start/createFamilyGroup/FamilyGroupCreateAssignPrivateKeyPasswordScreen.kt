@@ -10,7 +10,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyGroupNameFormData
-import com.github.familyvault.forms.NewFamilyMemberFormData
+import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
-    private val familyGroupDraft: NewFamilyMemberFormData,
+    private val familyGroupDraft: FamilyMemberNewMemberFormData,
     private val familyGroupNameDraft: FamilyGroupNameFormData
 ) : Screen {
     @Composable

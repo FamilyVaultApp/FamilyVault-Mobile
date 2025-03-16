@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.forms.NewFamilyMemberForm
+import com.github.familyvault.forms.FamilyGroupNewMemberForm
 import com.github.familyvault.ui.components.HeaderWithIcon
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.newFamilyMember.NewFamilyMemberFormContent
@@ -25,7 +25,7 @@ class FamilyGroupJoinNewMemberScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val form = NewFamilyMemberForm()
+        val form = FamilyGroupNewMemberForm()
 
         StartScreenScaffold {
             FamilyGroupJoinHeader()
