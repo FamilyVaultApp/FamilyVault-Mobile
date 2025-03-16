@@ -1,5 +1,7 @@
 package com.github.familyvault.services
 
+import com.github.familyvault.models.FamilyMember
+
 interface IFamilyGroupService {
     suspend fun createFamilyGroupAndAssign(
         firstname: String,
@@ -9,4 +11,6 @@ interface IFamilyGroupService {
         familyGroupDescription: String? = null
     )
     suspend fun assignDefaultStoredFamilyGroup(): Boolean
+
+    suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember>
 }
