@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
@@ -35,7 +32,7 @@ import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.show_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 
-class FamilyGroupJoinNFC(private val newMemberData: String) : Screen {
+class FamilyGroupJoinNfc(private val newMemberData: String) : Screen {
     @Composable
     override fun Content() {
 
@@ -65,12 +62,7 @@ class FamilyGroupJoinNFC(private val newMemberData: String) : Screen {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                Icons.Filled.Sensors,
-                contentDescription = stringResource(Res.string.join_family_group_content),
-                modifier = Modifier.size(128.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
+            AnimatedNfcBeam()
             Headline3(
                 stringResource(Res.string.join_family_group_content),
                 MaterialTheme.colorScheme.onBackground,
