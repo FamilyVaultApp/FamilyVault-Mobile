@@ -9,6 +9,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
+import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.privateKey.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -24,6 +25,9 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
             PrivateKeyAssignPasswordHeader()
             AssignPrivateKeyFormContent(
                 form,
+            )
+            InitialScreenButton(
+                enabled = form.isFormValid(),
             ) {
                 navigator.replaceAll(FamilyGroupJoinNFC("test"))
             }
