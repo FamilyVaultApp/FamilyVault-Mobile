@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerIcon.Companion.Text
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
@@ -45,19 +44,19 @@ import org.jetbrains.compose.resources.stringResource
 class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
     @Composable
     override fun Content() {
-
         StartScreenScaffold {
             val scope = rememberCoroutineScope()
             val nfcManager = getNFCManager()
 
             val trigger = remember { mutableStateOf(true) }
             val showDialog = remember { mutableStateOf(false) }
-            val tag = remember { mutableStateOf("") }
+
+            val nfcData = remember { mutableStateOf(newMemberData) }
 
             scope.launch {
                 nfcManager.tags.collectLatest { tagData ->
                     println("Test: I have detected a tag  $tagData")
-                    tag.value = tagData
+                    nfcData.value = tagData
                     showDialog.value = true
                 }
             }
@@ -70,16 +69,16 @@ class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
             JoinFamilyGroupHeader()
             Column {
                 Text("NFC tag value is: ")
-                Text(tag.value)
+                Text(nfcData.value)
             }
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
-            JoinFamilyGroupContent()
+            JoinFamilyGroupContent(nfcData.value)
         }
     }
 
     @Composable
     private fun JoinFamilyGroupHeader() {
-        return Box(
+        Box(
             modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)
         ) {
             Headline1(
@@ -90,8 +89,8 @@ class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
     }
 
     @Composable
-    private fun JoinFamilyGroupContent() {
-        return Column(
+    private fun JoinFamilyGroupContent(nfcData: String) {
+        Column(
             modifier = Modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -109,16 +108,18 @@ class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
                 Modifier.padding(AdditionalTheme.spacings.normalPadding)
             )
 
-            JoinFamilyGroupContentButtons()
+            JoinFamilyGroupContentButtons(nfcData)
         }
     }
 
     @Composable
-    private fun JoinFamilyGroupContentButtons() {
+    private fun JoinFamilyGroupContentButtons(nfcData: String) {
         val navigator = LocalNavigator.currentOrThrow
 
-        return Column(
-            modifier = Modifier.fillMaxSize().padding(bottom = AdditionalTheme.spacings.large),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -132,9 +133,11 @@ class FamilyGroupNFCJoin(private val newMemberData: String) : Screen {
                     modifier = Modifier.weight(1f)
                 )
                 Button(
-                    stringResource(Res.string.show_qr_code_button_content), onClick = {
-                        navigator.push(DisplayKeyPairQrCodeScreen(newMemberData))
-                    }, modifier = Modifier.weight(1f)
+                    stringResource(Res.string.show_qr_code_button_content),
+                    onClick = {
+                        navigator.push(DisplayKeyPairQrCodeScreen(nfcData))
+                    },
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
