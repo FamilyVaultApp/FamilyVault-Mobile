@@ -18,7 +18,8 @@ import com.github.familyvault.components.InitialScreenButton
 import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
-import com.github.familyvault.forms.NewFamilyGroupMemberForm
+import com.github.familyvault.forms.FamilyGroupCreateForm
+import com.github.familyvault.models.SelectedFamilyGroupAction
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.join_family_group_title
@@ -33,7 +34,7 @@ class JoinFamilyGroupNameFormScreen: Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val form = NewFamilyGroupMemberForm()
+        val form = FamilyGroupCreateForm(SelectedFamilyGroupAction.Join)
 
         StartScreenScaffold {
             JoinFamilyGroupHeader()
@@ -50,7 +51,7 @@ class JoinFamilyGroupNameFormScreen: Screen {
                     text = stringResource(Res.string.next_button_content),
                     enabled = form.isFormValid()
                 ) {
-                    navigator.replaceAll(JoinFamilyGroupPasswordAssignScreen(form.formData))
+                    navigator.replaceAll(PrivateKeyPasswordAssignScreen(form.formData, SelectedFamilyGroupAction.Join))
                 }
             }
         }
@@ -70,7 +71,7 @@ class JoinFamilyGroupNameFormScreen: Screen {
 
     @Composable
     private fun JoinFamilyGroupForm(
-        form: NewFamilyGroupMemberForm,
+        form: FamilyGroupCreateForm,
         isFormEnabled: Boolean = true,
     ) {
         Column {

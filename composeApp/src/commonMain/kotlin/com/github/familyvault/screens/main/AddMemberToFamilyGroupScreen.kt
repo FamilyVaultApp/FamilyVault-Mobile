@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +27,6 @@ import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.components.typography.Headline3
 import com.github.familyvault.screens.start.FamilyGroupQRCodeJoin
-import com.github.familyvault.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.add_member_to_family_group_header
@@ -42,17 +39,16 @@ class AddMemberToFamilyGroupScreen: Screen {
 
     @Composable
     override fun Content() {
-
         StartScreenScaffold()
         {
-            AddMemberToFamilyHeader()
+            AddMemberToFamilyGroupHeader()
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             AddMemberToFamilyGroupContent()
         }
     }
 
     @Composable
-    private fun AddMemberToFamilyHeader() {
+    private fun AddMemberToFamilyGroupHeader() {
         return Box(
             modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)
         ) {
@@ -97,18 +93,17 @@ class AddMemberToFamilyGroupScreen: Screen {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.large),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
                     stringResource(Res.string.cancel_button_content),
                     onClick = { navigator.replaceAll(MainScreen()) },
-                    modifier = Modifier.weight(1f)
                 )
                 Button(
                     stringResource(Res.string.scan_qr_code_button_content), onClick = {
                         navigator.push(FamilyGroupQRCodeJoin())
-                    }, modifier = Modifier.weight(1f)
+                    }
                 )
             }
         }

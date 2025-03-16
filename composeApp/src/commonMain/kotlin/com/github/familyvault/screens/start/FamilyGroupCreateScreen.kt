@@ -20,6 +20,7 @@ import com.github.familyvault.components.overrides.TextField
 import com.github.familyvault.components.screen.StartScreenScaffold
 import com.github.familyvault.components.typography.Headline1
 import com.github.familyvault.forms.FamilyGroupCreateForm
+import com.github.familyvault.models.SelectedFamilyGroupAction
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.create_new_family_group_title
@@ -35,7 +36,7 @@ class FamilyGroupCreateScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val form = FamilyGroupCreateForm()
+        val form = FamilyGroupCreateForm(SelectedFamilyGroupAction.Create)
 
         StartScreenScaffold {
             CreateFamilyGroupHeader()
@@ -52,7 +53,7 @@ class FamilyGroupCreateScreen : Screen {
                     text = stringResource(Res.string.create_new_family_group_title),
                     enabled = form.isFormValid()
                 ) {
-                    navigator.replaceAll(CreateFamilyGroupPasswordAssignScreen(form.formData))
+                    navigator.replaceAll(PrivateKeyPasswordAssignScreen(form.formData, SelectedFamilyGroupAction.Create))
                 }
             }
         }
