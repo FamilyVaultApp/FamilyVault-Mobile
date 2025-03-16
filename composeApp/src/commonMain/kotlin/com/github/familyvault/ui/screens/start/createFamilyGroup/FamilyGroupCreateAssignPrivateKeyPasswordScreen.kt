@@ -1,11 +1,15 @@
 package com.github.familyvault.ui.screens.start.createFamilyGroup
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -47,26 +51,31 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                 else -> Unit
             }
             PrivateKeyAssignPasswordHeader()
-            AssignPrivateKeyFormContent(
-                form,
-            )
-            InitialScreenButton(
-                enabled = form.isFormValid(),
-            ){
-                coroutineScope.launch {
-                    createFamilyGroupState = FormSubmitState.PENDING
-                    try {
-                        familyGroupService.createFamilyGroupAndAssign(
-                            familyGroupDraft.firstname.value,
-                            familyGroupDraft.surname.value,
-                            form.password,
-                            familyGroupNameDraft.familyGroupName.value,
-                            "Description"
-                        )
-                        navigator.replaceAll(DebugScreenContextId())
-                        createFamilyGroupState = FormSubmitState.IDLE
-                    } catch (e: Exception) {
-                        createFamilyGroupState = FormSubmitState.ERROR
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                AssignPrivateKeyFormContent(
+                    form,
+                )
+                InitialScreenButton(
+                    enabled = form.isFormValid(),
+                ) {
+                    coroutineScope.launch {
+                        createFamilyGroupState = FormSubmitState.PENDING
+                        try {
+                            familyGroupService.createFamilyGroupAndAssign(
+                                familyGroupDraft.firstname.value,
+                                familyGroupDraft.surname.value,
+                                form.password,
+                                familyGroupNameDraft.familyGroupName.value,
+                                "Description"
+                            )
+                            navigator.replaceAll(DebugScreenContextId())
+                            createFamilyGroupState = FormSubmitState.IDLE
+                        } catch (e: Exception) {
+                            createFamilyGroupState = FormSubmitState.ERROR
+                        }
                     }
                 }
             }

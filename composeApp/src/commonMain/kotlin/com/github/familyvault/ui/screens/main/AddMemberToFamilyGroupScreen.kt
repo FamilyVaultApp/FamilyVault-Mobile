@@ -35,7 +35,7 @@ import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 
-class AddMemberToFamilyGroupScreen: Screen {
+class AddMemberToFamilyGroupScreen : Screen {
 
     @Composable
     override fun Content() {

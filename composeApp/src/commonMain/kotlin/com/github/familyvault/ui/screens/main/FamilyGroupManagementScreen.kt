@@ -70,7 +70,8 @@ class FamilyGroupManagementScreen : Screen {
             TextField(
                 value = "", label = stringResource(Res.string.text_field_group_name_label)
             )
-            Button(modifier = Modifier.fillMaxWidth(),
+            Button(
+                modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.change_name_content),
                 onClick = {}
             )
@@ -89,26 +90,26 @@ class FamilyGroupManagementScreen : Screen {
             familyGroupMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
             isLoadingMembers = false
         }
-            Column {
-                Headline3(stringResource(Res.string.family_group_members))
-                Column(
-                    modifier = Modifier.padding(vertical = 15.dp)
-                ) {
-                    if (isLoadingMembers) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
-                        familyGroupMembers.forEach {
-                            FamilyMemberEntry(it)
-                        }
+        Column {
+            Headline3(stringResource(Res.string.family_group_members))
+            Column(
+                modifier = Modifier.padding(vertical = 15.dp)
+            ) {
+                if (isLoadingMembers) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
-
+                } else {
+                    familyGroupMembers.forEach {
+                        FamilyMemberEntry(it)
+                    }
                 }
+
             }
+        }
     }
 
     @Composable

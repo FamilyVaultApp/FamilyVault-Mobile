@@ -36,7 +36,6 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
         StartScreenScaffold {
             CreateFamilyGroupHeader()
 
-
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
