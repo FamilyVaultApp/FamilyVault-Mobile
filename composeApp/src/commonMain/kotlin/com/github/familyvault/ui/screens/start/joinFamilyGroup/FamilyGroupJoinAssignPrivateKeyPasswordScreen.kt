@@ -37,7 +37,7 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                 InitialScreenButton(
                     enabled = form.isFormValid(),
                 ) {
-                    navigator.replaceAll(FamilyGroupJoinNFC("test"))
+                    navigator.replaceAll(FamilyGroupJoinNfc("test"))
                 }
             }
         }
