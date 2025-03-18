@@ -9,6 +9,7 @@ import android.nfc.tech.Ndef
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.github.familyvault.models.NewFamilyMemberData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,15 +19,15 @@ import kotlinx.coroutines.launch
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class NFCManager : NfcAdapter.ReaderCallback {
     // Odczyt
-    private val _tags = MutableSharedFlow<String>()
-    actual val tags: SharedFlow<String> = _tags
+    private val _tags = MutableSharedFlow<NewFamilyMemberData>()
+    actual val tags: SharedFlow<NewFamilyMemberData> = _tags
 
     // Zapis
     private val _writeStatus = MutableSharedFlow<NFCWriteStatus>()
     actual val writeStatus: SharedFlow<NFCWriteStatus> = _writeStatus
 
     private var nfcAdapter: NfcAdapter? = null
-    private var dataToWrite: String? = null
+    private var dataToWrite: NewFamilyMemberData? = null
     private val scope = CoroutineScope(SupervisorJob())
 
     @Composable
@@ -46,7 +47,7 @@ actual class NFCManager : NfcAdapter.ReaderCallback {
         )
     }
 
-    actual fun prepareWrite(data: String) {
+    actual fun prepareWrite(data: NewFamilyMemberData) {
         dataToWrite = data
     }
 
@@ -66,7 +67,7 @@ actual class NFCManager : NfcAdapter.ReaderCallback {
                 ndef.connect()
                 ndef.cachedNdefMessage?.records?.forEach { record ->
                     scope.launch {
-                        _tags.emit(String(record.payload, Charsets.UTF_8))
+                        _tags.emit((record.payload, Charsets.UTF_8))
                     }
                 }
                 ndef.close()
@@ -78,7 +79,7 @@ actual class NFCManager : NfcAdapter.ReaderCallback {
         }
     }
 
-    private fun writeToTag(tag: Tag, data: String) {
+    private fun writeToTag(tag: Tag, data: NewFamilyMemberData) {
         scope.launch {
             try {
                 val ndef = Ndef.get(tag)
@@ -100,8 +101,8 @@ actual class NFCManager : NfcAdapter.ReaderCallback {
         }
     }
 
-    private fun createNdefMessage(data: String): NdefMessage {
-        val textRecord = NdefRecord.createTextRecord("en", data)
+    private fun createNdefMessage(data: NewFamilyMemberData): NdefMessage {
+        val textRecord = NdefRecord.createTextRecord("en", data.toString())
         return NdefMessage(arrayOf(textRecord))
     }
 }

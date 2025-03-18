@@ -19,6 +19,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -69,7 +71,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
             val trigger = remember { mutableStateOf(true) }
             val showDialog = remember { mutableStateOf(false) }
 
-            val nfcData = remember { mutableStateOf(newMemberData) }
+            val nfcData = remember { mutableStateOf(newFamilyMemberInformation) }
 
             scope.launch {
                 nfcManager.tags.collectLatest { tagData ->
@@ -85,7 +87,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
             }
 
             LaunchedEffect(Unit) {
-                nfcManager.prepareWrite(newMemberData)
+                nfcManager.prepareWrite(newFamilyMemberInformation)
             }
             LaunchedEffect(nfcManager.writeStatus) {
                 nfcManager.writeStatus.collect { status ->
@@ -116,10 +118,6 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
             }
 
             JoinFamilyGroupHeader()
-            Column {
-                Text("NFC tag value is: ")
-                Text(nfcData.value)
-            }
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             JoinFamilyGroupContent(nfcData.value)
         }
@@ -138,7 +136,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
     }
 
     @Composable
-    private fun JoinFamilyGroupContent(nfcData: String) {
+    private fun JoinFamilyGroupContent(nfcData: NewFamilyMemberData) {
         Column(
             modifier = Modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -157,7 +155,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
     }
 
     @Composable
-    private fun JoinFamilyGroupContentButtons(nfcData: String) {
+    private fun JoinFamilyGroupContentButtons(nfcData: NewFamilyMemberData) {
         val navigator = LocalNavigator.currentOrThrow
 
         Column(
@@ -179,7 +177,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
                 Button(
                     stringResource(Res.string.show_qr_code_button_content),
                     onClick = {
-                        navigator.push(DisplayKeyPairQrCodeScreen(nfcData))
+                        navigator.push(DisplayFamilyMemberDataQrCodeScreen(nfcData))
                     },
                     modifier = Modifier.weight(1f)
                 )
