@@ -30,6 +30,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.NFCManager
 import com.github.familyvault.components.getNFCManager
+import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.enums.JoinTokenStatus
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -52,11 +54,9 @@ class AddMemberToFamilyGroupScreen : Screen {
     override fun Content() {
         val nfcManager = getNFCManager()
         val navigator = LocalNavigator.currentOrThrow
-
         val trigger = remember { mutableStateOf(true) }
 
-
-        val nfcData = remember { mutableStateOf("") }
+        val nfcData = remember { mutableStateOf<NewFamilyMemberData?>(null) }
         val showDialog = remember { mutableStateOf(false) }
         val showError = remember { mutableStateOf<String?>(null) }
 
@@ -68,11 +68,20 @@ class AddMemberToFamilyGroupScreen : Screen {
         // Obserwacja tagów NFC
         LaunchedEffect(Unit) {
             nfcManager.tags.collect { tagData ->
-                if (tagData.startsWith("Błąd")) {
-                    showError.value = tagData
-                } else {
-                    nfcData.value = tagData
-                    showDialog.value = true
+                tagData.joinStatus?.let { status ->
+                    when (status.status) {
+                        JoinTokenStatus.Error -> {
+                            showError.value = status.info?.contextId?.let {
+                                "Błąd kontekstu: $it"
+                            } ?: "Nieznany błąd podczas odczytu"
+                        }
+                        else -> {
+                            nfcData.value = tagData
+                            showDialog.value = true
+                        }
+                    }
+                } ?: run {
+                    showError.value = "Nieprawidłowy format danych"
                 }
             }
         }
@@ -88,10 +97,13 @@ class AddMemberToFamilyGroupScreen : Screen {
             AlertDialog(
                 onDismissRequest = { showDialog.value = false },
                 title = { Text("Dodaj członka") },
-                text = { Text("Czy dodać członka z danymi:\n${nfcData.value}?") },
+                text = {
+                    Text("Czy dodać członka:\n" +
+                            "${nfcData.value?.firstname} ${nfcData.value?.surname}\n" +
+                            "Klucz publiczny: ${nfcData.value?.keyPair?.publicKey?.take(10)}...")
+                },
                 confirmButton = {
                     Button("Tak") {
-                        // Tutaj logika dodawania
                         navigator.replaceAll(MainScreen())
                     }
                 },
@@ -100,6 +112,7 @@ class AddMemberToFamilyGroupScreen : Screen {
                 }
             )
         }
+
 
         // Dialog z błędami
         showError.value?.let { error ->

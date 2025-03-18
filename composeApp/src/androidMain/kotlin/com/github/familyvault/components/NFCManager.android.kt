@@ -9,12 +9,16 @@ import android.nfc.tech.Ndef
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.github.familyvault.models.FamilyMemberJoinStatus
 import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.enums.JoinTokenStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class NFCManager : NfcAdapter.ReaderCallback {
@@ -66,15 +70,63 @@ actual class NFCManager : NfcAdapter.ReaderCallback {
             Ndef.get(tag)?.let { ndef ->
                 ndef.connect()
                 ndef.cachedNdefMessage?.records?.forEach { record ->
-                    scope.launch {
-                        _tags.emit((record.payload, Charsets.UTF_8))
+                    if (record.toUri() == null && record.tnf == NdefRecord.TNF_WELL_KNOWN) {
+                        val payload = record.payload
+                        if (payload != null && payload.isNotEmpty()) {
+                            val languageCodeLength = payload[0].toInt() and 0xFF
+                            if (payload.size > languageCodeLength + 1) {
+                                val jsonBytes = payload.copyOfRange(
+                                    1 + languageCodeLength,
+                                    payload.size
+                                )
+                                val jsonString = String(jsonBytes, Charsets.UTF_8)
+
+                                val json = Json {
+                                    ignoreUnknownKeys = true
+                                    encodeDefaults = true
+                                }
+
+                                try {
+                                    val memberData = json.decodeFromString<NewFamilyMemberData>(jsonString)
+                                    scope.launch {
+                                        _tags.emit(memberData)
+                                    }
+                                } catch (e: Exception) {
+                                    scope.launch {
+                                        _tags.emit(
+                                            NewFamilyMemberData(
+                                                firstname = "",
+                                                surname = "",
+                                                keyPair = PublicPrivateKeyPair("", ""),
+                                                joinStatus = FamilyMemberJoinStatus(
+                                                    token = "",
+                                                    status = JoinTokenStatus.Error,
+                                                    info = null
+                                                )
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
                 ndef.close()
             }
         } catch (e: Exception) {
             scope.launch {
-                _tags.emit("Błąd odczytu: ${e.message}")
+                _tags.emit(
+                    NewFamilyMemberData(
+                        firstname = "",
+                        surname = "",
+                        keyPair = PublicPrivateKeyPair("", ""),
+                        joinStatus = FamilyMemberJoinStatus(
+                            token = "",
+                            status = JoinTokenStatus.Error,
+                            info = null
+                        )
+                    )
+                )
             }
         }
     }
