@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class NewFamilyMemberData(
     val firstname: String,
     val surname: String,
-    val keyPair: PublicPrivateKeyPair
-    // TODO: JoinToken
+    val keyPair: PublicPrivateKeyPair,
+    var joinStatus: FamilyMemberJoinStatus?
 )

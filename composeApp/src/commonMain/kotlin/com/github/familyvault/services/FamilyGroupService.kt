@@ -5,8 +5,13 @@ import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
+import com.github.familyvault.backend.requests.GetTokenStatusRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
+import com.github.familyvault.backend.requests.UpdateTokenInfoRequest
+import com.github.familyvault.backend.requests.UpdateTokenStatusRequest
+import com.github.familyvault.models.ContextIdInfo
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.FamilyMemberJoinStatus
 import com.github.familyvault.models.PublicPrivateKeyPair
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 
@@ -54,6 +59,28 @@ class FamilyGroupService(
         )
     }
 
+    override suspend fun joinFamilyGroupAndAssign(
+        firstname: String,
+        surname: String,
+        keyPair: PublicPrivateKeyPair,
+        contextId: String
+    ) {
+        val solutionId = familyVaultBackendProxy.getSolutionId().solutionId
+        familyGroupSessionService.assignSession(
+            AppConfig.PRIVMX_BRIDGE_URL,
+            solutionId,
+            contextId,
+            keyPair
+        )
+        familyGroupSessionService.connect()
+        familyGroupCredentialsRepository.addDefaultCredential(
+            "Name",
+            solutionId,
+            contextId,
+            keyPair
+        )
+    }
+
     override suspend fun assignDefaultStoredFamilyGroup(): Boolean {
         val credential = familyGroupCredentialsRepository.getDefaultCredential()
 
@@ -70,9 +97,35 @@ class FamilyGroupService(
         return false
     }
 
+    override suspend fun generateJoinToken(): FamilyMemberJoinStatus {
+        return familyVaultBackendProxy.generateJoinToken().familyMemberJoinStatus
+    }
+
+    override suspend fun getTokenStatus(token: String): FamilyMemberJoinStatus {
+        return familyVaultBackendProxy.getTokenStatus(GetTokenStatusRequest(token = token)).familyMemberJoinStatus
+    }
+
+    override suspend fun updateTokenStatus(token: String, status: Int): FamilyMemberJoinStatus {
+        return familyVaultBackendProxy.updateTokenStatus(UpdateTokenStatusRequest(token, status)).familyMemberJoinStatus
+    }
+
+    override suspend fun updateTokenInfo(token: String, contextId: String): FamilyMemberJoinStatus {
+        return familyVaultBackendProxy.updateTokenInfo(UpdateTokenInfoRequest(token, ContextIdInfo(contextId = contextId))).familyMemberJoinStatus
+    }
+
+    override suspend fun addMemberToFamilyGroup(
+        contextId: String,
+        userId: String,
+        userPubKey: String
+    ) {
+        return familyVaultBackendProxy.addMemberToFamilyGroup(AddMemberToFamilyGroupRequest(contextId = contextId, userId = userId, userPubKey = userPubKey))
+    }
+
     override suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember> {
         val contextId = familyGroupSessionService.getContextId()
 
         return familyVaultBackendProxy.listMembersOfFamilyGroup(ListMembersFromFamilyGroupRequest(contextId)).members
     }
+
+
 }
