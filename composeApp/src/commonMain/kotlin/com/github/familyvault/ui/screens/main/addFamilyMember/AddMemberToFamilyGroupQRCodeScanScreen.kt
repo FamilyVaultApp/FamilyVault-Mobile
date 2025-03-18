@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.start.joinFamilyGroup
+package com.github.familyvault.ui.screens.main.addFamilyMember
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinQrCode : Screen {
+class AddMemberToFamilyGroupQRCodeScanScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -31,7 +31,7 @@ class FamilyGroupJoinQrCode : Screen {
                 val response = qrCodeScanner.scanQRCode()
 
                 if (response.status == QrCodeScanResponseStatus.SUCCESS) {
-                    navigator.replaceAll(QrCodeScanDebugScreen(response.content ?: ""))
+                    navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(response.content ?: ""))
                 } else {
                     navigator.pop()
                 }
