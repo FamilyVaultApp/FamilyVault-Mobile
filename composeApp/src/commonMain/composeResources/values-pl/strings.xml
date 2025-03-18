@@ -74,4 +74,5 @@
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera</string>
+    <string name="qr_code_generation_screen_content">Niech opiekun Twojej grupy zeskanuje ten kod, aby Cię do niej dodać.</string>
 </resources>
