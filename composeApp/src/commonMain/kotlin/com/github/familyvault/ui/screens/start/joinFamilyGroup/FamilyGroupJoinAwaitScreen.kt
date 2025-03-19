@@ -37,12 +37,14 @@ class FamilyGroupJoinAwaitScreen(private val userData: NewFamilyMemberData) : Sc
         val familyGroupService = koinInject<IFamilyGroupService>()
         val coroutineScope = rememberCoroutineScope()
 
-        LaunchedEffect(userData.joinToken) {
+        LaunchedEffect(Unit) {
             currentJoinInformation = familyGroupService.getTokenStatus(userData.joinToken)
             currentJoinStatus = currentJoinInformation.status
             while (currentJoinStatus == JoinTokenStatus.Pending) {
                 delay(1000)
                 currentJoinInformation = familyGroupService.getTokenStatus(userData.joinToken)
+                currentJoinStatus = currentJoinInformation.status
+                println("Received joinStatus: " + currentJoinStatus)
             }
         }
 
