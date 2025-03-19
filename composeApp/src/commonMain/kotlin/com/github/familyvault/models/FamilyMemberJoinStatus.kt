@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FamilyMemberJoinStatus(
-    val token: String,
+    var token: String,
     val status: JoinTokenStatus,
     val info: ContextIdInfo?
 )

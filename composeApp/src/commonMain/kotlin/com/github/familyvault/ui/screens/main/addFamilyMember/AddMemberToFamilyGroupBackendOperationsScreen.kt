@@ -15,7 +15,9 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.FamilyMemberJoinStatus
 import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.enums.JoinTokenStatus
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.typography.Paragraph
@@ -31,15 +33,16 @@ class AddMemberToFamilyGroupBackendOperationsScreen(val scanResult: String): Scr
         val familyGroupService = koinInject<IFamilyGroupService>()
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupNewMemberData: NewFamilyMemberData = Json.decodeFromString(scanResult)
+        var currentJoinInformation by remember { mutableStateOf(FamilyMemberJoinStatus(familyGroupNewMemberData.joinToken, JoinTokenStatus.Pending, null)) }
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val contextId = familyGroupSessionService.getContextId()
 
         LaunchedEffect(Unit) {
             familyGroupService.addMemberToFamilyGroup(contextId, familyGroupNewMemberData.firstname + " " + familyGroupNewMemberData.surname, familyGroupNewMemberData.keyPair.publicKey)
             delay(100)
-            familyGroupService.updateTokenInfo(familyGroupNewMemberData.joinStatus?.token!!, contextId)
+            familyGroupService.updateTokenInfo(currentJoinInformation.token, contextId)
             delay(100)
-            familyGroupService.updateTokenStatus(familyGroupNewMemberData.joinStatus?.token!!, 1)
+            familyGroupService.updateTokenStatus(currentJoinInformation.token, 1)
             joinProcessComplete = true
         }
 

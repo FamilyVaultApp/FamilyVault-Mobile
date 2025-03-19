@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -19,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.FamilyMemberJoinStatus
 import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.enums.JoinTokenStatus
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
@@ -41,9 +47,10 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
     override fun Content() {
 
         val familyGroupService = koinInject<IFamilyGroupService>()
-
+        var newJoinInformation by remember { mutableStateOf(FamilyMemberJoinStatus("", JoinTokenStatus.Pending, null)) }
         LaunchedEffect(Unit) {
-            newFamilyMemberInformation.joinStatus = familyGroupService.generateJoinToken()
+            newJoinInformation = familyGroupService.generateJoinToken()
+            newFamilyMemberInformation.joinToken = newJoinInformation.token
         }
 
         StartScreenScaffold {

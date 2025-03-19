@@ -39,7 +39,7 @@ class DisplayFamilyMemberDataQrCodeScreen(private val newMemberData: NewFamilyMe
 
             InitialScreenButton(
                 onClick = {
-                    navigator.replaceAll(FamilyGroupJoinAwaitScreen(newMemberData, newMemberData.joinStatus!!, newMemberData.joinStatus!!.token))
+                    navigator.replaceAll(FamilyGroupJoinAwaitScreen(newMemberData))
                 }
             )
         }

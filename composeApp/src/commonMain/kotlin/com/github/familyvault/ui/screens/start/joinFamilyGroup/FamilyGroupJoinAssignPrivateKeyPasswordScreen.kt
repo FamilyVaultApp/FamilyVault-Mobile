@@ -51,7 +51,7 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                         firstname = newFamilyMemberDraft.firstname.value,
                         surname = newFamilyMemberDraft.surname.value,
                         keyPair = keyPair,
-                        joinStatus = null
+                        joinToken = "notYetGenerated"
                     )
                     navigator.replaceAll(FamilyGroupJoinNfc(newFamilyMemberData))
                 }

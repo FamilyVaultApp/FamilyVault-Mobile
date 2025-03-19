@@ -7,5 +7,5 @@ data class NewFamilyMemberData(
     val firstname: String,
     val surname: String,
     val keyPair: PublicPrivateKeyPair,
-    var joinStatus: FamilyMemberJoinStatus?
+    var joinToken: String
 )

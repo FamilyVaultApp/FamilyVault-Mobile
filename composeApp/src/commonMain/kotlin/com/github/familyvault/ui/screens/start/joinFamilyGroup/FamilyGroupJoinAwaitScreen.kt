@@ -26,22 +26,23 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinAwaitScreen(private val userData: NewFamilyMemberData, private var joinStatus: FamilyMemberJoinStatus, private val token: String) : Screen {
+class FamilyGroupJoinAwaitScreen(private val userData: NewFamilyMemberData) : Screen {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        var currentJoinStatus by remember { mutableStateOf(joinStatus) }
+        var currentJoinStatus by remember { mutableStateOf(JoinTokenStatus.Pending) }
+        var currentJoinInformation by remember { mutableStateOf(FamilyMemberJoinStatus(userData.joinToken, JoinTokenStatus.Pending, null)) }
         var joinProcessComplete by remember { mutableStateOf(false) }
         val familyGroupService = koinInject<IFamilyGroupService>()
         val coroutineScope = rememberCoroutineScope()
 
-        LaunchedEffect(token) {
-            currentJoinStatus = familyGroupService.getTokenStatus(token)
-            while (currentJoinStatus.status == JoinTokenStatus.Pending) {
+        LaunchedEffect(userData.joinToken) {
+            currentJoinInformation = familyGroupService.getTokenStatus(userData.joinToken)
+            currentJoinStatus = currentJoinInformation.status
+            while (currentJoinStatus == JoinTokenStatus.Pending) {
                 delay(1000)
-                currentJoinStatus = familyGroupService.getTokenStatus(token)
-                println("Received joinStatus: " + currentJoinStatus.status)
+                currentJoinInformation = familyGroupService.getTokenStatus(userData.joinToken)
             }
         }
 
@@ -49,20 +50,20 @@ class FamilyGroupJoinAwaitScreen(private val userData: NewFamilyMemberData, priv
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            if (currentJoinStatus.status == JoinTokenStatus.Pending) {
+            if (currentJoinStatus == JoinTokenStatus.Pending) {
                 Row {
                     CircularProgressIndicator()
                     Paragraph("\nOczekiwanie...")
                 }
-            } else if (currentJoinStatus.status == JoinTokenStatus.Success) {
-                if (currentJoinStatus.info != null)
+            } else if (currentJoinStatus == JoinTokenStatus.Success) {
+                if (currentJoinInformation.info != null)
                 {
                     coroutineScope.launch {
                         familyGroupService.joinFamilyGroupAndAssign(
                             userData.firstname,
                             userData.surname,
                             userData.keyPair,
-                            currentJoinStatus.info!!.contextId
+                            currentJoinInformation.info!!.contextId
                         )
                         joinProcessComplete = true
                     }
