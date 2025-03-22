@@ -24,10 +24,11 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMemberJoinStatus
-import com.github.familyvault.models.NewFamilyMemberData
-import com.github.familyvault.models.enums.JoinTokenStatus
+import com.github.familyvault.models.NewFamilyMemberDataPayload
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IJoinTokenService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
+import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
@@ -42,18 +43,25 @@ import familyvault.composeapp.generated.resources.show_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMemberData) : Screen {
+class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: NewFamilyMemberDataPayload) : Screen {
     @Composable
     override fun Content() {
 
-        val familyGroupService = koinInject<IFamilyGroupService>()
-        var newJoinInformation by remember { mutableStateOf(FamilyMemberJoinStatus("", JoinTokenStatus.Pending, null)) }
+        val joinTokenService = koinInject<IJoinTokenService>()
+        var newJoinInformation: FamilyMemberJoinStatus? by remember { mutableStateOf(null) }
+        var isGeneratingToken by remember { mutableStateOf(true) }
         LaunchedEffect(Unit) {
-            newJoinInformation = familyGroupService.generateJoinToken()
-            newFamilyMemberInformation.joinToken = newJoinInformation.token
+            newJoinInformation = joinTokenService.generateJoinToken()
+            if (newJoinInformation != null) {
+                newFamilyMemberDataPayload.joinStatus = newJoinInformation
+                isGeneratingToken = false
+            }
         }
 
         StartScreenScaffold {
+            if (isGeneratingToken) {
+                LoaderWithText("Oczekiwanie...")
+            }
             JoinFamilyGroupHeader()
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             JoinFamilyGroupContent()
@@ -111,7 +119,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
                 )
                 Button(
                     stringResource(Res.string.show_qr_code_button_content), onClick = {
-                        navigator.push(DisplayFamilyMemberDataQrCodeScreen(newFamilyMemberInformation))
+                        navigator.push(DisplayFamilyMemberDataQrCodeScreen(newFamilyMemberDataPayload))
                     }, modifier = Modifier.weight(1f)
                 )
             }

@@ -6,11 +6,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FamilyMemberJoinStatus(
     var token: String,
-    val status: JoinTokenStatus,
+    var state: JoinTokenStatus,
     val info: ContextIdInfo?
 )
 
 @Serializable
 data class ContextIdInfo(
-    val contextId: String
+    val contextId: String,
+    val error: String?
 )

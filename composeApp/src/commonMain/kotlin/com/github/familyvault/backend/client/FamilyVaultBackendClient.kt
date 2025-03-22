@@ -5,27 +5,25 @@ import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.GetTokenStatusRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
-import com.github.familyvault.backend.requests.UpdateTokenInfoRequest
 import com.github.familyvault.backend.requests.UpdateTokenStatusRequest
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
 import com.github.familyvault.backend.responses.GenerateJoinTokenResponse
 import com.github.familyvault.backend.responses.GetTokenStatusResponse
 import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
-import com.github.familyvault.backend.responses.UpdateTokenInfoResponse
 import com.github.familyvault.backend.responses.UpdateTokenStatusResponse
-import com.github.familyvault.models.FamilyMemberJoinStatus
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
-import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
+
 
 class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     private val client = HttpClient {
@@ -48,6 +46,21 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
             )
         }
 
+    }
+
+    private suspend inline fun <reified T> getRequest(endpoint: String, req: Any?): T {
+        val response = client.get(getEndpointUrl(endpoint)) {
+            contentType(ContentType.Application.Json)
+            TODO("Obsługa parametrów zapytania")
+        }
+        if (response.status.isSuccess()) {
+            return response.body<T>()
+        } else {
+            throw FamilyVaultBackendErrorResponseException(
+                response.status,
+                response.body<String>()
+            )
+        }
     }
 
     override suspend fun getSolutionId(): PrivMxSolutionIdResponse {
@@ -79,26 +92,21 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     }
 
     override suspend fun generateJoinToken(): GenerateJoinTokenResponse {
-        return client.get(getEndpointUrl("/FamilyGroupMemberJoinStatus/Generate")).body()
+        return client.get(getEndpointUrl("/JoinStatus/Generate")).body()
     }
 
     override suspend fun getTokenStatus(req: GetTokenStatusRequest): GetTokenStatusResponse {
-        return client.get(getEndpointUrl("/FamilyGroupMemberJoinStatus/GetByToken")) {
+        return client.get(getEndpointUrl("/JoinStatus/GetByToken")) {
             parameter("token", req.token)
         }.body()
     }
 
     override suspend fun updateTokenStatus(req: UpdateTokenStatusRequest): UpdateTokenStatusResponse {
         return postRequest<UpdateTokenStatusResponse>(
-            "/FamilyGroupMemberJoinStatus/UpdateStatus", req
+            "/JoinStatus/UpdateStatus", req
         )
     }
 
-    override suspend fun updateTokenInfo(req: UpdateTokenInfoRequest): UpdateTokenInfoResponse {
-        return postRequest<UpdateTokenInfoResponse>(
-            "/FamilyGroupMemberJoinStatus/UpdateInfo", req
-        )
-    }
 
     private fun getEndpointUrl(endpoint: String): String {
         return "${AppConfig.BACKEND_URL}$endpoint"

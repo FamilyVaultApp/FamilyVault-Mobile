@@ -4,4 +4,5 @@ import com.github.familyvault.models.FamilyMemberJoinStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GenerateJoinTokenResponse(val familyMemberJoinStatus: FamilyMemberJoinStatus)
+data class GenerateJoinTokenResponse(val joinStatus: FamilyMemberJoinStatus
+)

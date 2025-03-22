@@ -19,6 +19,7 @@ import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.FamilyMemberJoinStatus
 import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.NewFamilyMemberDataPayload
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.privateKey.AssignPrivateKeyFormContent
@@ -34,6 +35,7 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
         val privMxClient = koinInject<IPrivMxClient>()
+
         StartScreenScaffold {
             PrivateKeyAssignPasswordHeader()
             Column(
@@ -50,10 +52,13 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                     val newFamilyMemberData = NewFamilyMemberData(
                         firstname = newFamilyMemberDraft.firstname.value,
                         surname = newFamilyMemberDraft.surname.value,
-                        keyPair = keyPair,
-                        joinToken = "notYetGenerated"
+                        keyPair = keyPair
                     )
-                    navigator.replaceAll(FamilyGroupJoinNfc(newFamilyMemberData))
+                    val newFamilyMemberDataPayload = NewFamilyMemberDataPayload(
+                        newMemberData = newFamilyMemberData,
+                        joinStatus = null
+                    )
+                    navigator.replaceAll(FamilyGroupJoinNfc(newFamilyMemberDataPayload))
                 }
             }
         }

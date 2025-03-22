@@ -16,44 +16,46 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMemberJoinStatus
-import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.NewFamilyMemberDataPayload
 import com.github.familyvault.models.enums.JoinTokenStatus
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
+import com.github.familyvault.services.IJoinTokenService
+import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.typography.Paragraph
 import kotlinx.coroutines.delay
-import kotlinx.serialization.json.Json
 import org.koin.compose.koinInject
 
-class AddMemberToFamilyGroupBackendOperationsScreen(val scanResult: String): Screen {
+class AddMemberToFamilyGroupBackendOperationsScreen(val scanResult: NewFamilyMemberDataPayload): Screen {
 
     @Composable
     override fun Content() {
-        var joinProcessComplete by remember { mutableStateOf(false) }
         val familyGroupService = koinInject<IFamilyGroupService>()
-        val navigator = LocalNavigator.currentOrThrow
-        val familyGroupNewMemberData: NewFamilyMemberData = Json.decodeFromString(scanResult)
-        var currentJoinInformation by remember { mutableStateOf(FamilyMemberJoinStatus(familyGroupNewMemberData.joinToken, JoinTokenStatus.Pending, null)) }
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val joinTokenService = koinInject<IJoinTokenService>()
+        val navigator = LocalNavigator.currentOrThrow
+        var currentJoinInformation: FamilyMemberJoinStatus? by remember { mutableStateOf(null) }
+
         val contextId = familyGroupSessionService.getContextId()
 
         LaunchedEffect(Unit) {
-            familyGroupService.addMemberToFamilyGroup(contextId, familyGroupNewMemberData.firstname + " " + familyGroupNewMemberData.surname, familyGroupNewMemberData.keyPair.publicKey)
-            delay(100)
-            familyGroupService.updateTokenInfo(currentJoinInformation.token, contextId)
-            delay(100)
-            familyGroupService.updateTokenStatus(currentJoinInformation.token, 1)
-            joinProcessComplete = true
-        }
 
-        if (!joinProcessComplete) {
+            currentJoinInformation = joinTokenService.getJoinStatus(scanResult.joinStatus!!.token)
+            if (currentJoinInformation!!.state != JoinTokenStatus.Success)
+            {
+                familyGroupService.addMemberToFamilyGroup(contextId, scanResult.newMemberData.fullname, scanResult.newMemberData.keyPair.publicKey)
+                delay(100)
+                joinTokenService.changeJoinStatusStateToAccept(currentJoinInformation!!.token, contextId)
+                delay(100)
+            }
+        }
+        if (currentJoinInformation == null || currentJoinInformation!!.state != JoinTokenStatus.Success) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Row {
-                    CircularProgressIndicator()
-                    Paragraph("\nOczekiwanie...")
+                    LoaderWithText("Oczekiwanie...")
                 }
             }
         } else {
