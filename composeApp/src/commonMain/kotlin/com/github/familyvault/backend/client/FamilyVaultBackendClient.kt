@@ -48,10 +48,12 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
 
     }
 
-    private suspend inline fun <reified T> getRequest(endpoint: String, req: Any?): T {
+    private suspend inline fun <reified T> getRequest(endpoint: String, req: Map<String, Any?>): T {
         val response = client.get(getEndpointUrl(endpoint)) {
             contentType(ContentType.Application.Json)
-            TODO("Obsługa parametrów zapytania")
+            req.forEach { (key, value) ->
+                value?.let { parameter(key, it) }
+            }
         }
         if (response.status.isSuccess()) {
             return response.body<T>()
@@ -73,16 +75,8 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         )
     }
 
-    override suspend fun addGuardianToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
-        postRequest<Unit>("/FamilyGroup/AddGuardianToFamilyGroup", req)
-    }
-
     override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
         postRequest<Unit>("/FamilyGroup/AddMemberToFamilyGroup", req)
-    }
-
-    override suspend fun addGuestToFamilyGroup(req: AddMemberToFamilyGroupRequest) {
-        postRequest<Unit>("/FamilyGroup/AddGuestToFamilyGroup", req)
     }
 
     override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
@@ -96,9 +90,10 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     }
 
     override suspend fun getTokenStatus(req: GetTokenStatusRequest): GetTokenStatusResponse {
-        return client.get(getEndpointUrl("/JoinStatus/GetByToken")) {
-            parameter("token", req.token)
-        }.body()
+        val requestParameters: Map<String, Any?> = mapOf (
+            "token" to req.token
+        )
+        return getRequest<GetTokenStatusResponse>("/JoinStatus/GetByToken", requestParameters)
     }
 
     override suspend fun updateTokenStatus(req: UpdateTokenStatusRequest): UpdateTokenStatusResponse {

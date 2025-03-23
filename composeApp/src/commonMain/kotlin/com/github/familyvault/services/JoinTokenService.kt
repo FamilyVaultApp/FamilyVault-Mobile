@@ -19,10 +19,10 @@ class JoinTokenService(): IJoinTokenService {
     }
 
     override suspend fun changeJoinStatusStateToPending(token: String): FamilyMemberJoinStatus {
-        return familyVaultBackendProxy.updateTokenStatus(UpdateTokenStatusRequest(token, JoinTokenStatus.Pending, null)).joinStatus
+        return familyVaultBackendProxy.updateTokenStatus(UpdateTokenStatusRequest(token, JoinTokenStatus.Pending.value, null)).joinStatus
     }
 
     override suspend fun changeJoinStatusStateToAccept(token: String, contextId: String): FamilyMemberJoinStatus {
-        return familyVaultBackendProxy.updateTokenStatus(UpdateTokenStatusRequest(token, JoinTokenStatus.Success, ContextIdInfo(contextId, null))).joinStatus
+        return familyVaultBackendProxy.updateTokenStatus(UpdateTokenStatusRequest(token, JoinTokenStatus.Success.value, ContextIdInfo(contextId, null))).joinStatus
     }
 }

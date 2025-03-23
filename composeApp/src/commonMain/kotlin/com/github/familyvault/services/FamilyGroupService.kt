@@ -8,6 +8,7 @@ import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 
 class FamilyGroupService(
@@ -32,11 +33,12 @@ class FamilyGroupService(
         val contextId = familyVaultBackendProxy.createFamilyGroup(
             CreateFamilyGroupRequest(familyGroupName, familyGroupDescription ?: "Test description")
         ).contextId
-        familyVaultBackendProxy.addGuardianToFamilyGroup(
+        familyVaultBackendProxy.addMemberToFamilyGroup(
             AddMemberToFamilyGroupRequest(
                 contextId,
                 username,
-                pairOfKeys.publicKey
+                pairOfKeys.publicKey,
+                FamilyGroupMemberPermissionGroup.Guardian.value
             )
         )
         familyGroupSessionService.assignSession(

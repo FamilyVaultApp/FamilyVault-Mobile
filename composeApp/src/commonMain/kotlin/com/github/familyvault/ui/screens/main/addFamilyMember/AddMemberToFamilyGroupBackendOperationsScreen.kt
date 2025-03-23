@@ -26,7 +26,7 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 
-class AddMemberToFamilyGroupBackendOperationsScreen(val scanResult: NewFamilyMemberDataPayload): Screen {
+class AddMemberToFamilyGroupBackendOperationsScreen(private val scanResult: NewFamilyMemberDataPayload): Screen {
 
     @Composable
     override fun Content() {
@@ -49,7 +49,7 @@ class AddMemberToFamilyGroupBackendOperationsScreen(val scanResult: NewFamilyMem
                 delay(100)
             }
         }
-        if (currentJoinInformation == null || currentJoinInformation!!.state != JoinTokenStatus.Success) {
+        if (currentJoinInformation == null) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
@@ -58,7 +58,7 @@ class AddMemberToFamilyGroupBackendOperationsScreen(val scanResult: NewFamilyMem
                     LoaderWithText("Oczekiwanie...")
                 }
             }
-        } else {
+        } else if (currentJoinInformation!!.state != JoinTokenStatus.Success) {
             navigator.replaceAll(AddMemberToFamilyGroupScreen())
         }
     }
