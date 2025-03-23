@@ -1,8 +1,8 @@
 package com.github.familyvault.backend.responses
 
-import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.JoinStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ListMembersFromFamilyGroupResponse(val members: List<FamilyMember>) :
+data class UpdateJoinStatusResponse(val joinStatus: JoinStatus) :
     FamilyVaultBackendResponse()

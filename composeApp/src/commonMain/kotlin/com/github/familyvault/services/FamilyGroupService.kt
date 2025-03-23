@@ -15,8 +15,7 @@ class FamilyGroupService(
     private val privMxClient: IPrivMxClient,
     private val familyGroupSessionService: IFamilyGroupSessionService,
     private val familyGroupCredentialsRepository: IFamilyGroupCredentialsRepository
-) :
-    IFamilyGroupService {
+) : IFamilyGroupService {
     private val familyVaultBackendProxy = FamilyVaultBackendClient()
 
     override suspend fun createFamilyGroupAndAssign(
@@ -38,43 +37,28 @@ class FamilyGroupService(
                 contextId,
                 username,
                 pairOfKeys.publicKey,
-                FamilyGroupMemberPermissionGroup.Guardian.value
+                FamilyGroupMemberPermissionGroup.Guardian
             )
         )
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL,
-            solutionId,
-            contextId,
-            pairOfKeys
+            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, pairOfKeys
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
-            familyGroupName,
-            solutionId,
-            contextId,
-            pairOfKeys
+            familyGroupName, solutionId, contextId, pairOfKeys
         )
     }
 
     override suspend fun joinFamilyGroupAndAssign(
-        firstname: String,
-        surname: String,
-        keyPair: PublicPrivateKeyPair,
-        contextId: String
+        firstname: String, surname: String, keyPair: PublicPrivateKeyPair, contextId: String
     ) {
         val solutionId = familyVaultBackendProxy.getSolutionId().solutionId
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL,
-            solutionId,
-            contextId,
-            keyPair
+            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, keyPair
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
-            "Name",
-            solutionId,
-            contextId,
-            keyPair
+            contextId, solutionId, contextId, keyPair // TODO: Dodać tutaj jako name, nazwe grupy rodzinnej
         )
     }
 
@@ -94,20 +78,23 @@ class FamilyGroupService(
         return false
     }
 
-
     override suspend fun addMemberToFamilyGroup(
-        contextId: String,
-        userId: String,
-        userPubKey: String
+        contextId: String, userId: String, userPubKey: String
     ) {
-        return familyVaultBackendProxy.addMemberToFamilyGroup(AddMemberToFamilyGroupRequest(contextId, userId, userPubKey))
+        familyVaultBackendProxy.addMemberToFamilyGroup(
+            AddMemberToFamilyGroupRequest(
+                contextId, userId, userPubKey
+            )
+        )
     }
 
     override suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember> {
         val contextId = familyGroupSessionService.getContextId()
 
-        return familyVaultBackendProxy.listMembersOfFamilyGroup(ListMembersFromFamilyGroupRequest(contextId)).members
+        return familyVaultBackendProxy.listMembersOfFamilyGroup(
+            ListMembersFromFamilyGroupRequest(
+                contextId
+            )
+        ).members
     }
-
-
 }

@@ -8,19 +8,14 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.models.NewFamilyMemberDataPayload
-import com.github.familyvault.models.enums.QrCodeScanResponseStatus
 import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.qr_code_scanning
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.SerializationException
 
 class AddMemberToFamilyGroupQrCodeScanScreen : Screen {
     @Composable
@@ -29,29 +24,17 @@ class AddMemberToFamilyGroupQrCodeScanScreen : Screen {
         val qrCodeScanner = koinInject<IQRCodeService>()
         val coroutineScope = rememberCoroutineScope()
 
-        LaunchedEffect(qrCodeScanner) {
+        LaunchedEffect(Unit) {
             coroutineScope.launch {
-                val response = qrCodeScanner.scanQRCode()
-                var scanResult: NewFamilyMemberDataPayload?
-                if (response.status == QrCodeScanResponseStatus.SUCCESS) {
-                    try {
-                        scanResult = Json.decodeFromString<NewFamilyMemberDataPayload>(response.content ?: "")
-                    } catch(e: SerializationException) {
-                        scanResult = null
-                    }
-                    navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(scanResult!!))
-                } else {
-                    navigator.pop()
-                }
+                val payload = qrCodeScanner.scanPayload()
+                navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
             }
         }
 
         StartScreenScaffold {
-            if (coroutineScope.isActive) {
-                LoaderWithText(
-                    stringResource(Res.string.qr_code_scanning), modifier = Modifier.fillMaxSize()
-                )
-            }
+            LoaderWithText(
+                stringResource(Res.string.qr_code_scanning), modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }

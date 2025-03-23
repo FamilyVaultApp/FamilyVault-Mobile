@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.models.QrCodeScanResponse
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
@@ -15,6 +16,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.common.CharacterSetECI
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
+import kotlinx.serialization.json.Json
 import java.util.EnumMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -23,22 +25,28 @@ class QRCodeService(private val context: Context) : IQRCodeService {
 
     override suspend fun scanQRCode(): QrCodeScanResponse {
         return suspendCoroutine { continuation ->
-            val scannerOptions = GmsBarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                .build()
+            val scannerOptions =
+                GmsBarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_QR_CODE).build()
             val scanner = GmsBarcodeScanning.getClient(context, scannerOptions)
 
-            scanner.startScan()
-                .addOnSuccessListener { barcode ->
+            scanner.startScan().addOnSuccessListener { barcode ->
                     continuation.resume(QrCodeScanResponse.success(barcode.rawValue))
-                }
-                .addOnCanceledListener {
+                }.addOnCanceledListener {
                     continuation.resume(QrCodeScanResponse.canceled())
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     continuation.resume(QrCodeScanResponse.error(e.message))
                 }
         }
+    }
+
+    override suspend fun scanPayload(): AddFamilyMemberDataPayload {
+        val scannedResult = scanQRCode()
+
+        if (scannedResult.error != null || scannedResult.content == null) {
+            throw Exception(scannedResult.error)
+        }
+
+        return Json.decodeFromString(scannedResult.content)
     }
 
     override fun generateQRCode(qrCodeContent: String): ImageBitmap? {
@@ -49,13 +57,9 @@ class QRCodeService(private val context: Context) : IQRCodeService {
             hints[EncodeHintType.CHARACTER_SET] = CharacterSetECI.UTF8
 
             bitMatrix = MultiFormatWriter().encode(
-                qrCodeContent,
-                BarcodeFormat.QR_CODE,
-                500,
-                500,
-                hints
+                qrCodeContent, BarcodeFormat.QR_CODE, 500, 500, hints
             )
-        } catch (exception : IllegalArgumentException){
+        } catch (exception: IllegalArgumentException) {
             return null
         }
 
@@ -70,14 +74,14 @@ class QRCodeService(private val context: Context) : IQRCodeService {
 
             for (x in 0 until bitMatrixWidth) {
 
-                pixels[offset + x] = if (bitMatrix.get(x, y))
-                    Color.BLACK
-                else
-                    Color.WHITE
+                pixels[offset + x] = if (bitMatrix.get(x, y)) Color.BLACK
+                else Color.WHITE
             }
         }
 
-        val imageBitmap: ImageBitmap = Bitmap.createBitmap(pixels, bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_8888).asImageBitmap()
+        val imageBitmap: ImageBitmap =
+            Bitmap.createBitmap(pixels, bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_8888)
+                .asImageBitmap()
         return imageBitmap
     }
 }
