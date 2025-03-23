@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main
+package com.github.familyvault.ui.screens.main.addFamilyMember
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +22,7 @@ import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
 import com.github.familyvault.ui.components.typography.Headline3
-import com.github.familyvault.ui.screens.start.joinFamilyGroup.FamilyGroupJoinQrCode
+import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.add_member_to_family_group_content
@@ -93,7 +93,7 @@ class AddMemberToFamilyGroupScreen : Screen {
                 )
                 Button(
                     stringResource(Res.string.scan_qr_code_button_content), onClick = {
-                        navigator.push(FamilyGroupJoinQrCode())
+                        navigator.push(AddMemberToFamilyGroupQrCodeScanScreen())
                     }
                 )
             }

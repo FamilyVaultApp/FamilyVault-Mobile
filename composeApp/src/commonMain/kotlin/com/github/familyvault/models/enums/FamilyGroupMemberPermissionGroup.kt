@@ -1,11 +1,17 @@
 package com.github.familyvault.models.enums
 
-import kotlinx.serialization.SerialName
+import com.github.familyvault.utils.EnumSerializer
 import kotlinx.serialization.Serializable
 
-@Serializable
+private class FamilyGroupMemberPermissionGroupSerializer: EnumSerializer<FamilyGroupMemberPermissionGroup>(
+    "FamilyGroupMemberPermissionGroup",
+    { it.value },
+    { v -> FamilyGroupMemberPermissionGroup.entries.first { it.value == v } }
+)
+
+@Serializable(with = FamilyGroupMemberPermissionGroupSerializer::class)
 enum class FamilyGroupMemberPermissionGroup(val value: Int) {
-    @SerialName("0") Guardian(0),
-    @SerialName("1") Member(1),
-    @SerialName("2") Guest(2);
+    Guardian(0),
+    Member(1),
+    Guest(2);
 }

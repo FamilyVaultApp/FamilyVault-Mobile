@@ -7,5 +7,7 @@ data class NewFamilyMemberData(
     val firstname: String,
     val surname: String,
     val keyPair: PublicPrivateKeyPair
-    // TODO: JoinToken
-)
+) {
+    val fullname: String
+        get() = "$firstname $surname"
+}
