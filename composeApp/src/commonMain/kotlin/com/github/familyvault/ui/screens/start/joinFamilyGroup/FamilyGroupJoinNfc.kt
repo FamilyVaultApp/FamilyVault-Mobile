@@ -9,20 +9,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Sensors
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -32,15 +21,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.components.NFCWriteStatus
 import com.github.familyvault.components.getNFCManager
-import com.github.familyvault.forms.FamilyMemberNewMemberFormData
-import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
-import com.github.familyvault.forms.PrivateKeyAssignPasswordFormData
-import com.github.familyvault.models.NewFamilyMemberData
-import com.github.familyvault.models.JoinStatus
 import com.github.familyvault.models.AddFamilyMemberDataPayload
-import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
-import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
@@ -52,72 +34,40 @@ import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.join_family_group_content
 import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.show_qr_code_button_content
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 
 class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMemberDataPayload) :
     Screen {
     @Composable
     override fun Content() {
+
+        val navigator = LocalNavigator.currentOrThrow
+
+        val nfcManager = getNFCManager()
+
+        LaunchedEffect(Unit) {
+            nfcManager.prepareWrite(newFamilyMemberDataPayload)
+        }
+
+        LaunchedEffect(Unit) {
+            nfcManager.writeStatus.collect { status ->
+                when (status) {
+                    is NFCWriteStatus.Success -> {
+                        navigator.replaceAll(FamilyGroupJoinWaitingScreen(newFamilyMemberDataPayload))
+                    }
+                    is NFCWriteStatus.Error -> {
+                        // Handle error
+                        println("Write error: ${status.message}")
+                    }
+                }
+            }
+        }
+
         StartScreenScaffold {
-            val scope = rememberCoroutineScope()
-            val nfcManager = getNFCManager()
-
-            val trigger = remember { mutableStateOf(true) }
-            val showDialog = remember { mutableStateOf(false) }
-
-            val nfcData = remember { mutableStateOf(newFamilyMemberInformation) }
-
-            scope.launch {
-                nfcManager.tags.collectLatest { tagData ->
-                    println("Test: I have detected a tag  $tagData")
-                    nfcData.value = tagData
-                    showDialog.value = true
-                }
-            }
-
-            if (trigger.value) {
-                nfcManager.registerApp()
-                trigger.value = false
-            }
-
-            LaunchedEffect(Unit) {
-                nfcManager.prepareWrite(newFamilyMemberInformation)
-            }
-            LaunchedEffect(nfcManager.writeStatus) {
-                nfcManager.writeStatus.collect { status ->
-                    when (status) {
-                        is NFCWriteStatus.Success -> {
-                            println("Zapisano dane przez NFC!")
-                            showDialog.value = true
-                        }
-                        is NFCWriteStatus.Error -> {
-                            println("Błąd: ${status.message}")
-                        }
-                    }
-                }
-            }
-
-            if (showDialog.value) {
-                AlertDialog(
-                    onDismissRequest = { showDialog.value = false },
-                    title = { Text("Sukces!") },
-                    text = { Text("Dane zostały przesłane") },
-                    confirmButton = {
-                        Button(
-                            text = "OK",
-                            onClick = { showDialog.value = false }
-                        )
-                    }
-                )
-            }
 
             JoinFamilyGroupHeader()
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
-            JoinFamilyGroupContent(nfcData.value)
+            JoinFamilyGroupContent()
         }
     }
 
@@ -134,7 +84,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
     }
 
     @Composable
-    private fun JoinFamilyGroupContent(nfcData: NewFamilyMemberData) {
+    private fun JoinFamilyGroupContent() {
         Column(
             modifier = Modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -148,12 +98,12 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
                 Modifier.padding(AdditionalTheme.spacings.normalPadding)
             )
 
-            JoinFamilyGroupContentButtons(nfcData)
+            JoinFamilyGroupContentButtons()
         }
     }
 
     @Composable
-    private fun JoinFamilyGroupContentButtons(nfcData: NewFamilyMemberData) {
+    private fun JoinFamilyGroupContentButtons() {
         val navigator = LocalNavigator.currentOrThrow
 
         Column(

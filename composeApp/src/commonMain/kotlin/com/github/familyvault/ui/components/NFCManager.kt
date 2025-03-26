@@ -1,7 +1,7 @@
 package com.github.familyvault.components
 
 import androidx.compose.runtime.Composable
-import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.AddFamilyMemberDataPayload
 import kotlinx.coroutines.flow.SharedFlow
 
 sealed class NFCWriteStatus {
@@ -10,14 +10,15 @@ sealed class NFCWriteStatus {
 }
 
 expect class NFCManager {
-    val tags: SharedFlow<NewFamilyMemberData>
+    val tags: SharedFlow<AddFamilyMemberDataPayload>
     val writeStatus: SharedFlow<NFCWriteStatus>
 
     @Composable
     fun registerApp()
+    @Composable
+    fun unregisterApp()
+    fun prepareWrite(data: AddFamilyMemberDataPayload)
 
-    fun prepareWrite(data: NewFamilyMemberData)
 }
-
 @Composable
 expect fun getNFCManager(): NFCManager
