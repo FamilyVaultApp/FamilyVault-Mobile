@@ -6,6 +6,7 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
+import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicPrivateKeyPair
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
@@ -96,5 +97,15 @@ class FamilyGroupService(
                 contextId
             )
         ).members
+    }
+
+    override suspend fun renameFamilyGroup(
+        contextId: String, name: String?
+    ) {
+        familyVaultBackendProxy.renameFamilyGroup(
+            RenameFamilyGroupRequest(
+                contextId, name
+            )
+        )
     }
 }

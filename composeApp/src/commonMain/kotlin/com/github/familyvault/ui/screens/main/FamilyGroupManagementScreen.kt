@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,8 +23,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.backend.requests.FamilyVaultBackendRequest
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
@@ -37,6 +40,7 @@ import familyvault.composeapp.generated.resources.family_group_add_new_member
 import familyvault.composeapp.generated.resources.family_group_management_title
 import familyvault.composeapp.generated.resources.family_group_members
 import familyvault.composeapp.generated.resources.text_field_group_name_label
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -64,17 +68,31 @@ class FamilyGroupManagementScreen : Screen {
 
     @Composable
     private fun FamilyGroupNameEdit() {
-        return Column(
+        val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val coroutineScope = rememberCoroutineScope()
+        var groupName by remember { mutableStateOf("") }
+
+        Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
             modifier = Modifier.fillMaxWidth().padding(vertical = AdditionalTheme.spacings.large),
         ) {
             TextField(
-                value = "", label = stringResource(Res.string.text_field_group_name_label)
+                value = groupName,
+                onValueChange = { groupName = it },
+                label = stringResource(Res.string.text_field_group_name_label)
             )
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.change_name_content),
-                onClick = {}
+                onClick = {
+                    coroutineScope.launch {
+                        familyGroupService.renameFamilyGroup(
+                            contextId = familyGroupSessionService.getContextId(),
+                            name = groupName
+                        )
+                    }
+                }
             )
         }
     }
