@@ -1,7 +1,7 @@
 package com.github.familyvault.ui.screens.main
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -24,7 +24,7 @@ object FilesCabinetTab : Tab {
         @Composable
         get() {
             val title = stringResource(Res.string.file_cabinet_tab)
-            val icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Chat)
+            val icon = rememberVectorPainter(Icons.Filled.Folder)
 
             return remember {
                 TabOptions(
