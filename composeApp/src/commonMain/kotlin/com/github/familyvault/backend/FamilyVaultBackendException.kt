@@ -1,8 +1,8 @@
-package com.github.familyvault.backend.client
+package com.github.familyvault.backend
 
 import io.ktor.http.HttpStatusCode
 
-class FamilyVaultBackendErrorResponseException(
+class FamilyVaultBackendException(
     statusCode: HttpStatusCode,
     errorBody: String
 ) : RuntimeException("$statusCode - $errorBody")

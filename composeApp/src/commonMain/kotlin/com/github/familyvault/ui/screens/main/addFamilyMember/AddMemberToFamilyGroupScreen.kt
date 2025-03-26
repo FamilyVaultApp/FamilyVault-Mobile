@@ -176,7 +176,7 @@ class AddMemberToFamilyGroupScreen : Screen {
                 )
                 Button(
                     stringResource(Res.string.scan_qr_code_button_content), onClick = {
-                        navigator.push(AddMemberToFamilyGroupQRCodeScanScreen())
+                        navigator.push(AddMemberToFamilyGroupQrCodeScanScreen())
                     }
                 )
             }

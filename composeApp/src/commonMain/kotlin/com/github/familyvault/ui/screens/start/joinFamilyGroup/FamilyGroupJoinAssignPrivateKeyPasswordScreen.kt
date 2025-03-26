@@ -8,7 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -17,9 +16,9 @@ import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
-import com.github.familyvault.models.FamilyMemberJoinStatus
 import com.github.familyvault.models.NewFamilyMemberData
-import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.models.AddFamilyMemberDataPayload
+import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.privateKey.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
@@ -34,6 +33,9 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
         val privMxClient = koinInject<IPrivMxClient>()
+        val joinStatusService = koinInject<IJoinStatusService>()
+        val coroutineScope = rememberCoroutineScope()
+
         StartScreenScaffold {
             PrivateKeyAssignPasswordHeader()
             Column(
@@ -46,14 +48,24 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                 InitialScreenButton(
                     enabled = form.isFormValid(),
                 ) {
-                    val keyPair = privMxClient.generatePairOfPrivateAndPublicKey(form.password, AppConfig.SALT)
-                    val newFamilyMemberData = NewFamilyMemberData(
-                        firstname = newFamilyMemberDraft.firstname.value,
-                        surname = newFamilyMemberDraft.surname.value,
-                        keyPair = keyPair,
-                        joinStatus = null
-                    )
-                    navigator.replaceAll(FamilyGroupJoinNfc(newFamilyMemberData))
+                    coroutineScope.launch {
+                        val keyPair = privMxClient.generatePairOfPrivateAndPublicKey(
+                            form.password,
+                            AppConfig.SALT
+                        )
+                        val joinStatus = joinStatusService.generateJoinStatus()
+
+                        val newFamilyMemberData = NewFamilyMemberData(
+                            firstname = newFamilyMemberDraft.firstname.value,
+                            surname = newFamilyMemberDraft.surname.value,
+                            keyPair = keyPair
+                        )
+                        val newFamilyMemberDataPayload = AddFamilyMemberDataPayload(
+                            newMemberData = newFamilyMemberData,
+                            joinStatusToken = joinStatus.token
+                        )
+                        navigator.replaceAll(FamilyGroupJoinNfc(newFamilyMemberDataPayload))
+                    }
                 }
             }
         }

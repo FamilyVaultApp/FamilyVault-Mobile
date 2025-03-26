@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 data class NewFamilyMemberData(
     val firstname: String,
     val surname: String,
-    val keyPair: PublicPrivateKeyPair,
-    var joinStatus: FamilyMemberJoinStatus?
-)
+    val keyPair: PublicPrivateKeyPair
+) {
+    val fullname: String
+        get() = "$firstname $surname"
+}

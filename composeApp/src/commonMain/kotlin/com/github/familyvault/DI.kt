@@ -6,6 +6,8 @@ import com.github.familyvault.services.FamilyGroupService
 import com.github.familyvault.services.FamilyGroupSessionService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
+import com.github.familyvault.services.IJoinStatusService
+import com.github.familyvault.services.JoinStatusService
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -27,6 +29,7 @@ val sharedModules = module {
             get()
         )
     }.bind<IFamilyGroupService>()
+    single { JoinStatusService() }.bind<IJoinStatusService>()
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {

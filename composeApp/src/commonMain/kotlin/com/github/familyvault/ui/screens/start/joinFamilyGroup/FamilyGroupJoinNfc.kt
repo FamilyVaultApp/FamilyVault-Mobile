@@ -19,8 +19,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -33,10 +35,12 @@ import com.github.familyvault.components.getNFCManager
 import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.forms.PrivateKeyAssignPasswordFormData
-import com.github.familyvault.models.FamilyMemberJoinStatus
 import com.github.familyvault.models.NewFamilyMemberData
-import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.models.JoinStatus
+import com.github.familyvault.models.AddFamilyMemberDataPayload
+import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
+import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
@@ -54,16 +58,10 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMemberData) : Screen {
+class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMemberDataPayload) :
+    Screen {
     @Composable
     override fun Content() {
-
-        val familyGroupService = koinInject<IFamilyGroupService>()
-
-        LaunchedEffect(Unit) {
-            newFamilyMemberInformation.joinStatus = familyGroupService.generateJoinToken()
-        }
-
         StartScreenScaffold {
             val scope = rememberCoroutineScope()
             val nfcManager = getNFCManager()
@@ -175,11 +173,13 @@ class FamilyGroupJoinNfc(private val newFamilyMemberInformation: NewFamilyMember
                     modifier = Modifier.weight(1f)
                 )
                 Button(
-                    stringResource(Res.string.show_qr_code_button_content),
-                    onClick = {
-                        navigator.push(DisplayFamilyMemberDataQrCodeScreen(nfcData))
-                    },
-                    modifier = Modifier.weight(1f)
+                    stringResource(Res.string.show_qr_code_button_content), onClick = {
+                        navigator.push(
+                            DisplayFamilyMemberDataQrCodeScreen(
+                                newFamilyMemberDataPayload
+                            )
+                        )
+                    }, modifier = Modifier.weight(1f)
                 )
             }
         }
