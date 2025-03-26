@@ -6,21 +6,24 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.github.familyvault.ui.components.overrides.NavigationBar
+import com.github.familyvault.ui.theme.AppTheme
 
 class MainScreen : Screen {
     @Composable
     override fun Content() {
         TabNavigator(ChatTab) {
-            Scaffold(
-                content = { CurrentTab() },
-                bottomBar = {
-                    NavigationBar(
-                        ChatTab,
-                        FilesCabinetTab,
-                        TaskTab
-                    )
-                }
-            )
+            AppTheme {
+                Scaffold(
+                    content = { CurrentTab() },
+                    bottomBar = {
+                        NavigationBar(
+                            ChatTab,
+                            FilesCabinetTab,
+                            TaskTab
+                        )
+                    }
+                )
+            }
         }
     }
 }
