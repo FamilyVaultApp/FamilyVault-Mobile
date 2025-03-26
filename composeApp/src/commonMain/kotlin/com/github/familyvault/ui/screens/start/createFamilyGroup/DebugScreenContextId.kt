@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.ui.components.InitialScreenButton
@@ -21,9 +24,23 @@ class DebugScreenContextId : Screen {
     @Composable
     override fun Content() {
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val familyGroupService = koinInject<IFamilyGroupService>()
+        val privMxClient = koinInject<IPrivMxClient>()
         val qrCodeGenerationService = koinInject<IQRCodeService>()
         val navigator = LocalNavigator.currentOrThrow
         val contextId = familyGroupSessionService.getContextId()
+
+        LaunchedEffect(Unit) {
+            val membersList = familyGroupService.retrieveFamilyGroupMembersList()
+            val contextId = familyGroupSessionService.getContextId()
+
+            if (privMxClient.createThread(contextId, membersList, ByteArray(0), ByteArray(0))) {
+                println("OK!!")
+            } else {
+                println("Failed to create a thread.")
+            }
+        }
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
