@@ -8,6 +8,10 @@ import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
+import com.simplito.java.privmx_endpoint_extra.model.SortOrder
+import familyvault.composeapp.generated.resources.Res
+import kotlinx.serialization.json.Json
+
 
 internal class PrivMxClient(certsPath: String) :
     IPrivMxClient {
@@ -51,7 +55,7 @@ internal class PrivMxClient(certsPath: String) :
                 members.first,
                 members.second,
                 publicMeta,
-                privateMeta
+                "Nowy czat".encodeToByteArray()
             )
 
             println("ThreadId: $threadId")
@@ -79,5 +83,70 @@ internal class PrivMxClient(certsPath: String) :
         }
 
         return guardians to members
+    }
+
+    override fun retrieveAllThreads(contextId: String): List<String> {
+        val startIndex = 0L
+        val pageSize = 100L
+        var threadIdList: List<String> = listOf()
+        if (threadApi != null)
+        {
+            val threadsPagingList = threadApi!!.listThreads(
+                contextId,
+                startIndex,
+                pageSize,
+                SortOrder.DESC
+            )
+            threadsPagingList.readItems.map {
+                ThreadItem(
+                    it,
+                    it.privateMeta.decodeToString(),
+                    it.publicMeta.decodeToString()
+                )
+                threadIdList += it.threadId
+            }
+        }
+        return threadIdList
+    }
+
+    override fun sendMessage(messageContent: String, threadId: String, responseToMsgId: String): Boolean {
+        val publicMeta: Any = if (responseToMsgId.isNotEmpty()) {
+            MessagePublicMeta(responseTo = responseToMsgId)
+        } else {
+            ByteArray(0)
+        }
+        val privateMeta = ByteArray(0)
+        if (threadApi != null) {
+            val messageID = threadApi!!.sendMessage(
+                threadId,
+                Json.encodeToString(publicMeta).encodeToByteArray(),
+                privateMeta,
+                messageContent.encodeToByteArray()
+            )
+            return true
+        } else {
+            return false
+        }
+    }
+
+    override fun retrieveMessagesFromThread(threadId: String) {
+        val startIndex = 0L
+        val pageSize = 100L
+        if (threadApi != null) {
+            val messagesPagingList = threadApi!!.listMessages(
+                threadId,
+                startIndex,
+                pageSize,
+                SortOrder.DESC
+            )
+
+            val messages = messagesPagingList.readItems.map {
+                MessageItem(
+                    it,
+                    it.data.decodeToString(),
+                    Json.decodeFromString(it.publicMeta.decodeToString())
+                )
+            }
+        }
     }
 }

@@ -32,12 +32,16 @@ class DebugScreenContextId : Screen {
 
         LaunchedEffect(Unit) {
             val membersList = familyGroupService.retrieveFamilyGroupMembersList()
-            val contextId = familyGroupSessionService.getContextId()
 
-            if (privMxClient.createThread(contextId, membersList, ByteArray(0), ByteArray(0))) {
-                println("OK!!")
-            } else {
-                println("Failed to create a thread.")
+//            if (privMxClient.createThread(contextId, membersList, ByteArray(0), ByteArray(0))) {
+//                println("OK!!")
+//            } else {
+//                println("Failed to create a thread.")
+//            }
+
+            val threadIds = privMxClient.retrieveAllThreads(contextId)
+            for (id in threadIds) {
+                println("Found thread ID: $id")
             }
         }
 
