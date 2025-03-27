@@ -3,6 +3,5 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">familyvault.local</domain>
         <domain includeSubdomains="true">10.7.5.1</domain>
-        <domain includeSubdomains="true">192.168.100.2</domain>
     </domain-config>
 </network-security-config>

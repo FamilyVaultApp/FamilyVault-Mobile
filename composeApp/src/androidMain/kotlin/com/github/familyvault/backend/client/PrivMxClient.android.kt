@@ -58,7 +58,6 @@ internal class PrivMxClient(certsPath: String) :
                 "Nowy czat".encodeToByteArray()
             )
 
-            println("ThreadId: $threadId")
             if (threadId != null) {
                 return true
             } else {
@@ -85,7 +84,7 @@ internal class PrivMxClient(certsPath: String) :
         return guardians to members
     }
 
-    override fun retrieveAllThreads(contextId: String): List<String> {
+    override fun retrieveAllThreadIds(contextId: String): List<String> {
         val startIndex = 0L
         val pageSize = 100L
         var threadIdList: List<String> = listOf()
@@ -117,12 +116,19 @@ internal class PrivMxClient(certsPath: String) :
         }
         val privateMeta = ByteArray(0)
         if (threadApi != null) {
-            val messageID = threadApi!!.sendMessage(
-                threadId,
-                Json.encodeToString(publicMeta).encodeToByteArray(),
-                privateMeta,
-                messageContent.encodeToByteArray()
-            )
+            val messageId: String
+            try {
+                messageId = threadApi!!.sendMessage(
+                    threadId,
+                    Json.encodeToString(publicMeta).encodeToByteArray(),
+                    privateMeta,
+                    messageContent.encodeToByteArray()
+                )
+            } catch (e: Exception) {
+                println(e.message)
+                return false
+            }
+            println("Message $messageId created")
             return true
         } else {
             return false
