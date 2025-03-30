@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RenameFamilyGroupRequest (
     val contextId: String,
-    val name: String?,
+    val name: String,
 ) : FamilyVaultBackendRequest()

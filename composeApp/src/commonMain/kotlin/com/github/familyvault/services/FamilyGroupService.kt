@@ -103,7 +103,7 @@ class FamilyGroupService(
     }
 
     override suspend fun renameFamilyGroup(
-        contextId: String, name: String?
+        contextId: String, name: String
     ) {
         familyVaultBackendProxy.renameFamilyGroup(
             RenameFamilyGroupRequest(
