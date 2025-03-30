@@ -72,6 +72,7 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.serialization.protobuf)
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
