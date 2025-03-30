@@ -76,7 +76,7 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
 }
 
 @Immutable
-data class Spacing (
+data class Spacing(
     val large: Dp,
     val medium: Dp,
     val small: Dp,
