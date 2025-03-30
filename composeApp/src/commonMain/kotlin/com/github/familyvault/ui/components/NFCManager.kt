@@ -17,8 +17,12 @@ expect class NFCManager {
     fun registerApp()
     @Composable
     fun unregisterApp()
-    fun prepareWrite(data: AddFamilyMemberDataPayload)
-
+    @Composable
+    fun setReadMode()
+    @Composable
+    fun setIdleMode()
+    @Composable
+    fun setEmulateMode(data: AddFamilyMemberDataPayload)
 }
 @Composable
 expect fun getNFCManager(): NFCManager

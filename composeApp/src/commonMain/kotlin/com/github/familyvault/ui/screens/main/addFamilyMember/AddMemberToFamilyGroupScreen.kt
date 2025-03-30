@@ -11,7 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -38,10 +43,24 @@ class AddMemberToFamilyGroupScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-
         val nfcManager = getNFCManager()
+        var isActive by remember { mutableStateOf(true) }
 
+        if (isActive) {
+            nfcManager.registerApp()
+            nfcManager.setReadMode()
+        } else {
+            nfcManager.setIdleMode()
+        }
 
+        // Clean up when leaving the screen
+        DisposableEffect(Unit) {
+            onDispose {
+                isActive = false
+            }
+        }
+
+        // Collect NFC tags in a LaunchedEffect
         LaunchedEffect(Unit) {
             nfcManager.tags.collect { payload ->
                 navigator.replaceAll(
@@ -92,7 +111,7 @@ class AddMemberToFamilyGroupScreen : Screen {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = AdditionalTheme.spacings.large),
+                .padding(horizontal = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -105,9 +124,8 @@ class AddMemberToFamilyGroupScreen : Screen {
                     onClick = { navigator.replaceAll(MainScreen()) },
                 )
                 Button(
-                    stringResource(Res.string.scan_qr_code_button_content), onClick = {
-                        navigator.push(AddMemberToFamilyGroupQrCodeScanScreen())
-                    }
+                    stringResource(Res.string.scan_qr_code_button_content),
+                    onClick = { navigator.push(AddMemberToFamilyGroupQrCodeScanScreen()) }
                 )
             }
         }

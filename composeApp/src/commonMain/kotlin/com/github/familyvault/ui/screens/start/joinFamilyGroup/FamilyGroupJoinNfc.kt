@@ -11,7 +11,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -19,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.components.NFCWriteStatus
 import com.github.familyvault.components.getNFCManager
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.ui.components.AnimatedNfcBeam
@@ -36,35 +40,30 @@ import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.show_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 
-class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMemberDataPayload) :
-    Screen {
+class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMemberDataPayload) : Screen {
+
     @Composable
     override fun Content() {
-
         val navigator = LocalNavigator.currentOrThrow
-
         val nfcManager = getNFCManager()
 
-        LaunchedEffect(Unit) {
-            nfcManager.prepareWrite(newFamilyMemberDataPayload)
+        var isActive by remember { mutableStateOf(true) }
+
+        if (isActive) {
+            nfcManager.registerApp()
+            nfcManager.setEmulateMode(newFamilyMemberDataPayload)
+        } else {
+            nfcManager.setIdleMode()
         }
 
-        LaunchedEffect(Unit) {
-            nfcManager.writeStatus.collect { status ->
-                when (status) {
-                    is NFCWriteStatus.Success -> {
-                        navigator.replaceAll(FamilyGroupJoinWaitingScreen(newFamilyMemberDataPayload))
-                    }
-                    is NFCWriteStatus.Error -> {
-                        // Handle error
-                        println("Write error: ${status.message}")
-                    }
-                }
+        // Clean up when leaving the screen
+        DisposableEffect(Unit) {
+            onDispose {
+                isActive = false
             }
         }
 
         StartScreenScaffold {
-
             JoinFamilyGroupHeader()
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             JoinFamilyGroupContent()
@@ -73,12 +72,10 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
 
     @Composable
     private fun JoinFamilyGroupHeader() {
-        Box(
-            modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)
-        ) {
+        Box(modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large)) {
             Headline1(
                 stringResource(Res.string.join_family_group_title),
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -97,7 +94,6 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
                 TextAlign.Center,
                 Modifier.padding(AdditionalTheme.spacings.normalPadding)
             )
-
             JoinFamilyGroupContentButtons()
         }
     }
@@ -109,7 +105,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = AdditionalTheme.spacings.large),
+                .padding(horizontal = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -123,13 +119,11 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
                     modifier = Modifier.weight(1f)
                 )
                 Button(
-                    stringResource(Res.string.show_qr_code_button_content), onClick = {
-                        navigator.push(
-                            DisplayFamilyMemberDataQrCodeScreen(
-                                newFamilyMemberDataPayload
-                            )
-                        )
-                    }, modifier = Modifier.weight(1f)
+                    stringResource(Res.string.show_qr_code_button_content),
+                    onClick = {
+                        navigator.push(DisplayFamilyMemberDataQrCodeScreen(newFamilyMemberDataPayload))
+                    },
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
