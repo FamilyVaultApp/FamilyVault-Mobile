@@ -25,6 +25,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.backend.requests.FamilyVaultBackendRequest
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.FamilyMemberEntry
@@ -71,26 +72,31 @@ class FamilyGroupManagementScreen : Screen {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val coroutineScope = rememberCoroutineScope()
-        var groupName by remember { mutableStateOf("") }
+
+        var familyGroupName by remember { mutableStateOf(familyGroupSessionService.getFamilyGroupName()) }
+        var currentFamilyGroupName by remember { mutableStateOf(familyGroupSessionService.getFamilyGroupName()) }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
             modifier = Modifier.fillMaxWidth().padding(vertical = AdditionalTheme.spacings.large),
         ) {
             TextField(
-                value = groupName,
-                onValueChange = { groupName = it },
+                value = familyGroupName,
+                onValueChange = { familyGroupName = it },
                 label = stringResource(Res.string.text_field_group_name_label)
             )
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.change_name_content),
+                enabled = familyGroupName != currentFamilyGroupName && familyGroupName.isNotBlank(),
                 onClick = {
                     coroutineScope.launch {
                         familyGroupService.renameFamilyGroup(
                             contextId = familyGroupSessionService.getContextId(),
-                            name = groupName
+                            name = familyGroupName
                         )
+                        familyGroupSessionService.updateFamilyGroupName(familyGroupName)
+                        currentFamilyGroupName = familyGroupName
                     }
                 }
             )

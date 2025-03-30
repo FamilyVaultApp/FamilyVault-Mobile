@@ -42,7 +42,7 @@ class FamilyGroupService(
             )
         )
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, pairOfKeys
+            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, pairOfKeys, familyGroupName
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
@@ -54,8 +54,10 @@ class FamilyGroupService(
         firstname: String, surname: String, keyPair: PublicPrivateKeyPair, contextId: String
     ) {
         val solutionId = familyVaultBackendProxy.getSolutionId().solutionId
+        val familyGroupName = familyGroupCredentialsRepository.getDefaultCredential()!!.name
+
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, keyPair
+            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, keyPair, familyGroupName
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
@@ -71,7 +73,8 @@ class FamilyGroupService(
                 AppConfig.PRIVMX_BRIDGE_URL,
                 credential.solutionId,
                 credential.contextId,
-                PublicPrivateKeyPair(credential.publicKey, credential.privateKey)
+                PublicPrivateKeyPair(credential.publicKey, credential.privateKey),
+                credential.name
             )
             familyGroupSessionService.connect()
             return true

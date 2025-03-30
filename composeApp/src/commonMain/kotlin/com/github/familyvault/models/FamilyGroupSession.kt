@@ -4,5 +4,6 @@ data class FamilyGroupSession(
     var bridgeUrl: String,
     var solutionId: String,
     var contextId: String,
-    var keyPair: PublicPrivateKeyPair
+    var keyPair: PublicPrivateKeyPair,
+    var familyGroupName: String
 )

@@ -7,9 +7,12 @@ interface IFamilyGroupSessionService {
         bridgeUrl: String,
         solutionId: String,
         contextId: String,
-        keyPair: PublicPrivateKeyPair
+        keyPair: PublicPrivateKeyPair,
+        familyGroupName: String
     )
 
     fun connect()
     fun getContextId(): String
+    fun getFamilyGroupName(): String
+    fun updateFamilyGroupName(newName: String)
 }

@@ -16,7 +16,7 @@ interface IFamilyGroupService {
         firstname: String,
         surname: String,
         keyPair: PublicPrivateKeyPair,
-        contextId: String
+        contextId: String,
     )
 
     suspend fun assignDefaultStoredFamilyGroup(): Boolean

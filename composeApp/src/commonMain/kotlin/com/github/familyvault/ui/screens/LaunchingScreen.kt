@@ -3,12 +3,18 @@ package com.github.familyvault.ui.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.screens.start.StartScreen
@@ -24,7 +30,9 @@ class LaunchingScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val coroutineScope = rememberCoroutineScope()
+        val familyGroupName = familyGroupSessionService.getFamilyGroupName()
 
         LaunchedEffect(familyGroupService) {
             coroutineScope.launch {

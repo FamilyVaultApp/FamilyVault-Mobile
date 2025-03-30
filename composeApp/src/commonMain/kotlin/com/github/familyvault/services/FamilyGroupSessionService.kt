@@ -14,10 +14,11 @@ class FamilyGroupSessionService(
         bridgeUrl: String,
         solutionId: String,
         contextId: String,
-        keyPair: PublicPrivateKeyPair
+        keyPair: PublicPrivateKeyPair,
+        familyGroupName: String
     ) {
         session = FamilyGroupSession(
-            bridgeUrl, solutionId, contextId, keyPair
+            bridgeUrl, solutionId, contextId, keyPair, familyGroupName
         )
     }
 
@@ -27,12 +28,22 @@ class FamilyGroupSessionService(
         privMxClient.establishConnection(
             session!!.bridgeUrl,
             session!!.solutionId,
-            session!!.keyPair.privateKey
+            session!!.keyPair.privateKey,
         )
     }
 
     override fun getContextId(): String {
         requireNotNull(session?.contextId)
         return session!!.contextId
+    }
+
+    override fun getFamilyGroupName(): String {
+        requireNotNull(session?.familyGroupName)
+        return session!!.familyGroupName
+    }
+
+    override fun updateFamilyGroupName(newName: String) {
+        requireNotNull(session)
+        session = session!!.copy(familyGroupName = newName)
     }
 }
