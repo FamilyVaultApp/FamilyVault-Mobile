@@ -13,11 +13,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.services.IJoinStatusService
-import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.ui.components.typography.Headline3
+import com.github.familyvault.utils.IQrCodeGenerator
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.qr_code_generation_screen_content
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -26,7 +25,7 @@ class DisplayFamilyMemberDataQrCodeScreen(private val payload: AddFamilyMemberDa
     @Composable
     override fun Content() {
         val joinTokenService = koinInject<IJoinStatusService>()
-        val qrCodeGenerationService = koinInject<IQRCodeService>()
+        val qrCodeGenerator = koinInject<IQrCodeGenerator>()
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
@@ -41,7 +40,7 @@ class DisplayFamilyMemberDataQrCodeScreen(private val payload: AddFamilyMemberDa
         ) {
             Headline3(stringResource(Res.string.qr_code_generation_screen_content))
             Image(
-                bitmap = qrCodeGenerationService.generateQRCode(Json.encodeToString(payload))!!,
+                bitmap = qrCodeGenerator.generate(payload),
                 contentDescription = "QR Code"
             )
 

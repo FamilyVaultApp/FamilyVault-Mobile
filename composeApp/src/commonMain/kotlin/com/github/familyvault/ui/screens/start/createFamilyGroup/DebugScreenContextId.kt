@@ -15,18 +15,18 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
-import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.screens.main.MainScreen
+import com.github.familyvault.utils.IQrCodeGenerator
 import org.koin.compose.koinInject
 
 class DebugScreenContextId : Screen {
     @Composable
     override fun Content() {
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
-//        val familyGroupService = koinInject<IFamilyGroupService>()
+//        val familyGroupService = koinInject<IFamilyGroupService>() 
 //        val privMxClient = koinInject<IPrivMxClient>()
-        val qrCodeGenerationService = koinInject<IQRCodeService>()
+        val qrCodeGenerator = koinInject<IQrCodeGenerator>()
         val navigator = LocalNavigator.currentOrThrow
         val contextId = familyGroupSessionService.getContextId()
 
@@ -59,7 +59,7 @@ class DebugScreenContextId : Screen {
             )
             Text("Debug QR code from ContextId:")
             Image(
-                bitmap = qrCodeGenerationService.generateQRCode(contextId)!!,
+                bitmap = qrCodeGenerator.generate(contextId),
                 contentDescription = "QR Code"
             )
 
