@@ -1,8 +1,10 @@
 package com.github.familyvault.backend.client
 
-import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicPrivateKeyPair
-import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
+import com.github.familyvault.models.chat.MessageItem
+import com.github.familyvault.models.chat.MessagePublicMeta
+import com.github.familyvault.models.chat.ThreadId
+import com.github.familyvault.models.chat.ThreadItem
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
@@ -45,113 +47,106 @@ internal class PrivMxClient(certsPath: String) :
         threadApi = connection!!.threadApi
     }
 
-    override fun createThread(contextId: String, familyGroupMembers: List<FamilyMember>, publicMeta: ByteArray, privateMeta: ByteArray): Boolean {
+    override fun createThread(contextId: String, users: List<Pair<String,String>>, managers: List<Pair<String,String>>, threadTags: ByteArray, threadName: ByteArray): ThreadId {
+        val userList: List<UserWithPubKey> = users.map { (username, publicKey) ->
+            UserWithPubKey(username, publicKey)
+        }
+        val managerList: List<UserWithPubKey> = managers.map { (username, publicKey) ->
+            UserWithPubKey(username, publicKey)
+        }
 
-        val members = splitFamilyMembers(familyGroupMembers)
-        try {
             val threadId = threadApi?.createThread(
                 contextId,
-                members.second,
-                members.first,
-                publicMeta,
-                "Nowy czat".encodeToByteArray() // TODO: Dodać opcję dodania nazwy czatu
+                managerList,
+                userList,
+                threadTags,
+                threadName
             )
 
-            if (threadId != null) {
-                return true
-            } else {
-                return false
+            if (threadId == null) {
+                throw Exception("Received empty threadsPagingList")
             }
-        } catch (e: Exception) {
-            println(e.message)
-        }
-        return false
+        return ThreadId(threadId)
     }
 
-    private fun splitFamilyMembers(familyGroupMembers: List<FamilyMember>): Pair<List<UserWithPubKey>, List<UserWithPubKey>> {
-        var guardians: List<UserWithPubKey> = listOf()
-        var members: List<UserWithPubKey> = listOf()
-
-        for (member in familyGroupMembers) {
-            if (member.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
-                guardians += UserWithPubKey(member.fullname, member.publicKey)
-            } else {
-                members += UserWithPubKey(member.fullname, member.publicKey)
-            }
+    override fun retrieveAllThreadIds(contextId: String, startIndex: Long, pageSize: Long): List<ThreadId> {
+        val threadIdList: MutableList<ThreadId> = mutableListOf()
+        if (threadApi == null) {
+            throw Exception("ThreadApi is null")
         }
-
-        return guardians to members
-    }
-
-    override fun retrieveAllThreadIds(contextId: String): List<String> {
-        val startIndex = 0L
-        val pageSize = 100L
-        var threadIdList: List<String> = listOf()
-        if (threadApi != null)
-        {
-            val threadsPagingList = threadApi!!.listThreads(
-                contextId,
-                startIndex,
-                pageSize,
-                SortOrder.DESC
+        val threadsPagingList = threadApi?.listThreads(
+            contextId,
+            startIndex,
+            pageSize,
+            SortOrder.DESC
+        )
+            
+        if (threadsPagingList == null) {
+            throw Exception("Received empty threadsPagingList")
+        }
+        threadsPagingList.readItems.map {
+            ThreadItem(
+                it,
+                it.privateMeta.decodeToString(),
+                it.publicMeta.decodeToString()
             )
-            threadsPagingList.readItems.map {
-                ThreadItem(
-                    it,
-                    it.privateMeta.decodeToString(),
-                    it.publicMeta.decodeToString()
-                )
-                threadIdList += it.threadId
-            }
+            threadIdList.add(ThreadId(it.threadId))
         }
+
         return threadIdList
     }
 
-    override fun sendMessage(messageContent: String, threadId: String, responseToMsgId: String): Boolean {
+    override fun sendMessage(messageContent: String, threadId: ThreadId, responseToMsgId: String) {
         val publicMeta: Any = if (responseToMsgId.isNotEmpty()) {
             MessagePublicMeta(responseTo = responseToMsgId)
         } else {
             ByteArray(0)
         }
         val privateMeta = ByteArray(0)
-        if (threadApi != null) {
-            val messageId: String
-            try {
-                messageId = threadApi!!.sendMessage(
-                    threadId,
-                    Json.encodeToString(publicMeta).encodeToByteArray(),
-                    privateMeta,
-                    messageContent.encodeToByteArray()
-                )
-            } catch (e: Exception) {
-                println(e.message)
-                return false
-            }
-            println("Message $messageId created")
-            return true
-        } else {
-            return false
+        if (threadApi == null) {
+            throw Exception("Thread API is null")
         }
-    }
-
-    override fun retrieveMessagesFromThread(threadId: String) {
-        val startIndex = 0L
-        val pageSize = 100L
-        if (threadApi != null) {
-            val messagesPagingList = threadApi!!.listMessages(
-                threadId,
-                startIndex,
-                pageSize,
-                SortOrder.DESC
+            threadApi!!.sendMessage(
+                threadId.threadId,
+                Json.encodeToString(publicMeta).encodeToByteArray(),
+                privateMeta,
+                messageContent.encodeToByteArray()
             )
 
-            val messages = messagesPagingList.readItems.map {
-                MessageItem(
-                    it,
-                    it.data.decodeToString(),
-                    Json.decodeFromString(it.publicMeta.decodeToString())
-                )
-            }
-        }
     }
+
+    override fun retrieveMessagesFromThread(threadId: ThreadId, startIndex: Long, pageSize: Long): List<MessageItem> {
+        if (threadApi == null) {
+            throw Exception("Received empty threadApi")
+        }
+
+        val messagesPagingList = threadApi?.listMessages(
+            threadId.threadId,
+            startIndex,
+            pageSize,
+            SortOrder.DESC
+        )
+
+        if (messagesPagingList == null) {
+            throw Exception("Messages paging list empty.")
+        }
+
+        val messages = messagesPagingList?.readItems?.map {
+            MessageItem(
+                it.data.contentToString(),
+                it.authorPubKey,
+                it.data.decodeToString(),
+                Json.decodeFromString(it.publicMeta.decodeToString())
+            )
+        }
+
+        if (messages == null) {
+            throw Exception("Messages list empty.")
+        }
+
+        return messages
+    }
+
 }
+
+
