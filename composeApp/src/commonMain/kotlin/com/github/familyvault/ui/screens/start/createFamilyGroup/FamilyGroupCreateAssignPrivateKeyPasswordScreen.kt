@@ -21,7 +21,7 @@ import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
 import com.github.familyvault.ui.components.dialogs.FamilyGroupCreatingDialog
-import com.github.familyvault.ui.components.privateKey.AssignPrivateKeyFormContent
+import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import kotlinx.coroutines.launch

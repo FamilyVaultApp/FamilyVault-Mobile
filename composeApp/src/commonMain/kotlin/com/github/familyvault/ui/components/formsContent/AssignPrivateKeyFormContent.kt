@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.components.privateKey
+package com.github.familyvault.ui.components.formsContent
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable

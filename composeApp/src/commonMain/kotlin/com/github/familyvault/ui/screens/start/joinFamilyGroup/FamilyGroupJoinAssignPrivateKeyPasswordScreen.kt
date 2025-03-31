@@ -20,7 +20,7 @@ import com.github.familyvault.models.NewFamilyMemberData
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.ui.components.InitialScreenButton
-import com.github.familyvault.ui.components.privateKey.AssignPrivateKeyFormContent
+import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import kotlinx.coroutines.launch
