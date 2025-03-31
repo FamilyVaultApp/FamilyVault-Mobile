@@ -75,4 +75,7 @@
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>
     <string name="qr_code_generation_screen_content">Have your family group guardian scan this code to let you join.</string>
+
+    <!-- Chat -->
+    <string name="chat_create_new">Create new chat</string>
 </resources>

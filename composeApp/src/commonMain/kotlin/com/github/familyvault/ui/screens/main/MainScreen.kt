@@ -1,29 +1,49 @@
 package com.github.familyvault.ui.screens.main
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.GroupAdd
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.github.familyvault.ui.components.overrides.NavigationBar
-import com.github.familyvault.ui.theme.AppTheme
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.chat_create_new
+import org.jetbrains.compose.resources.stringResource
 
 class MainScreen : Screen {
     @Composable
     override fun Content() {
         TabNavigator(ChatTab) {
-            AppTheme {
-                Scaffold(
-                    content = { CurrentTab() },
-                    bottomBar = {
-                        NavigationBar(
-                            ChatTab,
-                            FilesCabinetTab,
-                            TaskTab
-                        )
-                    }
+            Scaffold(bottomBar = {
+                NavigationBar(
+                    ChatTab, FilesCabinetTab, TaskTab
                 )
+            }, floatingActionButton = {
+                FloatingCurrentTabActionButton()
+            }) {
+                CurrentTab()
             }
+        }
+    }
+
+    @Composable
+    private fun FloatingCurrentTabActionButton() {
+        val tabNavigator = LocalTabNavigator.current
+
+        when (tabNavigator.current) {
+            is ChatTab -> FloatingChatActionButton()
+        }
+    }
+
+    @Composable
+    private fun FloatingChatActionButton() {
+        FloatingActionButton(onClick = {}) {
+            Icon(Icons.Filled.GroupAdd, stringResource(Res.string.chat_create_new))
         }
     }
 }

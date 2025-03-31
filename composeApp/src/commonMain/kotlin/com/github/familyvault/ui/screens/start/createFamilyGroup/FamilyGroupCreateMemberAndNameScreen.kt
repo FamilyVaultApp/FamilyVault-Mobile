@@ -15,7 +15,7 @@ import com.github.familyvault.forms.FamilyGroupNewMemberForm
 import com.github.familyvault.ui.components.HeaderWithIcon
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.ValidationErrorMessage
-import com.github.familyvault.ui.components.newFamilyMember.NewFamilyMemberFormContent
+import com.github.familyvault.ui.components.formsContent.NewFamilyMemberFormContent
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
