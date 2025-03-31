@@ -11,6 +11,7 @@ class JoinFamilyGroupPayloadState : IJoinFamilyGroupPayloadState {
         joinStatusToken: String, memberData: NewFamilyMemberData, encryptedPassword: String
     ) {
         payload = AddFamilyMemberDataPayload(memberData, joinStatusToken)
+        this.encryptedPassword = encryptedPassword
     }
 
 

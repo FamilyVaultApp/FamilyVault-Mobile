@@ -51,6 +51,8 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                         val keyPair = privMxClient.generatePairOfPrivateAndPublicKey(
                             form.password
                         )
+                        val encryptedPassword =
+                            privMxClient.encryptPrivateKeyPassword(form.password)
                         val joinStatus = joinStatusService.generateJoinStatus()
 
                         val newFamilyMemberData = NewFamilyMemberData(
@@ -59,7 +61,7 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                             keyPair = keyPair
                         )
                         joinFamilyGroupPayloadState.update(
-                            joinStatus.token, newFamilyMemberData, form.password
+                            joinStatus.token, newFamilyMemberData, encryptedPassword
                         )
                         navigator.replaceAll(FamilyGroupJoinNfc())
                     }
