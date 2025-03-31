@@ -7,7 +7,7 @@ import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 
@@ -54,7 +54,7 @@ class FamilyGroupService(
         firstname: String,
         surname: String,
         encryptedPassword: String,
-        keyPair: PublicPrivateKeyPair,
+        keyPair: PublicEncryptedPrivateKeyPair,
         contextId: String
     ) {
         val solutionId = familyVaultBackendProxy.getSolutionId().solutionId
@@ -79,7 +79,7 @@ class FamilyGroupService(
                 AppConfig.PRIVMX_BRIDGE_URL,
                 credential.solutionId,
                 credential.contextId,
-                PublicPrivateKeyPair(credential.publicKey, credential.encryptedPrivateKey)
+                PublicEncryptedPrivateKeyPair(credential.publicKey, credential.encryptedPrivateKey)
             )
             familyGroupSessionService.connect()
             return true

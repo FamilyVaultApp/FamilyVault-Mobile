@@ -2,7 +2,7 @@ package com.github.familyvault.repositories
 
 import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.familyGroupCredential.FamilyGroupCredential
-import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
 class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
     IFamilyGroupCredentialsRepository {
@@ -10,7 +10,7 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         name: String,
         solutionId: String,
         contextId: String,
-        keyPairs: PublicPrivateKeyPair,
+        keyPairs: PublicEncryptedPrivateKeyPair,
         encryptedPrivateKeyPassword: String,
     ) {
         val credentialDao = appDatabase.credentialDao()

@@ -1,16 +1,18 @@
 package com.github.familyvault.services
 
-import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
 interface IFamilyGroupSessionService {
     fun assignSession(
         bridgeUrl: String,
         solutionId: String,
         contextId: String,
-        keyPair: PublicPrivateKeyPair
+        keyPair: PublicEncryptedPrivateKeyPair
     )
 
     fun connect()
     fun getContextId(): String
-    fun getDecryptedPrivateKey(): String
+    fun getPrivateKey(): String
+    fun getBridgeUrl(): String
+    fun getSolutionId(): String
 }

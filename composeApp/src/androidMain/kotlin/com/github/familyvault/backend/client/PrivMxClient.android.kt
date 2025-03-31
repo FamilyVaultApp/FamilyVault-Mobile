@@ -1,7 +1,7 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
-import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.utils.EncryptUtils
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
@@ -19,13 +19,13 @@ internal class PrivMxClient(certsPath: String) : IPrivMxClient {
 
     override fun generatePairOfPrivateAndPublicKey(
         password: String,
-    ): PublicPrivateKeyPair {
+    ): PublicEncryptedPrivateKeyPair {
         val privateKey = container.cryptoApi.generatePrivateKey(Random.nextBits(32).toString())
         val publicKey = container.cryptoApi.derivePublicKey(privateKey)
         val encryptedPrivateKey = EncryptUtils.encryptData(
             privateKey, AppConfig.SECRET
         )
-        return PublicPrivateKeyPair(publicKey, encryptedPrivateKey)
+        return PublicEncryptedPrivateKeyPair(publicKey, encryptedPrivateKey)
     }
 
     override fun encryptPrivateKeyPassword(password: String): String {

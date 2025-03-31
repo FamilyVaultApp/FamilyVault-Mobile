@@ -1,7 +1,7 @@
 package com.github.familyvault.services
 
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
 interface IFamilyGroupService {
     suspend fun createFamilyGroupAndAssign(
@@ -16,7 +16,7 @@ interface IFamilyGroupService {
         firstname: String,
         surname: String,
         encryptedPassword: String,
-        keyPair: PublicPrivateKeyPair,
+        keyPair: PublicEncryptedPrivateKeyPair,
         contextId: String
     )
 

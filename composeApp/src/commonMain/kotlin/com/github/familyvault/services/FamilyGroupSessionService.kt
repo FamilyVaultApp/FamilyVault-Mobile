@@ -2,6 +2,7 @@ package com.github.familyvault.services
 
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyGroupSession
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.PublicPrivateKeyPair
 
 class FamilyGroupSessionService(
@@ -10,10 +11,16 @@ class FamilyGroupSessionService(
     private var session: FamilyGroupSession? = null
 
     override fun assignSession(
-        bridgeUrl: String, solutionId: String, contextId: String, keyPair: PublicPrivateKeyPair
+        bridgeUrl: String,
+        solutionId: String,
+        contextId: String,
+        keyPair: PublicEncryptedPrivateKeyPair
     ) {
         session = FamilyGroupSession(
-            bridgeUrl, solutionId, contextId, keyPair
+            bridgeUrl, solutionId, contextId, PublicPrivateKeyPair(
+                keyPair.publicKey,
+                privMxClient.decryptPrivateKeyPassword(keyPair.encryptedPrivateKey)
+            )
         )
     }
 
@@ -21,17 +28,23 @@ class FamilyGroupSessionService(
         requireNotNull(session)
 
         privMxClient.establishConnection(
-            session!!.bridgeUrl, session!!.solutionId, getDecryptedPrivateKey()
+            getBridgeUrl(), getSolutionId(), getPrivateKey()
         )
     }
 
     override fun getContextId(): String {
-        return requireNotNull(session?.contextId) { "contextId can't be null" }
+        return requireNotNull(session?.contextId)
     }
 
-    override fun getDecryptedPrivateKey(): String {
-        val encryptedPrivateKey =
-            requireNotNull(session?.keyPair?.encryptedPrivateKey) { "privateKey can't be null" }
-        return privMxClient.decryptPrivateKeyPassword(encryptedPrivateKey)
+    override fun getPrivateKey(): String {
+        return requireNotNull(session?.keyPair?.privateKey)
+    }
+
+    override fun getBridgeUrl(): String {
+        return requireNotNull(session?.bridgeUrl)
+    }
+
+    override fun getSolutionId(): String {
+        return requireNotNull(session?.solutionId)
     }
 }
