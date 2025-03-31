@@ -1,16 +1,16 @@
 package com.github.familyvault.backend.client
 
+import com.github.familyvault.AppConfig
 import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.utils.EncryptUtils
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
+import kotlin.random.Random
 
-internal class PrivMxClient(certsPath: String) :
-    IPrivMxClient {
+internal class PrivMxClient(certsPath: String) : IPrivMxClient {
     private val initModules = setOf(
-        Modules.THREAD,
-        Modules.STORE,
-        Modules.INBOX
+        Modules.THREAD, Modules.STORE, Modules.INBOX
     )
     private val container: PrivmxEndpointContainer = PrivmxEndpointContainer().also {
         it.setCertsPath(certsPath)
@@ -18,21 +18,31 @@ internal class PrivMxClient(certsPath: String) :
     private var connection: PrivmxEndpoint? = null
 
     override fun generatePairOfPrivateAndPublicKey(
-        secret: String,
-        salt: String
+        password: String,
     ): PublicPrivateKeyPair {
-        val privateKey = container.cryptoApi.derivePrivateKey(secret, salt)
+        val privateKey = container.cryptoApi.generatePrivateKey(Random.nextBits(32).toString())
         val publicKey = container.cryptoApi.derivePublicKey(privateKey)
+        val encryptedPrivateKey = EncryptUtils.encryptData(
+            privateKey, AppConfig.SECRET
+        )
+        return PublicPrivateKeyPair(publicKey, encryptedPrivateKey)
+    }
 
-        return PublicPrivateKeyPair(publicKey, privateKey)
+    override fun encryptPrivateKeyPassword(password: String): String {
+        return EncryptUtils.encryptData(
+            password, AppConfig.SECRET
+        )
+    }
+
+    override fun decryptPrivateKeyPassword(encryptedPassword: String): String {
+        return EncryptUtils.decryptData(
+            encryptedPassword, AppConfig.SECRET
+        )
     }
 
     override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
         connection = container.connect(
-            initModules,
-            privateKey,
-            solutionId,
-            bridgeUrl
+            initModules, privateKey, solutionId, bridgeUrl
         )
     }
 }

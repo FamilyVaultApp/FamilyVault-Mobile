@@ -12,4 +12,5 @@ interface IFamilyGroupSessionService {
 
     fun connect()
     fun getContextId(): String
+    fun getDecryptedPrivateKey(): String
 }

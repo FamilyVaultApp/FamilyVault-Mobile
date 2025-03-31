@@ -7,7 +7,7 @@ interface IFamilyGroupService {
     suspend fun createFamilyGroupAndAssign(
         firstname: String,
         surname: String,
-        secret: String,
+        password: String,
         familyGroupName: String,
         familyGroupDescription: String? = null
     )
@@ -15,6 +15,7 @@ interface IFamilyGroupService {
     suspend fun joinFamilyGroupAndAssign(
         firstname: String,
         surname: String,
+        encryptedPassword: String,
         keyPair: PublicPrivateKeyPair,
         contextId: String
     )

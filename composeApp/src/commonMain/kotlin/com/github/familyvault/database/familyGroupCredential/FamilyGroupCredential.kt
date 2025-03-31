@@ -11,6 +11,7 @@ data class FamilyGroupCredential(
     val solutionId: String,
     val contextId: String,
     val publicKey: String,
-    val privateKey: String,
+    val encryptedPrivateKey: String,
+    val encryptedPrivateKeyPassword: String,
     val isDefault: Boolean = false
 )

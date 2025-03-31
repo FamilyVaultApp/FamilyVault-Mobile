@@ -10,7 +10,8 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         name: String,
         solutionId: String,
         contextId: String,
-        keyPairs: PublicPrivateKeyPair
+        keyPairs: PublicPrivateKeyPair,
+        encryptedPrivateKeyPassword: String,
     ) {
         val credentialDao = appDatabase.credentialDao()
         credentialDao.insertDefaultCredentialAndUnsetOthers(
@@ -18,7 +19,8 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
                 name = name,
                 solutionId = solutionId,
                 contextId = contextId,
-                privateKey = keyPairs.privateKey,
+                encryptedPrivateKey = keyPairs.encryptedPrivateKey,
+                encryptedPrivateKeyPassword = encryptedPrivateKeyPassword,
                 publicKey = keyPairs.publicKey
             )
         )

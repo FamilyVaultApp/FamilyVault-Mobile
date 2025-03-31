@@ -6,15 +6,11 @@ import com.github.familyvault.models.PublicPrivateKeyPair
 
 class FamilyGroupSessionService(
     private val privMxClient: IPrivMxClient
-) :
-    IFamilyGroupSessionService {
+) : IFamilyGroupSessionService {
     private var session: FamilyGroupSession? = null
 
     override fun assignSession(
-        bridgeUrl: String,
-        solutionId: String,
-        contextId: String,
-        keyPair: PublicPrivateKeyPair
+        bridgeUrl: String, solutionId: String, contextId: String, keyPair: PublicPrivateKeyPair
     ) {
         session = FamilyGroupSession(
             bridgeUrl, solutionId, contextId, keyPair
@@ -25,14 +21,17 @@ class FamilyGroupSessionService(
         requireNotNull(session)
 
         privMxClient.establishConnection(
-            session!!.bridgeUrl,
-            session!!.solutionId,
-            session!!.keyPair.privateKey
+            session!!.bridgeUrl, session!!.solutionId, getDecryptedPrivateKey()
         )
     }
 
     override fun getContextId(): String {
-        requireNotNull(session?.contextId)
-        return session!!.contextId
+        return requireNotNull(session?.contextId) { "contextId can't be null" }
+    }
+
+    override fun getDecryptedPrivateKey(): String {
+        val encryptedPrivateKey =
+            requireNotNull(session?.keyPair?.encryptedPrivateKey) { "privateKey can't be null" }
+        return privMxClient.decryptPrivateKeyPassword(encryptedPrivateKey)
     }
 }

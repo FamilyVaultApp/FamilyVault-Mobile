@@ -8,6 +8,8 @@ import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.JoinStatusService
+import com.github.familyvault.states.IJoinFamilyGroupPayloadState
+import com.github.familyvault.states.JoinFamilyGroupPayloadState
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -30,6 +32,9 @@ val sharedModules = module {
         )
     }.bind<IFamilyGroupService>()
     single { JoinStatusService() }.bind<IJoinStatusService>()
+
+    // States
+    single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {
