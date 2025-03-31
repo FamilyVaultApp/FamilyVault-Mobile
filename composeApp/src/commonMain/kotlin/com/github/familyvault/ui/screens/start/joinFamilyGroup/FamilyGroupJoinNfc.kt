@@ -24,8 +24,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.components.NFCWriteStatus
 import com.github.familyvault.components.getNFCManager
 import com.github.familyvault.models.AddFamilyMemberDataPayload
+import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -39,6 +41,7 @@ import familyvault.composeapp.generated.resources.join_family_group_content
 import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.show_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMemberDataPayload) : Screen {
 
@@ -46,6 +49,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val nfcManager = getNFCManager()
+        val joinTokenService = koinInject<IJoinStatusService>()
 
         var isActive by remember { mutableStateOf(true) }
 
@@ -53,9 +57,13 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
             nfcManager.registerApp()
             nfcManager.setEmulateMode(newFamilyMemberDataPayload)
         } else {
-            nfcManager.setIdleMode()
+            nfcManager.unregisterApp()
         }
 
+        LaunchedEffect(Unit) {
+            joinTokenService.waitForNotInitiatedStatus(newFamilyMemberDataPayload.joinStatusToken)
+            navigator.replaceAll(FamilyGroupJoinWaitingScreen(newFamilyMemberDataPayload))
+        }
         // Clean up when leaving the screen
         DisposableEffect(Unit) {
             onDispose {
@@ -105,7 +113,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = AdditionalTheme.spacings.large),
+                .padding(bottom = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

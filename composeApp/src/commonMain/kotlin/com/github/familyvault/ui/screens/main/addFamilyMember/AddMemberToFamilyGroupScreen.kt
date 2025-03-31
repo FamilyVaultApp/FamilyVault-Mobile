@@ -50,7 +50,20 @@ class AddMemberToFamilyGroupScreen : Screen {
             nfcManager.registerApp()
             nfcManager.setReadMode()
         } else {
-            nfcManager.setIdleMode()
+            nfcManager.unregisterApp()
+        }
+        LaunchedEffect(Unit) {
+            nfcManager.tags.collect { payload ->
+                if (payload.newMemberData.surname.isNotEmpty()) {
+                    // Success: Data was read successfully
+                    AddMemberToFamilyGroupBackendOperationsScreen(payload)
+                    // Add your logic here (e.g., update UI, save data)
+                } else {
+                    // Error: Default/empty payload was emitted
+                    println("Error reading data from tag")
+                    // Handle the error (e.g., show an error message)
+                }
+            }
         }
 
         // Clean up when leaving the screen
@@ -111,7 +124,7 @@ class AddMemberToFamilyGroupScreen : Screen {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = AdditionalTheme.spacings.large),
+                .padding(bottom = AdditionalTheme.spacings.large),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
