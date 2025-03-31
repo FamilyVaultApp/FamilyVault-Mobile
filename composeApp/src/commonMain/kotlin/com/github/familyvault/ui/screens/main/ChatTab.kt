@@ -31,33 +31,24 @@ object ChatTab : Tab {
     @Composable
     override fun Content() {
 
-        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
-        val privMxClient = koinInject<IPrivMxClient>()
-        val contextId = familyGroupSessionService.getContextId()
-        var threadIds by remember { mutableStateOf<List<String>>(emptyList()) }
-        var isLoadingThreads by remember { mutableStateOf(true) }
-        LaunchedEffect(Unit) {
-            try {
-                threadIds = privMxClient.retrieveAllThreadIds(contextId)
-                isLoadingThreads = false
-            } catch (e: Exception) {
-                println("Failed to retrieve all thread IDs. Exception message: ${e.message}")
-            }
-        }
+//        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+//        val privMxClient = koinInject<IPrivMxClient>()
+//        val contextId = familyGroupSessionService.getContextId()
+//        var threadIds by remember { mutableStateOf<List<String>>(emptyList()) }
+//        var isLoadingThreads by remember { mutableStateOf(true) }
+//        LaunchedEffect(Unit) {
+//            try {
+//                threadIds = privMxClient.retrieveAllThreadIds(contextId)
+//                isLoadingThreads = false
+//            } catch (e: Exception) {
+//                println("Failed to retrieve all thread IDs. Exception message: ${e.message}")
+//            }
+//        }
 
         Column {
             TopAppBar(
                 stringResource(Res.string.chat_tab)
             )
-            if (!isLoadingThreads) {
-                Headline3("Retrieved thread IDs in this family group:")
-                for (id in threadIds) {
-                    Paragraph(id)
-                }
-            } else {
-                LoaderWithText("Oczekiwanie...")
-            }
-
         }
     }
 

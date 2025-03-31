@@ -24,29 +24,29 @@ class DebugScreenContextId : Screen {
     @Composable
     override fun Content() {
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
-        val familyGroupService = koinInject<IFamilyGroupService>()
-        val privMxClient = koinInject<IPrivMxClient>()
+//        val familyGroupService = koinInject<IFamilyGroupService>()
+//        val privMxClient = koinInject<IPrivMxClient>()
         val qrCodeGenerationService = koinInject<IQRCodeService>()
         val navigator = LocalNavigator.currentOrThrow
         val contextId = familyGroupSessionService.getContextId()
 
-        LaunchedEffect(Unit) {
-            try {
-                val threadIds = privMxClient.retrieveAllThreadIds(contextId)
-                if (threadIds.isEmpty()) {
-                    println("Threads list empty. Attempting to create test thread...")
-                    val membersList = familyGroupService.retrieveFamilyGroupMembersList()
-
-                    if (privMxClient.createThread(contextId, membersList, ByteArray(0), ByteArray(0))) {
-                        println("OK!!")
-                    } else {
-                        println("Failed to create a thread.")
-                    }
-                }
-            } catch (e: Exception) {
-                println("Failed to process threads operations. Exception message: ${e.message}")
-            }
-        }
+//        LaunchedEffect(Unit) {
+//            try {
+//                val threadIds = privMxClient.retrieveAllThreadIds(contextId)
+//                if (threadIds.isEmpty()) {
+//                    println("Threads list empty. Attempting to create test thread...")
+//                    val membersList = familyGroupService.retrieveFamilyGroupMembersList()
+//
+//                    if (privMxClient.createThread(contextId, membersList, ByteArray(0), ByteArray(0))) {
+//                        println("OK!!")
+//                    } else {
+//                        println("Failed to create a thread.")
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                println("Failed to process threads operations. Exception message: ${e.message}")
+//            }
+//        }
 
         Column(
             modifier = Modifier.fillMaxSize(),

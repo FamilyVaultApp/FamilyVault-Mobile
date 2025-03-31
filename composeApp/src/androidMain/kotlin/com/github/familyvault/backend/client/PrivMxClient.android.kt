@@ -9,7 +9,6 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
-import familyvault.composeapp.generated.resources.Res
 import kotlinx.serialization.json.Json
 
 
