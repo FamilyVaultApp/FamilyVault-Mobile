@@ -6,6 +6,7 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
+import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicPrivateKeyPair
@@ -108,6 +109,16 @@ class FamilyGroupService(
         familyVaultBackendProxy.renameFamilyGroup(
             RenameFamilyGroupRequest(
                 contextId, name
+            )
+        )
+    }
+
+    override suspend fun removeMemberFromFamilyGroup(
+        contextId: String, userPubKey: String
+    ) {
+        familyVaultBackendProxy.removeMemberFromFamilyGroup(
+            RemoveMemberFromFamilyGroupRequest(
+                contextId, userPubKey
             )
         )
     }

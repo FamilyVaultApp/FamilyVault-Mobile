@@ -132,7 +132,6 @@ class FamilyGroupManagementScreen : Screen {
                         FamilyMemberEntry(it)
                     }
                 }
-
             }
         }
     }
