@@ -52,10 +52,10 @@ internal class PrivMxClient(certsPath: String) :
         try {
             val threadId = threadApi?.createThread(
                 contextId,
-                members.first,
                 members.second,
+                members.first,
                 publicMeta,
-                "Nowy czat".encodeToByteArray()
+                "Nowy czat".encodeToByteArray() // TODO: Dodać opcję dodania nazwy czatu
             )
 
             if (threadId != null) {
