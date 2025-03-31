@@ -32,7 +32,6 @@ class LaunchingScreen : Screen {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val coroutineScope = rememberCoroutineScope()
-        val familyGroupName = familyGroupSessionService.getFamilyGroupName()
 
         LaunchedEffect(familyGroupService) {
             coroutineScope.launch {
