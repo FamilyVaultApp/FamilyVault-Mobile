@@ -21,6 +21,7 @@ import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.Paragraph
+import com.github.familyvault.ui.screens.main.chat.SelectChatContent
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_tab
 import kotlinx.coroutines.launch
@@ -49,20 +50,18 @@ object ChatTab : Tab {
             TopAppBar(
                 stringResource(Res.string.chat_tab)
             )
+            SelectChatContent()
         }
     }
 
     override val options: TabOptions
-        @Composable
-        get() {
+        @Composable get() {
             val title = stringResource(Res.string.chat_tab)
             val icon = rememberVectorPainter(Icons.Filled.Folder)
 
             return remember {
                 TabOptions(
-                    index = 0u,
-                    title = title,
-                    icon = icon
+                    index = 0u, title = title, icon = icon
                 )
             }
         }
