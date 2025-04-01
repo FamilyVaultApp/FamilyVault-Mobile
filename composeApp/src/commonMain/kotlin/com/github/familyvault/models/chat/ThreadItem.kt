@@ -1,9 +1,9 @@
 package com.github.familyvault.models.chat
 
-import com.simplito.java.privmx_endpoint.model.Thread
-
 data class ThreadItem(
-    val thread: Thread,
-    val decodedPrivateMeta: String,
-    val decodedPublicMeta: String
+    val threadId: String,
+    val managers: List<String>,
+    val users: List<String>,
+    val decodedThreadTag: String,
+    val decodedThreadName: String
 )

@@ -69,8 +69,8 @@ internal class PrivMxClient(certsPath: String) :
         return ThreadId(threadId)
     }
 
-    override fun retrieveAllThreadIds(contextId: String, startIndex: Long, pageSize: Long): List<ThreadId> {
-        val threadIdList: MutableList<ThreadId> = mutableListOf()
+    override fun retrieveAllThreads(contextId: String, startIndex: Long, pageSize: Long): List<ThreadItem> {
+        val threadsList: MutableList<ThreadItem> = mutableListOf()
         if (threadApi == null) {
             throw Exception("ThreadApi is null")
         }
@@ -85,15 +85,16 @@ internal class PrivMxClient(certsPath: String) :
             throw Exception("Received empty threadsPagingList")
         }
         threadsPagingList.readItems.map {
-            ThreadItem(
-                it,
+            threadsList.add(ThreadItem(
+                it.threadId,
+                it.managers,
+                it.users,
                 it.privateMeta.decodeToString(),
                 it.publicMeta.decodeToString()
-            )
-            threadIdList.add(ThreadId(it.threadId))
+            ))
         }
 
-        return threadIdList
+        return threadsList
     }
 
     override fun sendMessage(messageContent: String, threadId: ThreadId, responseToMsgId: String) {
@@ -131,7 +132,7 @@ internal class PrivMxClient(certsPath: String) :
             throw Exception("Messages paging list empty.")
         }
 
-        val messages = messagesPagingList?.readItems?.map {
+        val messages = messagesPagingList.readItems?.map {
             MessageItem(
                 it.data.contentToString(),
                 it.authorPubKey,
@@ -148,5 +149,4 @@ internal class PrivMxClient(certsPath: String) :
     }
 
 }
-
 

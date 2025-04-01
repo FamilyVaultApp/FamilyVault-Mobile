@@ -4,6 +4,7 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.MessageItem
 import com.github.familyvault.models.chat.ThreadId
+import com.github.familyvault.models.chat.ThreadItem
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 
 class ChatService(private val privMxClient: IPrivMxClient, private val familyGroupService: IFamilyGroupService, private val familyGroupSessionService: IFamilyGroupSessionService): IChatService {
@@ -21,9 +22,9 @@ class ChatService(private val privMxClient: IPrivMxClient, private val familyGro
         return threadId
     }
 
-    override fun retrieveAllThreadIds(): List<ThreadId> {
+    override fun retrieveAllThreads(): List<ThreadItem> {
         val contextId = familyGroupSessionService.getContextId()
-        val threadIdList = privMxClient.retrieveAllThreadIds(contextId, 0L, 100L)
+        val threadIdList = privMxClient.retrieveAllThreads(contextId, 0L, 100L)
 
         return threadIdList
     }
