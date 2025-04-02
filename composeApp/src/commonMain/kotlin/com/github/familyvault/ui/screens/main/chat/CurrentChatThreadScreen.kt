@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -32,14 +33,13 @@ class CurrentChatThreadScreen(private val threadName: String, private val thread
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                Column(
+                LazyColumn (
                     modifier = Modifier
                         .weight(1f)
-                        .verticalScroll(rememberScrollState())
                 )
                 {
-                    threadContent.forEachIndexed { index, (author, message) ->
-                        ChatThreadEntry(author, message, index % 2 == 0) // TODO: Poprawna implementacja rozpoznania autora
+                    items(threadContent.count()) { index ->
+                        ChatThreadEntry(threadContent[index].first, threadContent[index].second, index % 2 == 0) // TODO: Poprawna implementacja rozpoznania autora
                     }
                 }
 
