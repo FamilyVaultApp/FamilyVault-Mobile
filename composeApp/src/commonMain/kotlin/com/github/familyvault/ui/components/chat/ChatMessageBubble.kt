@@ -9,18 +9,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun ChatThreadEntry(
+fun ChatMessageBubble(
     senderName: String,
     message: String,
     isAuthor: Boolean
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (isAuthor) Arrangement.End else Arrangement.Start
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(AdditionalTheme.spacings.small),
+        horizontalArrangement = if (isAuthor) Arrangement.End else Arrangement.Start,
     ) {
+        if (!isAuthor) {
+            UserAvatar(firstName = senderName, size = AdditionalTheme.spacings.large)
+        }
         Column(
             modifier = Modifier
                 .padding(AdditionalTheme.spacings.small)
@@ -28,16 +35,11 @@ fun ChatThreadEntry(
                     if (isAuthor) MaterialTheme.colorScheme.primary else Color.LightGray,
                     shape = MaterialTheme.shapes.medium
                 )
+                .wrapContentWidth()
+                .fillMaxWidth(0.5f)
                 .padding(AdditionalTheme.spacings.medium),
             horizontalAlignment = if (isAuthor) Alignment.End else Alignment.Start
         ) {
-            if (!isAuthor) {
-                Text(
-                    text = senderName,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
             Text(
                 text = message,
                 style = MaterialTheme.typography.bodyLarge,

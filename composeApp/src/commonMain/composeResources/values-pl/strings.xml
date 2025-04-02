@@ -78,4 +78,7 @@
 
     <!-- Chat -->
     <string name="chat_create_new">Stwórz nowy chat</string>
+    <string name="chat_send_message">Wyślij wiadomość</string>
+    <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
+    <string name="chat_attach_photo">Dołącz zdjęcie</string>
 </resources>

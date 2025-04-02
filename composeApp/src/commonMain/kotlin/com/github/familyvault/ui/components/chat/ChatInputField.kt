@@ -2,7 +2,6 @@ package com.github.familyvault.ui.components.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.outlined.Image
@@ -17,36 +16,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.theme.AdditionalTheme
+import familyvault.composeapp.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
+import familyvault.composeapp.generated.resources.chat_attach_photo
+import familyvault.composeapp.generated.resources.chat_recording_icon
+import familyvault.composeapp.generated.resources.chat_send_message
 
 @Composable
 fun ChatInputField() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(AdditionalTheme.spacings.small)
-            .padding(vertical = 8.dp),
+            .padding(AdditionalTheme.spacings.small, vertical = AdditionalTheme.spacings.large),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = { /* Dodaj załącznik */ }) {
-            Icon(Icons.Outlined.Image, contentDescription = "Attach image", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(Icons.Outlined.Image, contentDescription = stringResource(Res.string.chat_attach_photo), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         IconButton(onClick = { /* Nagrywanie głosu */ }) {
-            Icon(Icons.Outlined.Mic, contentDescription = "Record audio", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Icon(Icons.Outlined.Mic, contentDescription = stringResource(Res.string.chat_recording_icon), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
 
         TextField(
-            label = "Send message",
+            label = stringResource(Res.string.chat_send_message),
             modifier = Modifier
                 .weight(1f)
                 .background(Color.Transparent)
         )
 
-        Spacer(modifier = Modifier.width(8.dp))
 
         IconButton(onClick = { /* Wyślij wiadomość */ }) {
-            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Wyślij wiadomość", tint = MaterialTheme.colorScheme.primary)
+            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(Res.string.chat_send_message), tint = MaterialTheme.colorScheme.primary)
         }
     }
 }
