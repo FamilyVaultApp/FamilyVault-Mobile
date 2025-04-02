@@ -35,9 +35,10 @@ class CurrentChatThreadScreen(private val thread: ThreadItem) :
         var isLoadingMessages by remember { mutableStateOf(true) }
         var messages = remember { mutableListOf<MessageItem>()}
         LaunchedEffect(Unit) {
+            // Temporary placeholder messages
             messages.addAll(chatService.retrieveMessagesFromThread(ThreadId(thread.threadId)))
-            messages.add(MessageItem("dololo", "6XPe7opLcSccQYwnf3UTiou4vz8ZpHmbwGZrP8hQdyGKoXgfLo", "", MessagePublicMeta("")))
-            messages.add(MessageItem("aaa", "6XPe7opLcSccQYwnf3UTiou4vz8ZpHmbwGZrP8hQdyGKoXgfLo", "", MessagePublicMeta("")))
+            messages.add(MessageItem("Test", "Osoba1", "", MessagePublicMeta("")))
+            messages.add(MessageItem("Test", "Osoba2", "", MessagePublicMeta("")))
             isLoadingMessages = false
         }
         Scaffold(

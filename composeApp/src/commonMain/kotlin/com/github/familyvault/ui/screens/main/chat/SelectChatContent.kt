@@ -25,7 +25,7 @@ fun SelectChatContent() {
     var isLoading by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         threadList.addAll(chatService.retrieveAllThreads())
-
+        // Temporary placeholder thread creation
         if (threadList.isEmpty()) {
             chatService.createThread("CZAT", "nowy")
             threadList.addAll(chatService.retrieveAllThreads())
