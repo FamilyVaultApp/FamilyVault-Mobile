@@ -19,7 +19,7 @@ import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun ChatEntry(
+fun ChatConversationEntry(
     title: String, lastMessage: ChatMessage, unreadMessages: Boolean, onClick: () -> Unit = {}
 ) {
     val backgroundColor =

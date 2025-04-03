@@ -9,11 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ThreadItem
 import com.github.familyvault.services.IChatService
-import com.github.familyvault.ui.components.chat.ChatEntry
+import com.github.familyvault.ui.components.chat.ChatConversationEntry
 import org.koin.compose.koinInject
 
 @Composable
@@ -21,7 +20,7 @@ fun SelectChatContent() {
     val navigator = LocalNavigator.currentOrThrow
 
     val chatService = koinInject<IChatService>()
-    val threadList = remember { mutableListOf<ThreadItem>()}
+    val threadList = remember { mutableListOf<ThreadItem>() }
     var isLoading by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         threadList.addAll(chatService.retrieveAllThreads())
@@ -36,16 +35,20 @@ fun SelectChatContent() {
     }
 
     Column {
-        ChatEntry(
+        ChatConversationEntry(
             title = "Tester",
-            lastMessage = ChatMessage("Paweł", "ggggggggggggggggggggggggggggggggggggggggg"),
+            lastMessage = ChatMessage(
+                "Paweł",
+                "ggggggggggggggggggggggggggggggggggggggggg",
+                isAuthor = true
+            ),
             unreadMessages = true,
             onClick = {
                 navigator.parent?.push(CurrentChatThreadScreen(threadList[0]))
             })
-        ChatEntry(
+        ChatConversationEntry(
             title = "Tester1",
-            lastMessage = ChatMessage("Szymon", "Witam"),
+            lastMessage = ChatMessage("Szymon", "Witam", isAuthor = false),
             unreadMessages = false
         )
     }
