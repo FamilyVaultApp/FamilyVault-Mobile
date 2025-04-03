@@ -46,7 +46,8 @@ data class AdditionalColors(
     val borderColor: Color,
     val mutedColor: Color,
     val onMutedColor: Color,
-    val onPrimaryContainerSecondColor: Color
+    val onPrimaryContainerSecondColor: Color,
+    val otherChatBubbleColor: Color
 )
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
@@ -58,7 +59,8 @@ private val LocalCustomColorsLight = staticCompositionLocalOf {
         borderColor = Color(0xFFE7E7E7),
         mutedColor = Color(0xFFB3B3B3),
         onMutedColor = Color(0xff6D6D6D),
-        onPrimaryContainerSecondColor = Color(0xff6D6D6D)
+        onPrimaryContainerSecondColor = Color(0xff6D6D6D),
+        otherChatBubbleColor = Color(0xfff3f3f3)
     )
 }
 
@@ -71,7 +73,8 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
         borderColor = Color(0xFF282828),
         mutedColor = Color(0xFF4D4D4D),
         onMutedColor = Color(0xffB3B3B3),
-        onPrimaryContainerSecondColor = Color(0xffB3B3B3)
+        onPrimaryContainerSecondColor = Color(0xffB3B3B3),
+        otherChatBubbleColor = Color(0xfff3f3f3)
     )
 }
 
