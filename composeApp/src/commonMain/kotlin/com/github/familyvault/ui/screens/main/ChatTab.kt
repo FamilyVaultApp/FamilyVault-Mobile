@@ -2,7 +2,7 @@ package com.github.familyvault.ui.screens.main
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -29,7 +29,7 @@ object ChatTab : Tab {
     override val options: TabOptions
         @Composable get() {
             val title = stringResource(Res.string.chat_tab)
-            val icon = rememberVectorPainter(Icons.Filled.Folder)
+            val icon = rememberVectorPainter(Icons.AutoMirrored.Filled.Chat)
 
             return remember {
                 TabOptions(
