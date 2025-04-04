@@ -1,28 +1,21 @@
-package com.github.familyvault.components
+package com.github.familyvault.ui.components
 
 import androidx.compose.runtime.Composable
 import com.github.familyvault.models.AddFamilyMemberDataPayload
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.Flow
 
-sealed class NFCWriteStatus {
-    object Success : NFCWriteStatus()
-    data class Error(val message: String) : NFCWriteStatus()
-}
-
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect class NFCManager {
-    val tags: SharedFlow<AddFamilyMemberDataPayload>
-    val writeStatus: SharedFlow<NFCWriteStatus>
+    val tags: Flow<AddFamilyMemberDataPayload>
 
     @Composable
-    fun registerApp()
+    fun RegisterApp()
     @Composable
-    fun unregisterApp()
+    fun UnregisterApp()
     @Composable
-    fun setReadMode()
+    fun SetReadMode()
     @Composable
-    fun setIdleMode()
-    @Composable
-    fun setEmulateMode(data: AddFamilyMemberDataPayload)
+    fun SetEmulateMode(data: AddFamilyMemberDataPayload)
 }
 @Composable
 expect fun getNFCManager(): NFCManager

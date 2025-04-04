@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">FamilyVault</string>
-    <string name="hce_service_description">NFC HCE Service</string>
-    <string name="aid_group_description">NDEF AID Group</string>
+    <string name="hce_service_description">FV NFC HCE Service</string>
+    <string name="aid_group_description">FV NDEF AID Group</string>
 </resources>

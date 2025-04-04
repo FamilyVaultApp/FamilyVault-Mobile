@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.components.getNFCManager
+import com.github.familyvault.ui.components.getNFCManager
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -47,38 +47,24 @@ class AddMemberToFamilyGroupScreen : Screen {
         var isActive by remember { mutableStateOf(true) }
 
         if (isActive) {
-            nfcManager.registerApp()
-            nfcManager.setReadMode()
+            nfcManager.RegisterApp()
+            nfcManager.SetReadMode()
         } else {
-            nfcManager.unregisterApp()
+            nfcManager.UnregisterApp()
         }
         LaunchedEffect(Unit) {
             nfcManager.tags.collect { payload ->
                 if (payload.newMemberData.surname.isNotEmpty()) {
-                    // Success: Data was read successfully
-                    AddMemberToFamilyGroupBackendOperationsScreen(payload)
-                    // Add your logic here (e.g., update UI, save data)
+                    navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
                 } else {
-                    // Error: Default/empty payload was emitted
                     println("Error reading data from tag")
-                    // Handle the error (e.g., show an error message)
                 }
             }
         }
 
-        // Clean up when leaving the screen
         DisposableEffect(Unit) {
             onDispose {
                 isActive = false
-            }
-        }
-
-        // Collect NFC tags in a LaunchedEffect
-        LaunchedEffect(Unit) {
-            nfcManager.tags.collect { payload ->
-                navigator.replaceAll(
-                    AddMemberToFamilyGroupBackendOperationsScreen(payload)
-                )
             }
         }
 
