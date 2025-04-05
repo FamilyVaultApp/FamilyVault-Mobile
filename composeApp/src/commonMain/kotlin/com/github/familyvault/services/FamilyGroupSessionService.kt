@@ -12,12 +12,13 @@ class FamilyGroupSessionService(
 
     override fun assignSession(
         bridgeUrl: String,
+        familyGroupName: String,
         solutionId: String,
         contextId: String,
         keyPair: PublicEncryptedPrivateKeyPair
     ) {
         session = FamilyGroupSession(
-            bridgeUrl, solutionId, contextId, PublicPrivateKeyPair(
+            bridgeUrl, familyGroupName, solutionId, contextId, PublicPrivateKeyPair(
                 keyPair.publicKey,
                 privMxClient.decryptPrivateKeyPassword(keyPair.encryptedPrivateKey)
             )
@@ -46,5 +47,18 @@ class FamilyGroupSessionService(
 
     override fun getSolutionId(): String {
         return requireNotNull(session?.solutionId)
+    }
+
+    override fun updateFamilyGroupName(name: String) {
+        session = session?.copy(familyGroupName = name)
+    }
+
+    override fun getFamilyGroupName(): String {
+        requireNotNull(session?.familyGroupName)
+        return session!!.familyGroupName
+    }
+
+    override fun getPublicKey(): String {
+        return requireNotNull(session?.keyPair?.publicKey)
     }
 }

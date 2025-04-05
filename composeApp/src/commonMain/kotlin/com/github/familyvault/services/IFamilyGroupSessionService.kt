@@ -5,6 +5,7 @@ import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 interface IFamilyGroupSessionService {
     fun assignSession(
         bridgeUrl: String,
+        familyGroupName: String,
         solutionId: String,
         contextId: String,
         keyPair: PublicEncryptedPrivateKeyPair
@@ -12,7 +13,10 @@ interface IFamilyGroupSessionService {
 
     fun connect()
     fun getContextId(): String
-    fun getPrivateKey(): String
     fun getBridgeUrl(): String
+    fun getPrivateKey(): String
     fun getSolutionId(): String
+    fun updateFamilyGroupName(name: String)
+    fun getFamilyGroupName() : String
+    fun getPublicKey(): String
 }

@@ -25,4 +25,10 @@ interface IFamilyGroupService {
     suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember>
 
     suspend fun addMemberToFamilyGroup(contextId: String, userId: String, userPubKey: String)
+
+    suspend fun renameCurrentFamilyGroup(name: String)
+
+    suspend fun refreshCurrentFamilyGroupName()
+
+    suspend fun removeMemberFromCurrentFamilyGroup(userPubKey: String)
 }

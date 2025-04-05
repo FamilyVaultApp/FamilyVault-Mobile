@@ -12,6 +12,7 @@
     <string name="next_button_content">Dalej</string>
     <string name="create_button_content">Stwórz</string>
     <string name="cancel_button_content">Anuluj</string>
+    <string name="confirm_button_content">Potwierdź</string>
     <string name="scan_qr_code_button_content">Zeskanuj kod QR</string>
     <string name="show_qr_code_button_content">Pokaż kod QR</string>
     <string name="change_name_content">Zmień nazwę</string>
@@ -81,4 +82,8 @@
     <string name="chat_send_message">Wyślij wiadomość</string>
     <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
+
+    <!-- Remove users -->
+    <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
+
 </resources>

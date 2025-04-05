@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
@@ -37,6 +39,7 @@ import familyvault.composeapp.generated.resources.family_group_add_new_member
 import familyvault.composeapp.generated.resources.family_group_management_title
 import familyvault.composeapp.generated.resources.family_group_members
 import familyvault.composeapp.generated.resources.text_field_group_name_label
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -64,17 +67,39 @@ class FamilyGroupManagementScreen : Screen {
 
     @Composable
     private fun FamilyGroupNameEdit() {
-        return Column(
+        val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val coroutineScope = rememberCoroutineScope()
+
+        var familyGroupName by remember { mutableStateOf(familyGroupSessionService.getFamilyGroupName()) }
+        var currentFamilyGroupName by remember { mutableStateOf(familyGroupSessionService.getFamilyGroupName()) }
+        var isChangingFamilyGroupName by remember { mutableStateOf(false) }
+
+        Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
             modifier = Modifier.fillMaxWidth().padding(vertical = AdditionalTheme.spacings.large),
         ) {
             TextField(
-                value = "", label = stringResource(Res.string.text_field_group_name_label)
+                enabled = !isChangingFamilyGroupName,
+                value = familyGroupName,
+                onValueChange = { familyGroupName = it },
+                label = stringResource(Res.string.text_field_group_name_label)
             )
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.change_name_content),
-                onClick = {}
+                enabled = familyGroupName != currentFamilyGroupName && familyGroupName.isNotBlank() && !isChangingFamilyGroupName,
+                onClick = {
+                    coroutineScope.launch {
+                        isChangingFamilyGroupName = true
+                        familyGroupService.renameCurrentFamilyGroup(
+                            name = familyGroupName
+                        )
+                        familyGroupSessionService.updateFamilyGroupName(familyGroupName)
+                        currentFamilyGroupName = familyGroupName
+                        isChangingFamilyGroupName = false
+                    }
+                }
             )
         }
     }
@@ -84,13 +109,14 @@ class FamilyGroupManagementScreen : Screen {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupMembers = remember { mutableStateListOf<FamilyMember>() }
 
-
         var isLoadingMembers by remember { mutableStateOf(true) }
 
         LaunchedEffect(Unit) {
+            isLoadingMembers = true
             familyGroupMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
             isLoadingMembers = false
         }
+
         Column {
             Headline3(stringResource(Res.string.family_group_members))
             Column(
@@ -108,7 +134,6 @@ class FamilyGroupManagementScreen : Screen {
                         FamilyMemberEntry(it)
                     }
                 }
-
             }
         }
     }
