@@ -35,4 +35,8 @@ class FamilyGroupSessionService(
         requireNotNull(session?.contextId)
         return session!!.contextId
     }
+
+    override fun getPublicKey(): String {
+        return requireNotNull(session?.keyPair?.publicKey)
+    }
 }

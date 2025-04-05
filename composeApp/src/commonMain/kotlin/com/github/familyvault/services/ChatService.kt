@@ -1,60 +1,62 @@
 package com.github.familyvault.services
 
+import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.models.chat.MessageItem
-import com.github.familyvault.models.chat.ThreadId
-import com.github.familyvault.models.chat.ThreadItem
-import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
+import com.github.familyvault.models.chat.ChatMessage
+import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.utils.FamilyMembersSplitter
+import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
 
-class ChatService(private val privMxClient: IPrivMxClient, private val familyGroupService: IFamilyGroupService, private val familyGroupSessionService: IFamilyGroupSessionService): IChatService {
-    override suspend fun createThread(
-        threadTag: String,
-        threadName: String?
-    ): ThreadId {
-        val familyGroupMembersList = familyGroupService.retrieveFamilyGroupMembersList()
+class ChatService(
+    private val privMxClient: IPrivMxClient,
+    private val familyGroupSessionService: IFamilyGroupSessionService
+) : IChatService {
+    override suspend fun createGroupChat(
+        name: String, members: List<FamilyMember>
+    ): ChatThread {
         val contextId = familyGroupSessionService.getContextId()
 
-        val splittedFamilyGroupMembersList = splitFamilyMembers(familyGroupMembersList)
-        val users = splittedFamilyGroupMembersList.first
-        val managers = splittedFamilyGroupMembersList.second
-        val threadId = privMxClient.createThread(contextId, users, managers, threadTag.encodeToByteArray(), (threadName ?: "").encodeToByteArray())
-        return threadId
+        val splitFamilyGroupMembersList = FamilyMembersSplitter.split(members)
+        val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
+        val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
+
+        val thread = privMxClient.createThread(
+            contextId, users, managers, AppConfig.CHAT_THREAD_TAG, name
+        )
+        return ChatThread(name, thread.threadId, lastMessage = null)
     }
 
-    override fun retrieveAllThreads(): List<ThreadItem> {
+    override fun retrieveAllChatThreads(): List<ChatThread> {
         val contextId = familyGroupSessionService.getContextId()
-        val threadIdList = privMxClient.retrieveAllThreads(contextId, 0L, 100L)
+        val threadIdList = privMxClient.retrieveAllThreads(contextId, 0, 100)
 
-        return threadIdList
+        return threadIdList.map {
+            ChatThread(
+                it.decodedThreadName, it.threadId, retrieveLastMessage(it.threadId)
+            )
+        }
     }
 
     override fun sendMessage(
-        threadId: ThreadId,
-        messageContent: String,
-        respondToMessageId: String
+        chatThreadId: String, messageContent: String, respondToMessageId: String
     ) {
-        privMxClient.sendMessage(messageContent, threadId, respondToMessageId)
+        privMxClient.sendMessage(messageContent, chatThreadId, respondToMessageId)
     }
 
-    override fun retrieveMessagesFromThread(threadId: ThreadId): List<MessageItem> {
-        val messagesList = privMxClient.retrieveMessagesFromThread(threadId, 0L, 100L)
-        return messagesList
-    }
+    override fun retrieveMessages(chatThreadId: String): List<ChatMessage> {
+        val userPublicKey = familyGroupSessionService.getPublicKey()
+        val messagesList = privMxClient.retrieveMessagesFromThread(chatThreadId, 0, 100)
 
-    private fun splitFamilyMembers(familyGroupMembers: List<FamilyMember>): Pair<List<Pair<String, String>>, List<Pair<String, String>>> {
-        val guardians: MutableList<Pair<String, String>> = mutableListOf()
-        val members: MutableList<Pair<String, String>> = mutableListOf()
-
-        for (member in familyGroupMembers) {
-            if (member.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
-                guardians.add(member.fullname to member.publicKey)
-            } else {
-                members.add(member.fullname to member.publicKey)
-            }
+        return messagesList.map {
+            MessageItemToChatMessageMapper.map(it, userPublicKey)
         }
-
-        return members to guardians
     }
 
+    override fun retrieveLastMessage(chatThreadId: String): ChatMessage? {
+        val userPublicKey = familyGroupSessionService.getPublicKey()
+        val message = privMxClient.retrieveLastMessageFromThread(chatThreadId) ?: return null
+
+        return MessageItemToChatMessageMapper.map(message, userPublicKey)
+    }
 }

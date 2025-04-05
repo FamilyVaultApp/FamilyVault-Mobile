@@ -35,7 +35,6 @@ val sharedModules = module {
     single { ChatService(
         get(),
         get(),
-        get()
     )
     }.bind<IChatService>()
 }
