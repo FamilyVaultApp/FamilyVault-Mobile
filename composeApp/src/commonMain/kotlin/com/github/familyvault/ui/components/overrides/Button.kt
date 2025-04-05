@@ -45,9 +45,9 @@ fun Button(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (icon != null) {
-                Icon(icon, text)
+                Icon(icon, text, tint = contentColor)
             }
-            Paragraph(text)
+            Paragraph(text, color = contentColor)
         }
     }
 }

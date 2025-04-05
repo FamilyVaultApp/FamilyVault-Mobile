@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class NewFamilyMemberData(
     val firstname: String,
     val surname: String,
-    val keyPair: PublicPrivateKeyPair
+    val keyPair: PublicEncryptedPrivateKeyPair
 ) {
     val fullname: String
         get() = "$firstname $surname"

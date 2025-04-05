@@ -75,4 +75,10 @@
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera</string>
     <string name="qr_code_generation_screen_content">Niech opiekun Twojej grupy zeskanuje ten kod, aby Cię do niej dodać.</string>
+
+    <!-- Chat -->
+    <string name="chat_create_new">Stwórz nowy chat</string>
+    <string name="chat_send_message">Wyślij wiadomość</string>
+    <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
+    <string name="chat_attach_photo">Dołącz zdjęcie</string>
 </resources>
