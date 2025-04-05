@@ -4,7 +4,7 @@ import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.backend.models.MessageItem
 
 object MessageItemToChatMessageMapper {
-    inline fun map(msg: MessageItem, userId: String): ChatMessage = ChatMessage(
+    fun map(msg: MessageItem, userId: String): ChatMessage = ChatMessage(
         id = msg.messageId,
         senderPubKey = msg.authorPublicKey,
         message = msg.messageContent ?: "",

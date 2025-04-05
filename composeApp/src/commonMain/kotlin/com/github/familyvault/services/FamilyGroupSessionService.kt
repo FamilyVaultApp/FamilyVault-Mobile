@@ -61,8 +61,4 @@ class FamilyGroupSessionService(
     override fun getPublicKey(): String {
         return requireNotNull(session?.keyPair?.publicKey)
     }
-
-    override fun getPublicKey(): String {
-        return requireNotNull(session?.keyPair?.publicKey)
-    }
 }
