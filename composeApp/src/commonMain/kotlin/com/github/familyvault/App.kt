@@ -4,12 +4,15 @@ import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
 import com.github.familyvault.ui.screens.LaunchingScreen
 import com.github.familyvault.ui.theme.AppTheme
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 
 @Composable
 @Preview
 fun App() {
+    println(TimeZone.availableZoneIds)
+
     KoinContext {
         AppTheme {
             Navigator(LaunchingScreen())

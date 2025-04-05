@@ -4,7 +4,7 @@ import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.models.PublicPrivateKeyPair
-import com.github.familyvault.models.chat.MessageItem
+import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey

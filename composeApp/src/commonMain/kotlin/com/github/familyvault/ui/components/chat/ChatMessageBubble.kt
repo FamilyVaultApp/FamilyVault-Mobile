@@ -21,7 +21,7 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 fun ChatMessageBubble(
     message: ChatMessage
 ) {
-    val (sender, messageContent, isAuthor) = message
+    val (sender, messageContent, _, _, isAuthor) = message
 
     Row(
         modifier = Modifier.fillMaxWidth(0.75f),

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9da8e3ff2ea35faebb9c217225da23ad",
+    "identityHash": "6697e8c9005b272e3e240f305f627f37",
     "entities": [
       {
         "tableName": "FamilyGroupCredential",
@@ -57,11 +57,53 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "StoredChatMessage",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `chatThreadId` TEXT NOT NULL, `authorId` TEXT NOT NULL, `content` TEXT NOT NULL, `createDate` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chatThreadId",
+            "columnName": "chatThreadId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "authorId",
+            "columnName": "authorId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createDate",
+            "columnName": "createDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9da8e3ff2ea35faebb9c217225da23ad')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6697e8c9005b272e3e240f305f627f37')"
     ]
   }
 }

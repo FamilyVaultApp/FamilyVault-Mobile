@@ -1,12 +1,14 @@
 package com.github.familyvault.utils.mappers
 
 import com.github.familyvault.models.chat.ChatMessage
-import com.github.familyvault.models.chat.MessageItem
+import com.github.familyvault.backend.models.MessageItem
 
 object MessageItemToChatMessageMapper {
     inline fun map(msg: MessageItem, userId: String): ChatMessage = ChatMessage(
-        sender = msg.authorPublicKey,
+        id = msg.messageId,
+        senderPubKey = msg.authorPublicKey,
         message = msg.messageContent ?: "",
+        senderId = msg.authorId,
         isAuthor = msg.authorPublicKey.compareTo(userId) == 0
     )
 }
