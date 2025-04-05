@@ -12,6 +12,7 @@
     <string name="next_button_content">Next</string>
     <string name="create_button_content">Create</string>
     <string name="cancel_button_content">Cancel</string>
+    <string name="confirm_button_content">Confirm</string>
     <string name="scan_qr_code_button_content">Scan QR code</string>
     <string name="show_qr_code_button_content">Show QR code</string>
     <string name="change_name_content">Change group name</string>
@@ -81,4 +82,7 @@
     <string name="chat_send_message">Send message</string>
     <string name="chat_recording_icon">Record voice message</string>
     <string name="chat_attach_photo">Attach photo</string>
+
+    <!-- Remove users -->
+    <string name="remove_user_dialog">Are you sure to remove this user?</string>
 </resources>

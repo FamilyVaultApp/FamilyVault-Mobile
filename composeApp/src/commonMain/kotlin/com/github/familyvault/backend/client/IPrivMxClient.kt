@@ -1,13 +1,15 @@
 package com.github.familyvault.backend.client
 
-import com.github.familyvault.backend.models.PrivMxUser
-import com.github.familyvault.models.PublicPrivateKeyPair
 import com.github.familyvault.backend.models.MessageItem
+import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
 interface IPrivMxClient {
-    fun generatePairOfPrivateAndPublicKey(secret: String, salt: String): PublicPrivateKeyPair
+    fun generatePairOfPrivateAndPublicKey(password: String): PublicEncryptedPrivateKeyPair
+    fun encryptPrivateKeyPassword(password: String): String
+    fun decryptPrivateKeyPassword(encryptedPassword: String): String
     fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String)
     fun createThread(
         contextId: String,

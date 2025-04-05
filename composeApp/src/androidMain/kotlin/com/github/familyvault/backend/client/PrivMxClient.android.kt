@@ -1,10 +1,12 @@
 package com.github.familyvault.backend.client
 
+import com.github.familyvault.AppConfig
+import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
-import com.github.familyvault.models.PublicPrivateKeyPair
-import com.github.familyvault.backend.models.MessageItem
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
@@ -13,6 +15,8 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
+import kotlin.random.Random
+
 
 internal class PrivMxClient(certsPath: String) : IPrivMxClient {
     private val initModules = setOf(
@@ -25,12 +29,26 @@ internal class PrivMxClient(certsPath: String) : IPrivMxClient {
     private var threadApi: ThreadApi? = null
 
     override fun generatePairOfPrivateAndPublicKey(
-        secret: String, salt: String
-    ): PublicPrivateKeyPair {
-        val privateKey = container.cryptoApi.derivePrivateKey(secret, salt)
+        password: String,
+    ): PublicEncryptedPrivateKeyPair {
+        val privateKey = container.cryptoApi.generatePrivateKey(Random.nextBits(32).toString())
         val publicKey = container.cryptoApi.derivePublicKey(privateKey)
+        val encryptedPrivateKey = EncryptUtils.encryptData(
+            privateKey, AppConfig.SECRET
+        )
+        return PublicEncryptedPrivateKeyPair(publicKey, encryptedPrivateKey)
+    }
 
-        return PublicPrivateKeyPair(publicKey, privateKey)
+    override fun encryptPrivateKeyPassword(password: String): String {
+        return EncryptUtils.encryptData(
+            password, AppConfig.SECRET
+        )
+    }
+
+    override fun decryptPrivateKeyPassword(encryptedPassword: String): String {
+        return EncryptUtils.decryptData(
+            encryptedPassword, AppConfig.SECRET
+        )
     }
 
     override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
@@ -93,6 +111,7 @@ internal class PrivMxClient(certsPath: String) : IPrivMxClient {
 
         val publicMeta = ByteArray(0)
         val privateMeta = ByteArray(0)
+
         threadApi.sendMessage(
             threadId, publicMeta, privateMeta, content.encodeToByteArray()
         )

@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.components.typography.Paragraph
+import com.github.familyvault.ui.theme.AdditionalTheme
 import androidx.compose.material.Button as MaterialButton
 
 @Composable
@@ -24,8 +25,8 @@ fun Button(
     shape: Shape = RoundedCornerShape(8.dp),
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
-    disabledContentColor: Color = MaterialTheme.colorScheme.primary,
-    disabledContainerColor: Color = MaterialTheme.colorScheme.onPrimary,
+    disabledContentColor: Color = AdditionalTheme.colors.onMutedColor,
+    disabledContainerColor: Color = AdditionalTheme.colors.mutedColor,
     onClick: () -> Unit
 ) {
     MaterialButton(

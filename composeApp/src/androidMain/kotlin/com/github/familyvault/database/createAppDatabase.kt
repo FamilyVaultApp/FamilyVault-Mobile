@@ -12,6 +12,8 @@ fun createAppDatabase(context: Context): AppDatabase {
         name = dbFile.absolutePath
     )
         .setDriver(BundledSQLiteDriver())
+        // TODO: Usunięcie destruktywnej migracji przy wersji 1.0
+        .fallbackToDestructiveMigration(false)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }
