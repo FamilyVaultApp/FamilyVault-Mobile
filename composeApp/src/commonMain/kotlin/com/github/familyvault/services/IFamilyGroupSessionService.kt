@@ -15,4 +15,5 @@ interface IFamilyGroupSessionService {
     fun getContextId(): String
     fun updateFamilyGroupName(name: String)
     fun getFamilyGroupName() : String
+    fun getPublicKey(): String
 }

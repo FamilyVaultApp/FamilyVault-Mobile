@@ -23,9 +23,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.backend.requests.FamilyVaultBackendRequest
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.FamilyMemberEntry
@@ -75,12 +73,14 @@ class FamilyGroupManagementScreen : Screen {
 
         var familyGroupName by remember { mutableStateOf(familyGroupSessionService.getFamilyGroupName()) }
         var currentFamilyGroupName by remember { mutableStateOf(familyGroupSessionService.getFamilyGroupName()) }
+        var isChangingFamilyGroupName by remember { mutableStateOf(false) }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
             modifier = Modifier.fillMaxWidth().padding(vertical = AdditionalTheme.spacings.large),
         ) {
             TextField(
+                enabled = !isChangingFamilyGroupName,
                 value = familyGroupName,
                 onValueChange = { familyGroupName = it },
                 label = stringResource(Res.string.text_field_group_name_label)
@@ -88,15 +88,16 @@ class FamilyGroupManagementScreen : Screen {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.change_name_content),
-                enabled = familyGroupName != currentFamilyGroupName && familyGroupName.isNotBlank(),
+                enabled = familyGroupName != currentFamilyGroupName && familyGroupName.isNotBlank() && !isChangingFamilyGroupName,
                 onClick = {
                     coroutineScope.launch {
-                        familyGroupService.renameFamilyGroup(
-                            contextId = familyGroupSessionService.getContextId(),
+                        isChangingFamilyGroupName = true
+                        familyGroupService.renameCurrentFamilyGroup(
                             name = familyGroupName
                         )
                         familyGroupSessionService.updateFamilyGroupName(familyGroupName)
                         currentFamilyGroupName = familyGroupName
+                        isChangingFamilyGroupName = false
                     }
                 }
             )
@@ -108,13 +109,14 @@ class FamilyGroupManagementScreen : Screen {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupMembers = remember { mutableStateListOf<FamilyMember>() }
 
-
         var isLoadingMembers by remember { mutableStateOf(true) }
 
         LaunchedEffect(Unit) {
+            isLoadingMembers = true
             familyGroupMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
             isLoadingMembers = false
         }
+
         Column {
             Headline3(stringResource(Res.string.family_group_members))
             Column(

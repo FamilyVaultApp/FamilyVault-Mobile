@@ -9,7 +9,6 @@ import com.github.familyvault.backend.requests.GetFamilyGroupNameRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
-import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicPrivateKeyPair
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
@@ -64,7 +63,7 @@ class FamilyGroupService(
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
-            contextId, solutionId, contextId, keyPair // TODO: Dodać tutaj jako name, nazwe grupy rodzinnej
+            familyGroupInformation.familyGroupName, solutionId, contextId, keyPair
         )
     }
 
@@ -107,12 +106,12 @@ class FamilyGroupService(
         ).members
     }
 
-    override suspend fun renameFamilyGroup(
-        contextId: String, name: String
+    override suspend fun renameCurrentFamilyGroup(
+        name: String
     ) {
         familyVaultBackendProxy.renameFamilyGroup(
             RenameFamilyGroupRequest(
-                contextId, name
+                familyGroupSessionService.getContextId(), name
             )
         )
     }
@@ -130,12 +129,12 @@ class FamilyGroupService(
         familyGroupCredentialsRepository.updateCredentialFamilyGroupName(contextId, familyGroupInformation.familyGroupName)
     }
 
-    override suspend fun removeMemberFromFamilyGroup(
-        contextId: String, userPubKey: String
+    override suspend fun removeMemberFromCurrentFamilyGroup(
+        userPubKey: String
     ) {
         familyVaultBackendProxy.removeMemberFromFamilyGroup(
             RemoveMemberFromFamilyGroupRequest(
-                contextId, userPubKey
+                familyGroupSessionService.getContextId(), userPubKey
             )
         )
     }

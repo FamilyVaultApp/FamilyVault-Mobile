@@ -16,4 +16,6 @@ interface IFamilyGroupCredentialsRepository {
     suspend fun getDefaultCredential() : FamilyGroupCredential?
 
     suspend fun updateCredentialFamilyGroupName(contextId: String, name: String)
+
+    suspend fun deleteCredential(contextId: String)
 }
