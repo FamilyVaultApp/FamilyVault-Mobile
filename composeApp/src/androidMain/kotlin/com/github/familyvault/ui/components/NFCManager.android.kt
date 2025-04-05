@@ -30,7 +30,7 @@ actual class NFCManager(private val context: Context) : NfcAdapter.ReaderCallbac
         Log.d("NFCManager", "Starting callbackFlow for reading NFC tags")
         val readerCallback = NfcAdapter.ReaderCallback { tag: Tag ->
             Log.d("NFCManager", "ReaderCallback invoked with tag: $tag")
-            // Próba odczytania wiadomości NDEF z tagu
+            // try reading ndef from tag
             val ndef = Ndef.get(tag)
             if (ndef != null) {
                 try {
@@ -75,59 +75,70 @@ actual class NFCManager(private val context: Context) : NfcAdapter.ReaderCallbac
             } else {
                 Log.w("NFCManager", "Tag does not support NDEF")
             }
+            // if tag does not support ndef, try isoDep
             val isoDep = IsoDep.get(tag)
             if (isoDep != null) {
                 try {
                     isoDep.connect()
                     Log.d("NFCManager", "IsoDep connected")
 
+                    // Use the same AID as defined in MyHostApduService
                     val selectCommand = byteArrayOf(
                         0x00.toByte(), 0xA4.toByte(), 0x04.toByte(), 0x00.toByte(),
                         0x07.toByte(),
                         0xD2.toByte(), 0x76.toByte(), 0x00.toByte(),
                         0x00.toByte(), 0x85.toByte(), 0x01.toByte(), 0x01.toByte()
                     )
+
                     Log.d("NFCManager", "Sending SELECT command: ${selectCommand.joinToString(" ")}")
                     val selectResponse = isoDep.transceive(selectCommand)
                     Log.d("NFCManager", "Response from SELECT: ${selectResponse.joinToString(" ")}")
 
+                    // Don't immediately return if response isn't OK - log it and continue
                     if (!isResponseOkay(selectResponse)) {
-                        Log.e("NFCManager", "SELECT command failed")
+                        Log.w("NFCManager", "SELECT command didn't return 90 00, but continuing: ${selectResponse.joinToString(" ")}")
                     }
-                    val readLengthCommand = byteArrayOf(
-                        0x00.toByte(), 0xB0.toByte(), 0x00.toByte(), 0x00.toByte(), 0x02.toByte()
-                    )
-                    Log.d("NFCManager", "Sending READ LENGTH command: ${readLengthCommand.joinToString(" ")}")
-                    val lengthResponse = isoDep.transceive(readLengthCommand)
-                    Log.d("NFCManager", "Length response: ${lengthResponse.joinToString(" ")}")
-                    if (!isResponseOkay(lengthResponse) || lengthResponse.size < 4) {
-                        Log.e("NFCManager", "Failed to read length")
-                    }
-                    val lengthBytes = lengthResponse.sliceArray(0 until lengthResponse.size - 2)
-                    val dataLength = ((lengthBytes[0].toInt() and 0xFF) shl 8) or (lengthBytes[1].toInt() and 0xFF)
-                    Log.d("NFCManager", "Data length: $dataLength")
-                    val readDataCommand = byteArrayOf(
-                        0x00.toByte(), 0xB0.toByte(), 0x00.toByte(), 0x02.toByte(),
-                        dataLength.toByte()
+
+                    val getDataCommand = byteArrayOf(
+                        0x00.toByte(), // CLA
+                        0xA0.toByte(), // INS - custom instruction
+                        0x00.toByte(), // P1
+                        0x00.toByte(), // P2
+                        0x00.toByte()  // Lc - no data to send, just requesting data
                     )
 
-                    Log.d("NFCManager", "Sending READ DATA command: ${readDataCommand.joinToString(" ")}")
-                    val dataResponse = isoDep.transceive(readDataCommand)
-                    Log.d("NFCManager", "Data response: ${dataResponse.joinToString(" ")}")
-                    if (!isResponseOkay(dataResponse)) {
-                        Log.e("NFCManager", "Failed to read data")
+                    Log.d("NFCManager", "Requesting data: ${getDataCommand.joinToString(" ")}")
+                    val dataResponse = isoDep.transceive(getDataCommand)
+                    Log.d("NFCManager", "Response from data request: ${dataResponse.joinToString(" ")}")
+
+                    if (isResponseOkay(dataResponse)) {
+                        val responseData = dataResponse.sliceArray(0 until dataResponse.size - 2)
+                        val statusByte = responseData[0].toInt()
+
+                        val languageCodeLength = statusByte and 0x3F
+
+                        val isUtf8 = (statusByte and 0x80) == 0
+                        val charset = if (isUtf8) Charset.forName("UTF-8") else Charset.forName("UTF-16")
+
+                        val textBytes = responseData.drop(1 + languageCodeLength).toByteArray()
+
+                        val jsonString = String(textBytes, charset)
+                        Log.d("NFCManager", "Received data: $jsonString")
+
+                        try {
+
+                            val payload: AddFamilyMemberDataPayload = Json.decodeFromString(
+                                AddFamilyMemberDataPayload.serializer(),
+                                jsonString)
+                            Log.d("NFCManager", "Deserialized payload: $payload")
+                            trySend(payload)
+                        } catch (e: Exception) {
+                            Log.e("NFCManager", "Error deserializing JSON", e)
+                        }
                     }
-
-                    val jsonBytes = dataResponse.sliceArray(0 until dataResponse.size - 2)
-                    val jsonString = jsonBytes.toString(Charset.forName("UTF-8"))
-                    Log.d("NFCManager", "Received JSON string: $jsonString")
-
-                    val payload = Json.decodeFromString(AddFamilyMemberDataPayload.serializer(), jsonString)
-                    Log.d("NFCManager", "Deserialized payload: $payload")
-
-                    trySend(payload)
                 } catch (e: Exception) {
                     Log.e("NFCManager", "Error communicating with IsoDep", e)
+                    e.printStackTrace()
                 } finally {
                     try {
                         isoDep.close()
@@ -136,8 +147,6 @@ actual class NFCManager(private val context: Context) : NfcAdapter.ReaderCallbac
                         Log.e("NFCManager", "Error closing IsoDep connection", e)
                     }
                 }
-            } else {
-                Log.w("NFCManager", "Tag does not support IsoDep")
             }
         }
 

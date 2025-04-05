@@ -1,5 +1,7 @@
 package com.github.familyvault.components
 
+// https://github.com/underwindfall/NFCAndroid/blob/master/app/src/main/java/com/qifan/nfcbank/cardEmulation/KHostApduService.kt
+
 import android.app.Service
 import android.content.Intent
 import android.nfc.NdefMessage
@@ -9,6 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import java.io.UnsupportedEncodingException
 import java.math.BigInteger
+import java.nio.charset.Charset
 import java.util.*
 
 /**
@@ -20,19 +23,14 @@ class MyHostApduService : HostApduService() {
     private val TAG = "HostApduService"
 
     private val APDU_SELECT = byteArrayOf(
-        0x00.toByte(), // CLA	- Class - Class of instruction
-        0xA4.toByte(), // INS	- Instruction - Instruction code
-        0x04.toByte(), // P1	- Parameter 1 - Instruction parameter 1
-        0x00.toByte(), // P2	- Parameter 2 - Instruction parameter 2
-        0x07.toByte(), // Lc field	- Number of bytes present in the data field of the command
-        0xD2.toByte(),
-        0x76.toByte(),
-        0x00.toByte(),
-        0x00.toByte(),
-        0x85.toByte(),
-        0x01.toByte(),
-        0x01.toByte(), // NDEF Tag Application name
-        0x00.toByte()  // Le field	- Maximum number of bytes expected in the data field of the response to the command
+        0x00.toByte(), // CLA
+        0xA4.toByte(), // INS
+        0x04.toByte(), // P1
+        0x00.toByte(), // P2
+        0x07.toByte(), // Lc
+        0xD2.toByte(), 0x76.toByte(), 0x00.toByte(),
+        0x00.toByte(), 0x85.toByte(), 0x01.toByte(), 0x01.toByte(), // AID
+        0x00.toByte()  // Le
     )
 
     private val CAPABILITY_CONTAINER_OK = byteArrayOf(
@@ -103,7 +101,7 @@ class MyHostApduService : HostApduService() {
 
     private val NDEF_ID = byteArrayOf(0xE1.toByte(), 0x04.toByte())
 
-    private var NDEF_URI = NdefMessage(createTextRecord("en", "NFC Clock", NDEF_ID))
+    private var NDEF_URI = NdefMessage(createTextRecord("en", "Family Vault", NDEF_ID))
     private var NDEF_URI_BYTES = NDEF_URI.toByteArray()
     private var NDEF_URI_LEN = fillByteArrayToFixedDimension(
         BigInteger.valueOf(NDEF_URI_BYTES.size.toLong()).toByteArray(), 2
@@ -222,6 +220,30 @@ class MyHostApduService : HostApduService() {
             return response
         }
 
+        // custom command
+        if (commandApdu.size >= 5 &&
+            commandApdu[0] == 0x00.toByte() &&
+            commandApdu[1] == 0xA0.toByte()) {
+
+            // This is our custom data command
+            val dataLength = commandApdu[4].toInt() and 0xFF
+            val receivedData = commandApdu.sliceArray(5 until 5 + dataLength)
+            val message = String(receivedData, Charset.forName("UTF-8"))
+
+            Log.i(TAG, "Received custom command with data: $message")
+
+            // Create response - use the stored message from onStartCommand
+            // We're using the class variable NDEF_URI that was set in onStartCommand
+            val jsonData = NDEF_URI.records[0].payload.toString(Charset.forName("UTF-8"))
+            val responseData = jsonData.toByteArray(Charset.forName("UTF-8"))
+
+            // Combine with status bytes
+            val response = responseData + A_OKAY
+
+            Log.i(TAG, "Responding with: ${response.toHex()}")
+            return response
+        }
+
         //
         // We're doing something outside our scope
         //
@@ -248,21 +270,6 @@ class MyHostApduService : HostApduService() {
         }
 
         return result.toString()
-    }
-
-    fun String.hexStringToByteArray(): ByteArray {
-
-        val result = ByteArray(length / 2)
-
-        for (i in 0 until length step 2) {
-            val firstIndex = HEX_CHARS.indexOf(this[i]);
-            val secondIndex = HEX_CHARS.indexOf(this[i + 1]);
-
-            val octet = firstIndex.shl(4).or(secondIndex)
-            result.set(i.shr(1), octet.toByte())
-        }
-
-        return result
     }
 
     fun createTextRecord(language: String, text: String, id: ByteArray): NdefRecord {
