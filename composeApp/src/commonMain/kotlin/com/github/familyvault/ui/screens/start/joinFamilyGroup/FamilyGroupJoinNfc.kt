@@ -42,8 +42,7 @@ import familyvault.composeapp.generated.resources.show_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMemberDataPayload) :
-    Screen {
+class FamilyGroupJoinNfc : Screen {
     @Composable
     override fun Content() {
         StartScreenScaffold {
@@ -105,9 +104,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
                 Button(
                     stringResource(Res.string.show_qr_code_button_content), onClick = {
                         navigator.push(
-                            DisplayFamilyMemberDataQrCodeScreen(
-                                newFamilyMemberDataPayload
-                            )
+                            DisplayFamilyMemberDataQrCodeScreen()
                         )
                     }, modifier = Modifier.weight(1f)
                 )

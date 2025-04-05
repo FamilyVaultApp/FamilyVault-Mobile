@@ -77,6 +77,12 @@
     <string name="qr_code_scanning">Initiate QR scanner</string>
     <string name="qr_code_generation_screen_content">Have your family group guardian scan this code to let you join.</string>
 
+    <!-- Chat -->
+    <string name="chat_create_new">Create new chat</string>
+    <string name="chat_send_message">Send message</string>
+    <string name="chat_recording_icon">Record voice message</string>
+    <string name="chat_attach_photo">Attach photo</string>
+
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>
 </resources>

@@ -12,15 +12,14 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.NewFamilyMemberData
-import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.services.IJoinStatusService
+import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.InitialScreenButton
-import com.github.familyvault.ui.components.privateKey.AssignPrivateKeyFormContent
+import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import kotlinx.coroutines.launch
@@ -30,17 +29,17 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
     Screen {
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-        val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
-        val privMxClient = koinInject<IPrivMxClient>()
+        val joinFamilyGroupPayloadState = koinInject<IJoinFamilyGroupPayloadState>()
         val joinStatusService = koinInject<IJoinStatusService>()
+        val privMxClient = koinInject<IPrivMxClient>()
         val coroutineScope = rememberCoroutineScope()
+        val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
+        val navigator = LocalNavigator.currentOrThrow
 
         StartScreenScaffold {
             PrivateKeyAssignPasswordHeader()
             Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom
+                modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
             ) {
                 AssignPrivateKeyFormContent(
                     form,
@@ -50,9 +49,10 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                 ) {
                     coroutineScope.launch {
                         val keyPair = privMxClient.generatePairOfPrivateAndPublicKey(
-                            form.password,
-                            AppConfig.SALT
+                            form.password
                         )
+                        val encryptedPassword =
+                            privMxClient.encryptPrivateKeyPassword(form.password)
                         val joinStatus = joinStatusService.generateJoinStatus()
 
                         val newFamilyMemberData = NewFamilyMemberData(
@@ -60,11 +60,10 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                             surname = newFamilyMemberDraft.surname.value,
                             keyPair = keyPair
                         )
-                        val newFamilyMemberDataPayload = AddFamilyMemberDataPayload(
-                            newMemberData = newFamilyMemberData,
-                            joinStatusToken = joinStatus.token
+                        joinFamilyGroupPayloadState.update(
+                            joinStatus.token, newFamilyMemberData, encryptedPassword
                         )
-                        navigator.replaceAll(FamilyGroupJoinNfc(newFamilyMemberDataPayload))
+                        navigator.replaceAll(FamilyGroupJoinNfc())
                     }
                 }
             }
