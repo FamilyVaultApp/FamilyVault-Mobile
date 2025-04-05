@@ -33,4 +33,9 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         val credentialDao = appDatabase.credentialDao()
         return credentialDao.getDefault()
     }
+
+    override suspend fun updateCredentialFamilyGroupName(contextId: String, name: String) {
+        val credentialDao = appDatabase.credentialDao()
+        credentialDao.updateCredentialName(contextId, name)
+    }
 }

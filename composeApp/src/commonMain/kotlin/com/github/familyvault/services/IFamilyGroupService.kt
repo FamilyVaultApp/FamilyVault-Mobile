@@ -27,5 +27,7 @@ interface IFamilyGroupService {
 
     suspend fun renameFamilyGroup(contextId: String, name: String)
 
+    suspend fun refreshCurrentFamilyGroupName()
+
     suspend fun removeMemberFromFamilyGroup(contextId: String, userPubKey: String)
 }

@@ -12,13 +12,13 @@ class FamilyGroupSessionService(
 
     override fun assignSession(
         bridgeUrl: String,
+        familyGroupName: String,
         solutionId: String,
         contextId: String,
-        keyPair: PublicPrivateKeyPair,
-        familyGroupName: String
+        keyPair: PublicPrivateKeyPair
     ) {
         session = FamilyGroupSession(
-            bridgeUrl, solutionId, contextId, keyPair, familyGroupName
+            bridgeUrl, familyGroupName, solutionId, contextId, keyPair
         )
     }
 
@@ -37,13 +37,12 @@ class FamilyGroupSessionService(
         return session!!.contextId
     }
 
+    override fun updateFamilyGroupName(name: String) {
+        session = session?.copy(familyGroupName = name)
+    }
+
     override fun getFamilyGroupName(): String {
         requireNotNull(session?.familyGroupName)
         return session!!.familyGroupName
-    }
-
-    override fun updateFamilyGroupName(newName: String) {
-        requireNotNull(session)
-        session = session!!.copy(familyGroupName = newName)
     }
 }

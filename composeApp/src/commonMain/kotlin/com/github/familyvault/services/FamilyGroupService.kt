@@ -5,9 +5,11 @@ import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
+import com.github.familyvault.backend.requests.GetFamilyGroupNameRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
+import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicPrivateKeyPair
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
@@ -43,7 +45,7 @@ class FamilyGroupService(
             )
         )
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, pairOfKeys, familyGroupName
+            AppConfig.PRIVMX_BRIDGE_URL, familyGroupName, solutionId, contextId, pairOfKeys
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
@@ -55,10 +57,10 @@ class FamilyGroupService(
         firstname: String, surname: String, keyPair: PublicPrivateKeyPair, contextId: String
     ) {
         val solutionId = familyVaultBackendProxy.getSolutionId().solutionId
-        val familyGroupName = familyGroupCredentialsRepository.getDefaultCredential()!!.name
+        val familyGroupInformation = familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(contextId))
 
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL, solutionId, contextId, keyPair, familyGroupName
+            AppConfig.PRIVMX_BRIDGE_URL, familyGroupInformation.familyGroupName, solutionId, contextId, keyPair
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
@@ -70,12 +72,14 @@ class FamilyGroupService(
         val credential = familyGroupCredentialsRepository.getDefaultCredential()
 
         if (credential != null) {
+            val familyGroupInformation = familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(credential.contextId))
+
             familyGroupSessionService.assignSession(
                 AppConfig.PRIVMX_BRIDGE_URL,
+                familyGroupInformation.familyGroupName,
                 credential.solutionId,
                 credential.contextId,
                 PublicPrivateKeyPair(credential.publicKey, credential.privateKey),
-                credential.name
             )
             familyGroupSessionService.connect()
             return true
@@ -111,6 +115,19 @@ class FamilyGroupService(
                 contextId, name
             )
         )
+    }
+
+    override suspend fun refreshCurrentFamilyGroupName(
+    ) {
+        val contextId = familyGroupSessionService.getContextId()
+
+        val familyGroupInformation = familyVaultBackendProxy.getFamilyGroupName(
+            GetFamilyGroupNameRequest(
+                contextId
+            )
+        )
+
+        familyGroupCredentialsRepository.updateCredentialFamilyGroupName(contextId, familyGroupInformation.familyGroupName)
     }
 
     override suspend fun removeMemberFromFamilyGroup(

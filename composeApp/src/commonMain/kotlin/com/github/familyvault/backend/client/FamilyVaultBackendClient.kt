@@ -6,6 +6,7 @@ import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.DeleteJoinStatusRequest
 import com.github.familyvault.backend.requests.FamilyVaultBackendRequest
+import com.github.familyvault.backend.requests.GetFamilyGroupNameRequest
 import com.github.familyvault.backend.requests.GetJoinStatusRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupRequest
@@ -16,6 +17,7 @@ import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
 import com.github.familyvault.backend.responses.DeleteJoinStatusResponse
 import com.github.familyvault.backend.responses.FamilyVaultBackendResponse
 import com.github.familyvault.backend.responses.GenerateJoinStatusResponse
+import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.backend.responses.GetJoinStatusResponse
 import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
@@ -69,6 +71,10 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
 
     override suspend fun removeMemberFromFamilyGroup(req: RemoveMemberFromFamilyGroupRequest): RemoveMemberFromFamilyGroupResponse {
         return postRequest("/FamilyGroup/RemoveMemberFromFamilyGroup", req)
+    }
+
+    override suspend fun getFamilyGroupName(req: GetFamilyGroupNameRequest): GetFamilyGroupNameResponse {
+        return postRequest("/FamilyGroup/GetFamilyGroupName", req)
     }
 
     override suspend fun generateJoinStatus(): GenerateJoinStatusResponse {

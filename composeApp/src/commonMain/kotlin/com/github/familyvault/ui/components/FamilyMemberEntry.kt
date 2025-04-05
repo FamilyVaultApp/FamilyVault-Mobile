@@ -74,14 +74,13 @@ fun FamilyMemberEntry(
             AlertDialog(
                 // TODO DOPASOWAĆ TREŚĆ
                 onDismissRequest = { showDialog = false },
-                title = { Text("Tytuł") },
                 text = { Text("Treść") },
                 confirmButton = {
                     TextButton(onClick = {
                         showDialog = false
                         coroutineScope.launch {
                             familyGroupService.removeMemberFromFamilyGroup(contextId, familyMember.publicKey)
-                            navigator.replaceAll(MainScreen())
+                            navigator.replaceAll(StartScreen())
                         }
                     }) {
                         Text("Potwierdź")

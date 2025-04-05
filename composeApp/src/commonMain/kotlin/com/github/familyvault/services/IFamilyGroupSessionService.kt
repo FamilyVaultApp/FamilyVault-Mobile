@@ -5,14 +5,14 @@ import com.github.familyvault.models.PublicPrivateKeyPair
 interface IFamilyGroupSessionService {
     fun assignSession(
         bridgeUrl: String,
+        familyGroupName: String,
         solutionId: String,
         contextId: String,
         keyPair: PublicPrivateKeyPair,
-        familyGroupName: String
     )
 
     fun connect()
     fun getContextId(): String
-    fun getFamilyGroupName(): String
-    fun updateFamilyGroupName(newName: String)
+    fun updateFamilyGroupName(name: String)
+    fun getFamilyGroupName() : String
 }
