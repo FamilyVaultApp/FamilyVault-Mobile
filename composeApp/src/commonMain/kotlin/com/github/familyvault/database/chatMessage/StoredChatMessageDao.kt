@@ -9,6 +9,9 @@ interface StoredChatMessageDao {
     @Query("SELECT * FROM StoredChatMessage WHERE chatThreadId = :chatThreadId LIMIT :take OFFSET :skip")
     suspend fun getMessages(chatThreadId: String, skip: Int, take: Int): List<StoredChatMessage>
 
+    @Query("SELECT EXISTS(SELECT 1 FROM StoredChatMessage WHERE id = :id)")
+    suspend fun isMessageStored(id: String): Boolean
+
     @Upsert
-    suspend fun upsert(data: StoredChatMessage)
+    suspend fun upsert(chatMessage: StoredChatMessage)
 }

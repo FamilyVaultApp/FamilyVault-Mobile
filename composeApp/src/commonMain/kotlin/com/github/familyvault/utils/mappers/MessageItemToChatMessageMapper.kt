@@ -9,6 +9,7 @@ object MessageItemToChatMessageMapper {
         senderPubKey = msg.authorPublicKey,
         message = msg.messageContent ?: "",
         senderId = msg.authorId,
+        sendDate = msg.createDate,
         isAuthor = msg.authorPublicKey.compareTo(userId) == 0
     )
 }

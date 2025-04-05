@@ -34,14 +34,16 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val listState = rememberLazyListState()
 
         LaunchedEffect(chatService) {
-            messages.clear()
+            chatService.populateDatabaseWithLastMessages(chatThread.id)
             messages.addAll(
-                chatService.retrieveMessages(chatThread.id)
+                chatService.retrieveMessagesLastPage(chatThread.id)
             )
         }
 
         LaunchedEffect(Unit) {
-            listState.scrollToItem(messages.lastIndex)
+            if (messages.isNotEmpty()) {
+                listState.scrollToItem(messages.lastIndex)
+            }
         }
 
         Scaffold(

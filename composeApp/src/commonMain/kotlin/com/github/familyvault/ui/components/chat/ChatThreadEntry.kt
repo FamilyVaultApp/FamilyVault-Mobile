@@ -38,7 +38,7 @@ fun ChatThreadEntry(
         UserAvatar(chatThread.name)
         Column {
             Headline3(chatThread.name)
-            ParagraphMuted(if (lastMessage == null) "" else "${lastMessage.senderPubKey}: ${lastMessage.messageShortPreview}")
+            ParagraphMuted(if (lastMessage == null) "" else "${lastMessage.senderId}: ${lastMessage.messageShortPreview}")
         }
     }
 }

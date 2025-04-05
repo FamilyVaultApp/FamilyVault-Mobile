@@ -9,6 +9,7 @@ data class StoredChatMessage(
     val id: String,
     val chatThreadId: String,
     val authorId: String,
+    val authorPublicKey: String,
     val content: String,
     val createDate: Long
 )

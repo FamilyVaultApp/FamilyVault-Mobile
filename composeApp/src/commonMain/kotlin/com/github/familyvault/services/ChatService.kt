@@ -5,10 +5,14 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
+import com.github.familyvault.utils.mappers.MessageItemToStoredChatMessageMapper
+import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
 
 class ChatService(
+    private val storedChatMessageRepository: IStoredChatMessageRepository,
     private val privMxClient: IPrivMxClient,
     private val familyGroupSessionService: IFamilyGroupSessionService
 ) : IChatService {
@@ -44,12 +48,12 @@ class ChatService(
         privMxClient.sendMessage(messageContent, chatThreadId, respondToMessageId)
     }
 
-    override fun retrieveMessages(chatThreadId: String): List<ChatMessage> {
+    override suspend fun retrieveMessagesLastPage(chatThreadId: String): List<ChatMessage> {
         val userPublicKey = familyGroupSessionService.getPublicKey()
-        val messagesList = privMxClient.retrieveMessagesFromThread(chatThreadId, 0, 100)
+        val messagesList = storedChatMessageRepository.getStoredChatMessagesPage(chatThreadId, 0)
 
         return messagesList.map {
-            MessageItemToChatMessageMapper.map(it, userPublicKey)
+            StoredChatMessageToChatMessageMapper.map(it, userPublicKey)
         }
     }
 
@@ -58,5 +62,33 @@ class ChatService(
         val message = privMxClient.retrieveLastMessageFromThread(chatThreadId) ?: return null
 
         return MessageItemToChatMessageMapper.map(message, userPublicKey)
+    }
+
+    override suspend fun populateDatabaseWithLastMessages(chatThreadId: String) {
+        var encounteredExistingMessage = true
+        var currentPage = 0
+
+        do {
+            val messagesFromPrivMx = privMxClient.retrieveMessagesFromThread(
+                chatThreadId,
+                currentPage * AppConfig.CHAT_MESSAGES_PER_PAGE,
+                AppConfig.CHAT_MESSAGES_PER_PAGE
+            )
+            if (messagesFromPrivMx.isEmpty()) {
+                break
+            }
+
+            for (privMxMessage in messagesFromPrivMx) {
+                encounteredExistingMessage =
+                    storedChatMessageRepository.isChatMessageInRepositoryById(privMxMessage.messageId)
+                if (encounteredExistingMessage) {
+                    return
+                }
+                storedChatMessageRepository.addNewStoredChatMessage(
+                    MessageItemToStoredChatMessageMapper.map(privMxMessage, chatThreadId)
+                )
+            }
+            currentPage++
+        } while (!encounteredExistingMessage)
     }
 }
