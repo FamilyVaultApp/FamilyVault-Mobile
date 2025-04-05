@@ -2,22 +2,25 @@ package com.github.familyvault.services
 
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyGroupSession
+import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.PublicPrivateKeyPair
 
 class FamilyGroupSessionService(
     private val privMxClient: IPrivMxClient
-) :
-    IFamilyGroupSessionService {
+) : IFamilyGroupSessionService {
     private var session: FamilyGroupSession? = null
 
     override fun assignSession(
         bridgeUrl: String,
         solutionId: String,
         contextId: String,
-        keyPair: PublicPrivateKeyPair
+        keyPair: PublicEncryptedPrivateKeyPair
     ) {
         session = FamilyGroupSession(
-            bridgeUrl, solutionId, contextId, keyPair
+            bridgeUrl, solutionId, contextId, PublicPrivateKeyPair(
+                keyPair.publicKey,
+                privMxClient.decryptPrivateKeyPassword(keyPair.encryptedPrivateKey)
+            )
         )
     }
 
@@ -25,14 +28,23 @@ class FamilyGroupSessionService(
         requireNotNull(session)
 
         privMxClient.establishConnection(
-            session!!.bridgeUrl,
-            session!!.solutionId,
-            session!!.keyPair.privateKey
+            getBridgeUrl(), getSolutionId(), getPrivateKey()
         )
     }
 
     override fun getContextId(): String {
-        requireNotNull(session?.contextId)
-        return session!!.contextId
+        return requireNotNull(session?.contextId)
+    }
+
+    override fun getPrivateKey(): String {
+        return requireNotNull(session?.keyPair?.privateKey)
+    }
+
+    override fun getBridgeUrl(): String {
+        return requireNotNull(session?.bridgeUrl)
+    }
+
+    override fun getSolutionId(): String {
+        return requireNotNull(session?.solutionId)
     }
 }
