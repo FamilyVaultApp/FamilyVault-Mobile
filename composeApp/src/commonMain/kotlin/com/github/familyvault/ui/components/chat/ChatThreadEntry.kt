@@ -12,32 +12,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.github.familyvault.models.chat.ChatMessage
+import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun ChatConversationEntry(
-    title: String, lastMessage: ChatMessage, unreadMessages: Boolean, onClick: () -> Unit = {}
+fun ChatThreadEntry(
+    chatThread: ChatThread, unreadMessages: Boolean, onClick: () -> Unit = {}
 ) {
     val backgroundColor =
         if (unreadMessages) MaterialTheme.colorScheme.primaryContainer else Color.Unspecified
+    val lastMessage = chatThread.lastMessage
 
     return Row(
-        modifier = Modifier.fillMaxWidth()
-            .clickable(onClick = onClick).background(backgroundColor).padding(
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).background(backgroundColor)
+            .padding(
                 horizontal = AdditionalTheme.spacings.screenPadding,
                 vertical = AdditionalTheme.spacings.normalPadding,
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
     ) {
-        UserAvatar(title)
+        UserAvatar(chatThread.name)
         Column {
-            Headline3(title)
-            ParagraphMuted("${lastMessage.sender}: ${lastMessage.messageShortPreview}")
+            Headline3(chatThread.name)
+            ParagraphMuted(if (lastMessage == null) "" else "${lastMessage.senderId}: ${lastMessage.messageShortPreview}")
         }
     }
 }

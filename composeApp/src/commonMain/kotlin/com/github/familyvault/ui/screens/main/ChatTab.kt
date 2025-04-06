@@ -17,7 +17,6 @@ import org.jetbrains.compose.resources.stringResource
 object ChatTab : Tab {
     @Composable
     override fun Content() {
-
         Column {
             TopAppBar(
                 stringResource(Res.string.chat_tab)

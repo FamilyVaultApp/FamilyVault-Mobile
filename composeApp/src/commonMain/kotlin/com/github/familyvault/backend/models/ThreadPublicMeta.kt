@@ -1,4 +1,4 @@
-package com.github.familyvault.models.chat
+package com.github.familyvault.backend.models
 
 import kotlinx.serialization.Serializable
 

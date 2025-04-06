@@ -24,10 +24,12 @@ fun UserAvatar(
             .background(MaterialTheme.colorScheme.primary, CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            firstName.first().toString(),
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontWeight = FontWeight.Bold
-        )
+        if (firstName.isNotEmpty()) {
+            Text(
+                firstName.first().toString(),
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }

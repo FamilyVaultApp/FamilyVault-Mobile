@@ -40,7 +40,6 @@ class JoinStatusService : IJoinStatusService {
         do {
             delay(AppConfig.BACKEND_REQUEST_INTERVAL_LENGTH_MS)
             joinStatus = getJoinStatus(token)
-            println(joinStatus)
         } while (joinStatus?.state == JoinStatusState.Initiated)
 
         return joinStatus!!
