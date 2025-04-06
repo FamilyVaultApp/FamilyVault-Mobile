@@ -17,7 +17,7 @@ data class ChatMessage(
         if (other is ChatMessage) {
             return id == other.id
         }
-        return false;
+        return false
     }
 
     override fun hashCode(): Int {

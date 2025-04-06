@@ -94,6 +94,9 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
     }
 
     private fun handleTextMessageSend(message: String) {
+        if (message.isEmpty()) {
+            return
+        }
         chatService.sendMessage(chatThread.id, message, respondToMessageId = "")
     }
 
