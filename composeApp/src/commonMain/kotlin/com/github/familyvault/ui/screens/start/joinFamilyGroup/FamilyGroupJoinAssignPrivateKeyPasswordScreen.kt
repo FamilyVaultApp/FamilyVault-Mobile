@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -16,9 +17,12 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.NewFamilyMemberData
+import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.dialogs.ErrorDialog
+import com.github.familyvault.ui.components.dialogs.FamilyGroupPreparingToJoinDialog
 import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -35,8 +39,18 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
         val coroutineScope = rememberCoroutineScope()
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
         val navigator = LocalNavigator.currentOrThrow
+        var preparingToJoinFamilyGroupState by remember { mutableStateOf(FormSubmitState.IDLE) }
 
         StartScreenScaffold {
+            when (preparingToJoinFamilyGroupState) {
+                FormSubmitState.PENDING -> FamilyGroupPreparingToJoinDialog()
+
+                FormSubmitState.ERROR -> ErrorDialog {
+                    preparingToJoinFamilyGroupState = FormSubmitState.IDLE
+                }
+
+                else -> Unit
+            }
             PrivateKeyAssignPasswordHeader()
             Column(
                 modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
@@ -48,22 +62,29 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                     enabled = form.isFormValid(),
                 ) {
                     coroutineScope.launch {
-                        val keyPair = privMxClient.generatePairOfPrivateAndPublicKey(
-                            form.password
-                        )
-                        val encryptedPassword =
-                            privMxClient.encryptPrivateKeyPassword(form.password)
-                        val joinStatus = joinStatusService.generateJoinStatus()
+                        preparingToJoinFamilyGroupState = FormSubmitState.PENDING
+                        try {
+                            val keyPair = privMxClient.generatePairOfPrivateAndPublicKey(
+                                form.password
+                            )
+                            val encryptedPassword =
+                                privMxClient.encryptPrivateKeyPassword(form.password)
+                            val joinStatus = joinStatusService.generateJoinStatus()
 
-                        val newFamilyMemberData = NewFamilyMemberData(
-                            firstname = newFamilyMemberDraft.firstname.value,
-                            surname = newFamilyMemberDraft.surname.value,
-                            keyPair = keyPair
-                        )
-                        joinFamilyGroupPayloadState.update(
-                            joinStatus.token, newFamilyMemberData, encryptedPassword
-                        )
-                        navigator.replaceAll(FamilyGroupJoinNfc())
+                            val newFamilyMemberData = NewFamilyMemberData(
+                                firstname = newFamilyMemberDraft.firstname.value,
+                                surname = newFamilyMemberDraft.surname.value,
+                                keyPair = keyPair
+                            )
+                            joinFamilyGroupPayloadState.update(
+                                joinStatus.token, newFamilyMemberData, encryptedPassword
+                            )
+                            navigator.replaceAll(FamilyGroupJoinNfc())
+                            preparingToJoinFamilyGroupState = FormSubmitState.IDLE
+                        } catch (e: Exception) {
+                            preparingToJoinFamilyGroupState = FormSubmitState.ERROR
+                            println(e)
+                        }
                     }
                 }
             }

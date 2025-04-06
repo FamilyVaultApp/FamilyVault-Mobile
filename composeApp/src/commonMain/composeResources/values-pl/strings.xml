@@ -42,6 +42,7 @@
     <!-- Joining family group-->
     <string name="join_family_group_title">Dołącz do grupy rodzinnej</string>
     <string name="join_family_group_content">Zetknij swój telefon z telefonem rodzica, aby dołączyć.</string>
+    <string name="preparing_to_join_family_group_label">Przygotowanie do dołączenia do grupy</string>
 
     <!-- Form validation errors-->
     <string name="form_empty_error">To pole nie może być puste</string>
@@ -90,7 +91,7 @@
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
-    
+
     <!-- Connection error screen -->
     <string name="connection_error_title">Błąd połączenia</string>
     <string name="connection_error_content">Nie można połączyć się z serwerem. Sprawdź połączenie internetowe i spróbuj ponownie.</string>

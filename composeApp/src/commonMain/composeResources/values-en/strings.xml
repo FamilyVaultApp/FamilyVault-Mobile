@@ -42,6 +42,7 @@
     <!-- Joining family group-->
     <string name="join_family_group_title">Join family group</string>
     <string name="join_family_group_content">Tap your phone to your parent's phone to join the family group.</string>
+    <string name="preparing_to_join_family_group_label">Preparing to join family group</string>
 
     <!-- Form validation errors-->
     <string name="form_empty_error">This field cannot be empty</string>
