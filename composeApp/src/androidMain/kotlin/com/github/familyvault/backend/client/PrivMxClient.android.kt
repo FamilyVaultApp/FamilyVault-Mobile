@@ -11,6 +11,7 @@ import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
+import com.simplito.java.privmx_endpoint_extra.events.EventType
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
@@ -18,12 +19,12 @@ import com.simplito.java.privmx_endpoint_extra.model.SortOrder
 import kotlin.random.Random
 
 
-internal class PrivMxClient(certsPath: String) : IPrivMxClient {
+class PrivMxClient : IPrivMxClient {
     private val initModules = setOf(
         Modules.THREAD, Modules.STORE, Modules.INBOX
     )
     private val container: PrivmxEndpointContainer = PrivmxEndpointContainer().also {
-        it.setCertsPath(certsPath)
+        it.startListening()
     }
     private var connection: PrivmxEndpoint? = null
     private var threadApi: ThreadApi? = null
@@ -55,7 +56,7 @@ internal class PrivMxClient(certsPath: String) : IPrivMxClient {
         connection = container.connect(
             initModules, privateKey, solutionId, bridgeUrl
         )
-        threadApi = connection!!.threadApi
+        threadApi = requireNotNull(connection).threadApi
     }
 
     override fun createThread(
@@ -123,7 +124,7 @@ internal class PrivMxClient(certsPath: String) : IPrivMxClient {
         val threadApi = requireNotNull(threadApi)
 
         val messagesPagingList = threadApi.listMessages(
-            threadId, startIndex.toLong(), pageSize.toLong(), SortOrder.ASC
+            threadId, startIndex.toLong(), pageSize.toLong(), SortOrder.DESC
         )
 
         val messages = messagesPagingList.readItems?.map {
@@ -145,5 +146,17 @@ internal class PrivMxClient(certsPath: String) : IPrivMxClient {
 
         return PrivMxMessageToMessageItemMapper.map(message)
     }
-}
 
+    /* Listeners */
+    override fun registerOnMessageCreated(
+        threadId: String,
+        callback: (MessageItem) -> Unit
+    ) {
+        requireNotNull(connection).registerCallback(
+            "CONTEKSTSXD",
+            EventType.ThreadNewMessageEvent(threadId)
+        ) {
+            callback(PrivMxMessageToMessageItemMapper.map(it))
+        }
+    }
+}

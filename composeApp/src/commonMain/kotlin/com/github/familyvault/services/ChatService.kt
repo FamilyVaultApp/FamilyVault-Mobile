@@ -48,9 +48,13 @@ class ChatService(
         privMxClient.sendMessage(messageContent, chatThreadId, respondToMessageId)
     }
 
-    override suspend fun retrieveMessagesLastPage(chatThreadId: String): List<ChatMessage> {
+    override suspend fun retrieveMessagesFirstPage(chatThreadId: String): List<ChatMessage> {
+        return retrieveMessagesPage(chatThreadId, 0)
+    }
+
+    override suspend fun retrieveMessagesPage(chatThreadId: String, page: Int): List<ChatMessage> {
         val userPublicKey = familyGroupSessionService.getPublicKey()
-        val messagesList = storedChatMessageRepository.getStoredChatMessagesPage(chatThreadId, 0)
+        val messagesList = storedChatMessageRepository.getStoredChatMessagesPage(chatThreadId, page)
 
         return messagesList.map {
             StoredChatMessageToChatMessageMapper.map(it, userPublicKey)

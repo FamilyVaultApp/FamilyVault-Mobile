@@ -11,6 +11,8 @@ interface IPrivMxClient {
     fun encryptPrivateKeyPassword(password: String): String
     fun decryptPrivateKeyPassword(encryptedPassword: String): String
     fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String)
+
+    /* Thread */
     fun createThread(
         contextId: String,
         users: List<PrivMxUser>,
@@ -26,4 +28,7 @@ interface IPrivMxClient {
     ): List<MessageItem>
 
     fun retrieveLastMessageFromThread(threadId: String): MessageItem?
+
+    /* Listeners */
+    fun registerOnMessageCreated(threadId: String, callback: (MessageItem) -> Unit)
 }

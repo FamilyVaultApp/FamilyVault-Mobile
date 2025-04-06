@@ -6,7 +6,7 @@ import androidx.room.Upsert
 
 @Dao
 interface StoredChatMessageDao {
-    @Query("SELECT * FROM StoredChatMessage WHERE chatThreadId = :chatThreadId LIMIT :take OFFSET :skip")
+    @Query("SELECT * FROM StoredChatMessage WHERE chatThreadId = :chatThreadId ORDER BY createDate DESC LIMIT :take OFFSET :skip")
     suspend fun getMessages(chatThreadId: String, skip: Int, take: Int): List<StoredChatMessage>
 
     @Query("SELECT EXISTS(SELECT 1 FROM StoredChatMessage WHERE id = :id)")
