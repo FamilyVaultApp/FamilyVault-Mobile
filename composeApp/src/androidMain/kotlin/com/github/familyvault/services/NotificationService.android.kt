@@ -33,7 +33,7 @@ class NotificationService(context: Context): INotificationService {
         }
     }
 
-    @Composable
+
     override fun sendNotification(title: String, content: String) {
 
         val builder = NotificationCompat.Builder(androidContext, channelId)
