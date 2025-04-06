@@ -33,15 +33,7 @@ class NotificationService(context: Context): INotificationService {
         }
     }
 
-
-    override fun sendNotification(title: String, content: String) {
-
-        val builder = NotificationCompat.Builder(androidContext, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
-            .setContentTitle(title)
-            .setContentText(content)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-
+    override fun requestNotificationsPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     androidContext,
@@ -55,14 +47,30 @@ class NotificationService(context: Context): INotificationService {
                 )
             }
         }
+    }
+
+    override fun checkNotificationPermission(): Boolean {
+        if (ActivityCompat.checkSelfPermission(
+                androidContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            return true
+        }
+        return false
+    }
+
+    override fun sendNotification(title: String, content: String) {
+
+        val builder = NotificationCompat.Builder(androidContext, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         with(NotificationManagerCompat.from(androidContext)) {
-            if (ActivityCompat.checkSelfPermission(
-                    androidContext,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                throw Exception("Permission not granted")
+            if (!checkNotificationPermission()) {
+                return
             }
             notify(System.currentTimeMillis().toInt(), builder.build())
         }
