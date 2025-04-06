@@ -19,7 +19,7 @@ import com.simplito.java.privmx_endpoint_extra.model.SortOrder
 import kotlin.random.Random
 
 
-class PrivMxClient : IPrivMxClient {
+class PrivMxClient : IPrivMxClient, AutoCloseable {
     private val initModules = setOf(
         Modules.THREAD, Modules.STORE, Modules.INBOX
     )
@@ -153,10 +153,15 @@ class PrivMxClient : IPrivMxClient {
         callback: (MessageItem) -> Unit
     ) {
         requireNotNull(connection).registerCallback(
-            "CONTEKSTSXD",
+            "CHAT_EVENT",
             EventType.ThreadNewMessageEvent(threadId)
         ) {
             callback(PrivMxMessageToMessageItemMapper.map(it))
         }
+    }
+
+    override fun close() {
+        requireNotNull(connection).unregisterAll()
+        requireNotNull(connection).close()
     }
 }
