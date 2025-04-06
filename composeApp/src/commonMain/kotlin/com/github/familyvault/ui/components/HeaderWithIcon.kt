@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
@@ -15,6 +16,7 @@ fun HeaderWithIcon(text: String, icon: ImageVector) {
     Column(
         modifier = Modifier.padding(vertical = AdditionalTheme.spacings.large),
         verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.large),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Headline1(
             text,

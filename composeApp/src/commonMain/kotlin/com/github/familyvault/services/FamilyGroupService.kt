@@ -9,9 +9,11 @@ import com.github.familyvault.backend.requests.GetFamilyGroupNameRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
+import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
+import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 
 class FamilyGroupService(
@@ -76,12 +78,18 @@ class FamilyGroupService(
         )
     }
 
-    override suspend fun assignDefaultStoredFamilyGroup(): Boolean {
+    override suspend fun assignDefaultStoredFamilyGroup(): ConnectionStatus {
         val credential = familyGroupCredentialsRepository.getDefaultCredential()
 
-        if (credential != null) {
-            val familyGroupInformation = familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(credential.contextId))
 
+        if (credential != null) {
+            val familyGroupInformation: GetFamilyGroupNameResponse
+            try {
+                familyGroupInformation =
+                    familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(credential.contextId))
+            } catch(e: Exception) {
+                return ConnectionStatus.ConnectionError
+            }
             familyGroupSessionService.assignSession(
                 AppConfig.PRIVMX_BRIDGE_URL,
                 familyGroupInformation.familyGroupName,
@@ -89,10 +97,11 @@ class FamilyGroupService(
                 credential.contextId,
                 PublicEncryptedPrivateKeyPair(credential.publicKey, credential.encryptedPrivateKey)
             )
-            familyGroupSessionService.connect()
-            return true
+
+            val connectionStatus = familyGroupSessionService.connect()
+            return connectionStatus
         }
-        return false
+        return ConnectionStatus.NoCredentials
     }
 
     override suspend fun addMemberToFamilyGroup(

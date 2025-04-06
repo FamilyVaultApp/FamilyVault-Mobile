@@ -85,5 +85,13 @@
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
+    
+    <!-- Connection error screen -->
+    <string name="connection_error_title">Błąd połączenia</string>
+    <string name="connection_error_content">Nie można połączyć się z serwerem. Sprawdź połączenie internetowe i spróbuj ponownie.</string>
+    <string name="connection_error_button_content">Ponów połączenie</string>
 
+    <string name="user_not_found_title">Nie znaleziono użytkownika</string>
+    <string name="user_not_found_content">Nie udało się znaleźć Ciebie w tej Grupie Rodzinnej. Możliwe, że Twoje konto zostało z niej usunięte. Możesz usunąć dane tej grupy rodzinnej z urządzenia, korzystając z poniższego przycisku.</string>
+    <string name="user_not_found_button_content">Usuń dane grupy rodzinnej</string>
 </resources>
