@@ -13,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.enums.ConnectionStatus
@@ -50,11 +51,16 @@ fun ConnectionError(connectionStatus: ConnectionStatus) {
             },
             Icons.Outlined.Error
         )
-        if (connectionStatus == ConnectionStatus.ConnectionError)
-        {
-            Paragraph(stringResource(Res.string.connection_error_content))
+        if (connectionStatus == ConnectionStatus.ConnectionError) {
+            Paragraph(
+                stringResource(Res.string.connection_error_content),
+                textAlign = TextAlign.Center
+            )
         } else {
-            Paragraph(stringResource(Res.string.user_not_found_content))
+            Paragraph(
+                stringResource(Res.string.user_not_found_content),
+                textAlign = TextAlign.Center
+            )
         }
         Column(
             modifier = Modifier.fillMaxHeight(),

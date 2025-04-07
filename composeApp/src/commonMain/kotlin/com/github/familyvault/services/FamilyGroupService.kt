@@ -3,6 +3,7 @@ package com.github.familyvault.services
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.backend.exceptions.FamilyVaultBackendNoConnectionException
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.GetFamilyGroupNameRequest
@@ -40,10 +41,7 @@ class FamilyGroupService(
         ).contextId
         familyVaultBackendProxy.addMemberToFamilyGroup(
             AddMemberToFamilyGroupRequest(
-                contextId,
-                username,
-                pairOfKeys.publicKey,
-                FamilyGroupMemberPermissionGroup.Guardian
+                contextId, username, pairOfKeys.publicKey, FamilyGroupMemberPermissionGroup.Guardian
             )
         )
         familyGroupSessionService.assignSession(
@@ -63,10 +61,15 @@ class FamilyGroupService(
         contextId: String
     ) {
         val solutionId = familyVaultBackendProxy.getSolutionId().solutionId
-        val familyGroupInformation = familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(contextId))
+        val familyGroupInformation =
+            familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(contextId))
 
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL, familyGroupInformation.familyGroupName, solutionId, contextId, keyPair
+            AppConfig.PRIVMX_BRIDGE_URL,
+            familyGroupInformation.familyGroupName,
+            solutionId,
+            contextId,
+            keyPair
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
@@ -80,28 +83,27 @@ class FamilyGroupService(
 
     override suspend fun assignDefaultStoredFamilyGroup(): ConnectionStatus {
         val credential = familyGroupCredentialsRepository.getDefaultCredential()
+            ?: return ConnectionStatus.NoCredentials
 
+        val familyGroupInformation: GetFamilyGroupNameResponse
 
-        if (credential != null) {
-            val familyGroupInformation: GetFamilyGroupNameResponse
-            try {
-                familyGroupInformation =
-                    familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(credential.contextId))
-            } catch(e: Exception) {
-                return ConnectionStatus.ConnectionError
-            }
-            familyGroupSessionService.assignSession(
-                AppConfig.PRIVMX_BRIDGE_URL,
-                familyGroupInformation.familyGroupName,
-                credential.solutionId,
-                credential.contextId,
-                PublicEncryptedPrivateKeyPair(credential.publicKey, credential.encryptedPrivateKey)
-            )
-
-            val connectionStatus = familyGroupSessionService.connect()
-            return connectionStatus
+        try {
+            familyGroupInformation =
+                familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(credential.contextId))
+        } catch (e: FamilyVaultBackendNoConnectionException) {
+            return ConnectionStatus.ConnectionError
         }
-        return ConnectionStatus.NoCredentials
+
+        familyGroupSessionService.assignSession(
+            AppConfig.PRIVMX_BRIDGE_URL,
+            familyGroupInformation.familyGroupName,
+            credential.solutionId,
+            credential.contextId,
+            PublicEncryptedPrivateKeyPair(credential.publicKey, credential.encryptedPrivateKey)
+        )
+
+        val connectionStatus = familyGroupSessionService.connect()
+        return connectionStatus
     }
 
     override suspend fun addMemberToFamilyGroup(
@@ -144,7 +146,9 @@ class FamilyGroupService(
             )
         )
 
-        familyGroupCredentialsRepository.updateCredentialFamilyGroupName(contextId, familyGroupInformation.familyGroupName)
+        familyGroupCredentialsRepository.updateCredentialFamilyGroupName(
+            contextId, familyGroupInformation.familyGroupName
+        )
     }
 
     override suspend fun removeMemberFromCurrentFamilyGroup(
