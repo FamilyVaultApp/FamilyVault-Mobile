@@ -11,10 +11,11 @@ import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.util.Log
 import com.github.familyvault.models.AddFamilyMemberDataPayload
+import com.github.familyvault.utils.PayloadDecryptor
+import com.github.familyvault.utils.PayloadEncryptor
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.serialization.json.Json
 import java.nio.charset.Charset
 
 
@@ -49,10 +50,8 @@ class NFCService(private val context: Context) : INFCService {
                         val jsonString = String(textBytes, charset)
                         Log.d("NFCManager", "Extracted JSON string: $jsonString")
 
-                        val payload: AddFamilyMemberDataPayload = Json.decodeFromString(
-                            AddFamilyMemberDataPayload.serializer(),
-                            jsonString
-                        )
+                        val payload: AddFamilyMemberDataPayload = PayloadDecryptor.decrypt(jsonString)
+
                         Log.d("NFCManager", "Deserialized payload: $payload")
                         trySend(payload)
                     } else {
@@ -122,10 +121,7 @@ class NFCService(private val context: Context) : INFCService {
                         Log.d("NFCManager", "Received data: $jsonString")
 
                         try {
-
-                            val payload: AddFamilyMemberDataPayload = Json.decodeFromString(
-                                AddFamilyMemberDataPayload.serializer(),
-                                jsonString)
+                            val payload: AddFamilyMemberDataPayload = PayloadDecryptor.decrypt(jsonString)
                             Log.d("NFCManager", "Deserialized payload: $payload")
                             trySend(payload)
                         } catch (e: Exception) {
@@ -191,7 +187,7 @@ class NFCService(private val context: Context) : INFCService {
         (context as? Activity)?.let { activity ->
             nfcAdapter?.disableReaderMode(activity)
         }
-        val jsonString = Json.encodeToString(AddFamilyMemberDataPayload.serializer(), data)
+        val jsonString = PayloadEncryptor.encrypt(data)
         intent.putExtra("ndefMessage", jsonString)
         context.startService(intent)
         Log.d("NFCManager", "Emulate mode set with JSON data: $jsonString")
