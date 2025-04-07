@@ -13,17 +13,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.services.getNFCService
+import com.github.familyvault.services.INFCService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -37,23 +33,19 @@ import familyvault.composeapp.generated.resources.add_member_to_family_group_hea
 import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 class AddMemberToFamilyGroupScreen : Screen {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val nfcManager = getNFCService()
-        var isActive by remember { mutableStateOf(true) }
+        val nfcService = koinInject<INFCService>()
 
-        if (isActive) {
-            nfcManager.RegisterApp()
-            nfcManager.SetReadMode()
-        } else {
-            nfcManager.UnregisterApp()
-        }
         LaunchedEffect(Unit) {
-            nfcManager.tags.collect { payload ->
+            nfcService.registerApp()
+            nfcService.setReadMode()
+            nfcService.tags.collect { payload ->
                 if (payload.newMemberData.surname.isNotEmpty()) {
                     navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
                 } else {
@@ -64,7 +56,7 @@ class AddMemberToFamilyGroupScreen : Screen {
 
         DisposableEffect(Unit) {
             onDispose {
-                isActive = false
+                nfcService.unregisterApp()
             }
         }
 

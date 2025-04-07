@@ -13,10 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -24,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.services.getNFCService
-import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.services.IJoinStatusService
+import com.github.familyvault.services.INFCService
+import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -42,31 +39,28 @@ import familyvault.composeapp.generated.resources.show_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMemberDataPayload) : Screen {
+class FamilyGroupJoinNfc() : Screen {
 
     @Composable
     override fun Content() {
+
+        val joinFamilyGroupPayloadState = koinInject<IJoinFamilyGroupPayloadState>()
         val navigator = LocalNavigator.currentOrThrow
-        val nfcManager = getNFCService()
+        val nfcService = koinInject<INFCService>()
         val joinTokenService = koinInject<IJoinStatusService>()
+        val payload = remember { joinFamilyGroupPayloadState.getPayload() }
 
-        var isActive by remember { mutableStateOf(true) }
-
-        if (isActive) {
-            nfcManager.RegisterApp()
-            nfcManager.SetEmulateMode(newFamilyMemberDataPayload)
-        } else {
-            nfcManager.UnregisterApp()
-        }
 
         LaunchedEffect(Unit) {
-            joinTokenService.waitForNotInitiatedStatus(newFamilyMemberDataPayload.joinStatusToken)
-            navigator.replaceAll(FamilyGroupJoinWaitingScreen(newFamilyMemberDataPayload))
+            nfcService.registerApp()
+            nfcService.setEmulateMode(payload)
+            joinTokenService.waitForNotInitiatedStatus(payload.joinStatusToken)
+            navigator.replaceAll(FamilyGroupJoinWaitingScreen())
         }
         // Clean up when leaving the screen
         DisposableEffect(Unit) {
             onDispose {
-                isActive = false
+                nfcService.unregisterApp()
             }
         }
 
@@ -128,7 +122,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
                 Button(
                     stringResource(Res.string.show_qr_code_button_content),
                     onClick = {
-                        navigator.push(DisplayFamilyMemberDataQrCodeScreen(newFamilyMemberDataPayload))
+                        navigator.push(DisplayFamilyMemberDataQrCodeScreen())
                     },
                     modifier = Modifier.weight(1f)
                 )

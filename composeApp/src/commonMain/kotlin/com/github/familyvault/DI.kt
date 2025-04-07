@@ -18,7 +18,6 @@ import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.states.JoinFamilyGroupPayloadState
-import com.github.familyvault.ui.screens.main.chat.CurrentChatThreadScreen
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration

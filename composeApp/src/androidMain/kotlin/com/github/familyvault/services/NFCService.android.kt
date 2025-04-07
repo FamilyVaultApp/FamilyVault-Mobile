@@ -10,8 +10,6 @@ import android.nfc.tech.IsoDep
 import android.nfc.tech.Ndef
 import android.os.Bundle
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -20,12 +18,11 @@ import kotlinx.serialization.json.Json
 import java.nio.charset.Charset
 
 
-@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-actual class NFCService(private val context: Context) : NfcAdapter.ReaderCallback {
+class NFCService(private val context: Context) : INFCService {
 
     private var nfcAdapter: NfcAdapter? = NfcAdapter.getDefaultAdapter(context)
 
-    actual val tags: Flow<AddFamilyMemberDataPayload> = callbackFlow {
+    override val tags: Flow<AddFamilyMemberDataPayload> = callbackFlow {
         Log.d("NFCManager", "Starting callbackFlow for reading NFC tags")
         val readerCallback = NfcAdapter.ReaderCallback { tag: Tag ->
             Log.d("NFCManager", "ReaderCallback invoked with tag: $tag")
@@ -169,8 +166,7 @@ actual class NFCService(private val context: Context) : NfcAdapter.ReaderCallbac
         return sw1 == 0x90.toByte() && sw2 == 0x00.toByte()
     }
 
-    @Composable
-    actual fun RegisterApp() {
+    override suspend fun registerApp() {
         Log.d("NFCManager", "registerApp() invoked")
         if (nfcAdapter == null) {
             Log.w("NFCManager", "NFC is not available on this device")
@@ -179,50 +175,44 @@ actual class NFCService(private val context: Context) : NfcAdapter.ReaderCallbac
         }
     }
 
-    @Composable
-    actual fun UnregisterApp() {
+    override fun unregisterApp() {
         Log.d("NFCManager", "unregisterApp() invoked")
         Log.d("NFCManager", "setIdleMode() invoked")
-        nfcAdapter?.disableReaderMode(LocalContext.current as Activity)
+        (context as? Activity)?.let { activity ->
+            nfcAdapter?.disableReaderMode(activity)
+        }
         context.stopService(Intent(context, HostApduService::class.java))
         Log.d("NFCManager", "Idle mode set; service stopped")
     }
 
-    @Composable
-    actual fun SetEmulateMode(data: AddFamilyMemberDataPayload) {
+    override suspend fun setEmulateMode(data: AddFamilyMemberDataPayload) {
         Log.d("NFCManager", "setEmulateMode() invoked with data: $data")
         val intent = Intent(context, HostApduService::class.java)
-        nfcAdapter?.disableReaderMode(LocalContext.current as Activity)
+        (context as? Activity)?.let { activity ->
+            nfcAdapter?.disableReaderMode(activity)
+        }
         val jsonString = Json.encodeToString(AddFamilyMemberDataPayload.serializer(), data)
         intent.putExtra("ndefMessage", jsonString)
         context.startService(intent)
         Log.d("NFCManager", "Emulate mode set with JSON data: $jsonString")
     }
 
-    @Composable
-    actual fun SetReadMode() {
+    override suspend fun setReadMode() {
         Log.d("NFCManager", "setReadMode() invoked")
-        nfcAdapter?.enableReaderMode(
-            LocalContext.current as Activity,
-            this,
-            NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B or
-                    NfcAdapter.FLAG_READER_NFC_F or NfcAdapter.FLAG_READER_NFC_V or
-                    NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS,
-            Bundle().apply {
-                putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 500)
-            }
-        )
-        Log.d("NFCManager", "Read mode enabled")
+        val callback = NfcAdapter.ReaderCallback {  }
+        (context as? Activity)?.let { activity ->
+            nfcAdapter?.enableReaderMode(
+                activity,
+                callback,
+                NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B or
+                        NfcAdapter.FLAG_READER_NFC_F or NfcAdapter.FLAG_READER_NFC_V or
+                        NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS,
+                Bundle().apply {
+                    putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 500)
+                }
+            )
+            Log.d("NFCManager", "Read mode enabled")
+        } ?: Log.e("NFCManager", "Context is not an Activity")
     }
 
-
-    override fun onTagDiscovered(tag: Tag?) {
-        Log.d("NFCManager", "onTagDiscovered() invoked with tag: $tag")
-    }
-}
-
-@Composable
-actual fun getNFCService(): NFCService {
-    Log.d("NFCManager", "getNFCManager() invoked")
-    return com.github.familyvault.services.NFCService(context = LocalContext.current)
 }
