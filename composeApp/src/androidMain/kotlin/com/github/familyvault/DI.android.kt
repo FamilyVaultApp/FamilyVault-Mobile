@@ -4,6 +4,8 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.client.PrivMxClient
 import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.createAppDatabase
+import com.github.familyvault.services.INotificationService
+import com.github.familyvault.services.NotificationService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.services.NfcService
@@ -23,6 +25,9 @@ actual fun getPlatformModules() = module {
     /* QrCode */
     factory { QrCodeService(get()) }.bind<IQRCodeService>()
     factory { QrCodeGenerator() }.bind<IQrCodeGenerator>()
+    
+    /* Notifications */
+    factory { NotificationService(get()) }.bind<INotificationService>()
 
     /* NFC */
     factory {NfcService(get()) }.bind<INfcService>()
