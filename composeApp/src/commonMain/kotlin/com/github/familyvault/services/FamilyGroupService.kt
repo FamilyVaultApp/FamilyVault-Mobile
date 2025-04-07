@@ -102,8 +102,7 @@ class FamilyGroupService(
             PublicEncryptedPrivateKeyPair(credential.publicKey, credential.encryptedPrivateKey)
         )
 
-        val connectionStatus = familyGroupSessionService.connect()
-        return connectionStatus
+        return familyGroupSessionService.connect()
     }
 
     override suspend fun addMemberToFamilyGroup(
