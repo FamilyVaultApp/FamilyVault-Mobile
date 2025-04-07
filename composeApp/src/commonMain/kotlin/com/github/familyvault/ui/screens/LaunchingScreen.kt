@@ -30,8 +30,7 @@ class LaunchingScreen : Screen {
 
         LaunchedEffect(Unit) {
             coroutineScope.launch {
-                val notificationPermission = notificationService.checkNotificationPermission()
-                if (!notificationPermission) {
+                if (!notificationService.checkNotificationPermission()) {
                     notificationService.requestNotificationsPermission()
                 }
                 if (familyGroupService.assignDefaultStoredFamilyGroup()) {

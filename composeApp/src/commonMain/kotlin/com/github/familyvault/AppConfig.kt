@@ -10,6 +10,8 @@ object AppConfig {
   
     /* Notifications permission */
     const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
+    const val NOTIFICATION_CHANNEL_NAME = "FamilyVault"
+    const val NOTIFICATION_CHANNEL_DESCRIPTION = "FamilyVault Notification channel"
 
     /* Qr Code */
     val QR_CODE_SIZE: Pair<Int, Int> = 500 to 500
