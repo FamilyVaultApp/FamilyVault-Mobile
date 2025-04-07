@@ -16,13 +16,13 @@ import com.github.familyvault.AppConfig
 import com.github.familyvault.AppConfig.NOTIFICATION_PERMISSION_REQUEST_CODE
 
 class NotificationService(private val context: Context): INotificationService {
-    private var channelId: String = "FamilyVault"
+    private var channelId: String = AppConfig.NOTIFICATION_CHANNEL_NAME
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(channelId, AppConfig.NOTIFICATION_CHANNEL_NAME, importance).apply {
-                description = AppConfig.NOTIFICATION_CHANNEL_NAME
+                description = AppConfig.NOTIFICATION_CHANNEL_DESCRIPTION
             }
 
             val notificationManager: NotificationManager =
