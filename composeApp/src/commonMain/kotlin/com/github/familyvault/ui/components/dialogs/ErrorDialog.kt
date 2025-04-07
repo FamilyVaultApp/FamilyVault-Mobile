@@ -14,10 +14,13 @@ import familyvault.composeapp.generated.resources.error_occurred_label
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ErrorDialog(onDismiss: () -> Unit) {
+fun ErrorDialog(
+    message: String = stringResource(Res.string.error_occurred_label),
+    onDismiss: () -> Unit
+) {
     Dialog(onDismissRequest = onDismiss) {
         Text(
-            text = stringResource(Res.string.error_occurred_label),
+            text = message,
             modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center),
             textAlign = TextAlign.Center
         )
