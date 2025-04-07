@@ -1,11 +1,11 @@
-package com.github.familyvault.ui.components
+package com.github.familyvault.services
 
 import androidx.compose.runtime.Composable
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-expect class NFCManager {
+expect class NFCService {
     val tags: Flow<AddFamilyMemberDataPayload>
 
     @Composable
@@ -18,4 +18,4 @@ expect class NFCManager {
     fun SetEmulateMode(data: AddFamilyMemberDataPayload)
 }
 @Composable
-expect fun getNFCManager(): NFCManager
+expect fun getNFCService(): NFCService

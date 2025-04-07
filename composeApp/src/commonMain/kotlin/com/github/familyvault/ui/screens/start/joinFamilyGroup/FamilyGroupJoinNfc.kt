@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.ui.components.getNFCManager
+import com.github.familyvault.services.getNFCService
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
@@ -47,7 +47,7 @@ class FamilyGroupJoinNfc(private val newFamilyMemberDataPayload: AddFamilyMember
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val nfcManager = getNFCManager()
+        val nfcManager = getNFCService()
         val joinTokenService = koinInject<IJoinStatusService>()
 
         var isActive by remember { mutableStateOf(true) }

@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.ui.components.getNFCManager
+import com.github.familyvault.services.getNFCService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -43,7 +43,7 @@ class AddMemberToFamilyGroupScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val nfcManager = getNFCManager()
+        val nfcManager = getNFCService()
         var isActive by remember { mutableStateOf(true) }
 
         if (isActive) {

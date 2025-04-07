@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.components
+package com.github.familyvault.services
 
 import android.app.Activity
 import android.content.Intent
@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.github.familyvault.components.MyHostApduService
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +21,7 @@ import java.nio.charset.Charset
 
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
-actual class NFCManager(private val context: Context) : NfcAdapter.ReaderCallback {
+actual class NFCService(private val context: Context) : NfcAdapter.ReaderCallback {
 
     private var nfcAdapter: NfcAdapter? = NfcAdapter.getDefaultAdapter(context)
 
@@ -185,14 +184,14 @@ actual class NFCManager(private val context: Context) : NfcAdapter.ReaderCallbac
         Log.d("NFCManager", "unregisterApp() invoked")
         Log.d("NFCManager", "setIdleMode() invoked")
         nfcAdapter?.disableReaderMode(LocalContext.current as Activity)
-        context.stopService(Intent(context, MyHostApduService::class.java))
+        context.stopService(Intent(context, HostApduService::class.java))
         Log.d("NFCManager", "Idle mode set; service stopped")
     }
 
     @Composable
     actual fun SetEmulateMode(data: AddFamilyMemberDataPayload) {
         Log.d("NFCManager", "setEmulateMode() invoked with data: $data")
-        val intent = Intent(context, MyHostApduService::class.java)
+        val intent = Intent(context, HostApduService::class.java)
         nfcAdapter?.disableReaderMode(LocalContext.current as Activity)
         val jsonString = Json.encodeToString(AddFamilyMemberDataPayload.serializer(), data)
         intent.putExtra("ndefMessage", jsonString)
@@ -223,7 +222,7 @@ actual class NFCManager(private val context: Context) : NfcAdapter.ReaderCallbac
 }
 
 @Composable
-actual fun getNFCManager(): NFCManager {
+actual fun getNFCService(): NFCService {
     Log.d("NFCManager", "getNFCManager() invoked")
-    return NFCManager(context = LocalContext.current)
+    return com.github.familyvault.services.NFCService(context = LocalContext.current)
 }

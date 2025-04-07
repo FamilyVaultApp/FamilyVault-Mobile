@@ -1,4 +1,4 @@
-package com.github.familyvault.components
+package com.github.familyvault.services
 
 // https://github.com/underwindfall/NFCAndroid/blob/master/app/src/main/java/com/qifan/nfcbank/cardEmulation/KHostApduService.kt
 
@@ -18,7 +18,7 @@ import java.util.*
  * Created by Qifan on 05/12/2018.
  */
 
-class MyHostApduService : HostApduService() {
+class HostApduService : HostApduService() {
 
     private val TAG = "HostApduService"
 
