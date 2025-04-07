@@ -21,12 +21,15 @@ import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
-import com.github.familyvault.ui.components.dialogs.FamilyGroupPreparingToJoinDialog
 import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.preparing_to_join_family_group_label
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberDraft: FamilyMemberNewMemberFormData) :
@@ -43,7 +46,9 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
 
         StartScreenScaffold {
             when (preparingToJoinFamilyGroupState) {
-                FormSubmitState.PENDING -> FamilyGroupPreparingToJoinDialog()
+                FormSubmitState.PENDING -> CircularProgressIndicatorDialog(
+                    stringResource(Res.string.preparing_to_join_family_group_label)
+                )
 
                 FormSubmitState.ERROR -> ErrorDialog {
                     preparingToJoinFamilyGroupState = FormSubmitState.IDLE

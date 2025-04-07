@@ -11,19 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.components.overrides.Dialog
-import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.creating_family_group_label
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FamilyGroupCreatingDialog(
+fun CircularProgressIndicatorDialog(
+    message: String
 ) {
     Dialog(onDismissRequest = {}) {
         CircularProgressIndicator(
             modifier = Modifier.width(48.dp)
         )
         Text(
-            text = stringResource(Res.string.creating_family_group_label),
+            text = message,
             modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center),
             textAlign = TextAlign.Center,
         )
