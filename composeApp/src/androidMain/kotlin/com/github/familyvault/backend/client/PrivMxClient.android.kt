@@ -1,6 +1,7 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
+import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadId
@@ -10,6 +11,7 @@ import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
+import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.java.privmx_endpoint_extra.events.EventType
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
@@ -53,10 +55,14 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
-        connection = container.connect(
-            initModules, privateKey, solutionId, bridgeUrl
-        )
-        threadApi = requireNotNull(connection).threadApi
+        try {
+            connection = container.connect(
+                initModules, privateKey, solutionId, bridgeUrl
+            )
+        } catch (e: PrivmxException) {
+            throw FamilyVaultPrivMxException(e.code, e.message ?: "")
+        }
+        threadApi = connection!!.threadApi
     }
 
     override fun createThread(

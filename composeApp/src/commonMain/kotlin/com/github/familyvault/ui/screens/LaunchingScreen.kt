@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.INotificationService
 import com.github.familyvault.ui.components.LoaderWithText
@@ -30,14 +31,21 @@ class LaunchingScreen : Screen {
 
         LaunchedEffect(Unit) {
             coroutineScope.launch {
-                if (!notificationService.checkNotificationPermission()) {
+              if (!notificationService.checkNotificationPermission()) {
                     notificationService.requestNotificationsPermission()
                 }
-                if (familyGroupService.assignDefaultStoredFamilyGroup()) {
-                    navigator.replaceAll(DebugScreenContextId())
-                } else {
-                    navigator.replaceAll(StartScreen())
+                when (val connectionStatus = familyGroupService.assignDefaultStoredFamilyGroup()) {
+                    ConnectionStatus.Success -> {
+                        navigator.replaceAll(DebugScreenContextId())
+                    }
+                    ConnectionStatus.NoCredentials -> {
+                        navigator.replaceAll(StartScreen())
+                    }
+                    else -> {
+                        navigator.replaceAll(ConnectionFailedScreen(connectionStatus))
+                    }
                 }
+
             }
         }
 
