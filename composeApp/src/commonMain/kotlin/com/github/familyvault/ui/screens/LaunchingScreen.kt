@@ -28,7 +28,7 @@ class LaunchingScreen : Screen {
         val coroutineScope = rememberCoroutineScope()
         val notificationService = koinInject<INotificationService>()
 
-        LaunchedEffect(familyGroupService) {
+        LaunchedEffect(Unit) {
             coroutineScope.launch {
                 val notificationPermission = notificationService.checkNotificationPermission()
                 if (!notificationPermission) {

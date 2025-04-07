@@ -1,4 +1,4 @@
-package com.github.familyvault.models.chat
+package com.github.familyvault.backend.models
 
 data class ThreadItem(
     val threadId: String,
