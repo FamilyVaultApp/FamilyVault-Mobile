@@ -1,6 +1,7 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
+import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.chat.MessageItem
 import com.github.familyvault.models.chat.MessagePublicMeta
@@ -8,6 +9,7 @@ import com.github.familyvault.models.chat.ThreadId
 import com.github.familyvault.models.chat.ThreadItem
 import com.github.familyvault.utils.EncryptUtils
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
+import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
@@ -51,9 +53,13 @@ internal class PrivMxClient(certsPath: String) : IPrivMxClient {
     }
 
     override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
-        connection = container.connect(
-            initModules, privateKey, solutionId, bridgeUrl
-        )
+        try {
+            connection = container.connect(
+                initModules, privateKey, solutionId, bridgeUrl
+            )
+        } catch (e: PrivmxException) {
+            throw FamilyVaultPrivMxException(e.code, e.message ?: "")
+        }
         threadApi = connection!!.threadApi
     }
 

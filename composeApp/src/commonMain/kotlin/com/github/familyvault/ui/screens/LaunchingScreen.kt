@@ -12,7 +12,6 @@ import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
-import com.github.familyvault.ui.screens.start.ConnectionFailedScreen
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.screens.start.createFamilyGroup.DebugScreenContextId
 import familyvault.composeapp.generated.resources.Res
@@ -30,14 +29,18 @@ class LaunchingScreen : Screen {
 
         LaunchedEffect(familyGroupService) {
             coroutineScope.launch {
-                val connectionStatus = familyGroupService.assignDefaultStoredFamilyGroup()
-                if (connectionStatus == ConnectionStatus.Success) {
-                    navigator.replaceAll(DebugScreenContextId())
-                } else if (connectionStatus == ConnectionStatus.NoCredentials) {
-                    navigator.replaceAll(StartScreen())
-                } else {
-                    navigator.replaceAll(ConnectionFailedScreen(connectionStatus))
+                when (val connectionStatus = familyGroupService.assignDefaultStoredFamilyGroup()) {
+                    ConnectionStatus.Success -> {
+                        navigator.replaceAll(DebugScreenContextId())
+                    }
+                    ConnectionStatus.NoCredentials -> {
+                        navigator.replaceAll(StartScreen())
+                    }
+                    else -> {
+                        navigator.replaceAll(ConnectionFailedScreen(connectionStatus))
+                    }
                 }
+
             }
         }
 

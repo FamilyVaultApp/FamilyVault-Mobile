@@ -91,7 +91,7 @@ class FamilyGroupService(
             familyGroupInformation =
                 familyVaultBackendProxy.getFamilyGroupName(GetFamilyGroupNameRequest(credential.contextId))
         } catch (e: FamilyVaultBackendNoConnectionException) {
-            return ConnectionStatus.ConnectionError
+            return ConnectionStatus.Error
         }
 
         familyGroupSessionService.assignSession(

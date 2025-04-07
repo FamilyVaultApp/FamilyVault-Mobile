@@ -1,6 +1,8 @@
 package com.github.familyvault.services
 
+import com.github.familyvault.backend.PrivMxErrorCodes
 import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.models.FamilyGroupSession
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.PublicPrivateKeyPair
@@ -32,8 +34,10 @@ class FamilyGroupSessionService(
             privMxClient.establishConnection(
                 getBridgeUrl(), getSolutionId(), getPrivateKey()
             )
-        } catch (e: Exception) {
-            if (e.message == "User doesn't exist") return ConnectionStatus.UserNotFound
+        } catch (e: FamilyVaultPrivMxException) {
+            if (e.errorCode == PrivMxErrorCodes.USER_NOT_IN_CONTEXT) {
+                return ConnectionStatus.UserNotFound
+            }
         }
         return ConnectionStatus.Success
     }

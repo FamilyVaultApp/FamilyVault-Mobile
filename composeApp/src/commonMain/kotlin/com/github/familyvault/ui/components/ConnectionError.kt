@@ -34,9 +34,9 @@ import org.koin.compose.koinInject
 
 @Composable
 fun ConnectionError(connectionStatus: ConnectionStatus) {
+    val navigator = LocalNavigator.currentOrThrow
     val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
     val familyGroupCredentialsRepository = koinInject<IFamilyGroupCredentialsRepository>()
-    val navigator = LocalNavigator.currentOrThrow
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -44,21 +44,21 @@ fun ConnectionError(connectionStatus: ConnectionStatus) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HeaderWithIcon(
-            if (connectionStatus == ConnectionStatus.ConnectionError) {
-                stringResource(Res.string.connection_error_title)
-            } else {
+            if (connectionStatus == ConnectionStatus.UserNotFound) {
                 stringResource(Res.string.user_not_found_title)
+            } else {
+                stringResource(Res.string.connection_error_title)
             },
             Icons.Outlined.Error
         )
-        if (connectionStatus == ConnectionStatus.ConnectionError) {
+        if (connectionStatus == ConnectionStatus.UserNotFound) {
             Paragraph(
-                stringResource(Res.string.connection_error_content),
+                stringResource(Res.string.user_not_found_content),
                 textAlign = TextAlign.Center
             )
         } else {
             Paragraph(
-                stringResource(Res.string.user_not_found_content),
+                stringResource(Res.string.connection_error_content),
                 textAlign = TextAlign.Center
             )
         }
@@ -67,21 +67,19 @@ fun ConnectionError(connectionStatus: ConnectionStatus) {
             verticalArrangement = Arrangement.Bottom
         ) {
             InitialScreenButton(
-                text = if (connectionStatus == ConnectionStatus.ConnectionError) {
-                    stringResource(Res.string.connection_error_button_content)
-                } else {
+                text = if (connectionStatus == ConnectionStatus.UserNotFound) {
                     stringResource(Res.string.user_not_found_button_content)
+                } else {
+                    stringResource(Res.string.connection_error_button_content)
                 },
                 onClick = {
                     if (connectionStatus == ConnectionStatus.UserNotFound) {
                         val contextId = familyGroupSessionService.getContextId()
                         coroutineScope.launch {
                             familyGroupCredentialsRepository.deleteCredential(contextId)
-                            navigator.replaceAll(LaunchingScreen())
                         }
-                    } else {
-                        navigator.replaceAll(LaunchingScreen())
                     }
+                    navigator.replaceAll(LaunchingScreen())
                 }
             )
         }
