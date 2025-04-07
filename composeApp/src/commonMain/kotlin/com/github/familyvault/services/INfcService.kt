@@ -3,7 +3,7 @@ package com.github.familyvault.services
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import kotlinx.coroutines.flow.Flow
 
-interface INFCService {
+interface INfcService {
     val tags: Flow<AddFamilyMemberDataPayload>
 
     suspend fun registerApp()

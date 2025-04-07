@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.services.INFCService
+import com.github.familyvault.services.INfcService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -40,7 +40,7 @@ class AddMemberToFamilyGroupScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val nfcService = koinInject<INFCService>()
+        val nfcService = koinInject<INfcService>()
 
         LaunchedEffect(Unit) {
             nfcService.registerApp()

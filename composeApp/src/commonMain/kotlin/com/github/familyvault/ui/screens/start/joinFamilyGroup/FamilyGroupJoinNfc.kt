@@ -22,7 +22,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.services.IJoinStatusService
-import com.github.familyvault.services.INFCService
+import com.github.familyvault.services.INfcService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.overrides.Button
@@ -46,7 +46,7 @@ class FamilyGroupJoinNfc() : Screen {
 
         val joinFamilyGroupPayloadState = koinInject<IJoinFamilyGroupPayloadState>()
         val navigator = LocalNavigator.currentOrThrow
-        val nfcService = koinInject<INFCService>()
+        val nfcService = koinInject<INfcService>()
         val joinTokenService = koinInject<IJoinStatusService>()
         val payload = remember { joinFamilyGroupPayloadState.getPayload() }
 

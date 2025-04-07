@@ -19,25 +19,25 @@ import kotlinx.coroutines.flow.callbackFlow
 import java.nio.charset.Charset
 
 
-class NFCService(private val context: Context) : INFCService {
+class NfcService(private val context: Context) : INfcService {
 
     private var nfcAdapter: NfcAdapter? = NfcAdapter.getDefaultAdapter(context)
 
     override val tags: Flow<AddFamilyMemberDataPayload> = callbackFlow {
-        Log.d("NFCManager", "Starting callbackFlow for reading NFC tags")
+        Log.d("NfcService", "Starting callbackFlow for reading NFC tags")
         val readerCallback = NfcAdapter.ReaderCallback { tag: Tag ->
-            Log.d("NFCManager", "ReaderCallback invoked with tag: $tag")
+            Log.d("NfcService", "ReaderCallback invoked with tag: $tag")
             // try reading ndef from tag
             val ndef = Ndef.get(tag)
             if (ndef != null) {
                 try {
-                    Log.d("NFCManager", "Connecting to NFC tag")
+                    Log.d("NfcService", "Connecting to NFC tag")
                     ndef.connect()
                     val ndefMessage: NdefMessage = ndef.ndefMessage
-                    Log.d("NFCManager", "NDEF Message received with ${ndefMessage.records.size} record(s)")
+                    Log.d("NfcService", "NDEF Message received with ${ndefMessage.records.size} record(s)")
                     if (ndefMessage.records.isNotEmpty()) {
                         val payloadBytes = ndefMessage.records[0].payload
-                        Log.d("NFCManager", "Raw payload bytes: ${payloadBytes.joinToString()}")
+                        Log.d("NfcService", "Raw payload bytes: ${payloadBytes.joinToString()}")
                         val statusByte = payloadBytes[0].toInt()
 
                         val languageCodeLength = statusByte and 0x3F
@@ -48,34 +48,34 @@ class NFCService(private val context: Context) : INFCService {
                         val textBytes = payloadBytes.drop(1 + languageCodeLength).toByteArray()
 
                         val jsonString = String(textBytes, charset)
-                        Log.d("NFCManager", "Extracted JSON string: $jsonString")
+                        Log.d("NfcService", "Extracted JSON string: $jsonString")
 
                         val payload: AddFamilyMemberDataPayload = PayloadDecryptor.decrypt(jsonString)
 
-                        Log.d("NFCManager", "Deserialized payload: $payload")
+                        Log.d("NfcService", "Deserialized payload: $payload")
                         trySend(payload)
                     } else {
-                        Log.w("NFCManager", "NDEF Message contains no records")
+                        Log.w("NfcService", "NDEF Message contains no records")
                     }
                 } catch (e: Exception) {
-                    Log.e("NFCManager", "Error during NFC tag reading", e)
+                    Log.e("NfcService", "Error during NFC tag reading", e)
                 } finally {
                     try {
                         ndef.close()
-                        Log.d("NFCManager", "NFC tag connection closed")
+                        Log.d("NfcService", "NFC tag connection closed")
                     } catch (e: Exception) {
-                        Log.e("NFCManager", "Error closing NFC tag connection", e)
+                        Log.e("NfcService", "Error closing NFC tag connection", e)
                     }
                 }
             } else {
-                Log.w("NFCManager", "Tag does not support NDEF")
+                Log.w("NfcService", "Tag does not support NDEF")
             }
             // if tag does not support ndef, try isoDep
             val isoDep = IsoDep.get(tag)
             if (isoDep != null) {
                 try {
                     isoDep.connect()
-                    Log.d("NFCManager", "IsoDep connected")
+                    Log.d("NfcService", "IsoDep connected")
 
                     // Use the same AID as defined in MyHostApduService
                     val selectCommand = byteArrayOf(
@@ -85,13 +85,13 @@ class NFCService(private val context: Context) : INFCService {
                         0x00.toByte(), 0x85.toByte(), 0x01.toByte(), 0x01.toByte()
                     )
 
-                    Log.d("NFCManager", "Sending SELECT command: ${selectCommand.joinToString(" ")}")
+                    Log.d("NfcService", "Sending SELECT command: ${selectCommand.joinToString(" ")}")
                     val selectResponse = isoDep.transceive(selectCommand)
-                    Log.d("NFCManager", "Response from SELECT: ${selectResponse.joinToString(" ")}")
+                    Log.d("NfcService", "Response from SELECT: ${selectResponse.joinToString(" ")}")
 
                     // Don't immediately return if response isn't OK - log it and continue
                     if (!isResponseOkay(selectResponse)) {
-                        Log.w("NFCManager", "SELECT command didn't return 90 00, but continuing: ${selectResponse.joinToString(" ")}")
+                        Log.w("NfcService", "SELECT command didn't return 90 00, but continuing: ${selectResponse.joinToString(" ")}")
                     }
 
                     val getDataCommand = byteArrayOf(
@@ -102,9 +102,9 @@ class NFCService(private val context: Context) : INFCService {
                         0x00.toByte()  // Lc - no data to send, just requesting data
                     )
 
-                    Log.d("NFCManager", "Requesting data: ${getDataCommand.joinToString(" ")}")
+                    Log.d("NfcService", "Requesting data: ${getDataCommand.joinToString(" ")}")
                     val dataResponse = isoDep.transceive(getDataCommand)
-                    Log.d("NFCManager", "Response from data request: ${dataResponse.joinToString(" ")}")
+                    Log.d("NfcService", "Response from data request: ${dataResponse.joinToString(" ")}")
 
                     if (isResponseOkay(dataResponse)) {
                         val responseData = dataResponse.sliceArray(0 until dataResponse.size - 2)
@@ -118,25 +118,25 @@ class NFCService(private val context: Context) : INFCService {
                         val textBytes = responseData.drop(1 + languageCodeLength).toByteArray()
 
                         val jsonString = String(textBytes, charset)
-                        Log.d("NFCManager", "Received data: $jsonString")
+                        Log.d("NfcService", "Received data: $jsonString")
 
                         try {
                             val payload: AddFamilyMemberDataPayload = PayloadDecryptor.decrypt(jsonString)
-                            Log.d("NFCManager", "Deserialized payload: $payload")
+                            Log.d("NfcService", "Deserialized payload: $payload")
                             trySend(payload)
                         } catch (e: Exception) {
-                            Log.e("NFCManager", "Error deserializing JSON", e)
+                            Log.e("NfcService", "Error deserializing JSON", e)
                         }
                     }
                 } catch (e: Exception) {
-                    Log.e("NFCManager", "Error communicating with IsoDep", e)
+                    Log.e("NfcService", "Error communicating with IsoDep", e)
                     e.printStackTrace()
                 } finally {
                     try {
                         isoDep.close()
-                        Log.d("NFCManager", "IsoDep connection closed")
+                        Log.d("NfcService", "IsoDep connection closed")
                     } catch (e: Exception) {
-                        Log.e("NFCManager", "Error closing IsoDep connection", e)
+                        Log.e("NfcService", "Error closing IsoDep connection", e)
                     }
                 }
             }
@@ -148,11 +148,11 @@ class NFCService(private val context: Context) : INFCService {
             NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_V,
             null
         )
-        Log.d("NFCManager", "Reader mode enabled")
+        Log.d("NfcService", "Reader mode enabled")
 
         awaitClose {
             nfcAdapter?.disableReaderMode(context as Activity)
-            Log.d("NFCManager", "Reader mode disabled (awaitClose)")
+            Log.d("NfcService", "Reader mode disabled (awaitClose)")
         }
     }
     private fun isResponseOkay(response: ByteArray): Boolean {
@@ -163,26 +163,26 @@ class NFCService(private val context: Context) : INFCService {
     }
 
     override suspend fun registerApp() {
-        Log.d("NFCManager", "registerApp() invoked")
+        Log.d("NfcService", "registerApp() invoked")
         if (nfcAdapter == null) {
-            Log.w("NFCManager", "NFC is not available on this device")
+            Log.w("NfcService", "NFC is not available on this device")
         } else {
-            Log.d("NFCManager", "NFC is available on this device")
+            Log.d("NfcService", "NFC is available on this device")
         }
     }
 
     override fun unregisterApp() {
-        Log.d("NFCManager", "unregisterApp() invoked")
-        Log.d("NFCManager", "setIdleMode() invoked")
+        Log.d("NfcService", "unregisterApp() invoked")
+        Log.d("NfcService", "setIdleMode() invoked")
         (context as? Activity)?.let { activity ->
             nfcAdapter?.disableReaderMode(activity)
         }
         context.stopService(Intent(context, HostApduService::class.java))
-        Log.d("NFCManager", "Idle mode set; service stopped")
+        Log.d("NfcService", "Idle mode set; service stopped")
     }
 
     override suspend fun setEmulateMode(data: AddFamilyMemberDataPayload) {
-        Log.d("NFCManager", "setEmulateMode() invoked with data: $data")
+        Log.d("NfcService", "setEmulateMode() invoked with data: $data")
         val intent = Intent(context, HostApduService::class.java)
         (context as? Activity)?.let { activity ->
             nfcAdapter?.disableReaderMode(activity)
@@ -190,11 +190,11 @@ class NFCService(private val context: Context) : INFCService {
         val jsonString = PayloadEncryptor.encrypt(data)
         intent.putExtra("ndefMessage", jsonString)
         context.startService(intent)
-        Log.d("NFCManager", "Emulate mode set with JSON data: $jsonString")
+        Log.d("NfcService", "Emulate mode set with JSON data: $jsonString")
     }
 
     override suspend fun setReadMode() {
-        Log.d("NFCManager", "setReadMode() invoked")
+        Log.d("NfcService", "setReadMode() invoked")
         val callback = NfcAdapter.ReaderCallback {  }
         (context as? Activity)?.let { activity ->
             nfcAdapter?.enableReaderMode(
@@ -207,8 +207,8 @@ class NFCService(private val context: Context) : INFCService {
                     putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 500)
                 }
             )
-            Log.d("NFCManager", "Read mode enabled")
-        } ?: Log.e("NFCManager", "Context is not an Activity")
+            Log.d("NfcService", "Read mode enabled")
+        } ?: Log.e("NfcService", "Context is not an Activity")
     }
 
 }
