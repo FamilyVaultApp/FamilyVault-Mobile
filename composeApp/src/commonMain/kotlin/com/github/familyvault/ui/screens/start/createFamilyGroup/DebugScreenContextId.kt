@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupSessionService
+import com.github.familyvault.services.INotificationService
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.utils.IQrCodeGenerator
@@ -26,7 +25,10 @@ class DebugScreenContextId : Screen {
         val qrCodeGenerator = koinInject<IQrCodeGenerator>()
         val navigator = LocalNavigator.currentOrThrow
         val contextId = familyGroupSessionService.getContextId()
-            
+        val notificationsService = koinInject<INotificationService>()
+
+        notificationsService.sendNotification("Test notification", "FamilyVault notification test")
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

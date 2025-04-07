@@ -1,9 +1,12 @@
 package com.github.familyvault.services
 
+import com.github.familyvault.backend.PrivMxErrorCodes
 import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.models.FamilyGroupSession
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.PublicPrivateKeyPair
+import com.github.familyvault.models.enums.ConnectionStatus
 
 class FamilyGroupSessionService(
     private val privMxClient: IPrivMxClient
@@ -25,12 +28,18 @@ class FamilyGroupSessionService(
         )
     }
 
-    override fun connect() {
+    override fun connect(): ConnectionStatus {
         requireNotNull(session)
-
-        privMxClient.establishConnection(
-            getBridgeUrl(), getSolutionId(), getPrivateKey()
-        )
+        try {
+            privMxClient.establishConnection(
+                getBridgeUrl(), getSolutionId(), getPrivateKey()
+            )
+        } catch (e: FamilyVaultPrivMxException) {
+            if (e.errorCode == PrivMxErrorCodes.USER_NOT_IN_CONTEXT) {
+                return ConnectionStatus.UserNotFound
+            }
+        }
+        return ConnectionStatus.Success
     }
 
     override fun getContextId(): String {

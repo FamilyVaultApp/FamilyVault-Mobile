@@ -10,7 +10,7 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class QRCodeService(private val context: Context) : IQRCodeService {
+class QrCodeService(private val context: Context) : IQRCodeService {
     override suspend fun scanQRCode(): QrCodeScanResponse {
         return suspendCoroutine { continuation ->
             val scannerOptions =

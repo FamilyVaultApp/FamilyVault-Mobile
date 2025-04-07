@@ -87,4 +87,13 @@
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>
+
+    <!-- Connection error screen -->
+    <string name="connection_error_title">Connection Error</string>
+    <string name="connection_error_content">Couldn't connect to the server. Please check your internet connection and try again </string>
+    <string name="connection_error_button_content">Retry connection</string>
+
+    <string name="user_not_found_title">User not found</string>
+    <string name="user_not_found_content">We couldn't find you in this Family Group. It's possible that your account has been removed from it. You can remove this family group's data from your device using the button below.</string>
+    <string name="user_not_found_button_content">Remove Family Group data</string>
 </resources>

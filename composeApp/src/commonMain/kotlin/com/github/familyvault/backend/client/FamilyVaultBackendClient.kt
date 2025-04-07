@@ -1,7 +1,8 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
-import com.github.familyvault.backend.FamilyVaultBackendException
+import com.github.familyvault.backend.exceptions.FamilyVaultBackendErrorException
+import com.github.familyvault.backend.exceptions.FamilyVaultBackendNoConnectionException
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.DeleteJoinStatusRequest
@@ -26,16 +27,17 @@ import com.github.familyvault.backend.responses.RenameFamilyGroupResponse
 import com.github.familyvault.backend.responses.UpdateJoinStatusResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
-import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 
 class FamilyVaultBackendClient : IFamilyVaultBackendClient {
@@ -97,7 +99,7 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         )
     }
 
-    private inline fun getEndpointUrl(endpoint: String): String {
+    private fun getEndpointUrl(endpoint: String): String {
         return "${AppConfig.BACKEND_URL}$endpoint"
     }
 
@@ -108,14 +110,21 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     private suspend inline fun <reified TResponse : FamilyVaultBackendResponse> postRequest(
         endpoint: String, req: FamilyVaultBackendRequest?
     ): TResponse {
-        val response = client.post(getEndpointUrl(endpoint)) {
-            contentType(ContentType.Application.Json)
-            setBody(req)
+        val response: HttpResponse
+
+        try {
+            response = client.post(getEndpointUrl(endpoint)) {
+                contentType(ContentType.Application.Json)
+                setBody(req)
+            }
+        } catch (e: ConnectTimeoutException) {
+            throw FamilyVaultBackendNoConnectionException(e.message ?: "")
         }
+
         if (response.status.isSuccess()) {
             return response.body<TResponse>()
         } else {
-            throw FamilyVaultBackendException(
+            throw FamilyVaultBackendErrorException(
                 response.status, response.bodyAsText()
             )
         }
@@ -128,16 +137,23 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     private suspend inline fun <reified TResponse : FamilyVaultBackendResponse> getRequest(
         endpoint: String, req: FamilyVaultBackendRequest?
     ): TResponse {
-        val response = client.get(getEndpointUrl(endpoint)) {
-            contentType(ContentType.Application.Json)
-            req?.toParameters()?.forEach { (key, value) ->
-                parameter(key, value)
+        val response: HttpResponse
+
+        try {
+            response = client.get(getEndpointUrl(endpoint)) {
+                contentType(ContentType.Application.Json)
+                req?.toParameters()?.forEach { (key, value) ->
+                    parameter(key, value)
+                }
             }
+        } catch (e: ConnectTimeoutException) {
+            throw FamilyVaultBackendNoConnectionException(e.message ?: "")
         }
+
         if (response.status.isSuccess()) {
             return response.body<TResponse>()
         } else {
-            throw FamilyVaultBackendException(
+            throw FamilyVaultBackendErrorException(
                 response.status, response.bodyAsText()
             )
         }
