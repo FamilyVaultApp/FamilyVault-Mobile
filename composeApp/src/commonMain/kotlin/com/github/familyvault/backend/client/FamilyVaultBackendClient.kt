@@ -99,7 +99,7 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         )
     }
 
-    private inline fun getEndpointUrl(endpoint: String): String {
+    private fun getEndpointUrl(endpoint: String): String {
         return "${AppConfig.BACKEND_URL}$endpoint"
     }
 

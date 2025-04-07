@@ -1,12 +1,15 @@
 package com.github.familyvault.services
 
-import com.github.familyvault.models.chat.MessageItem
-import com.github.familyvault.models.chat.ThreadId
-import com.github.familyvault.models.chat.ThreadItem
+import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.chat.ChatMessage
+import com.github.familyvault.models.chat.ChatThread
 
 interface IChatService {
-    suspend fun createThread(threadTag: String, threadName: String?): ThreadId
-    fun retrieveAllThreads(): List<ThreadItem>
-    fun sendMessage(threadId: ThreadId, messageContent: String, respondToMessageId: String)
-    fun retrieveMessagesFromThread(threadId: ThreadId): List<MessageItem>
+    fun retrieveAllChatThreads(): List<ChatThread>
+    fun retrieveLastMessage(chatThreadId: String): ChatMessage?
+    fun sendMessage(chatThreadId: String, messageContent: String, respondToMessageId: String)
+    suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
+    suspend fun populateDatabaseWithLastMessages(chatThreadId: String)
+    suspend fun retrieveMessagesFirstPage(chatThreadId: String): List<ChatMessage>
+    suspend fun retrieveMessagesPage(chatThreadId: String, page: Int): List<ChatMessage>
 }

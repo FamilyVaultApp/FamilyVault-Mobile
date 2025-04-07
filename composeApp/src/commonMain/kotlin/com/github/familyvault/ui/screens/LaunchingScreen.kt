@@ -27,7 +27,7 @@ class LaunchingScreen : Screen {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val coroutineScope = rememberCoroutineScope()
 
-        LaunchedEffect(familyGroupService) {
+        LaunchedEffect(Unit) {
             coroutineScope.launch {
                 when (val connectionStatus = familyGroupService.assignDefaultStoredFamilyGroup()) {
                     ConnectionStatus.Success -> {
