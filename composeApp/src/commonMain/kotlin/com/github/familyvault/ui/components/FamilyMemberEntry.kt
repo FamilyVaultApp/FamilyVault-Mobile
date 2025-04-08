@@ -1,5 +1,6 @@
 package com.github.familyvault.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,6 +28,7 @@ import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.dialogs.RemoveFamilyMemberDialog
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.screens.main.MainScreen
+import com.github.familyvault.ui.screens.main.modifyFamilyMember.ModifyFamilyMemberScreen
 import com.github.familyvault.ui.screens.start.StartScreen
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.family_group_delete_member
@@ -49,17 +51,19 @@ fun FamilyMemberEntry(
     var showDialog by remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier.height(45.dp).fillMaxWidth(),
+        modifier = Modifier.height(45.dp).fillMaxWidth().clickable {
+            navigator.push(ModifyFamilyMemberScreen(familyMember.fullname))
+        },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             modifier = Modifier.fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
         ) {
             UserAvatar(firstName = familyMember.firstname)
-            Paragraph(familyMember.fullname)
+            Paragraph(text = familyMember.fullname)
         }
 
 
@@ -68,7 +72,7 @@ fun FamilyMemberEntry(
         }) {
             Icon(
                 Icons.Outlined.Delete,
-                contentDescription = stringResource(Res.string.family_group_delete_member)
+                contentDescription = stringResource(Res.string.family_group_delete_member),
             )
         }
 

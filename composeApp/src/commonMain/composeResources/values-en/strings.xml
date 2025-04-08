@@ -94,4 +94,12 @@
     <string name="user_not_found_title">User not found</string>
     <string name="user_not_found_content">We couldn't find you in this Family Group. It's possible that your account has been removed from it. You can remove this family group's data from your device using the button below.</string>
     <string name="user_not_found_button_content">Remove Family Group data</string>
+
+
+    <!-- User modification -->
+    <string name="user_modification_guardian">Guardian</string>
+    <string name="user_modification_member">Member</string>
+    <string name="user_modification_guest">Guest</string>
+    <string name="user_modification_choose_permission_content">Select this user's permission group.</string>
+    <string name="user_modification_save_button">Save changes</string>
 </resources>

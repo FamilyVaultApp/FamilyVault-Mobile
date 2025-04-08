@@ -27,6 +27,12 @@ interface IFamilyGroupService {
 
     suspend fun addMemberToFamilyGroup(contextId: String, userId: String, userPubKey: String)
 
+    suspend fun changeFamilyMemberPermissionGroupToGuardian(userId: String)
+
+    suspend fun changeFamilyMemberPermissionGroupToMember(userId: String)
+
+    suspend fun changeFamilyMemberPermissionGroupToGuest(userId: String)
+
     suspend fun renameCurrentFamilyGroup(name: String)
 
     suspend fun refreshCurrentFamilyGroupName()

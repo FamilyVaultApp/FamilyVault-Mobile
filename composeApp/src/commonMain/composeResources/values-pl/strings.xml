@@ -94,4 +94,11 @@
     <string name="user_not_found_title">Nie znaleziono użytkownika</string>
     <string name="user_not_found_content">Nie udało się znaleźć Ciebie w tej Grupie Rodzinnej. Możliwe, że Twoje konto zostało z niej usunięte. Możesz usunąć dane tej grupy rodzinnej z urządzenia, korzystając z poniższego przycisku.</string>
     <string name="user_not_found_button_content">Usuń dane grupy rodzinnej</string>
+
+    <!-- User modification -->
+    <string name="user_modification_guardian">Opiekun</string>
+    <string name="user_modification_member">Członek</string>
+    <string name="user_modification_guest">Gość</string>
+    <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
+    <string name="user_modification_save_button">Zapisz zmiany</string>
 </resources>
