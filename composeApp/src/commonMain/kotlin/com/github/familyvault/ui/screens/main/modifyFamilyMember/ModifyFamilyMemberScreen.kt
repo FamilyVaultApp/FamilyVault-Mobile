@@ -91,9 +91,7 @@ class ModifyFamilyMemberScreen(val userId: String): Screen {
                             savingChanges = true
                             when (selectedIndex) {
                                 0 -> {
-                                    familyGroupService.changeFamilyMemberPermissionGroupToGuest(
-                                        userId
-                                    )
+                                    familyGroupService.changeFamilyMemberPermissionGroupToGuest(userId)
                                 }
 
                                 1 -> {
