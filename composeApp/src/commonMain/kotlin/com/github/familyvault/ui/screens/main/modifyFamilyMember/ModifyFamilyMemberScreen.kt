@@ -111,8 +111,8 @@ class ModifyFamilyMemberScreen(val userId: String) : Screen {
                                 }
                             }
                             savingChanges = false
+                            navigator.pop()
                         }
-                        navigator.pop()
                     }
                 )
             }

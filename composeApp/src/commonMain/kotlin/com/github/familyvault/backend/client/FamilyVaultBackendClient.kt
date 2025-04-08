@@ -64,7 +64,7 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     }
 
     override suspend fun changeFamilyMemberPermissionGroup(req: ChangeFamilyMemberPermissionGroupRequest): ChangeFamilyMemberPermissionGroup {
-        return postRequest("/FamilyGroup/ChangeMemberPermmissionGroup", req)
+        return postRequest("/FamilyGroup/ChangeMemberPermissionGroup", req)
     }
 
     override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
