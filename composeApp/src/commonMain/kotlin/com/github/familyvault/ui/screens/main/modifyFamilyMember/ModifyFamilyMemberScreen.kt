@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonColors
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.runtime.Composable
@@ -27,20 +25,24 @@ import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
-import org.jetbrains.compose.resources.stringResource
+import familyvault.composeapp.generated.resources.user_modification_choose_permission_content
+import familyvault.composeapp.generated.resources.user_modification_guardian
 import familyvault.composeapp.generated.resources.user_modification_guest
 import familyvault.composeapp.generated.resources.user_modification_member
-import familyvault.composeapp.generated.resources.user_modification_guardian
 import familyvault.composeapp.generated.resources.user_modification_save_button
-import familyvault.composeapp.generated.resources.user_modification_choose_permission_content
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class ModifyFamilyMemberScreen(val userId: String): Screen {
+class ModifyFamilyMemberScreen(val userId: String) : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val options = listOf(stringResource(Res.string.user_modification_guest), stringResource(Res.string.user_modification_member), stringResource(Res.string.user_modification_guardian))
+        val options = listOf(
+            stringResource(Res.string.user_modification_guest),
+            stringResource(Res.string.user_modification_member),
+            stringResource(Res.string.user_modification_guardian)
+        )
         var selectedIndex by remember { mutableStateOf(0) }
         var savingChanges by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
@@ -91,15 +93,21 @@ class ModifyFamilyMemberScreen(val userId: String): Screen {
                             savingChanges = true
                             when (selectedIndex) {
                                 0 -> {
-                                    familyGroupService.changeFamilyMemberPermissionGroupToGuest(userId)
+                                    familyGroupService.changeFamilyMemberPermissionGroupToGuest(
+                                        userId
+                                    )
                                 }
 
                                 1 -> {
-                                    familyGroupService.changeFamilyMemberPermissionGroupToMember(userId)
+                                    familyGroupService.changeFamilyMemberPermissionGroupToMember(
+                                        userId
+                                    )
                                 }
 
                                 2 -> {
-                                    familyGroupService.changeFamilyMemberPermissionGroupToGuardian(userId)
+                                    familyGroupService.changeFamilyMemberPermissionGroupToGuardian(
+                                        userId
+                                    )
                                 }
                             }
                             savingChanges = false
