@@ -46,7 +46,7 @@ class ModifyFamilyMemberScreen(val userId: String): Screen {
         val coroutineScope = rememberCoroutineScope()
         val familyGroupService = koinInject<IFamilyGroupService>()
 
-        val navigationBarColors = SegmentedButtonDefaults.colors().copy(
+        val segmentedButtonColors = SegmentedButtonDefaults.colors().copy(
             activeContainerColor = MaterialTheme.colorScheme.primaryContainer,
             activeContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         )
@@ -74,7 +74,7 @@ class ModifyFamilyMemberScreen(val userId: String): Screen {
                             onClick = { selectedIndex = index },
                             selected = index == selectedIndex,
                             label = { Paragraph(label) },
-                            colors = navigationBarColors
+                            colors = segmentedButtonColors
                         )
                     }
                 }
