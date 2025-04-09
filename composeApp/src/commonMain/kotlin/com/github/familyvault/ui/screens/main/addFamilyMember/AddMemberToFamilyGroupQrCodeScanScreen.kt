@@ -19,6 +19,7 @@ import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.invalid_qr_code_label
 import familyvault.composeapp.generated.resources.qr_code_scanning
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -30,16 +31,21 @@ class AddMemberToFamilyGroupQrCodeScanScreen : Screen {
         val qrCodeScanner = koinInject<IQRCodeService>()
         val coroutineScope = rememberCoroutineScope()
         var invalidQrCode by remember { mutableStateOf(false) }
+        var scanning by remember { mutableStateOf(true) }
 
-
-        LaunchedEffect(Unit) {
-            coroutineScope.launch {
-                try {
-                    val payload = qrCodeScanner.scanPayload()
-                    navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
-                } catch (e: Exception) {
-                    invalidQrCode = true
-                    println(e)
+        LaunchedEffect(scanning) {
+            if (scanning) {
+                coroutineScope.launch {
+                    try {
+                        val payload = qrCodeScanner.scanPayload()
+                        navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
+                    } catch (e: CancellationException) {
+                        navigator.pop()
+                    } catch (e: Exception) {
+                        invalidQrCode = true
+                        scanning = false
+                        println(e)
+                    }
                 }
             }
         }
@@ -48,7 +54,7 @@ class AddMemberToFamilyGroupQrCodeScanScreen : Screen {
             if (invalidQrCode) {
                 ErrorDialog(stringResource(Res.string.invalid_qr_code_label)) {
                     invalidQrCode = false
-                    navigator.pop()
+                    scanning = true
                 }
             }
             LoaderWithText(
