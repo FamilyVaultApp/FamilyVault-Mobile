@@ -3,10 +3,12 @@ package com.github.familyvault.services
 import android.content.Context
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.models.QrCodeScanResponse
+import com.github.familyvault.models.enums.QrCodeScanResponseStatus
 import com.github.familyvault.utils.PayloadDecryptor
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -30,8 +32,11 @@ class QrCodeService(private val context: Context) : IQRCodeService {
     override suspend fun scanPayload(): AddFamilyMemberDataPayload {
         val scannedResult = scanQRCode()
 
-        if (scannedResult.error != null || scannedResult.content == null) {
-            throw Exception(scannedResult.error)
+        if (scannedResult.status == QrCodeScanResponseStatus.CANCELED) {
+            throw CancellationException("Scan canceled")
+        }
+        if (scannedResult.content == null || scannedResult.status == QrCodeScanResponseStatus.ERROR) {
+            throw Exception(scannedResult.error ?: "Unknown error")
         }
 
         return PayloadDecryptor.decrypt(scannedResult.content)
