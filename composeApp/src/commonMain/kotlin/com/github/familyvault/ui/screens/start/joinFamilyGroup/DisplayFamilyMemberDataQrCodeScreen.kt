@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.backend.exceptions.FamilyVaultBackendErrorException
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
@@ -22,6 +23,7 @@ import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.utils.IQrCodeGenerator
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.qr_code_generation_screen_content
+import io.ktor.client.network.sockets.ConnectTimeoutException
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -47,7 +49,10 @@ class DisplayFamilyMemberDataQrCodeScreen : Screen {
             try {
                 joinTokenService.waitForNotInitiatedStatus(payload.joinStatusToken)
                 navigator.replaceAll(FamilyGroupJoinWaitingScreen())
-            } catch (e: Exception) {
+            } catch (e: FamilyVaultBackendErrorException) {
+                println(e)
+                error = true
+            } catch (e: ConnectTimeoutException) {
                 println(e)
                 error = true
             }
