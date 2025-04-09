@@ -5,9 +5,9 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.os.Build
 
-class AudioPlayer(
+class AudioPlayerService(
     private val context: Context
-) : IAudioPlayer {
+) : IAudioPlayerService {
 
     private var player: MediaPlayer? = null
 

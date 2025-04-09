@@ -37,6 +37,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         chatService = koinInject<IChatService>()
         val chatState = koinInject<ICurrentChatState>()
         val chatListenerService = koinInject<IChatListenerService>()
+
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by
@@ -87,7 +88,9 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 Box(
                     modifier = Modifier.fillMaxWidth().padding(AdditionalTheme.spacings.small)
                 ) {
-                    ChatInputField(onTextMessageSend = { handleTextMessageSend(it) })
+                    ChatInputField(
+                        onTextMessageSend = { handleTextMessageSend(it) }
+                    )
                 }
             }
         }

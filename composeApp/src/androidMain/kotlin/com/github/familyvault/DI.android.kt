@@ -4,6 +4,10 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.client.PrivMxClient
 import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.createAppDatabase
+import com.github.familyvault.services.AudioPlayerService
+import com.github.familyvault.services.AudioRecorderService
+import com.github.familyvault.services.IAudioPlayerService
+import com.github.familyvault.services.IAudioRecorderService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.services.NfcService
@@ -26,4 +30,8 @@ actual fun getPlatformModules() = module {
 
     /* NFC */
     factory {NfcService(get()) }.bind<INfcService>()
+
+    /* Microphone service */
+    factory {AudioPlayerService(get()) }.bind<IAudioPlayerService>()
+    factory {AudioRecorderService(get()) }.bind<IAudioRecorderService>()
 }

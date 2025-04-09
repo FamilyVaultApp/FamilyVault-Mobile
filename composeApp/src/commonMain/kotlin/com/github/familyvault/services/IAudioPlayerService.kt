@@ -1,6 +1,6 @@
 package com.github.familyvault.services
 
-interface IAudioPlayer {
+interface IAudioPlayerService {
     fun playFile(filePath: String)
     fun stop()
 }

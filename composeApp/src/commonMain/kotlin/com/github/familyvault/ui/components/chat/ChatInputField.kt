@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.github.familyvault.services.IAudioRecorderService
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -26,9 +27,14 @@ import familyvault.composeapp.generated.resources.chat_attach_photo
 import familyvault.composeapp.generated.resources.chat_recording_icon
 import familyvault.composeapp.generated.resources.chat_send_message
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
-fun ChatInputField(onTextMessageSend: (message: String) -> Unit) {
+fun ChatInputField(
+    onTextMessageSend: (message: String) -> Unit
+) {
+    val audioRecorder = koinInject<IAudioRecorderService>()
+
     var textMessage by remember { mutableStateOf("") }
 
     Row(
@@ -43,7 +49,15 @@ fun ChatInputField(onTextMessageSend: (message: String) -> Unit) {
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        IconButton(onClick = { /* Nagrywanie głosu */ }) {
+        IconButton(onClick = {
+            if (!audioRecorder.checkRecordingPermission()) {
+                audioRecorder.requestRecordingPermission()
+            } else {
+                val filePath = audioRecorder.retrieveFilePath()
+                audioRecorder.start(filePath)
+                audioRecorder.stop()
+            }
+        }) {
             Icon(
                 Icons.Outlined.Mic,
                 contentDescription = stringResource(Res.string.chat_recording_icon),
@@ -51,14 +65,12 @@ fun ChatInputField(onTextMessageSend: (message: String) -> Unit) {
             )
         }
 
-
         TextField(
             label = stringResource(Res.string.chat_send_message),
             modifier = Modifier.weight(1f).background(Color.Transparent),
             value = textMessage,
             onValueChange = { textMessage = it },
         )
-
 
         IconButton(onClick = {
             onTextMessageSend(textMessage)
