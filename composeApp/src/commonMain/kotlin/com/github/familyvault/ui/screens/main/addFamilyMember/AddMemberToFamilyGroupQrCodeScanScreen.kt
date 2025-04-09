@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.exceptions.QrCodeBadScanException
+import com.github.familyvault.exceptions.QrCodeCancellationException
 import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
@@ -19,7 +21,6 @@ import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.invalid_qr_code_label
 import familyvault.composeapp.generated.resources.qr_code_scanning
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -39,9 +40,9 @@ class AddMemberToFamilyGroupQrCodeScanScreen : Screen {
                     try {
                         val payload = qrCodeScanner.scanPayload()
                         navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
-                    } catch (e: CancellationException) {
+                    } catch (e: QrCodeCancellationException) {
                         navigator.pop()
-                    } catch (e: Exception) {
+                    } catch (e: QrCodeBadScanException) {
                         invalidQrCode = true
                         scanning = false
                         println(e)
