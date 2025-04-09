@@ -1,16 +1,21 @@
 package com.github.familyvault.ui.screens.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GroupAdd
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.github.familyvault.ui.components.overrides.NavigationBar
+import com.github.familyvault.ui.screens.main.chat.CreateGroupChatScreen
 import com.github.familyvault.ui.theme.AppTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_new
@@ -48,8 +53,11 @@ class MainScreen : Screen {
 
     @Composable
     private fun FloatingChatActionButton() {
+        val navigator = LocalNavigator.currentOrThrow
         FloatingActionButton(onClick = {}) {
-            Icon(Icons.Filled.GroupAdd, stringResource(Res.string.chat_create_new))
+            Icon(Icons.Filled.GroupAdd, stringResource(Res.string.chat_create_new), modifier = Modifier.clickable {
+                navigator.parent?.push(CreateGroupChatScreen())
+            })
         }
     }
 }

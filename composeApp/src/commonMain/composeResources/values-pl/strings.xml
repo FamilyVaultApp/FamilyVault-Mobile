@@ -79,9 +79,14 @@
 
     <!-- Chat -->
     <string name="chat_create_new">Stwórz nowy chat</string>
+    <string name="chat_set_group_name">Nazwa grupy</string>
+    <string name="chat_create_group_default_name">Grupa rodzinna</string>
+    <string name="chat_create_group_members">Członkowie czatu grupowego</string>
+    <string name="chat_create_group_button_content">Utwórz chat</string>
     <string name="chat_send_message">Wyślij wiadomość</string>
     <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
+
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
