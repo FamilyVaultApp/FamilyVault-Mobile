@@ -45,19 +45,18 @@ import org.koin.compose.koinInject
 class CreateGroupChatScreen : Screen {
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+        val familyGroupService = koinInject<IFamilyGroupService>()
+        val chatService = koinInject<IChatService>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val coroutineScope = rememberCoroutineScope()
         val defaultName = stringResource(Res.string.chat_create_group_default_name)
         var groupName by remember { mutableStateOf(defaultName) }
         var isCreatingGroupChat by remember { mutableStateOf(false) }
         var isLoadingFamilyMembers by remember { mutableStateOf(true) }
         val familyMembers = remember { mutableStateListOf<FamilyMember>() }
         val selectedMembers = remember { mutableStateListOf<FamilyMember>() }
-
-        val familyGroupService = koinInject<IFamilyGroupService>()
-        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         var myPublicKey by remember { mutableStateOf("") }
-        val chatService = koinInject<IChatService>()
-        val coroutineScope = rememberCoroutineScope()
-        val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit) {
             familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
@@ -106,7 +105,7 @@ class CreateGroupChatScreen : Screen {
                     }
                 }
 
-                CreateGroupChatButton(groupName.isNotEmpty() && !isCreatingGroupChat && selectedMembers.isNotEmpty(), {
+                CreateGroupChatButton(groupChatMembersValidator(selectedMembers, groupName, isCreatingGroupChat), {
                     isCreatingGroupChat = true
                     coroutineScope.launch {
                         chatService.createGroupChat(groupName, selectedMembers)
@@ -116,6 +115,10 @@ class CreateGroupChatScreen : Screen {
                 })
             }
         }
+    }
+
+    private fun groupChatMembersValidator(selectedMembers: List<FamilyMember>, groupName: String, isCreatingGroupChat: Boolean): Boolean {
+        return groupName.isNotEmpty() && !isCreatingGroupChat && selectedMembers.isNotEmpty()
     }
 
     @Composable
