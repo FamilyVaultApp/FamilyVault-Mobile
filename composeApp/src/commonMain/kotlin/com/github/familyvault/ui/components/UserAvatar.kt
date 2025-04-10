@@ -16,19 +16,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun UserAvatar(
     firstName: String,
-    size: Dp? = null
+    size: Dp? = null,
 ) {
     return Box(
         modifier = Modifier
             .size(size ?: 40.dp)
             .background(MaterialTheme.colorScheme.primary, CircleShape),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         if (firstName.isNotEmpty()) {
             Text(
                 firstName.first().toString(),
                 color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }

@@ -5,6 +5,7 @@ import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.exceptions.FamilyVaultBackendNoConnectionException
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
+import com.github.familyvault.backend.requests.ChangeFamilyMemberPermissionGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.GetFamilyGroupNameRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
