@@ -86,6 +86,8 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingValues)
+                    .padding(AdditionalTheme.spacings.screenPadding),
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
             ) {
                 Headline3(stringResource(Res.string.user_modification_choose_permission_content))
                 options.forEachIndexed { index, option ->
@@ -96,29 +98,20 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
                             .fillMaxWidth()
                     ) {
                         RadioButton(
-                            selected = selectedPermissionGroup.value == index,
+                            selected = selectedPermissionGroup == option.permissionGroup,
                             onClick = { selectedPermissionGroup = option.permissionGroup
                             }
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(AdditionalTheme.spacings.large))
                         Paragraph(option.label)
                     }
                 }
             }
 
             Column(
-                modifier = Modifier.fillMaxHeight().padding(paddingValues),
-                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.large, Alignment.Bottom),
+                modifier = Modifier.fillMaxHeight().padding(paddingValues).padding(AdditionalTheme.spacings.screenPadding),
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium, Alignment.Bottom),
             ) {
-                Button(
-                    text = stringResource(Res.string.user_modification_remove_user_button_content),
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !savingChanges,
-                    containerColor = MaterialTheme.colorScheme.error,
-                    onClick = {
-                        showDialog = true
-                    }
-                )
                 Button(
                     text = stringResource(Res.string.user_modification_save_button),
                     modifier = Modifier.fillMaxWidth(),
@@ -130,6 +123,15 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
                             savingChanges = false
                             navigator.pop()
                         }
+                    }
+                )
+                Button(
+                    text = stringResource(Res.string.user_modification_remove_user_button_content),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !savingChanges,
+                    containerColor = MaterialTheme.colorScheme.error,
+                    onClick = {
+                        showDialog = true
                     }
                 )
             }
