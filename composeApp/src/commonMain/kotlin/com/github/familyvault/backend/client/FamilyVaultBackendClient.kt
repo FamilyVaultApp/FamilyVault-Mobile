@@ -15,7 +15,7 @@ import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupReques
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
 import com.github.familyvault.backend.requests.UpdateJoinStatusRequest
 import com.github.familyvault.backend.responses.AddMemberToFamilyGroupResponse
-import com.github.familyvault.backend.responses.ChangeFamilyMemberPermissionGroup
+import com.github.familyvault.backend.responses.ChangeFamilyMemberPermissionGroupResponse
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
 import com.github.familyvault.backend.responses.DeleteJoinStatusResponse
 import com.github.familyvault.backend.responses.FamilyVaultBackendResponse
@@ -63,7 +63,7 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         return postRequest("/FamilyGroup/AddMemberToFamilyGroup", req)
     }
 
-    override suspend fun changeFamilyMemberPermissionGroup(req: ChangeFamilyMemberPermissionGroupRequest): ChangeFamilyMemberPermissionGroup {
+    override suspend fun changeFamilyMemberPermissionGroup(req: ChangeFamilyMemberPermissionGroupRequest): ChangeFamilyMemberPermissionGroupResponse {
         return postRequest("/FamilyGroup/ChangeMemberPermissionGroup", req)
     }
 

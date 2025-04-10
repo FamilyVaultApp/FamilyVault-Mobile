@@ -3,4 +3,4 @@ package com.github.familyvault.backend.responses
 import kotlinx.serialization.Serializable
 
 @Serializable
-object ChangeFamilyMemberPermissionGroup : FamilyVaultBackendResponse()
+object ChangeFamilyMemberPermissionGroupResponse : FamilyVaultBackendResponse()

@@ -116,24 +116,6 @@ class FamilyGroupService(
         )
     }
 
-    override suspend fun changeFamilyMemberPermissionGroupToGuardian(userId: String) {
-        familyVaultBackendProxy.changeFamilyMemberPermissionGroup(
-            ChangeFamilyMemberPermissionGroupRequest(familyGroupSessionService.getContextId(), userId, FamilyGroupMemberPermissionGroup.Guardian)
-        )
-    }
-
-    override suspend fun changeFamilyMemberPermissionGroupToMember(userId: String) {
-        familyVaultBackendProxy.changeFamilyMemberPermissionGroup(
-            ChangeFamilyMemberPermissionGroupRequest(familyGroupSessionService.getContextId(), userId, FamilyGroupMemberPermissionGroup.Member)
-        )
-    }
-
-    override suspend fun changeFamilyMemberPermissionGroupToGuest(userId: String) {
-        familyVaultBackendProxy.changeFamilyMemberPermissionGroup(
-            ChangeFamilyMemberPermissionGroupRequest(familyGroupSessionService.getContextId(), userId, FamilyGroupMemberPermissionGroup.Guest)
-        )
-    }
-
     override suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember> {
         val contextId = familyGroupSessionService.getContextId()
 
