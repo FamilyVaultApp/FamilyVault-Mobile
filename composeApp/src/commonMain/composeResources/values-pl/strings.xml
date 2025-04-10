@@ -42,6 +42,7 @@
     <!-- Joining family group-->
     <string name="join_family_group_title">Dołącz do grupy rodzinnej</string>
     <string name="join_family_group_content">Zetknij swój telefon z telefonem rodzica, aby dołączyć.</string>
+    <string name="preparing_to_join_family_group_label">Przygotowanie do dołączenia do grupy</string>
 
     <!-- Form validation errors-->
     <string name="form_empty_error">To pole nie może być puste</string>
@@ -76,6 +77,7 @@
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera</string>
     <string name="qr_code_generation_screen_content">Niech opiekun Twojej grupy zeskanuje ten kod, aby Cię do niej dodać.</string>
+    <string name="invalid_qr_code_label">Nieprawidłowy kod QR</string>
 
     <!-- Chat -->
     <string name="chat_create_new">Stwórz nowy chat</string>
@@ -85,7 +87,7 @@
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
-    
+
     <!-- Connection error screen -->
     <string name="connection_error_title">Błąd połączenia</string>
     <string name="connection_error_content">Nie można połączyć się z serwerem. Sprawdź połączenie internetowe i spróbuj ponownie.</string>
