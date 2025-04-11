@@ -21,11 +21,13 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.forms.GroupChatCreationForm
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
-import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.UserAvatar
+import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -35,7 +37,6 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_group_button_content
 import familyvault.composeapp.generated.resources.chat_create_new
-import familyvault.composeapp.generated.resources.chat_create_group_default_name
 import familyvault.composeapp.generated.resources.chat_set_group_name
 import familyvault.composeapp.generated.resources.chat_create_group_members
 import kotlinx.coroutines.launch
@@ -48,20 +49,20 @@ class CreateGroupChatScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
         val chatService = koinInject<IChatService>()
-        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
-        val coroutineScope = rememberCoroutineScope()
-        val defaultName = stringResource(Res.string.chat_create_group_default_name)
-        var groupName by remember { mutableStateOf(defaultName) }
-        var isCreatingGroupChat by remember { mutableStateOf(false) }
         var isLoadingFamilyMembers by remember { mutableStateOf(true) }
-        val familyMembers = remember { mutableStateListOf<FamilyMember>() }
-        val selectedMembers = remember { mutableStateListOf<FamilyMember>() }
         var myPublicKey by remember { mutableStateOf("") }
+        val familyMembers = remember { mutableStateListOf<FamilyMember>() }
+        var createGroupChatState by remember { mutableStateOf(FormSubmitState.IDLE) }
+        val form by remember { mutableStateOf(GroupChatCreationForm()) }
+        val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
-            familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
-            myPublicKey = familyGroupSessionService.getPublicKey()
-            familyMembers.find { it.publicKey == myPublicKey }?.let { selectedMembers.add(it) }
+            familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersWithoutMeList())
+            val myMemberData = familyGroupService.retrieveMyFamilyMemberData()
+            myPublicKey = myMemberData.publicKey
+            form.currentUserPublicKey = myPublicKey
+            form.addToGroupChatMembers(myMemberData)
+
             isLoadingFamilyMembers = false
         }
 
@@ -81,10 +82,11 @@ class CreateGroupChatScreen : Screen {
                     .fillMaxWidth()
             ) {
                 TextField(
-                    enabled = !isCreatingGroupChat && !isLoadingFamilyMembers,
-                    value = groupName,
-                    onValueChange = { groupName = it },
-                    label = stringResource(Res.string.chat_set_group_name)
+                    enabled = !isLoadingFamilyMembers && createGroupChatState != FormSubmitState.PENDING,
+                    value = form.groupName,
+                    onValueChange = { form.setGroupName(it)},
+                    label = stringResource(Res.string.chat_set_group_name),
+                    supportingText = { ValidationErrorMessage(form.groupNameValidationError) }
                 )
                 Headline3(stringResource(Res.string.chat_create_group_members))
                 if (isLoadingFamilyMembers) {
@@ -93,32 +95,35 @@ class CreateGroupChatScreen : Screen {
                     familyMembers.forEach { member ->
                         FamilyMemberSwitchItem(
                             member = member,
-                            isSelected = selectedMembers.contains(member),
+                            isSelected = form.familyMembers.contains(member),
                             onToggle = {
-                                if (selectedMembers.contains(member)) {
-                                    selectedMembers.remove(member)
-                                } else {
-                                    selectedMembers.add(member)
+                                if (member.publicKey != myPublicKey) {
+                                    if (form.familyMembers.contains(member)) {
+                                        form.removeFromGroupChatMembers(member)
+                                    } else {
+                                        form.addToGroupChatMembers(member)
+                                    }
+                                    println(form.familyMembers)
                                 }
                             }
                         )
                     }
                 }
-
-                CreateGroupChatButton(groupChatMembersValidator(selectedMembers, groupName, isCreatingGroupChat), {
-                    isCreatingGroupChat = true
+                ValidationErrorMessage(form.groupMembersValidationError)
+                CreateGroupChatButton(form.isFormValid() && !isLoadingFamilyMembers, {
+                    createGroupChatState = FormSubmitState.PENDING
                     coroutineScope.launch {
-                        chatService.createGroupChat(groupName, selectedMembers)
-                        isCreatingGroupChat = false
-                        navigator.pop()
+                        try {
+                            chatService.createGroupChat(form.groupName, form.familyMembers)
+                            createGroupChatState = FormSubmitState.IDLE
+                            navigator.pop()
+                        } catch (e: Exception) {
+                            createGroupChatState = FormSubmitState.ERROR
+                        }
                     }
                 })
             }
         }
-    }
-
-    private fun groupChatMembersValidator(selectedMembers: List<FamilyMember>, groupName: String, isCreatingGroupChat: Boolean): Boolean {
-        return groupName.isNotEmpty() && !isCreatingGroupChat && selectedMembers.isNotEmpty()
     }
 
     @Composable

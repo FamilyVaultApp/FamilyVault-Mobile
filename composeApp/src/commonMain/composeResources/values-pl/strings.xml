@@ -49,6 +49,8 @@
     <string name="form_overfill_error">Możesz wprowadzić maksymalnie %1$d znaki</string>
     <string name="form_password_not_equal_error">Hasła nie są zgodne ze sobą</string>
     <string name="form_too_short_error">Wartość musi być dłuższe niż %1$d znaków</string>
+    <string name="form_creator_not_in_group">Nie możesz utworzyć chatu grupowego, w którym Ciebie nie ma</string>
+    <string name="form_chat_group_members_empty">Nie możesz utworzyć chatu grupowego bez żadnych członków</string>
 
     <!-- Bottom navigation bar items-->
     <string name="chat_tab">Wiadomości</string>
