@@ -16,12 +16,10 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.ChatThreadType
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.ParagraphStickyHeader
 import com.github.familyvault.ui.components.chat.ChatThreadEntry
-import com.github.familyvault.ui.components.dialogs.ChatCreatingDialog
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_type_group
 import familyvault.composeapp.generated.resources.chat_type_individual
@@ -78,25 +76,11 @@ fun SelectChatContent() {
 @Composable
 private fun SelectableChatThreadEntry(chatThread: ChatThread) {
     val navigator = LocalNavigator.currentOrThrow
-    val chatService = koinInject<IChatService>()
     val coroutineScope = rememberCoroutineScope()
-
-    var isCreatingDialog by mutableStateOf(false)
-
-    if (isCreatingDialog) {
-        ChatCreatingDialog()
-    }
 
     ChatThreadEntry(chatThread, unreadMessages = false) {
         coroutineScope.launch {
-            if (chatThread.type == ChatThreadType.INDIVIDUAL_DRAFT && !isCreatingDialog) {
-                isCreatingDialog = true
-                val newChatThread = chatService.createIndividualChatFromDraft(chatThread)
-                navigator.parent?.push(CurrentChatThreadScreen(newChatThread))
-                isCreatingDialog = false
-            } else {
-                navigator.parent?.push(CurrentChatThreadScreen(chatThread))
-            }
+            navigator.parent?.push(CurrentChatThreadScreen(chatThread))
         }
     }
 }

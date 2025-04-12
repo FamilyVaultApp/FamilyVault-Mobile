@@ -6,6 +6,7 @@ import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.repositories.StoredChatMessageRepository
+import com.github.familyvault.services.FamilyMemberAdditionService
 import com.github.familyvault.services.ChatListenerService
 import com.github.familyvault.services.ChatService
 import com.github.familyvault.services.FamilyGroupService
@@ -18,6 +19,7 @@ import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
 import com.github.familyvault.services.JoinStatusService
 import com.github.familyvault.services.FamilyMemberPermissionGroupService
+import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
@@ -42,7 +44,7 @@ val sharedModules = module {
             get(),
             get(),
             get(),
-            get()
+            get(),
         )
     }.bind<IFamilyGroupService>()
     single { JoinStatusService() }.bind<IJoinStatusService>()
@@ -52,12 +54,18 @@ val sharedModules = module {
             get(),
             get(),
             get(),
-            get()
         )
     }.bind<IChatService>()
     single {
         ChatListenerService(get(), get(), get(), get())
     }.bind<IChatListenerService>()
+    factory {
+        FamilyMemberAdditionService(
+            get(),
+            get(),
+            get()
+        )
+    }.bind<IFamilyMemberAdditionService>()
 
     // Backend client
     single { FamilyVaultBackendClient() }.bind<IFamilyVaultBackendClient>()

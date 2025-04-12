@@ -7,9 +7,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.AddFamilyMemberDataPayload
-import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IJoinStatusService
+import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.screens.main.modifyFamilyMember.ModifyFamilyMemberScreen
@@ -25,7 +25,7 @@ class AddMemberToFamilyGroupBackendOperationsScreen(private val payload: AddFami
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyMemberAdditionService = koinInject<IFamilyMemberAdditionService>()
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val joinTokenService = koinInject<IJoinStatusService>()
         val coroutineScope = rememberCoroutineScope()
@@ -38,9 +38,9 @@ class AddMemberToFamilyGroupBackendOperationsScreen(private val payload: AddFami
                     joinStatusToken
                 )
                 val contextId = familyGroupSessionService.getContextId()
-                familyGroupService.addMemberToFamilyGroup(
-                    contextId, newMemberData.fullname, newMemberData.keyPair.publicKey
-                )
+
+                familyMemberAdditionService.addMemberToFamilyGroup(contextId, newMemberData)
+
                 joinTokenService.changeStateToSuccess(
                     joinStatusToken, contextId
                 )

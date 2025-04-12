@@ -20,10 +20,10 @@ import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 
 class FamilyGroupService(
-    private val privMxClient: IPrivMxClient,
-    private val familyGroupSessionService: IFamilyGroupSessionService,
     private val familyGroupCredentialsRepository: IFamilyGroupCredentialsRepository,
+    private val familyGroupSessionService: IFamilyGroupSessionService,
     private val familyVaultBackendClient: IFamilyVaultBackendClient,
+    private val privMxClient: IPrivMxClient,
 ) : IFamilyGroupService {
 
     override suspend fun createFamilyGroupAndAssign(

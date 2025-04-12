@@ -1,9 +1,7 @@
 package com.github.familyvault.services
 
 import com.github.familyvault.AppConfig
-import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
-import com.github.familyvault.backend.requests.GetMemberFromFamilyGroupRequest
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
@@ -17,7 +15,6 @@ import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
 class ChatService(
     private val familyGroupService: IFamilyGroupService,
     private val familyGroupSessionService: IFamilyGroupSessionService,
-    private val familyVaultBackendClient: IFamilyVaultBackendClient,
     private val privMxClient: IPrivMxClient,
     private val storedChatMessageRepository: IStoredChatMessageRepository,
 ) : IChatService {
@@ -47,36 +44,6 @@ class ChatService(
         )
     }
 
-    override suspend fun createIndividualChatFromDraft(chatDraft: ChatThread): ChatThread {
-        val contextId = familyGroupSessionService.getContextId()
-        val currentUser = familyGroupSessionService.getCurrentUser()
-        val familyMember = familyVaultBackendClient.getMemberFromFamilyGroup(
-            GetMemberFromFamilyGroupRequest(
-                contextId = contextId,
-                userId = chatDraft.participantsIds.first { it.compareTo(currentUser.id) != 0 },
-                publicKey = null,
-            )
-        ).member
-        val threadUsers = listOf(familyMember.toPrivMxUser(), currentUser.toPrivMxUser())
-
-        val threadId = privMxClient.createThread(
-            contextId,
-            users = threadUsers,
-            managers = threadUsers,
-            tag = AppConfig.CHAT_THREAD_TAG,
-            type = ChatThreadType.INDIVIDUAL.toString(),
-            name = threadUsers.joinToString { it.userId },
-        )
-
-        return ChatThread(
-            id = threadId,
-            name = familyMember.fullname,
-            participantsIds = threadUsers.map { it.userId },
-            lastMessage = null,
-            type = ChatThreadType.INDIVIDUAL
-        )
-    }
-
     override fun retrieveAllChatThreads(): List<ChatThread> {
         val contextId = familyGroupSessionService.getContextId()
         val threadItems = privMxClient.retrieveAllThreads(contextId, 0, 100)
@@ -96,53 +63,53 @@ class ChatService(
         return retrieveAllChatThreads().filter { it.type == ChatThreadType.GROUP }
     }
 
-    override fun retrieveExistsIndividualChatThreads(): List<ChatThread> {
+    override fun retrieveAllIndividualChatThreads(): List<ChatThread> {
         val chatThreads = retrieveAllChatThreads().filter { it.type == ChatThreadType.INDIVIDUAL }
         val currentUser = familyGroupSessionService.getCurrentUser()
 
         return chatThreads.map {
-            it.copy(name = it.participantsIds.first { participantId ->
+            val chatName = it.participantsIds.firstOrNull { participantId ->
                 participantId.compareTo(
                     currentUser.id
                 ) != 0
-            })
-        }
-    }
-
-    override suspend fun retrieveAllIndividualChatThreads(): List<ChatThread> {
-        val familyMembers = familyGroupService.retrieveFamilyGroupMembersList()
-
-        val userPubKey = familyGroupSessionService.getPublicKey()
-        val userId = familyMembers.first { it.toPrivMxUser().publicKey.compareTo(userPubKey) == 0 }
-            .toPrivMxUser().userId
-
-        val existsIndividualChatThreads = retrieveExistsIndividualChatThreads()
-
-        val familyMembersWithoutIndividualChat = familyMembers.filter { familyMember ->
-            !existsIndividualChatThreads.any {
-                it.participantsIds.contains(
-                    familyMember.toPrivMxUser().userId
-                )
             }
-        }
 
-        val nonExistsIndividualChatThreads = familyMembersWithoutIndividualChat.map {
-            ChatThread(
-                id = null,
-                it.fullname,
-                listOf(it.toPrivMxUser().userId, userId),
-                lastMessage = null,
-                type = ChatThreadType.INDIVIDUAL_DRAFT,
-            )
+            it.copy(name = chatName ?: currentUser.fullname)
         }
-
-        return (existsIndividualChatThreads + nonExistsIndividualChatThreads)
     }
 
     override fun sendMessage(
         chatThreadId: String, messageContent: String, respondToMessageId: String
     ) {
         privMxClient.sendMessage(messageContent, chatThreadId, respondToMessageId)
+    }
+
+    override suspend fun createIndividualChat(
+        firstMember: FamilyMember, secondMember: FamilyMember
+    ) {
+        val contextId = familyGroupSessionService.getContextId()
+
+        val threadUsers =
+            if (firstMember.id.compareTo(secondMember.id) == 0) listOf(firstMember.toPrivMxUser()) else listOf(
+                firstMember.toPrivMxUser(), secondMember.toPrivMxUser()
+            )
+
+        privMxClient.createThread(
+            contextId,
+            users = threadUsers,
+            managers = threadUsers,
+            tag = AppConfig.CHAT_THREAD_TAG,
+            type = ChatThreadType.INDIVIDUAL.toString(),
+            name = threadUsers.joinToString { it.userId },
+        )
+    }
+
+    override suspend fun createIndividualChatsWithAllFamilyMembersForMember(member: FamilyMember) {
+        val familyMembers = familyGroupService.retrieveFamilyGroupMembersList()
+
+        familyMembers.forEach {
+            createIndividualChat(member, it)
+        }
     }
 
     override suspend fun retrieveMessagesFirstPage(chatThreadId: String): List<ChatMessage> {
