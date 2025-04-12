@@ -53,18 +53,7 @@ class MainScreen : Screen {
 
     @Composable
     private fun FloatingChatActionButton() {
-        val chatService = koinInject<IChatService>()
-        val familyGroupService = koinInject<IFamilyGroupService>()
-        val coroutineScope = rememberCoroutineScope()
-
-        FloatingActionButton(onClick = {
-            coroutineScope.launch {
-                chatService.createGroupChat(
-                    "Testowy",
-                    familyGroupService.retrieveFamilyGroupMembersList()
-                )
-            }
-        }) {
+        FloatingActionButton(onClick = {}) {
             Icon(Icons.Filled.GroupAdd, stringResource(Res.string.chat_create_new))
         }
     }

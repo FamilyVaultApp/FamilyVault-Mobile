@@ -81,10 +81,13 @@ class ChatService(
     ) {
         val contextId = familyGroupSessionService.getContextId()
 
-        val threadUsers =
-            if (firstMember.id.compareTo(secondMember.id) == 0) listOf(firstMember.toPrivMxUser()) else listOf(
+        val threadUsers = if (firstMember.id == secondMember.id) {
+            listOf(firstMember.toPrivMxUser())
+        } else {
+            listOf(
                 firstMember.toPrivMxUser(), secondMember.toPrivMxUser()
             )
+        }
 
         privMxClient.createThread(
             contextId,
