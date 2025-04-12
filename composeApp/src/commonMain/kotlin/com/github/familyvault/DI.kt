@@ -13,7 +13,9 @@ import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IJoinStatusService
+import com.github.familyvault.services.IFamilyMemberPermissionGroupService
 import com.github.familyvault.services.JoinStatusService
+import com.github.familyvault.services.FamilyMemberPermissionGroupService
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
@@ -55,6 +57,7 @@ val sharedModules = module {
     // States
     single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()
     single { CurrentChatState(get()) }.bind<ICurrentChatState>()
+    single { FamilyMemberPermissionGroupService(get()) }.bind<IFamilyMemberPermissionGroupService>()
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {

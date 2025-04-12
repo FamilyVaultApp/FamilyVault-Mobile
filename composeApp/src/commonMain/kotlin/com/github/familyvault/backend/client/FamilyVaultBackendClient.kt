@@ -4,6 +4,7 @@ import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.exceptions.FamilyVaultBackendErrorException
 import com.github.familyvault.backend.exceptions.FamilyVaultBackendNoConnectionException
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
+import com.github.familyvault.backend.requests.ChangeFamilyMemberPermissionGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.DeleteJoinStatusRequest
 import com.github.familyvault.backend.requests.FamilyVaultBackendRequest
@@ -14,6 +15,7 @@ import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupReques
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
 import com.github.familyvault.backend.requests.UpdateJoinStatusRequest
 import com.github.familyvault.backend.responses.AddMemberToFamilyGroupResponse
+import com.github.familyvault.backend.responses.ChangeFamilyMemberPermissionGroupResponse
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
 import com.github.familyvault.backend.responses.DeleteJoinStatusResponse
 import com.github.familyvault.backend.responses.FamilyVaultBackendResponse
@@ -59,6 +61,10 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
 
     override suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest): AddMemberToFamilyGroupResponse {
         return postRequest("/FamilyGroup/AddMemberToFamilyGroup", req)
+    }
+
+    override suspend fun changeFamilyMemberPermissionGroup(req: ChangeFamilyMemberPermissionGroupRequest): ChangeFamilyMemberPermissionGroupResponse {
+        return postRequest("/FamilyGroup/ChangeMemberPermissionGroup", req)
     }
 
     override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
