@@ -12,7 +12,7 @@ import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
-import com.github.familyvault.ui.screens.main.FamilyGroupManagementScreen
+import com.github.familyvault.ui.screens.main.modifyFamilyMember.ModifyFamilyMemberScreen
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.launch
@@ -44,7 +44,7 @@ class AddMemberToFamilyGroupBackendOperationsScreen(private val payload: AddFami
                 joinTokenService.changeStateToSuccess(
                     joinStatusToken, contextId
                 )
-                navigator.replaceAll(FamilyGroupManagementScreen())
+                navigator.popUntil { it is ModifyFamilyMemberScreen }
             }
         }
 

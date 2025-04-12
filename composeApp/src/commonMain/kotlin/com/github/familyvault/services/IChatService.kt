@@ -6,10 +6,14 @@ import com.github.familyvault.models.chat.ChatThread
 
 interface IChatService {
     fun retrieveAllChatThreads(): List<ChatThread>
+    fun retrieveAllGroupChatThreads(): List<ChatThread>
+    fun retrieveExistsIndividualChatThreads(): List<ChatThread>
     fun retrieveLastMessage(chatThreadId: String): ChatMessage?
     fun sendMessage(chatThreadId: String, messageContent: String, respondToMessageId: String)
     suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
+    suspend fun createIndividualChatFromDraft(chatDraft: ChatThread): ChatThread
     suspend fun populateDatabaseWithLastMessages(chatThreadId: String)
+    suspend fun retrieveAllIndividualChatThreads(): List<ChatThread>
     suspend fun retrieveMessagesFirstPage(chatThreadId: String): List<ChatMessage>
     suspend fun retrieveMessagesPage(chatThreadId: String, page: Int): List<ChatMessage>
 }

@@ -14,5 +14,8 @@ data class FamilyMember(
     val fullname: String
         get() = "$firstname $surname"
 
+    val id: String
+        get() = fullname
+
     fun toPrivMxUser() = PrivMxUser(fullname, publicKey)
 }

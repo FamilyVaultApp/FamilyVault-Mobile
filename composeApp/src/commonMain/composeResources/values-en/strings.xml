@@ -82,8 +82,11 @@
     <!-- Chat -->
     <string name="chat_create_new">Create new chat</string>
     <string name="chat_send_message">Send message</string>
+    <string name="chat_type_individual">Individual</string>
+    <string name="chat_type_group">Groups</string>
     <string name="chat_recording_icon">Record voice message</string>
     <string name="chat_attach_photo">Attach photo</string>
+    <string name="chat_creating">Creating chat...</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>

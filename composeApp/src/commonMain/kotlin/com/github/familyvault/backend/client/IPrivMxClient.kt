@@ -2,7 +2,6 @@ package com.github.familyvault.backend.client
 
 import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
-import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
@@ -17,9 +16,10 @@ interface IPrivMxClient {
         contextId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        threadTags: String,
-        threadName: String
-    ): ThreadId
+        tag: String,
+        type: String,
+        name: String
+    ): String
 
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun sendMessage(content: String, threadId: String, referenceMessageId: String = "")

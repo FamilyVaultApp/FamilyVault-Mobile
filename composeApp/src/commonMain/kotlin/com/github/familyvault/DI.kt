@@ -1,5 +1,7 @@
 package com.github.familyvault
 
+import com.github.familyvault.backend.client.FamilyVaultBackendClient
+import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IStoredChatMessageRepository
@@ -34,9 +36,10 @@ val sharedModules = module {
     single { StoredChatMessageRepository(get()) }.bind<IStoredChatMessageRepository>()
 
     // Services
-    single { FamilyGroupSessionService(get()) }.bind<IFamilyGroupSessionService>()
+    single { FamilyGroupSessionService(get(), get()) }.bind<IFamilyGroupSessionService>()
     single {
         FamilyGroupService(
+            get(),
             get(),
             get(),
             get()
@@ -47,12 +50,17 @@ val sharedModules = module {
         ChatService(
             get(),
             get(),
+            get(),
+            get(),
             get()
         )
     }.bind<IChatService>()
     single {
         ChatListenerService(get(), get(), get(), get())
     }.bind<IChatListenerService>()
+
+    // Backend client
+    single { FamilyVaultBackendClient() }.bind<IFamilyVaultBackendClient>()
 
     // States
     single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()

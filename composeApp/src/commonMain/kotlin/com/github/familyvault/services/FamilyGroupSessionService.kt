@@ -1,17 +1,22 @@
 package com.github.familyvault.services
 
 import com.github.familyvault.backend.PrivMxErrorCodes
+import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
+import com.github.familyvault.backend.requests.GetMemberFromFamilyGroupRequest
 import com.github.familyvault.models.FamilyGroupSession
+import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.PublicPrivateKeyPair
 import com.github.familyvault.models.enums.ConnectionStatus
 
 class FamilyGroupSessionService(
-    private val privMxClient: IPrivMxClient
+    private val privMxClient: IPrivMxClient,
+    private val familyVaultBackendClient: IFamilyVaultBackendClient
 ) : IFamilyGroupSessionService {
     private var session: FamilyGroupSession? = null
+    private var currentUser: FamilyMember? = null
 
     override fun assignSession(
         bridgeUrl: String,
@@ -28,12 +33,17 @@ class FamilyGroupSessionService(
         )
     }
 
-    override fun connect(): ConnectionStatus {
+    override suspend fun connect(): ConnectionStatus {
         requireNotNull(session)
         try {
             privMxClient.establishConnection(
                 getBridgeUrl(), getSolutionId(), getPrivateKey()
             )
+            currentUser = familyVaultBackendClient.getMemberFromFamilyGroup(
+                GetMemberFromFamilyGroupRequest(
+                    contextId = getContextId(), userId = null, publicKey = getPublicKey()
+                )
+            ).member
         } catch (e: FamilyVaultPrivMxException) {
             if (e.errorCode == PrivMxErrorCodes.USER_NOT_IN_CONTEXT) {
                 return ConnectionStatus.UserNotFound
@@ -57,6 +67,8 @@ class FamilyGroupSessionService(
     override fun getSolutionId(): String {
         return requireNotNull(session?.solutionId)
     }
+
+    override fun getCurrentUser(): FamilyMember = requireNotNull(currentUser)
 
     override fun updateFamilyGroupName(name: String) {
         session = session?.copy(familyGroupName = name)
