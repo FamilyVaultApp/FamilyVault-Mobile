@@ -149,13 +149,27 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     /* Listeners */
+    override fun unregisterAllEvents(eventName: String) {
+        requireNotNull(connection).unregisterCallbacks(eventName)
+    }
+
     override fun registerOnMessageCreated(
-        threadId: String, callback: (MessageItem) -> Unit
+        eventName: String,
+        threadId: String,
+        callback: (MessageItem) -> Unit
     ) {
         requireNotNull(connection).registerCallback(
-            "CHAT_EVENT", EventType.ThreadNewMessageEvent(threadId)
+            eventName, EventType.ThreadNewMessageEvent(threadId)
         ) {
             callback(PrivMxMessageToMessageItemMapper.map(it))
+        }
+    }
+
+    override fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit) {
+        requireNotNull(connection).registerCallback(
+            eventName, EventType.ThreadCreatedEvent
+        ) {
+            callback(PrivMxThreadToThreadItemMapper.map(it))
         }
     }
 

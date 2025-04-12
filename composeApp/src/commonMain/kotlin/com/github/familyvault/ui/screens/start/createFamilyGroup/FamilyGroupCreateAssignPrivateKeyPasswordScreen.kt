@@ -18,6 +18,7 @@ import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
@@ -37,6 +38,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
     @Composable
     override fun Content() {
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyMemberAdditionService = koinInject<IFamilyMemberAdditionService>()
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
 
@@ -57,8 +59,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
             }
             PrivateKeyAssignPasswordHeader()
             Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom
+                modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
             ) {
                 AssignPrivateKeyFormContent(
                     form,
@@ -76,6 +77,8 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                                 familyGroupNameDraft.familyGroupName.value,
                                 "Description"
                             )
+                            familyMemberAdditionService.afterJoinedToFamilyMembersOperations()
+
                             navigator.replaceAll(DebugScreenContextId())
                             createFamilyGroupState = FormSubmitState.IDLE
                         } catch (e: Exception) {

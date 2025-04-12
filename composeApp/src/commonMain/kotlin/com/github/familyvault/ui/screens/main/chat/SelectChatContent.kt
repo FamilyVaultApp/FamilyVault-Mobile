@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -16,7 +17,11 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.services.IChatThreadListenerService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.ParagraphStickyHeader
 import com.github.familyvault.ui.components.chat.ChatThreadEntry
@@ -32,18 +37,50 @@ import org.koin.compose.koinInject
 @Composable
 fun SelectChatContent() {
     val chatService = koinInject<IChatService>()
+    val chatThreadListenerService = koinInject<IChatThreadListenerService>()
+    val chatMessagesListenerService = koinInject<IChatMessagesListenerService>()
+    val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
 
     val groupChatThreads = remember { mutableStateListOf<ChatThread>() }
     val individualChatThreads = remember { mutableStateListOf<ChatThread>() }
     var isLoading by remember { mutableStateOf(true) }
+    val user = remember { familyGroupSessionService.getCurrentUser() }
 
     LaunchedEffect(Unit) {
         isLoading = true
 
         groupChatThreads.addAll(chatService.retrieveAllGroupChatThreads())
         individualChatThreads.addAll(chatService.retrieveAllIndividualChatThreads())
+        chatThreadListenerService.startListeningForNewChatThread {
+            when (it.type) {
+                ChatThreadType.INDIVIDUAL -> individualChatThreads.add(
+                    it.copy(
+                        name = it.customNameIfIndividualOrDefault(
+                            user.id
+                        )
+                    )
+                )
+
+                ChatThreadType.GROUP -> groupChatThreads.add(it)
+            }
+        }
+        for (chatThread in (groupChatThreads + individualChatThreads)) {
+            chatMessagesListenerService.startListeningForNewMessage(chatThread.id) { newMessage ->
+                val chatThreadList =
+                    if (chatThread.type == ChatThreadType.INDIVIDUAL) individualChatThreads else groupChatThreads
+
+                chatThreadList.removeAll { it.id.compareTo(chatThread.id) == 0 }
+                chatThreadList.add(chatThread.copy(lastMessage = newMessage))
+            }
+        }
 
         isLoading = false
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            chatThreadListenerService.unregisterAllListeners()
+        }
     }
 
     if (isLoading) {
@@ -57,7 +94,7 @@ fun SelectChatContent() {
             )
         }
 
-        items(individualChatThreads) {
+        items(individualChatThreads.sortedBy { it.lastMessage?.sendDate }.reversed()) {
             SelectableChatThreadEntry(it)
         }
 
@@ -67,7 +104,7 @@ fun SelectChatContent() {
             )
         }
 
-        items(groupChatThreads) {
+        items(groupChatThreads.sortedBy { it.lastMessage?.sendDate }.reversed()) {
             SelectableChatThreadEntry(it)
         }
     }

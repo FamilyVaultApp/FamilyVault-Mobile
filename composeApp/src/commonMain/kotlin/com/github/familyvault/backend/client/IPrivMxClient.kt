@@ -30,5 +30,12 @@ interface IPrivMxClient {
     fun retrieveLastMessageFromThread(threadId: String): MessageItem?
 
     /* Listeners */
-    fun registerOnMessageCreated(threadId: String, callback: (MessageItem) -> Unit)
+    fun unregisterAllEvents(eventName: String)
+    fun registerOnMessageCreated(
+        eventName: String,
+        threadId: String,
+        callback: (MessageItem) -> Unit
+    )
+
+    fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
 }

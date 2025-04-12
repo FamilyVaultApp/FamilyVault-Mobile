@@ -7,11 +7,12 @@ import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.repositories.StoredChatMessageRepository
 import com.github.familyvault.services.FamilyMemberAdditionService
-import com.github.familyvault.services.ChatListenerService
+import com.github.familyvault.services.ChatMessagesListenerService
 import com.github.familyvault.services.ChatService
+import com.github.familyvault.services.ChatThreadListenerService
 import com.github.familyvault.services.FamilyGroupService
 import com.github.familyvault.services.FamilyGroupSessionService
-import com.github.familyvault.services.IChatListenerService
+import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
@@ -19,6 +20,7 @@ import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
 import com.github.familyvault.services.JoinStatusService
 import com.github.familyvault.services.FamilyMemberPermissionGroupService
+import com.github.familyvault.services.IChatThreadListenerService
 import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.ICurrentChatState
@@ -57,15 +59,19 @@ val sharedModules = module {
         )
     }.bind<IChatService>()
     single {
-        ChatListenerService(get(), get(), get(), get())
-    }.bind<IChatListenerService>()
-    factory {
+        ChatMessagesListenerService(get(), get(), get(), get())
+    }.bind<IChatMessagesListenerService>()
+    single { ChatThreadListenerService(get()) }.bind<IChatThreadListenerService>()
+    single {
         FamilyMemberAdditionService(
-            get(),
-            get(),
-            get()
+            get(), get(), get()
         )
     }.bind<IFamilyMemberAdditionService>()
+    single {
+        FamilyMemberPermissionGroupService(
+            get(), get()
+        )
+    }.bind<IFamilyMemberPermissionGroupService>()
 
     // Backend client
     single { FamilyVaultBackendClient() }.bind<IFamilyVaultBackendClient>()
@@ -73,15 +79,13 @@ val sharedModules = module {
     // States
     single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()
     single { CurrentChatState(get()) }.bind<ICurrentChatState>()
-    single { FamilyMemberPermissionGroupService(get()) }.bind<IFamilyMemberPermissionGroupService>()
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
         modules(
-            sharedModules,
-            getPlatformModules()
+            sharedModules, getPlatformModules()
         )
     }
 }

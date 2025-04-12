@@ -59,23 +59,15 @@ class ChatService(
         }
     }
 
-    override fun retrieveAllGroupChatThreads(): List<ChatThread> {
-        return retrieveAllChatThreads().filter { it.type == ChatThreadType.GROUP }
-    }
+    override fun retrieveAllGroupChatThreads(): List<ChatThread> =
+        retrieveAllChatThreads().filter { it.type == ChatThreadType.GROUP }
+
 
     override fun retrieveAllIndividualChatThreads(): List<ChatThread> {
-        val chatThreads = retrieveAllChatThreads().filter { it.type == ChatThreadType.INDIVIDUAL }
-        val currentUser = familyGroupSessionService.getCurrentUser()
+        val user = familyGroupSessionService.getCurrentUser()
 
-        return chatThreads.map {
-            val chatName = it.participantsIds.firstOrNull { participantId ->
-                participantId.compareTo(
-                    currentUser.id
-                ) != 0
-            }
-
-            it.copy(name = chatName ?: currentUser.fullname)
-        }
+        return retrieveAllChatThreads().filter { it.type == ChatThreadType.INDIVIDUAL }
+            .map { it.copy(name = it.customNameIfIndividualOrDefault(user.id)) }
     }
 
     override fun sendMessage(
