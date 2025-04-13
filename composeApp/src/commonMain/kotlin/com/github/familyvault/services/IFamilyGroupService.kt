@@ -2,6 +2,7 @@ package com.github.familyvault.services
 
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.enums.ConnectionStatus
 
 interface IFamilyGroupService {
     suspend fun createFamilyGroupAndAssign(
@@ -20,7 +21,7 @@ interface IFamilyGroupService {
         contextId: String
     )
 
-    suspend fun assignDefaultStoredFamilyGroup(): Boolean
+    suspend fun assignDefaultStoredFamilyGroup(): ConnectionStatus
 
     suspend fun retrieveFamilyGroupMembersList(): List<FamilyMember>
 

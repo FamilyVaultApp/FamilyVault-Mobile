@@ -3,6 +3,7 @@
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
     <string name="loading">Loading...</string>
+    <string name="you">You</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -42,6 +43,7 @@
     <!-- Joining family group-->
     <string name="join_family_group_title">Join family group</string>
     <string name="join_family_group_content">Tap your phone to your parent's phone to join the family group.</string>
+    <string name="preparing_to_join_family_group_label">Preparing to join family group</string>
 
     <!-- Form validation errors-->
     <string name="form_empty_error">This field cannot be empty</string>
@@ -76,13 +78,36 @@
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>
     <string name="qr_code_generation_screen_content">Have your family group guardian scan this code to let you join.</string>
+    <string name="invalid_qr_code_label">Invalid QR code</string>
 
     <!-- Chat -->
     <string name="chat_create_new">Create new chat</string>
     <string name="chat_send_message">Send message</string>
+    <string name="chat_type_individual">Individual</string>
+    <string name="chat_type_group">Groups</string>
     <string name="chat_recording_icon">Record voice message</string>
     <string name="chat_attach_photo">Attach photo</string>
+    <string name="chat_creating">Creating chat...</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>
+
+    <!-- Connection error screen -->
+    <string name="connection_error_title">Connection Error</string>
+    <string name="connection_error_content">Couldn't connect to the server. Please check your internet connection and try again </string>
+    <string name="connection_error_button_content">Retry connection</string>
+
+    <string name="user_not_found_title">User not found</string>
+    <string name="user_not_found_content">We couldn't find you in this Family Group. It's possible that your account has been removed from it. You can remove this family group's data from your device using the button below.</string>
+    <string name="user_not_found_button_content">Remove Family Group data</string>
+
+
+    <!-- User modification -->
+    <string name="user_modification_description">Modify family group member</string>
+    <string name="user_permission_group_guardian">Guardian</string>
+    <string name="user_permission_group_member">Member</string>
+    <string name="user_permission_group_guest">Guest</string>
+    <string name="user_modification_choose_permission_content">Select this user's permission group.</string>
+    <string name="user_modification_remove_user_button_content">Remove this user</string>
+    <string name="user_modification_save_button">Save changes</string>
 </resources>

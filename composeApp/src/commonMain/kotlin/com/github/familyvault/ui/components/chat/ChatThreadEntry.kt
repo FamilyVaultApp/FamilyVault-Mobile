@@ -9,22 +9,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.you
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun ChatThreadEntry(
     chatThread: ChatThread, unreadMessages: Boolean, onClick: () -> Unit = {}
 ) {
+    val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
     val backgroundColor =
         if (unreadMessages) MaterialTheme.colorScheme.primaryContainer else Color.Unspecified
     val lastMessage = chatThread.lastMessage
+    val currentUser = remember { familyGroupSessionService.getCurrentUser() }
+
+    val senderName = if (lastMessage?.senderId == currentUser.id) {
+        stringResource(Res.string.you)
+    } else {
+        lastMessage?.senderId
+    }
 
     return Row(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).background(backgroundColor)
@@ -38,7 +52,9 @@ fun ChatThreadEntry(
         UserAvatar(chatThread.name)
         Column {
             Headline3(chatThread.name)
-            ParagraphMuted(if (lastMessage == null) "" else "${lastMessage.senderId}: ${lastMessage.messageShortPreview}")
+            if (lastMessage != null) {
+                ParagraphMuted("${senderName}: ${lastMessage.messageShortPreview}")
+            }
         }
     }
 }

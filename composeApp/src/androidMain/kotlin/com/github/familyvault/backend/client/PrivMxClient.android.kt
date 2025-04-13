@@ -1,19 +1,21 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
+import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
-import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessagePrivateMeta
-import com.github.familyvault.backend.utils.ThreadMessageDecoder
 import com.github.familyvault.backend.utils.ThreadMessageEncoder
+import com.github.familyvault.backend.models.ThreadPrivateMeta
+import com.github.familyvault.backend.models.ThreadPublicMeta
+import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
-import com.github.familyvault.models.enums.ChatMessageType
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
+import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.java.privmx_endpoint_extra.events.EventType
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
@@ -21,7 +23,6 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
 import kotlin.random.Random
-
 
 class PrivMxClient : IPrivMxClient, AutoCloseable {
     private val initModules = setOf(
@@ -57,19 +58,24 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
-        connection = container.connect(
-            initModules, privateKey, solutionId, bridgeUrl
-        )
-        threadApi = requireNotNull(connection).threadApi
+        try {
+            connection = container.connect(
+                initModules, privateKey, solutionId, bridgeUrl
+            )
+        } catch (e: PrivmxException) {
+            throw FamilyVaultPrivMxException(e.code, e.message ?: "")
+        }
+        threadApi = connection!!.threadApi
     }
 
     override fun createThread(
         contextId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        threadTags: String,
-        threadName: String
-    ): ThreadId {
+        tag: String,
+        type: String,
+        name: String
+    ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
         }
@@ -78,31 +84,24 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
 
         val threadId = threadApi?.createThread(
-            contextId, managerList, userList, // TODO: Poprawić ustawienie manager i user
-            threadTags.encodeToByteArray(), threadName.encodeToByteArray()
+            contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
+            ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name))
         )
 
-        if (threadId == null) {
-            throw Exception("Received empty threadsPagingList")
-        }
-        return ThreadId(threadId)
+        return requireNotNull(threadId) { "Received empty threadsPagingList" }
     }
 
     override fun retrieveAllThreads(
         contextId: String, startIndex: Int, pageSize: Int
     ): List<ThreadItem> {
-        val threadsList: MutableList<ThreadItem> = mutableListOf()
-        if (threadApi == null) {
-            throw Exception("ThreadApi is null")
-        }
-        val threadsPagingList = threadApi?.listThreads(
+        val threadsList = mutableListOf<ThreadItem>()
+
+        val threadsPagingList = requireNotNull(threadApi).listThreads(
             contextId, startIndex.toLong(), pageSize.toLong(), SortOrder.DESC
         )
 
-        if (threadsPagingList == null) {
-            throw Exception("Received empty threadsPagingList")
-        }
-        threadsPagingList.readItems.map {
+        requireNotNull(threadsPagingList).readItems.map {
             threadsList.add(
                 PrivMxThreadToThreadItemMapper.map(it)
             )
@@ -165,15 +164,27 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     /* Listeners */
+    override fun unregisterAllEvents(eventName: String) {
+        requireNotNull(connection).unregisterCallbacks(eventName)
+    }
+
     override fun registerOnMessageCreated(
+        eventName: String,
         threadId: String,
         callback: (MessageItem) -> Unit
     ) {
         requireNotNull(connection).registerCallback(
-            "CHAT_EVENT",
-            EventType.ThreadNewMessageEvent(threadId)
+            eventName, EventType.ThreadNewMessageEvent(threadId)
         ) {
             callback(PrivMxMessageToMessageItemMapper.map(it))
+        }
+    }
+
+    override fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit) {
+        requireNotNull(connection).registerCallback(
+            eventName, EventType.ThreadCreatedEvent
+        ) {
+            callback(PrivMxThreadToThreadItemMapper.map(it))
         }
     }
 

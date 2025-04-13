@@ -18,13 +18,17 @@ import com.github.familyvault.forms.FamilyMemberNewMemberFormData
 import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
-import com.github.familyvault.ui.components.dialogs.FamilyGroupCreatingDialog
 import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.creating_family_group_label
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
@@ -34,6 +38,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
     @Composable
     override fun Content() {
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyMemberAdditionService = koinInject<IFamilyMemberAdditionService>()
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
 
@@ -42,7 +47,9 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
 
         StartScreenScaffold {
             when (createFamilyGroupState) {
-                FormSubmitState.PENDING -> FamilyGroupCreatingDialog()
+                FormSubmitState.PENDING -> CircularProgressIndicatorDialog(
+                    stringResource(Res.string.creating_family_group_label)
+                )
 
                 FormSubmitState.ERROR -> ErrorDialog {
                     createFamilyGroupState = FormSubmitState.IDLE
@@ -52,8 +59,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
             }
             PrivateKeyAssignPasswordHeader()
             Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Bottom
+                modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
             ) {
                 AssignPrivateKeyFormContent(
                     form,
@@ -71,6 +77,8 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                                 familyGroupNameDraft.familyGroupName.value,
                                 "Description"
                             )
+                            familyMemberAdditionService.afterJoinedToFamilyMembersOperations()
+
                             navigator.replaceAll(DebugScreenContextId())
                             createFamilyGroupState = FormSubmitState.IDLE
                         } catch (e: Exception) {

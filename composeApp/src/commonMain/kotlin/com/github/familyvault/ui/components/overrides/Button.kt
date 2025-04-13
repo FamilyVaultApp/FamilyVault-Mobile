@@ -2,8 +2,8 @@ package com.github.familyvault.ui.components.overrides
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
-import androidx.compose.material.Button as MaterialButton
+import androidx.compose.material3.Button as MaterialButton
 
 @Composable
 fun Button(
@@ -35,10 +35,10 @@ fun Button(
         enabled = enabled,
         shape = shape,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = containerColor,
+            containerColor = containerColor,
             contentColor = contentColor,
             disabledContentColor = disabledContentColor,
-            disabledBackgroundColor = disabledContainerColor
+            disabledContainerColor = disabledContainerColor
         )
     ) {
         Row(

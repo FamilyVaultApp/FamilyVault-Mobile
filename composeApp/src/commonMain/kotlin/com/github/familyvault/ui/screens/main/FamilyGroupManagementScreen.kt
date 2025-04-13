@@ -120,7 +120,8 @@ class FamilyGroupManagementScreen : Screen {
         Column {
             Headline3(stringResource(Res.string.family_group_members))
             Column(
-                modifier = Modifier.padding(vertical = 15.dp)
+                modifier = Modifier.padding(vertical = 15.dp),
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
             ) {
                 if (isLoadingMembers) {
                     Box(
