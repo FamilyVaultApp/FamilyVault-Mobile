@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -28,8 +31,8 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val newFamilyMemberForm = FamilyGroupNewMemberForm()
-        val familyGroupNameForm = FamilyGroupNameForm()
+        val newFamilyMemberForm by remember { mutableStateOf(FamilyGroupNewMemberForm()) }
+        val familyGroupNameForm by remember { mutableStateOf(FamilyGroupNameForm()) }
 
         StartScreenScaffold {
             CreateFamilyGroupHeader()

@@ -2,9 +2,6 @@ package com.github.familyvault.ui.components.formsContent
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import com.github.familyvault.forms.FamilyGroupNewMemberForm
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.TextField
@@ -15,34 +12,22 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun NewFamilyMemberFormContent(form: FamilyGroupNewMemberForm, enabled: Boolean = true) {
-
-    val firstname = rememberSaveable { mutableStateOf(form.firstname) }
-    val surname = rememberSaveable { mutableStateOf(form.surname) }
-
-    LaunchedEffect(firstname.value) {
-        if (firstname.value != form.firstname) {
-            form.setFirstname(firstname.value)
-        }
-    }
-
-    LaunchedEffect(surname.value) {
-        if (surname.value != form.surname) {
-            form.setSurname(surname.value)
-        }
-    }
-
     Column {
         TextField(
-            value = firstname.value,
+            value = form.firstname,
             label = stringResource(Res.string.text_field_name_label),
-            onValueChange = { firstname.value = it },
+            onValueChange = {
+                form.setFirstname(it)
+            },
             enabled = enabled,
             supportingText = { ValidationErrorMessage(form.firstnameValidationError) }
         )
         TextField(
-            value = surname.value,
+            value = form.surname,
             label = stringResource(Res.string.text_field_surname_label),
-            onValueChange = { surname.value = it },
+            onValueChange = {
+                form.setSurname(it)
+            },
             enabled = enabled,
             supportingText = { ValidationErrorMessage(form.surnameValidationError) }
         )
