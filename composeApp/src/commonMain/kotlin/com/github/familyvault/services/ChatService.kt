@@ -6,8 +6,8 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.ChatMessageType
-import com.github.familyvault.models.enums.ChatStoreType
 import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.models.enums.StoreType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
@@ -33,7 +33,7 @@ class ChatService(
             contextId,
             users,
             managers,
-            ChatStoreType.AUDIO.toString(),
+            StoreType.CHAT_FILES_STORE.toString(),
             ByteArray(0)
         )
 
@@ -115,7 +115,7 @@ class ChatService(
             contextId,
             users = threadUsers,
             managers = threadUsers,
-            ChatStoreType.AUDIO.toString(),
+            StoreType.CHAT_FILES_STORE.toString(),
             ByteArray(0)
         )
 
