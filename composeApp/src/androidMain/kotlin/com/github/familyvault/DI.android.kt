@@ -1,6 +1,5 @@
 package com.github.familyvault
 
-import AudioRecorderService
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.client.PrivMxClient
 import com.github.familyvault.database.AppDatabase
@@ -8,6 +7,7 @@ import com.github.familyvault.database.createAppDatabase
 import com.github.familyvault.services.INotificationService
 import com.github.familyvault.services.NotificationService
 import com.github.familyvault.services.AudioPlayerService
+import com.github.familyvault.services.AudioRecorderService
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IAudioRecorderService
 import com.github.familyvault.services.INfcService
@@ -38,5 +38,5 @@ actual fun getPlatformModules() = module {
 
     /* Microphone service */
     factory {AudioPlayerService(get()) }.bind<IAudioPlayerService>()
-    factory {AudioRecorderService(get()) }.bind<IAudioRecorderService>()
+    factory { AudioRecorderService(get()) }.bind<IAudioRecorderService>()
 }

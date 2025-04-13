@@ -41,7 +41,7 @@ fun ChatInputField(
 
     var textMessage by remember { mutableStateOf("") }
     var isRecording by remember { mutableStateOf(false) }
-    var audioData = audioRecorder.getAudioBytes()
+    var audioData = ByteArray(0)
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -88,6 +88,7 @@ fun ChatInputField(
             onTextMessageSend(textMessage)
             onVoiceMessageSend(audioData)
             textMessage = ""
+            audioData = ByteArray(0)
         }) {
             Icon(
                 Icons.AutoMirrored.Filled.Send,
