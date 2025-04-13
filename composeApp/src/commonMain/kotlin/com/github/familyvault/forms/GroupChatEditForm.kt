@@ -6,14 +6,14 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.forms.FormDataListEntry
 import com.github.familyvault.models.forms.FormDataStringEntry
 
-data class GroupChatCreationFormData(
+data class GroupChatEditFormData(
     val groupName: FormDataStringEntry = FormDataStringEntry(),
     var familyMembers: FormDataListEntry<FamilyMember> = FormDataListEntry(),
 )
 
 class GroupChatEditForm: BasicForm() {
 
-    var formData: GroupChatCreationFormData = GroupChatCreationFormData()
+    var formData: GroupChatEditFormData = GroupChatEditFormData()
         private set
 
     val groupName: String
