@@ -49,21 +49,7 @@ fun ChatInputField(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        IconButton(onClick = {
-            if (!audioRecorder.checkRecordingPermission()) {
-                audioRecorder.requestRecordingPermission()
-            } else {
-                val filePath = audioRecorder.retrieveFilePath()
-                audioRecorder.start(filePath)
-                audioRecorder.stop()
-            }
-        }) {
-            Icon(
-                Icons.Outlined.Mic,
-                contentDescription = stringResource(Res.string.chat_recording_icon),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+        VoiceRecorderButton(audioRecorder)
 
         TextField(
             label = stringResource(Res.string.chat_send_message),

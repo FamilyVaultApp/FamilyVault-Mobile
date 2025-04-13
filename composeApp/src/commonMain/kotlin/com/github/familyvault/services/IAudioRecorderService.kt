@@ -1,9 +1,9 @@
 package com.github.familyvault.services
 
 interface IAudioRecorderService {
-    fun start(outputFilePath: String)
+    fun start()
     fun stop()
-    fun retrieveFilePath() : String
+    fun getAudioBytes(): ByteArray
     fun requestRecordingPermission()
     fun checkRecordingPermission(): Boolean
 }

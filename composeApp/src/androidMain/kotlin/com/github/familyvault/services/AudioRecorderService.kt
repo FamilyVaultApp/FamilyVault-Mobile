@@ -1,87 +1,97 @@
-package com.github.familyvault.services
-
 import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.media.AudioFormat
+import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.os.Build
-import android.os.Environment
 import androidx.core.app.ActivityCompat
+import com.github.familyvault.services.IAudioRecorderService
+import kotlinx.coroutines.*
+import java.io.ByteArrayOutputStream
 
 class AudioRecorderService(
     private val context: Context
 ) : IAudioRecorderService {
 
-    private var recorder: MediaRecorder? = null
     private var isRecording = false
+    private var audioRecord: AudioRecord? = null
+    private var recordingJob: Job? = null
+    private val bufferSize = AudioRecord.getMinBufferSize(
+        SAMPLE_RATE,
+        AudioFormat.CHANNEL_IN_MONO,
+        AudioFormat.ENCODING_PCM_16BIT
+    )
+
+    private val outputStream = ByteArrayOutputStream()
 
     companion object {
         private const val RECORDING_PERMISSION_REQUEST_CODE = 1002
+        private const val SAMPLE_RATE = 44100
     }
 
-    @Suppress("DEPRECATION")
-    private fun createRecorder(): MediaRecorder {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            MediaRecorder(context)
-        } else {
-            MediaRecorder()
-        }
-    }
-
-    override fun start(outputFilePath: String) {
+    override fun start() {
         if (isRecording) return
 
-        recorder = createRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setOutputFile(outputFilePath)
-
-            prepare()
-            start()
+        if (!checkRecordingPermission()) {
+            return
         }
 
-        isRecording = true
+        try {
+            audioRecord = AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                SAMPLE_RATE,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize
+            )
+
+            audioRecord?.startRecording()
+            isRecording = true
+
+            recordingJob = CoroutineScope(Dispatchers.IO).launch {
+                val buffer = ByteArray(bufferSize)
+                while (isRecording) {
+                    val read = audioRecord?.read(buffer, 0, buffer.size) ?: 0
+                    if (read > 0) {
+                        outputStream.write(buffer, 0, read)
+                    }
+                }
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
     }
 
     override fun stop() {
         if (!isRecording) return
 
-        try {
-            recorder?.apply {
-                stop()
-                release()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            recorder = null
-            isRecording = false
-        }
+        isRecording = false
+        recordingJob?.cancel()
+
+        audioRecord?.stop()
+        audioRecord?.release()
+        audioRecord = null
     }
 
-    override fun retrieveFilePath() : String {
-        return context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).toString() + "/FamilyVault_Recording" + System.currentTimeMillis().toInt()
+    override fun getAudioBytes(): ByteArray {
+        return outputStream.toByteArray()
     }
 
     override fun requestRecordingPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!checkRecordingPermission()) {
-                ActivityCompat.requestPermissions(
-                    context as Activity,
-                    arrayOf(Manifest.permission.RECORD_AUDIO),
-                    RECORDING_PERMISSION_REQUEST_CODE
-                )
-            }
+        if (!checkRecordingPermission()) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                arrayOf(Manifest.permission.RECORD_AUDIO),
+                RECORDING_PERMISSION_REQUEST_CODE
+            )
         }
     }
 
     override fun checkRecordingPermission(): Boolean {
-        return (ActivityCompat.checkSelfPermission(
+        return ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
-                )
     }
 }
