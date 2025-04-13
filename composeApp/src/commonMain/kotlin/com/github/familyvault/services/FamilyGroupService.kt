@@ -152,6 +152,25 @@ class FamilyGroupService(
         )
     }
 
+    override suspend fun retrieveFamilyGroupMembersWithoutMeList(): List<FamilyMember> {
+        val contextId = familyGroupSessionService.getContextId()
+        val familyMembers = familyVaultBackendClient.listMembersOfFamilyGroup(
+            ListMembersFromFamilyGroupRequest(
+                contextId
+            )
+        ).members.toMutableList()
+
+        val myUserData = retrieveMyFamilyMemberData()
+        return familyMembers.filter { it != myUserData }
+    }
+
+    override suspend fun retrieveMyFamilyMemberData(): FamilyMember {
+        val contextId = familyGroupSessionService.getContextId()
+        val publicKey = familyGroupSessionService.getPublicKey()
+
+        return familyVaultBackendClient.getMemberFromFamilyGroup(GetMemberFromFamilyGroupRequest(contextId, null, publicKey)).member
+    }
+
     override suspend fun removeMemberFromCurrentFamilyGroup(
         userPubKey: String
     ) {
