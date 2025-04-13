@@ -161,20 +161,14 @@ class FamilyGroupService(
         ).members.toMutableList()
 
         val myUserData = retrieveMyFamilyMemberData()
-      return familyMembers.filter { it != myUserData }
+        return familyMembers.filter { it != myUserData }
     }
 
     override suspend fun retrieveMyFamilyMemberData(): FamilyMember {
-        val myPublicKey = familyGroupSessionService.getPublicKey()
         val contextId = familyGroupSessionService.getContextId()
-        val familyMembers = familyVaultBackendClient.listMembersOfFamilyGroup(
-            ListMembersFromFamilyGroupRequest(
-                contextId
-            )
-        ).members
-        familyMembers.find { it.publicKey == myPublicKey }?.let { return it }
+        val publicKey = familyGroupSessionService.getPublicKey()
 
-        throw Exception("User data not found")
+        return familyVaultBackendClient.getMemberFromFamilyGroup(GetMemberFromFamilyGroupRequest(contextId, null, publicKey)).member
     }
 
     override suspend fun removeMemberFromCurrentFamilyGroup(

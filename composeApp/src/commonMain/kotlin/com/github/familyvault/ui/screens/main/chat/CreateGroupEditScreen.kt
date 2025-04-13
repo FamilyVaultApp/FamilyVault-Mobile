@@ -51,6 +51,7 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
         val chatService = koinInject<IChatService>()
         var isLoadingFamilyMembers by remember { mutableStateOf(true) }
         var myPublicKey by remember { mutableStateOf("") }
+        var myUserData: FamilyMember? by remember { mutableStateOf(null) }
         val familyMembers = remember { mutableStateListOf<FamilyMember>() }
         var createGroupChatState by remember { mutableStateOf(FormSubmitState.IDLE) }
         val form by remember { mutableStateOf(GroupChatEditForm()) }
@@ -58,11 +59,15 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
 
         LaunchedEffect(Unit) {
             isLoadingFamilyMembers = true
-            familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
-            val myMemberData = familyGroupService.retrieveMyFamilyMemberData()
-            myPublicKey = myMemberData.publicKey
+            familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersWithoutMeList())
+            myUserData = familyGroupService.retrieveMyFamilyMemberData()
+            if (myUserData == null) {
+                throw Exception("My user data is null")
+            }
+
+            myPublicKey = myUserData!!.publicKey
             form.currentUserPublicKey = myPublicKey
-            form.addMemberToGroupChat(myMemberData)
+            form.addMemberToGroupChat(myUserData!!)
 
             isLoadingFamilyMembers = false
         }
@@ -76,10 +81,11 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
             },
         ) { paddingValues ->
             Column(
-                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.large),
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
                 modifier = Modifier
                     .padding(paddingValues)
                     .padding(horizontal = AdditionalTheme.spacings.screenPadding)
+                    .padding(top = AdditionalTheme.spacings.screenPadding)
                     .fillMaxWidth()
             ) {
                 TextField(
@@ -93,6 +99,12 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
                 if (isLoadingFamilyMembers) {
                     CircularProgressIndicator()
                 } else {
+                    FamilyMemberSwitchItem(
+                        member = myUserData!!,
+                        isSelected = true,
+                        onToggle = {},
+                        isCurrentMember = true
+                    )
                     familyMembers.forEach { member ->
                         FamilyMemberSwitchItem(
                             member = member,
