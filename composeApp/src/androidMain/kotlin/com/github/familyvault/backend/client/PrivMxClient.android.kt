@@ -4,11 +4,13 @@ import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
+import com.github.familyvault.backend.models.StorePublicMeta
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessagePrivateMeta
 import com.github.familyvault.backend.utils.ThreadMessageEncoder
 import com.github.familyvault.backend.models.ThreadPrivateMeta
 import com.github.familyvault.backend.models.ThreadPublicMeta
+import com.github.familyvault.backend.utils.StoreMetaEncoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.utils.EncryptUtils
@@ -16,6 +18,7 @@ import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
+import com.simplito.java.privmx_endpoint.modules.store.StoreApi
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.java.privmx_endpoint_extra.events.EventType
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
@@ -33,6 +36,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
     private var connection: PrivmxEndpoint? = null
     private var threadApi: ThreadApi? = null
+    private var storeApi: StoreApi? = null
 
     override fun generatePairOfPrivateAndPublicKey(
         password: String,
@@ -74,7 +78,8 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         managers: List<PrivMxUser>,
         tag: String,
         type: String,
-        name: String
+        name: String,
+        referenceStoreId: String
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -86,10 +91,33 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val threadId = threadApi?.createThread(
             contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId))
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }
+    }
+
+    override fun createStore(
+        contextId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+        type: String,
+        privateMeta: ByteArray
+    ): String {
+        val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+        val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+
+        val storeId = storeApi?.createStore(
+            contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
+            StoreMetaEncoder.encode(StorePublicMeta(type)),
+            privateMeta
+        )
+
+        return requireNotNull(storeId) { "Received empty storeId" }
     }
 
     override fun retrieveAllThreads(

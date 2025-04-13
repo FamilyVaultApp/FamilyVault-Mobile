@@ -6,6 +6,7 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.ChatMessageType
+import com.github.familyvault.models.enums.ChatStoreType
 import com.github.familyvault.models.enums.ChatThreadType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
@@ -28,14 +29,24 @@ class ChatService(
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
 
+        val storeId = privMxClient.createStore(
+            contextId,
+            users,
+            managers,
+            ChatStoreType.AUDIO.toString(),
+            ByteArray(0)
+        )
+
         val threadId = privMxClient.createThread(
             contextId,
             users,
             managers,
             AppConfig.CHAT_THREAD_TAG,
             ChatThreadType.GROUP.toString(),
-            name
+            name,
+            storeId
         )
+
         return ChatThread(
             threadId,
             name,
@@ -97,6 +108,14 @@ class ChatService(
             )
         }
 
+        val storeId = privMxClient.createStore(
+            contextId,
+            users = threadUsers,
+            managers = threadUsers,
+            ChatStoreType.AUDIO.toString(),
+            ByteArray(0)
+        )
+
         privMxClient.createThread(
             contextId,
             users = threadUsers,
@@ -104,6 +123,7 @@ class ChatService(
             tag = AppConfig.CHAT_THREAD_TAG,
             type = ChatThreadType.INDIVIDUAL.toString(),
             name = threadUsers.joinToString { it.userId },
+            referenceStoreId = storeId
         )
     }
 
