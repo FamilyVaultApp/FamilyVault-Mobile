@@ -11,7 +11,7 @@ data class GroupChatEditFormData(
     var familyMembers: FormDataListEntry<FamilyMember> = FormDataListEntry(),
 )
 
-class GroupChatEditForm: BasicForm() {
+class GroupChatEditForm : BasicForm() {
 
     var formData: GroupChatEditFormData = GroupChatEditFormData()
         private set
@@ -35,7 +35,7 @@ class GroupChatEditForm: BasicForm() {
         afterEntryUpdate(formData.groupName)
     }
 
-    fun addToGroupChatMembers(member: FamilyMember) {
+    fun addMemberToGroupChat(member: FamilyMember) {
         formData.familyMembers.list.add(member)
         afterEntryUpdate(formData.familyMembers)
     }

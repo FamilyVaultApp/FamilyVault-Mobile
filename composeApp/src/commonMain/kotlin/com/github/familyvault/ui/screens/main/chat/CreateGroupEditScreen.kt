@@ -76,7 +76,7 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
             val myMemberData = familyGroupService.retrieveMyFamilyMemberData()
             myPublicKey = myMemberData.publicKey
             form.currentUserPublicKey = myPublicKey
-            form.addToGroupChatMembers(myMemberData)
+            form.addMemberToGroupChat(myMemberData)
 
             isLoadingFamilyMembers = false
         }
@@ -99,7 +99,7 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
                 TextField(
                     enabled = !isLoadingFamilyMembers && createGroupChatState != FormSubmitState.PENDING,
                     value = form.groupName,
-                    onValueChange = { form.setGroupName(it)},
+                    onValueChange = { form.setGroupName(it) },
                     label = stringResource(Res.string.chat_set_group_name),
                     supportingText = { ValidationErrorMessage(form.groupNameValidationError) }
                 )
@@ -115,7 +115,7 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
                                 if (form.familyMembers.contains(member)) {
                                     form.removeMemberFromGroupChat(member)
                                 } else {
-                                    form.addToGroupChatMembers(member)
+                                    form.addMemberToGroupChat(member)
                                 }
                             },
                             isCurrentMember = member.publicKey == myPublicKey
@@ -125,7 +125,8 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
                 ValidationErrorMessage(form.groupMembersValidationError)
             }
             Column(
-                modifier = Modifier.fillMaxHeight().padding(paddingValues).padding(AdditionalTheme.spacings.screenPadding),
+                modifier = Modifier.fillMaxHeight().padding(paddingValues)
+                    .padding(AdditionalTheme.spacings.screenPadding),
                 verticalArrangement = Arrangement.Bottom,
             ) {
                 CreateGroupChatButton(form.isFormValid() && !isLoadingFamilyMembers, {
