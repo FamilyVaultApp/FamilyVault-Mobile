@@ -16,6 +16,7 @@ import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
+import com.simplito.java.privmx_endpoint.model.Thread
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi
@@ -25,6 +26,7 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
+import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
 import kotlin.random.Random
 
 class PrivMxClient : IPrivMxClient, AutoCloseable {
@@ -120,6 +122,16 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return requireNotNull(storeId) { "Received empty storeId" }
     }
 
+    override fun retrieveThread(
+        threadId: String,
+    ): ThreadItem {
+        val thread = requireNotNull(threadApi).getThread(threadId)
+
+        return thread.let {
+            PrivMxThreadToThreadItemMapper.map(it)
+        }
+    }
+
     override fun retrieveAllThreads(
         contextId: String, startIndex: Int, pageSize: Int
     ): List<ThreadItem> {
@@ -160,6 +172,23 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         threadApi.sendMessage(
             threadId, publicMeta, ThreadMessageEncoder.encode(privateMeta), content
         )
+    }
+
+    override fun sendFileToStore(
+        content: ByteArray, storeId: String
+    ): String {
+        val fileId = StoreFileStreamWriter.createFile(
+            storeApi,
+            storeId,
+            content,
+            ByteArray(0),
+            content.size.toLong(),
+        ).run {
+            write(content)
+            close()
+        }
+
+        return fileId
     }
 
     override fun retrieveMessagesFromThread(

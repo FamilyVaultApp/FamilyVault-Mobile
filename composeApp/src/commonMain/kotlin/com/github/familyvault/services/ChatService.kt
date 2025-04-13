@@ -92,7 +92,11 @@ class ChatService(
         chatThreadId: String,
         audioData: ByteArray
     ) {
-        privMxClient.sendMessage(audioData, chatThreadId, ChatMessageType.AUDIO.toString())
+        val storeId = privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId
+
+        val fileId = privMxClient.sendFileToStore(audioData, storeId)
+
+        privMxClient.sendMessage(fileId, chatThreadId, ChatMessageType.AUDIO.toString())
     }
 
     override suspend fun createIndividualChat(

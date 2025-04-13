@@ -32,9 +32,11 @@ interface IPrivMxClient {
         privateMeta: ByteArray
     ): String
 
+    fun retrieveThread(threadId: String) : ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun sendMessage(content: String, threadId: String, type: String, referenceMessageId: String = "")
     fun sendMessage(content: ByteArray, threadId: String, type: String, referenceMessageId: String = "")
+    fun sendFileToStore(content: ByteArray, storeId: String) : String
     fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int
     ): List<MessageItem>
