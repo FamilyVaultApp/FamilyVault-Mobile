@@ -10,7 +10,7 @@ data class FamilyMemberNewMemberFormData(
 )
 
 class FamilyGroupNewMemberForm : BasicForm() {
-    var formData: FamilyMemberNewMemberFormData = FamilyMemberNewMemberFormData()
+    var formData = FamilyMemberNewMemberFormData()
         private set
 
     val firstname: String
