@@ -72,6 +72,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             throw FamilyVaultPrivMxException(e.code, e.message ?: "")
         }
         threadApi = connection!!.threadApi
+        storeApi = connection!!.storeApi
     }
 
     override fun createThread(
