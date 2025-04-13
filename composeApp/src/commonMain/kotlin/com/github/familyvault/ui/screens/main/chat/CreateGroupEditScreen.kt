@@ -47,19 +47,8 @@ import org.koin.compose.koinInject
 
 class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen {
 
-    enum class GroupChatAction {
-        Create,
-        Edit
-    }
-
     @Composable
     override fun Content() {
-        var groupChatAction: GroupChatAction
-        if (chatThread == null) {
-            groupChatAction = GroupChatAction.Create
-        } else {
-            groupChatAction = GroupChatAction.Edit
-        }
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
         val chatService = koinInject<IChatService>()
