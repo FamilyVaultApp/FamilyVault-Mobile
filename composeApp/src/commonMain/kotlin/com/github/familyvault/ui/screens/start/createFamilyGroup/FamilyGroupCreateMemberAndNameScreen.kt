@@ -14,14 +14,12 @@ import com.github.familyvault.forms.FamilyGroupNameForm
 import com.github.familyvault.forms.FamilyGroupNewMemberForm
 import com.github.familyvault.ui.components.HeaderWithIcon
 import com.github.familyvault.ui.components.InitialScreenButton
-import com.github.familyvault.ui.components.ValidationErrorMessage
+import com.github.familyvault.ui.components.formsContent.FamilyGroupNameFormContent
 import com.github.familyvault.ui.components.formsContent.NewFamilyMemberFormContent
-import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.create_new_family_group_title
 import familyvault.composeapp.generated.resources.family_group_create_screen_title
-import familyvault.composeapp.generated.resources.text_field_group_name_label
 import org.jetbrains.compose.resources.stringResource
 
 class FamilyGroupCreateMemberAndNameScreen : Screen {
@@ -72,13 +70,7 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
     ) {
         Column {
             NewFamilyMemberFormContent(newFamilyMemberForm, isFormEnabled)
-            TextField(
-                value = familyGroupNameForm.familyGroupName,
-                label = stringResource(Res.string.text_field_group_name_label),
-                onValueChange = { familyGroupNameForm.setFamilyGroupName(it) },
-                enabled = isFormEnabled,
-                supportingText = { ValidationErrorMessage(familyGroupNameForm.familyGroupNameValidationError) }
-            )
+            FamilyGroupNameFormContent(familyGroupNameForm, isFormEnabled)
         }
     }
 }
