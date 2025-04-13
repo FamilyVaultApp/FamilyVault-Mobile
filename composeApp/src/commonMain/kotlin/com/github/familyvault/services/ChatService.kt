@@ -5,11 +5,13 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.models.enums.ChatMessageType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
 import com.github.familyvault.utils.mappers.MessageItemToStoredChatMessageMapper
 import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
+import io.ktor.util.encodeBase64
 
 class ChatService(
     private val storedChatMessageRepository: IStoredChatMessageRepository,
@@ -42,10 +44,17 @@ class ChatService(
         }
     }
 
-    override fun sendMessage(
+    override fun sendTextMessage(
         chatThreadId: String, messageContent: String, respondToMessageId: String
     ) {
-        privMxClient.sendMessage(messageContent, chatThreadId, respondToMessageId)
+        privMxClient.sendMessage(messageContent, chatThreadId, ChatMessageType.TEXT.toString(), respondToMessageId)
+    }
+
+    override fun sendVoiceMessage(
+        chatThreadId: String,
+        audioData: ByteArray
+    ) {
+        privMxClient.sendMessage(audioData, chatThreadId, ChatMessageType.AUDIO.toString())
     }
 
     override suspend fun retrieveMessagesFirstPage(chatThreadId: String): List<ChatMessage> {

@@ -89,7 +89,8 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                     modifier = Modifier.fillMaxWidth().padding(AdditionalTheme.spacings.small)
                 ) {
                     ChatInputField(
-                        onTextMessageSend = { handleTextMessageSend(it) }
+                        onTextMessageSend = { handleTextMessageSend(it) },
+                        onVoiceMessageSend = { handleVoiceMessageSend(it) }
                     )
                 }
             }
@@ -100,7 +101,14 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         if (message.isEmpty()) {
             return
         }
-        chatService.sendMessage(chatThread.id, message, respondToMessageId = "")
+        chatService.sendTextMessage(chatThread.id, message, respondToMessageId = "")
+    }
+
+    private fun handleVoiceMessageSend(audio: ByteArray) {
+        if (audio.isEmpty()) {
+            return
+        }
+        chatService.sendVoiceMessage(chatThread.id, audio)
     }
 
     private suspend fun scrollToLastMessage(

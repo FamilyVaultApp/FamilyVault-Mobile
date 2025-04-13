@@ -5,7 +5,11 @@ import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
+import com.github.familyvault.backend.models.ThreadMessagePrivateMeta
+import com.github.familyvault.backend.utils.ThreadMessageDecoder
+import com.github.familyvault.backend.utils.ThreadMessageEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.enums.ChatMessageType
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
@@ -107,14 +111,27 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return threadsList
     }
 
-    override fun sendMessage(content: String, threadId: String, referenceMessageId: String) {
-        val threadApi = requireNotNull(threadApi)
+    override fun sendMessage(
+        content: String,
+        threadId: String,
+        type: String,
+        referenceMessageId: String
+    ) {
+        sendMessage(content.encodeToByteArray(), threadId, type, referenceMessageId)
+    }
 
+    override fun sendMessage(
+        content: ByteArray,
+        threadId: String,
+        type: String,
+        referenceMessageId: String
+    ) {
+        val threadApi = requireNotNull(threadApi)
         val publicMeta = ByteArray(0)
-        val privateMeta = ByteArray(0)
+        val privateMeta = ThreadMessagePrivateMeta(type)
 
         threadApi.sendMessage(
-            threadId, publicMeta, privateMeta, content.encodeToByteArray()
+            threadId, publicMeta, ThreadMessageEncoder.encode(privateMeta), content
         )
     }
 
