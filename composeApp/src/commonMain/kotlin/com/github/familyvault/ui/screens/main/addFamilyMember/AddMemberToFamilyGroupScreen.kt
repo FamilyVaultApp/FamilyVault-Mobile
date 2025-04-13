@@ -47,7 +47,7 @@ class AddMemberToFamilyGroupScreen : Screen {
             nfcService.setReadMode()
             nfcService.tags.collect { payload ->
                 if (payload.newMemberData.surname.isNotEmpty()) {
-                    navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
+                    navigator.replace(AddMemberToFamilyGroupBackendOperationsScreen(payload))
                 } else {
                     println("Error reading data from tag")
                 }

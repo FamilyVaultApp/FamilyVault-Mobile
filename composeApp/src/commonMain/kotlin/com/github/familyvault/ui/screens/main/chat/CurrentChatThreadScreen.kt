@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -19,7 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.services.IChatListenerService
+import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
@@ -35,12 +36,12 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
     @Composable
     override fun Content() {
         chatService = koinInject<IChatService>()
+        val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val chatState = koinInject<ICurrentChatState>()
-        val chatListenerService = koinInject<IChatListenerService>()
+
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
-        val isAtTop by
-        remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
+        val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
 
         LaunchedEffect(chatThread) {
             chatState.update(chatThread.id)
@@ -48,7 +49,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
             chatService.populateDatabaseWithLastMessages(chatThread.id)
             chatState.populateStateFromService()
 
-            chatListenerService.startListeningForNewMessage(chatThread.id) {
+            chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                 coroutineScope.launch {
                     scrollToLastMessage(listState, chatState)
                 }
@@ -62,6 +63,12 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 val currentLookingMessage = chatState.messages[listState.firstVisibleItemIndex]
                 chatState.getNextPageFromService()
                 listState.scrollToItem(chatState.messages.indexOf(currentLookingMessage))
+            }
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                chatMessageListenerService.unregisterAllListeners()
             }
         }
 
@@ -87,17 +94,17 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 Box(
                     modifier = Modifier.fillMaxWidth().padding(AdditionalTheme.spacings.small)
                 ) {
-                    ChatInputField(onTextMessageSend = { handleTextMessageSend(it) })
+                    ChatInputField(onTextMessageSend = { handleTextMessageSend(chatThread.id, it) })
                 }
             }
         }
     }
 
-    private fun handleTextMessageSend(message: String) {
+    private fun handleTextMessageSend(chatThreadId: String, message: String) {
         if (message.isEmpty()) {
             return
         }
-        chatService.sendMessage(chatThread.id, message, respondToMessageId = "")
+        chatService.sendMessage(chatThreadId, message, respondToMessageId = "")
     }
 
     private suspend fun scrollToLastMessage(

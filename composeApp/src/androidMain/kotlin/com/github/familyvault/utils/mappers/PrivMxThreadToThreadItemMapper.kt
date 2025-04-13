@@ -1,6 +1,7 @@
 package com.github.familyvault.utils.mappers
 
 import com.github.familyvault.backend.models.ThreadItem
+import com.github.familyvault.backend.utils.ThreadMetaDecoder
 import com.simplito.java.privmx_endpoint.model.Thread
 
 object PrivMxThreadToThreadItemMapper {
@@ -8,7 +9,7 @@ object PrivMxThreadToThreadItemMapper {
         thread.threadId,
         thread.managers,
         thread.users,
-        thread.publicMeta.decodeToString(),
-        thread.privateMeta.decodeToString()
+        ThreadMetaDecoder.decodePublicMeta(thread.publicMeta),
+        ThreadMetaDecoder.decodePrivateMeta(thread.privateMeta)
     )
 }

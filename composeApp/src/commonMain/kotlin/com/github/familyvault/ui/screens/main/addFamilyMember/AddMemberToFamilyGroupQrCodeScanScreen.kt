@@ -39,7 +39,7 @@ class AddMemberToFamilyGroupQrCodeScanScreen : Screen {
                 coroutineScope.launch {
                     try {
                         val payload = qrCodeScanner.scanPayload()
-                        navigator.replaceAll(AddMemberToFamilyGroupBackendOperationsScreen(payload))
+                        navigator.replace(AddMemberToFamilyGroupBackendOperationsScreen(payload))
                     } catch (e: QrCodeCancellationException) {
                         navigator.pop()
                     } catch (e: QrCodeBadScanException) {
