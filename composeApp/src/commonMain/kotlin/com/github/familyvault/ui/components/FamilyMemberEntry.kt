@@ -18,6 +18,7 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.screens.main.modifyFamilyMember.ModifyFamilyMemberScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.user_modification_description
 import org.jetbrains.compose.resources.stringResource
@@ -39,7 +40,7 @@ fun FamilyMemberEntry(
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
         ) {
             UserAvatar(firstName = familyMember.firstname)
-            Paragraph(familyMember.fullname)
+            Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
         }
 
 
