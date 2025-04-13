@@ -158,10 +158,8 @@ class FamilyGroupService(
             )
         ).members.toMutableList()
 
-        val myData = retrieveMyFamilyMemberData()
-        familyMembers.find { it == myData }?.let { familyMembers.remove(it) }
-
-        return familyMembers
+        val myUserData = retrieveMyFamilyMemberData()
+      return familyMembers.filter { it != myUserData }
     }
 
     override suspend fun retrieveMyFamilyMemberData(): FamilyMember {

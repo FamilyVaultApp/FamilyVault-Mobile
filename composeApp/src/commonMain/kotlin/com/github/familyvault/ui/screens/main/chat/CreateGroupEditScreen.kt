@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -21,8 +22,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.forms.GroupChatCreationForm
+import com.github.familyvault.forms.GroupChatEditForm
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
@@ -43,9 +45,21 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class CreateGroupChatScreen : Screen {
+class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen {
+
+    enum class GroupChatAction {
+        Create,
+        Edit
+    }
+
     @Composable
     override fun Content() {
+        var groupChatAction: GroupChatAction
+        if (chatThread == null) {
+            groupChatAction = GroupChatAction.Create
+        } else {
+            groupChatAction = GroupChatAction.Edit
+        }
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
         val chatService = koinInject<IChatService>()
@@ -53,11 +67,12 @@ class CreateGroupChatScreen : Screen {
         var myPublicKey by remember { mutableStateOf("") }
         val familyMembers = remember { mutableStateListOf<FamilyMember>() }
         var createGroupChatState by remember { mutableStateOf(FormSubmitState.IDLE) }
-        val form by remember { mutableStateOf(GroupChatCreationForm()) }
+        val form by remember { mutableStateOf(GroupChatEditForm()) }
         val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
-            familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersWithoutMeList())
+            isLoadingFamilyMembers = true
+            familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
             val myMemberData = familyGroupService.retrieveMyFamilyMemberData()
             myPublicKey = myMemberData.publicKey
             form.currentUserPublicKey = myPublicKey
@@ -97,19 +112,22 @@ class CreateGroupChatScreen : Screen {
                             member = member,
                             isSelected = form.familyMembers.contains(member),
                             onToggle = {
-                                if (member.publicKey != myPublicKey) {
-                                    if (form.familyMembers.contains(member)) {
-                                        form.removeFromGroupChatMembers(member)
-                                    } else {
-                                        form.addToGroupChatMembers(member)
-                                    }
-                                    println(form.familyMembers)
+                                if (form.familyMembers.contains(member)) {
+                                    form.removeMemberFromGroupChat(member)
+                                } else {
+                                    form.addToGroupChatMembers(member)
                                 }
-                            }
+                            },
+                            isCurrentMember = member.publicKey == myPublicKey
                         )
                     }
                 }
                 ValidationErrorMessage(form.groupMembersValidationError)
+            }
+            Column(
+                modifier = Modifier.fillMaxHeight().padding(paddingValues).padding(AdditionalTheme.spacings.screenPadding),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
                 CreateGroupChatButton(form.isFormValid() && !isLoadingFamilyMembers, {
                     createGroupChatState = FormSubmitState.PENDING
                     coroutineScope.launch {
@@ -130,19 +148,22 @@ class CreateGroupChatScreen : Screen {
     private fun FamilyMemberSwitchItem(
         member: FamilyMember,
         isSelected: Boolean,
-        onToggle: () -> Unit
+        onToggle: () -> Unit,
+        isCurrentMember: Boolean
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
+
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             UserAvatar(firstName = member.firstname)
             Paragraph(text = member.fullname, modifier = Modifier.weight(1f))
             Switch(
-                checked = isSelected,
-                onCheckedChange = { onToggle() }
+                checked = isSelected || isCurrentMember,
+                onCheckedChange = { onToggle() },
+                enabled = !isCurrentMember
             )
         }
     }

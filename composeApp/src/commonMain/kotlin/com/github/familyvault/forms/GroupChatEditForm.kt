@@ -11,7 +11,7 @@ data class GroupChatCreationFormData(
     var familyMembers: FormDataListEntry<FamilyMember> = FormDataListEntry(),
 )
 
-class GroupChatCreationForm: BasicForm() {
+class GroupChatEditForm: BasicForm() {
 
     var formData: GroupChatCreationFormData = GroupChatCreationFormData()
         private set
@@ -40,7 +40,7 @@ class GroupChatCreationForm: BasicForm() {
         afterEntryUpdate(formData.familyMembers)
     }
 
-    fun removeFromGroupChatMembers(member: FamilyMember) {
+    fun removeMemberFromGroupChat(member: FamilyMember) {
         formData.familyMembers.list.remove(member)
         afterEntryUpdate(formData.familyMembers)
     }
