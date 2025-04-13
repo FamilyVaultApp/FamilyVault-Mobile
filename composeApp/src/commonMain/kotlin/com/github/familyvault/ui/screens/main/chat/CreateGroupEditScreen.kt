@@ -2,9 +2,8 @@ package com.github.familyvault.ui.screens.main.chat
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -18,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -28,19 +26,18 @@ import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
-import com.github.familyvault.ui.components.UserAvatar
+import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.typography.Headline3
-import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_group_button_content
+import familyvault.composeapp.generated.resources.chat_create_group_members
 import familyvault.composeapp.generated.resources.chat_create_new
 import familyvault.composeapp.generated.resources.chat_set_group_name
-import familyvault.composeapp.generated.resources.chat_create_group_members
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -141,15 +138,7 @@ class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen
         onToggle: () -> Unit,
         isCurrentMember: Boolean
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            UserAvatar(firstName = member.firstname)
-            Paragraph(text = member.fullname, modifier = Modifier.weight(1f))
+        FamilyMemberEntry(member) {
             Switch(
                 checked = isSelected || isCurrentMember,
                 onCheckedChange = { onToggle() },
