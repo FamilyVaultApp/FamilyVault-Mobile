@@ -3,6 +3,7 @@
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">Ikona aplikacji Family Vault</string>
     <string name="loading">Ładowanie...</string>
+    <string name="you">Ty</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -42,6 +43,7 @@
     <!-- Joining family group-->
     <string name="join_family_group_title">Dołącz do grupy rodzinnej</string>
     <string name="join_family_group_content">Zetknij swój telefon z telefonem rodzica, aby dołączyć.</string>
+    <string name="preparing_to_join_family_group_label">Przygotowanie do dołączenia do grupy</string>
 
     <!-- Form validation errors-->
     <string name="form_empty_error">To pole nie może być puste</string>
@@ -78,6 +80,7 @@
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera</string>
     <string name="qr_code_generation_screen_content">Niech opiekun Twojej grupy zeskanuje ten kod, aby Cię do niej dodać.</string>
+    <string name="invalid_qr_code_label">Nieprawidłowy kod QR</string>
 
     <!-- Chat -->
     <string name="chat_create_new">Stwórz nowy chat</string>
@@ -86,13 +89,16 @@
     <string name="chat_create_group_members">Członkowie czatu grupowego</string>
     <string name="chat_create_group_button_content">Utwórz chat</string>
     <string name="chat_send_message">Wyślij wiadomość</string>
+    <string name="chat_type_individual">Indywidualny</string>
+    <string name="chat_type_group">Grupowy</string>
     <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
+    <string name="chat_creating">Tworzenie chatu...</string>
 
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
-    
+
     <!-- Connection error screen -->
     <string name="connection_error_title">Błąd połączenia</string>
     <string name="connection_error_content">Nie można połączyć się z serwerem. Sprawdź połączenie internetowe i spróbuj ponownie.</string>
@@ -101,4 +107,13 @@
     <string name="user_not_found_title">Nie znaleziono użytkownika</string>
     <string name="user_not_found_content">Nie udało się znaleźć Ciebie w tej Grupie Rodzinnej. Możliwe, że Twoje konto zostało z niej usunięte. Możesz usunąć dane tej grupy rodzinnej z urządzenia, korzystając z poniższego przycisku.</string>
     <string name="user_not_found_button_content">Usuń dane grupy rodzinnej</string>
+
+    <!-- User modification -->
+    <string name="user_modification_description">Modyfikuj członka grupy rodzinnej</string>
+    <string name="user_permission_group_guardian">Opiekun</string>
+    <string name="user_permission_group_member">Członek</string>
+    <string name="user_permission_group_guest">Gość</string>
+    <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
+    <string name="user_modification_remove_user_button_content">Usuń tego użytkownika</string>
+    <string name="user_modification_save_button">Zapisz zmiany</string>
 </resources>

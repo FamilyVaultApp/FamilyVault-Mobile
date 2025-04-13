@@ -9,6 +9,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.LoaderWithText
@@ -24,6 +25,7 @@ class FamilyGroupJoinWaitingScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyMemberAdditionService = koinInject<IFamilyMemberAdditionService>()
         val joinTokenService = koinInject<IJoinStatusService>()
         val joinFamilyGroupPayloadState = koinInject<IJoinFamilyGroupPayloadState>()
         val payload = remember { joinFamilyGroupPayloadState.getPayload() }
@@ -43,6 +45,8 @@ class FamilyGroupJoinWaitingScreen : Screen {
                 keyPair,
                 joinStatusInfo.contextId
             )
+            familyMemberAdditionService.afterJoinedToFamilyMembersOperations()
+
             navigator.replaceAll(DebugScreenContextId())
         }
 
