@@ -93,7 +93,6 @@ class ChatService(
         audioData: ByteArray
     ) {
         val storeId = privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId
-        println(storeId)
         val fileId = privMxClient.sendFileToStore(audioData, storeId)
 
         privMxClient.sendMessage(fileId, chatThreadId, ChatMessageType.AUDIO.toString())

@@ -180,7 +180,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val fileId = StoreFileStreamWriter.createFile(
             storeApi,
             storeId,
-            content,
+            ByteArray(0),
             ByteArray(0),
             content.size.toLong(),
         ).run {
