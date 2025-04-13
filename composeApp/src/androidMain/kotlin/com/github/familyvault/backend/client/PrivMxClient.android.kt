@@ -89,14 +89,13 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
         }
+            val threadId = threadApi?.createThread(
+                contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
+                ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
+                ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId))
+            )
 
-        val threadId = threadApi?.createThread(
-            contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
-            ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId))
-        )
-
-        return requireNotNull(threadId) { "Received empty threadsPagingList" }
+            return requireNotNull(threadId) { "Received empty threadsPagingList" }
     }
 
     override fun createStore(
