@@ -154,7 +154,7 @@ class FamilyGroupService(
 
     override suspend fun retrieveFamilyGroupMembersWithoutMeList(): List<FamilyMember> {
         val contextId = familyGroupSessionService.getContextId()
-        val familyMembers = familyVaultBackendProxy.listMembersOfFamilyGroup(
+        val familyMembers = familyVaultBackendClient.listMembersOfFamilyGroup(
             ListMembersFromFamilyGroupRequest(
                 contextId
             )
@@ -167,7 +167,7 @@ class FamilyGroupService(
     override suspend fun retrieveMyFamilyMemberData(): FamilyMember {
         val myPublicKey = familyGroupSessionService.getPublicKey()
         val contextId = familyGroupSessionService.getContextId()
-        val familyMembers = familyVaultBackendProxy.listMembersOfFamilyGroup(
+        val familyMembers = familyVaultBackendClient.listMembersOfFamilyGroup(
             ListMembersFromFamilyGroupRequest(
                 contextId
             )
