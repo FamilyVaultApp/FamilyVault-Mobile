@@ -15,7 +15,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.github.familyvault.ui.components.overrides.NavigationBar
-import com.github.familyvault.ui.screens.main.chat.CreateGroupEditScreen
+import com.github.familyvault.ui.screens.main.chat.GroupChatEditScreen
 import com.github.familyvault.ui.theme.AppTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_new
@@ -56,7 +56,7 @@ class MainScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         FloatingActionButton(onClick = {}) {
             Icon(Icons.Filled.GroupAdd, stringResource(Res.string.chat_create_new), modifier = Modifier.clickable {
-                navigator.parent?.push(CreateGroupEditScreen())
+                navigator.parent?.push(GroupChatEditScreen())
             })
         }
     }

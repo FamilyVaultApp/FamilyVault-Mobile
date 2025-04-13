@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class CreateGroupEditScreen(private val chatThread: ChatThread? = null) : Screen {
+class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
 
     @Composable
     override fun Content() {
