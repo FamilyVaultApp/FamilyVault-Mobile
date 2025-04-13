@@ -4,22 +4,26 @@ import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.exceptions.FamilyVaultBackendErrorException
 import com.github.familyvault.backend.exceptions.FamilyVaultBackendNoConnectionException
 import com.github.familyvault.backend.requests.AddMemberToFamilyGroupRequest
+import com.github.familyvault.backend.requests.ChangeFamilyMemberPermissionGroupRequest
 import com.github.familyvault.backend.requests.CreateFamilyGroupRequest
 import com.github.familyvault.backend.requests.DeleteJoinStatusRequest
 import com.github.familyvault.backend.requests.FamilyVaultBackendRequest
 import com.github.familyvault.backend.requests.GetFamilyGroupNameRequest
 import com.github.familyvault.backend.requests.GetJoinStatusRequest
+import com.github.familyvault.backend.requests.GetMemberFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.ListMembersFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupRequest
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
 import com.github.familyvault.backend.requests.UpdateJoinStatusRequest
 import com.github.familyvault.backend.responses.AddMemberToFamilyGroupResponse
+import com.github.familyvault.backend.responses.ChangeFamilyMemberPermissionGroupResponse
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
 import com.github.familyvault.backend.responses.DeleteJoinStatusResponse
 import com.github.familyvault.backend.responses.FamilyVaultBackendResponse
 import com.github.familyvault.backend.responses.GenerateJoinStatusResponse
 import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.backend.responses.GetJoinStatusResponse
+import com.github.familyvault.backend.responses.GetMemberFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
 import com.github.familyvault.backend.responses.RemoveMemberFromFamilyGroupResponse
@@ -61,9 +65,19 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         return postRequest("/FamilyGroup/AddMemberToFamilyGroup", req)
     }
 
+    override suspend fun changeFamilyMemberPermissionGroup(req: ChangeFamilyMemberPermissionGroupRequest): ChangeFamilyMemberPermissionGroupResponse {
+        return postRequest("/FamilyGroup/ChangeMemberPermissionGroup", req)
+    }
+
     override suspend fun listMembersOfFamilyGroup(req: ListMembersFromFamilyGroupRequest): ListMembersFromFamilyGroupResponse {
         return postRequest(
             "/FamilyGroup/ListMembersFromFamilyGroup", req
+        )
+    }
+
+    override suspend fun getMemberFromFamilyGroup(req: GetMemberFromFamilyGroupRequest): GetMemberFromFamilyGroupResponse {
+        return postRequest(
+            "/FamilyGroup/GetMemberFromFamilyGroup", req
         )
     }
 

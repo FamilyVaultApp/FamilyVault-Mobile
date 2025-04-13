@@ -16,14 +16,18 @@ fun NewFamilyMemberFormContent(form: FamilyGroupNewMemberForm, enabled: Boolean 
         TextField(
             value = form.firstname,
             label = stringResource(Res.string.text_field_name_label),
-            onValueChange = { form.setFirstname(it) },
+            onValueChange = {
+                form.setFirstname(it)
+            },
             enabled = enabled,
             supportingText = { ValidationErrorMessage(form.firstnameValidationError) }
         )
         TextField(
             value = form.surname,
             label = stringResource(Res.string.text_field_surname_label),
-            onValueChange = { form.setSurname(it) },
+            onValueChange = {
+                form.setSurname(it)
+            },
             enabled = enabled,
             supportingText = { ValidationErrorMessage(form.surnameValidationError) }
         )
