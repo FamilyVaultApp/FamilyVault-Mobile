@@ -20,7 +20,12 @@ interface IPrivMxClient {
         type: String,
         name: String
     ): String
-
+    fun updateThread(
+        threadId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+        newName: String? = ""
+    )
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun sendMessage(content: String, threadId: String, referenceMessageId: String = "")
     fun retrieveMessagesFromThread(

@@ -32,6 +32,7 @@ import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.typography.Headline3
+import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_group_button_content
@@ -62,6 +63,7 @@ class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
         val form by remember { mutableStateOf(GroupChatEditForm()) }
         val groupChatAction = if (chatThread == null) GroupChatAction.Create else GroupChatAction.Edit
         val coroutineScope = rememberCoroutineScope()
+
         LaunchedEffect(Unit) {
             isLoadingFamilyMembers = true
             familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersWithoutMeList())
@@ -73,6 +75,12 @@ class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
             myPublicKey = myUserData!!.publicKey
             form.currentUserPublicKey = myPublicKey
             form.addMemberToGroupChat(myUserData!!)
+
+            if (groupChatAction == GroupChatAction.Edit) {
+                form.setGroupName(chatThread!!.name)
+                val filteredMembers = familyMembers.filter { it.fullname in chatThread.participantsIds }
+                form.addAllMembersFromListToGroupChat(filteredMembers)
+            }
 
             isLoadingFamilyMembers = false
         }
@@ -136,7 +144,13 @@ class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
                     createGroupChatState = FormSubmitState.PENDING
                     coroutineScope.launch {
                         try {
-                            chatService.createGroupChat(form.groupName, form.familyMembers)
+                            if (groupChatAction == GroupChatAction.Create) {
+                                chatService.createGroupChat(form.groupName, form.familyMembers)
+                            } else {
+                                chatService.updateGroupChat(chatThread!!, form.familyMembers, form.groupName)
+                                createGroupChatState = FormSubmitState.IDLE
+                                navigator.replaceAll(MainScreen())
+                            }
                             createGroupChatState = FormSubmitState.IDLE
                             navigator.pop()
                         } catch (e: Exception) {

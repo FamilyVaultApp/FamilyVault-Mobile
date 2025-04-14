@@ -44,6 +44,13 @@ class ChatService(
         )
     }
 
+    override suspend fun updateGroupChat(thread: ChatThread, members: List<FamilyMember>, newName: String?) {
+        val splitFamilyGroupMembersList = FamilyMembersSplitter.split(members)
+        val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
+        val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
+        privMxClient.updateThread(thread.id, users, managers, newName)
+    }
+
     override fun retrieveAllChatThreads(): List<ChatThread> {
         val contextId = familyGroupSessionService.getContextId()
         val threadItems = privMxClient.retrieveAllThreads(contextId, 0, 100)

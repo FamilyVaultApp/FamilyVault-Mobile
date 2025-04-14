@@ -90,6 +90,31 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return requireNotNull(threadId) { "Received empty threadsPagingList" }
     }
 
+    override fun updateThread(
+        threadId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+        newName: String?
+    ) {
+        val thread = threadApi?.getThread(threadId) ?: throw Exception("Thread is null)")
+        val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+        val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+
+        threadApi?.updateThread(
+            thread.threadId,
+            userList,
+            managerList,
+            thread.publicMeta,
+            if (newName != null) ThreadMetaEncoder.encode(ThreadPrivateMeta(newName)) else thread.privateMeta,
+            thread.version,
+            true
+        )
+    }
+
     override fun retrieveAllThreads(
         contextId: String, startIndex: Int, pageSize: Int
     ): List<ThreadItem> {
