@@ -19,6 +19,7 @@ import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.you
 import org.jetbrains.compose.resources.stringResource
@@ -51,9 +52,13 @@ fun ChatThreadEntry(
     ) {
         UserAvatar(chatThread.name)
         Column {
-            Headline3(chatThread.name)
+            Headline3(
+                TextShortener.shortenText(chatThread.name, 30)
+            )
             if (lastMessage != null) {
-                ParagraphMuted("${senderName}: ${lastMessage.messageShortPreview}")
+                ParagraphMuted(
+                    TextShortener.shortenText("${senderName}: ${lastMessage.message}", 30)
+                )
             }
         }
     }

@@ -1,9 +1,7 @@
 package com.github.familyvault.ui.screens.main.chat
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -26,7 +24,6 @@ import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatMessageEntry
 import com.github.familyvault.ui.components.overrides.TopAppBar
-import com.github.familyvault.ui.theme.AdditionalTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -84,18 +81,14 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                     modifier = Modifier.weight(1f),
                     state = listState,
                 ) {
-                    items(items = chatState.messages) { message ->
+                    items(items = chatState.messages, key = { it.id }) { message ->
                         ChatMessageEntry(
                             message
                         )
                     }
                 }
 
-                Box(
-                    modifier = Modifier.fillMaxWidth().padding(AdditionalTheme.spacings.small)
-                ) {
-                    ChatInputField(onTextMessageSend = { handleTextMessageSend(chatThread.id, it) })
-                }
+                ChatInputField(onTextMessageSend = { handleTextMessageSend(chatThread.id, it) })
             }
         }
     }

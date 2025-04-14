@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.TextShortener
 
 @Composable
 fun FamilyMemberEntry(
@@ -28,7 +29,7 @@ fun FamilyMemberEntry(
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
         ) {
             UserAvatar(firstName = familyMember.firstname)
-            Paragraph(familyMember.fullname)
+            Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
         }
 
         actionComponent()

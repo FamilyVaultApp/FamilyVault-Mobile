@@ -22,9 +22,6 @@ fun ChatMessageEntry(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (isAuthor) Alignment.End else Alignment.Start
     ) {
-        if (!isAuthor) {
-            Paragraph(message.senderId)
-        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -32,9 +29,6 @@ fun ChatMessageEntry(
             horizontalArrangement = if (isAuthor) Arrangement.End else Arrangement.Start,
         ) {
             ChatMessageBubble(message)
-        }
-        if (!isAuthor) {
-            Paragraph(message.sendDate.toString())
         }
     }
 }

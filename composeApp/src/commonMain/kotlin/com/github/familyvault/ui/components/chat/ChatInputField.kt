@@ -33,7 +33,7 @@ fun ChatInputField(onTextMessageSend: (message: String) -> Unit) {
 
     Row(
         modifier = Modifier.fillMaxWidth()
-            .padding(AdditionalTheme.spacings.small, vertical = AdditionalTheme.spacings.large),
+            .padding(AdditionalTheme.spacings.small),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = { /* Dodaj załącznik */ }) {
