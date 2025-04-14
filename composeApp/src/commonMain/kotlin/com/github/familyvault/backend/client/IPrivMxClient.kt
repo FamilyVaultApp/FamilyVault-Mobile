@@ -36,6 +36,7 @@ interface IPrivMxClient {
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun sendMessage(content: String, threadId: String, type: String, referenceMessageId: String = "")
     fun sendMessage(content: ByteArray, threadId: String, type: String, referenceMessageId: String = "")
+    fun getFile(fileId: String) : ByteArray
     fun sendFileToStore(content: ByteArray, storeId: String) : String
     fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int

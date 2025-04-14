@@ -26,6 +26,8 @@ import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
+import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream
+import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamReader
 import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
 import kotlin.random.Random
 
@@ -172,6 +174,22 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         threadApi.sendMessage(
             threadId, publicMeta, ThreadMessageEncoder.encode(privateMeta), content
         )
+    }
+
+    override fun getFile(fileId: String): ByteArray {
+        var data = ByteArray(0)
+
+        StoreFileStreamReader.openFile(
+            storeApi,
+            fileId,
+        ).also {
+            do {
+                val chunk = it.read(StoreFileStream.OPTIMAL_SEND_SIZE)
+                data += chunk
+            } while (chunk.size.toLong() == StoreFileStream.OPTIMAL_SEND_SIZE)
+        }.close()
+
+        return data
     }
 
     override fun sendFileToStore(

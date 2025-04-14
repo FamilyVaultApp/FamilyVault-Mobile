@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.familyvault.models.chat.ChatMessage
+import com.github.familyvault.models.enums.ChatMessageType
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 
@@ -31,7 +32,10 @@ fun ChatMessageEntry(
                 .padding(AdditionalTheme.spacings.small),
             horizontalArrangement = if (isAuthor) Arrangement.End else Arrangement.Start,
         ) {
-            ChatMessageBubble(message)
+            when (message.type) {
+                ChatMessageType.TEXT -> ChatMessageTextBubble(message)
+                ChatMessageType.AUDIO -> ChatMessageRecordingBubble(message)
+            }
         }
         if (!isAuthor) {
             Paragraph(message.sendDate.toString())

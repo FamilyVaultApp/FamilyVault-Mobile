@@ -98,6 +98,12 @@ class ChatService(
         privMxClient.sendMessage(fileId, chatThreadId, ChatMessageType.AUDIO.toString())
     }
 
+    override fun getVoiceMessage(
+        fileId: String
+    ): ByteArray {
+        return privMxClient.getFile(fileId)
+    }
+
     override suspend fun createIndividualChat(
         firstMember: FamilyMember, secondMember: FamilyMember
     ) {
