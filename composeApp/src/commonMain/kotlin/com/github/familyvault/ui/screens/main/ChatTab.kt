@@ -19,7 +19,7 @@ object ChatTab : Tab {
     override fun Content() {
         Column {
             TopAppBar(
-                stringResource(Res.string.chat_tab)
+                stringResource(Res.string.chat_tab),
             )
             SelectChatContent()
         }

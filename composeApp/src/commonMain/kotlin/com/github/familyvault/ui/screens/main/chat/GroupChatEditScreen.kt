@@ -44,6 +44,11 @@ import org.koin.compose.koinInject
 
 class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
 
+    enum class GroupChatAction {
+        Create,
+        Edit
+    }
+
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -55,8 +60,8 @@ class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
         val familyMembers = remember { mutableStateListOf<FamilyMember>() }
         var createGroupChatState by remember { mutableStateOf(FormSubmitState.IDLE) }
         val form by remember { mutableStateOf(GroupChatEditForm()) }
+        val groupChatAction = if (chatThread == null) GroupChatAction.Create else GroupChatAction.Edit
         val coroutineScope = rememberCoroutineScope()
-
         LaunchedEffect(Unit) {
             isLoadingFamilyMembers = true
             familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersWithoutMeList())
@@ -75,7 +80,7 @@ class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = stringResource(Res.string.chat_create_new),
+                    title = if (groupChatAction == GroupChatAction.Create) stringResource(Res.string.chat_create_new) else chatThread!!.name,
                     showManagementButton = false
                 )
             },
