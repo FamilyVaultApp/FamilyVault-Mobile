@@ -66,7 +66,6 @@ fun ChatInputField(
                 } else {
                     audioRecorder.stop()
                     isRecording = false
-
                     audioData = audioRecorder.getAudioBytes()
                 }
             }
@@ -85,10 +84,17 @@ fun ChatInputField(
         )
 
         IconButton(onClick = {
-            onTextMessageSend(textMessage)
-            onVoiceMessageSend(audioData)
-            textMessage = ""
-            audioData = ByteArray(0)
+            if (audioData.isNotEmpty() || isRecording) {
+                audioRecorder.stop()
+                isRecording = false
+                audioData = audioRecorder.getAudioBytes()
+                onVoiceMessageSend(audioData)
+                audioData = ByteArray(0)
+            }
+            if (textMessage.isNotEmpty()) {
+                onTextMessageSend(textMessage)
+                textMessage = ""
+            }
         }) {
             Icon(
                 Icons.AutoMirrored.Filled.Send,

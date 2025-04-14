@@ -18,13 +18,13 @@ class AudioRecorderService(
     private var isRecording = false
     private var audioRecord: AudioRecord? = null
     private var recordingJob: Job? = null
+    private var outputStream = ByteArrayOutputStream()
+
     private val bufferSize = AudioRecord.getMinBufferSize(
         SAMPLE_RATE,
         AudioFormat.CHANNEL_IN_MONO,
         AudioFormat.ENCODING_PCM_16BIT
     )
-
-    private val outputStream = ByteArrayOutputStream()
 
     companion object {
         private const val RECORDING_PERMISSION_REQUEST_CODE = 1002
@@ -33,10 +33,9 @@ class AudioRecorderService(
 
     override fun start() {
         if (isRecording) return
+        if (!checkRecordingPermission()) return
 
-        if (!checkRecordingPermission()) {
-            return
-        }
+        outputStream = ByteArrayOutputStream()
 
         try {
             audioRecord = AudioRecord(
@@ -73,6 +72,9 @@ class AudioRecorderService(
         audioRecord?.stop()
         audioRecord?.release()
         audioRecord = null
+
+        outputStream.flush()
+        outputStream.close()
     }
 
     override fun getAudioBytes(): ByteArray {

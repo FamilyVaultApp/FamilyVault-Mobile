@@ -2,15 +2,25 @@ package com.github.familyvault.ui.components.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -29,7 +39,8 @@ fun ChatMessageRecordingBubble(
 
     val sender = message.senderId
     val isAuthor = message.isAuthor
-    val audio = chatService.getVoiceMessage(message.message)
+
+    var isPlaying by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier.fillMaxWidth(0.75f),
@@ -39,30 +50,43 @@ fun ChatMessageRecordingBubble(
             UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
         }
 
-        Column(
+        Row(
             modifier = Modifier
-                .padding(AdditionalTheme.spacings.small)
+                .padding(AdditionalTheme.spacings.medium)
                 .background(
                     if (isAuthor) MaterialTheme.colorScheme.primary else AdditionalTheme.colors.otherChatBubbleColor,
                     shape = MaterialTheme.shapes.medium
                 )
                 .padding(AdditionalTheme.spacings.medium),
-            horizontalAlignment = if (isAuthor) Alignment.End else Alignment.Start
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "🎙️ Wiadomość głosowa",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = if (isAuthor) TextAlign.End else TextAlign.Start,
-                color = if (isAuthor) MaterialTheme.colorScheme.onPrimary else Color.Black
-            )
-            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.small))
-            Button(onClick = {
-                coroutineScope.launch {
-                    audioPlayerService.play(audio)
+            IconButton(
+                onClick = {
+                    coroutineScope.launch {
+                        if (isPlaying) {
+                            audioPlayerService.stop()
+                            isPlaying = false
+                        } else {
+                            val audio = chatService.getVoiceMessage(message.message)
+                            isPlaying = true
+                            audioPlayerService.play(audio) {
+                                isPlaying = false
+                            }
+                        }
+                    }
                 }
-            }) {
-                Text("▶️ Odtwórz")
+            ) {
+                Icon(
+                    imageVector = if (isPlaying) Icons.Default.Stop else Icons.Default.PlayArrow,
+                    contentDescription = null
+                )
             }
+
+            WaveformAnimation(
+                isPlaying = isPlaying,
+                modifier = Modifier.padding(end = 10.dp)
+            )
         }
     }
 }
