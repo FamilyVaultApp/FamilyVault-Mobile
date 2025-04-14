@@ -8,5 +8,5 @@ data class MessageItem(
     val authorId: String,
     val authorPublicKey: String,
     val createDate: LocalDateTime,
-    val privateMeta: MessagePrivateMeta
+    val privateMeta: ThreadMessagePrivateMeta
 )
