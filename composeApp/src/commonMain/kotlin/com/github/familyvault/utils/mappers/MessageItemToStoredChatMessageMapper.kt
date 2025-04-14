@@ -12,6 +12,7 @@ object MessageItemToStoredChatMessageMapper {
         authorId = msg.authorId,
         authorPublicKey = msg.authorPublicKey,
         content = msg.messageContent ?: "",
-        createDate = msg.createDate.toInstant(TimeZone.UTC).toEpochMilliseconds()
+        createDate = msg.createDate.toInstant(TimeZone.UTC).toEpochMilliseconds(),
+        type = msg.privateMeta.messageType
     )
 }

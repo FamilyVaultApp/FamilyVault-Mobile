@@ -1,11 +1,14 @@
 package com.github.familyvault.services
 
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 
-class AudioPlayerService : IAudioPlayerService {
+class AudioPlayerService(
+    private val context: Context
+) : IAudioPlayerService {
 
     private var audioTrack: AudioTrack? = null
 

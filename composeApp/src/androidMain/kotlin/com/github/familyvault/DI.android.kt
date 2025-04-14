@@ -37,6 +37,6 @@ actual fun getPlatformModules() = module {
     factory {NfcService(get()) }.bind<INfcService>()
 
     /* Microphone service */
-    factory {AudioPlayerService(get()) }.bind<IAudioPlayerService>()
+    factory { AudioPlayerService(get()) }.bind<IAudioPlayerService>()
     factory { AudioRecorderService(get()) }.bind<IAudioRecorderService>()
 }

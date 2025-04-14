@@ -1,5 +1,6 @@
 package com.github.familyvault.models.chat
 
+import com.github.familyvault.models.enums.ChatMessageType
 import kotlinx.datetime.LocalDateTime
 
 data class ChatMessage(
@@ -8,7 +9,8 @@ data class ChatMessage(
     val senderId: String,
     val senderPubKey: String,
     val sendDate: LocalDateTime,
-    val isAuthor: Boolean
+    val isAuthor: Boolean,
+    val type: ChatMessageType
 ) {
     val messageShortPreview
         get() = if (message.length > 20) message.substring(0, 20) + "..." else message
