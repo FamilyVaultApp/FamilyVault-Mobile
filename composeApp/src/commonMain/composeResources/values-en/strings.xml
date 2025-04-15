@@ -88,8 +88,8 @@
     <string name="chat_recording_icon">Record voice message</string>
     <string name="chat_attach_photo">Attach photo</string>
     <string name="chat_creating">Creating chat...</string>
-    <string name="chat_message_type_audio">Recording sent</string>
-    <string name="chat_message_type_image">Photo sent</string>
+    <string name="chat_message_type_audio">Voice message</string>
+    <string name="chat_message_type_image">Photo</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>
