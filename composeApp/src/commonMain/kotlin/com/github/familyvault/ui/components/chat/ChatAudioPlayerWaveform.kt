@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 
 @Composable
-fun WaveformAnimation(
+fun ChatAudioPlayerWaveform(
     isPlaying: Boolean,
     isAuthor: Boolean,
 ) {

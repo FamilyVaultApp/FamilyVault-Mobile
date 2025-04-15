@@ -1,33 +1,23 @@
 package com.github.familyvault.ui.components.chat
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Mic
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.github.familyvault.services.IAudioRecorderService
-import com.github.familyvault.services.IChatService
-import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.chat_attach_photo
-import familyvault.composeapp.generated.resources.chat_recording_icon
 import familyvault.composeapp.generated.resources.chat_send_message
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -41,66 +31,118 @@ fun ChatInputField(
 
     var textMessage by remember { mutableStateOf("") }
     var isRecording by remember { mutableStateOf(false) }
-    var audioData = ByteArray(0)
+    var audioData by remember { mutableStateOf(ByteArray(0)) }
 
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(AdditionalTheme.spacings.small, vertical = AdditionalTheme.spacings.large),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = { /* Dodaj załącznik */ }) {
-            Icon(
-                Icons.Outlined.Image,
-                contentDescription = stringResource(Res.string.chat_attach_photo),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-
+        // Obsługa załączników lub usuwania
         IconButton(onClick = {
-            if (!audioRecorder.checkRecordingPermission()) {
-                audioRecorder.requestRecordingPermission()
-            } else {
-                if (!isRecording) {
-                    audioRecorder.start()
-                    isRecording = true
-                } else {
-                    audioRecorder.stop()
-                    isRecording = false
-                    audioData = audioRecorder.getAudioBytes()
-                }
-            }
-        }) {
-            Icon(
-                imageVector = if (isRecording) Icons.Default.Stop else Icons.Outlined.Mic,
-                contentDescription = if (isRecording) "Stop recording" else "Start recording"
-            )
-        }
-
-        TextField(
-            label = stringResource(Res.string.chat_send_message),
-            modifier = Modifier.weight(1f).background(Color.Transparent),
-            value = textMessage,
-            onValueChange = { textMessage = it },
-        )
-
-        IconButton(onClick = {
-            if (audioData.isNotEmpty() || isRecording) {
+            if (isRecording) {
                 audioRecorder.stop()
                 isRecording = false
-                audioData = audioRecorder.getAudioBytes()
-                onVoiceMessageSend(audioData)
                 audioData = ByteArray(0)
-            }
-            if (textMessage.isNotEmpty()) {
-                onTextMessageSend(textMessage)
-                textMessage = ""
+            } else {
+                // Obsługa zdjęć
             }
         }) {
             Icon(
-                Icons.AutoMirrored.Filled.Send,
-                contentDescription = stringResource(Res.string.chat_send_message),
+                imageVector = if (isRecording) Icons.Default.Delete else Icons.Outlined.Image,
+                contentDescription = null,
+                tint = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        // Przycisk nagrywania
+        if (!isRecording) {
+            IconButton(onClick = {
+                if (!audioRecorder.checkRecordingPermission()) {
+                    audioRecorder.requestRecordingPermission()
+                } else {
+                    audioRecorder.start()
+                    isRecording = true
+                }
+            }) {
+                Icon(
+                    imageVector = Icons.Outlined.Mic,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(4.dp))
+
+        AnimatedContent(
+            targetState = isRecording,
+            modifier = Modifier
+                .weight(1f)
+        ) { recording ->
+            Box(
+                modifier = Modifier
+                    .height(60.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                if (recording) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                shape = MaterialTheme.shapes.large
+                            )
+                            .padding(horizontal = 12.dp)
+                    ) {
+                        ChatInputWaveForm(
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                } else {
+                    TextField(
+                        label = stringResource(Res.string.chat_send_message),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Transparent),
+                        value = textMessage,
+                        onValueChange = { textMessage = it },
+                    )
+                }
+            }
+        }
+
+        IconButton(
+            onClick = {
+                when {
+                    isRecording -> {
+                        audioRecorder.stop()
+                        audioData = audioRecorder.getAudioBytes()
+                        isRecording = false
+                    }
+
+                    textMessage.isNotBlank() -> {
+                        onTextMessageSend(textMessage)
+                        textMessage = ""
+                    }
+                }
+            },
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.Send,
+                contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
+        }
+
+    }
+
+    LaunchedEffect(audioData) {
+        if (audioData.isNotEmpty()) {
+            onVoiceMessageSend(audioData)
+            audioData = ByteArray(0)
         }
     }
 }
