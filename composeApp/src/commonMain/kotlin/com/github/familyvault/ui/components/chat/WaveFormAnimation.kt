@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -26,9 +27,8 @@ import kotlin.random.Random
 
 @Composable
 fun WaveformAnimation(
-    modifier: Modifier = Modifier,
-    barColor: Color = MaterialTheme.colorScheme.onPrimary,
-    isPlaying: Boolean
+    isPlaying: Boolean,
+    isAuthor: Boolean,
 ) {
     val barCount = 10
 
@@ -53,7 +53,7 @@ fun WaveformAnimation(
     }
 
     Row(
-        modifier = modifier.height(24.dp),
+        Modifier.height(24.dp).padding(end = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
@@ -62,7 +62,10 @@ fun WaveformAnimation(
                 modifier = Modifier
                     .width(4.dp)
                     .fillMaxHeight(anim.value)
-                    .background(barColor, shape = RoundedCornerShape(2.dp))
+                    .background(
+                        if (isAuthor) MaterialTheme.colorScheme.onPrimary else Color.Black,
+                        shape = RoundedCornerShape(2.dp)
+                    )
             )
         }
     }

@@ -80,13 +80,13 @@ fun ChatMessageRecordingBubble(
                 Icon(
                     imageVector = if (isPlaying) Icons.Default.Stop else Icons.Default.PlayArrow,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = if (isAuthor) MaterialTheme.colorScheme.onPrimary else Color.Black
                 )
             }
 
             WaveformAnimation(
                 isPlaying = isPlaying,
-                modifier = Modifier.padding(end = 10.dp)
+                isAuthor = isAuthor
             )
         }
     }
