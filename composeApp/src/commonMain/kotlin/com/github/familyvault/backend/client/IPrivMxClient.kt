@@ -43,4 +43,6 @@ interface IPrivMxClient {
     )
 
     fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
+
+    fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit)
 }

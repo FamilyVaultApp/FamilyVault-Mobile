@@ -198,6 +198,14 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
     }
 
+    override fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit) {
+        requireNotNull(connection).registerCallback(
+            eventName, EventType.ThreadUpdatedEvent
+        ) {
+            callback(PrivMxThreadToThreadItemMapper.map(it))
+        }
+    }
+
     override fun close() {
         requireNotNull(connection).unregisterAll()
         requireNotNull(connection).close()

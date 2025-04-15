@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
@@ -49,6 +50,16 @@ fun SelectChatContent() {
 
         chatThreadListenerService.startListeningForNewChatThread {
             currentChatThreadsState.addNewChatThread(it)
+            chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
+                currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+            }
+        }
+
+        chatThreadListenerService.startListeningForUpdatedChatThread {
+            currentChatThreadsState.clean()
+            currentChatThreadsState.addNewChatThread(it)
+            currentChatThreadsState.addGroupChatThreads(chatService.retrieveAllGroupChatThreads())
+            currentChatThreadsState.addIndividualChatThreads(chatService.retrieveAllIndividualChatThreads())
             chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
                 currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
             }
