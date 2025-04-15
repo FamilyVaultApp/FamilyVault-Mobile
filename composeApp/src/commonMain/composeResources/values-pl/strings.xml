@@ -88,6 +88,8 @@
     <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
     <string name="chat_creating">Tworzenie chatu...</string>
+    <string name="chat_message_type_audio">Wysłano nagranie</string>
+    <string name="chat_message_type_image">Wysłano zdjęcie</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>

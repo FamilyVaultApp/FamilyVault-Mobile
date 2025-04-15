@@ -35,6 +35,7 @@ fun ChatMessageEntry(
             when (message.type) {
                 ChatMessageType.TEXT -> ChatMessageTextBubble(message)
                 ChatMessageType.AUDIO -> ChatMessageRecordingBubble(message)
+                ChatMessageType.IMAGE -> null
             }
         }
         if (!isAuthor) {

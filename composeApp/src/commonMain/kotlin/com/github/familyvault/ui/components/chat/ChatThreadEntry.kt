@@ -14,12 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.models.enums.ChatMessageType
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.chat_message_type_audio
+import familyvault.composeapp.generated.resources.chat_message_type_image
 import familyvault.composeapp.generated.resources.you
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -53,7 +56,11 @@ fun ChatThreadEntry(
         Column {
             Headline3(chatThread.name)
             if (lastMessage != null) {
-                ParagraphMuted("${senderName}: ${lastMessage.messageShortPreview}")
+                when(lastMessage.type) {
+                    ChatMessageType.AUDIO -> ParagraphMuted("${senderName}: ${stringResource(Res.string.chat_message_type_audio)}")
+                    ChatMessageType.IMAGE -> ParagraphMuted("${senderName}: ${stringResource(Res.string.chat_message_type_image)}")
+                    ChatMessageType.TEXT -> ParagraphMuted("${senderName}: ${lastMessage.messageShortPreview}")
+                }
             }
         }
     }
