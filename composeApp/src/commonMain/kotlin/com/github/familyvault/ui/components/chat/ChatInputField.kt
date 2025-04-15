@@ -39,7 +39,6 @@ fun ChatInputField(
             .padding(AdditionalTheme.spacings.small, vertical = AdditionalTheme.spacings.large),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Obsługa załączników lub usuwania
         IconButton(onClick = {
             if (isRecording) {
                 audioRecorder.stop()
@@ -56,7 +55,6 @@ fun ChatInputField(
             )
         }
 
-        // Przycisk nagrywania
         if (!isRecording) {
             IconButton(onClick = {
                 if (!audioRecorder.checkRecordingPermission()) {
