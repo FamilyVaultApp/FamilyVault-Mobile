@@ -31,5 +31,9 @@ interface IFamilyGroupService {
 
     suspend fun refreshCurrentFamilyGroupName()
 
+    suspend fun retrieveFamilyGroupMembersWithoutMeList(): List<FamilyMember>
+
+    suspend fun retrieveMyFamilyMemberData(): FamilyMember
+
     suspend fun removeMemberFromCurrentFamilyGroup(userPubKey: String)
 }

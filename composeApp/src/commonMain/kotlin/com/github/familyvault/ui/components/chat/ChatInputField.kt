@@ -134,7 +134,6 @@ fun ChatInputField(
                 tint = MaterialTheme.colorScheme.primary
             )
         }
-
     }
 
     LaunchedEffect(audioData) {

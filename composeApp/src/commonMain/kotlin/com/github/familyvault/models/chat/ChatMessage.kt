@@ -12,9 +12,6 @@ data class ChatMessage(
     val isAuthor: Boolean,
     val type: ChatMessageType
 ) {
-    val messageShortPreview
-        get() = if (message.length > 20) message.substring(0, 20) + "..." else message
-
     override fun equals(other: Any?): Boolean {
         if (other is ChatMessage) {
             return id == other.id

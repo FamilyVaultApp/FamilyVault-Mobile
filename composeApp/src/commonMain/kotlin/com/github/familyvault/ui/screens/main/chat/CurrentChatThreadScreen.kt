@@ -84,13 +84,12 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                     modifier = Modifier.weight(1f),
                     state = listState,
                 ) {
-                    items(items = chatState.messages) { message ->
+                    items(items = chatState.messages, key = { it.id }) { message ->
                         ChatMessageEntry(
                             message
                         )
                     }
                 }
-
                 Box(
                     modifier = Modifier.fillMaxWidth().padding(AdditionalTheme.spacings.small)
                 ) {

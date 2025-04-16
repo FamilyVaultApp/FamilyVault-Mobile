@@ -23,9 +23,6 @@ fun ChatMessageEntry(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (isAuthor) Alignment.End else Alignment.Start
     ) {
-        if (!isAuthor) {
-            Paragraph(message.senderId)
-        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -37,9 +34,6 @@ fun ChatMessageEntry(
                 ChatMessageType.AUDIO -> ChatMessageRecordingBubble(message)
                 ChatMessageType.IMAGE -> null
             }
-        }
-        if (!isAuthor) {
-            Paragraph(message.sendDate.toString())
         }
     }
 }

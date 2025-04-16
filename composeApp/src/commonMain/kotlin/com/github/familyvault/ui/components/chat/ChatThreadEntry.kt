@@ -20,6 +20,7 @@ import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_message_type_audio
 import familyvault.composeapp.generated.resources.chat_message_type_image
@@ -54,12 +55,14 @@ fun ChatThreadEntry(
     ) {
         UserAvatar(chatThread.name)
         Column {
-            Headline3(chatThread.name)
+            Headline3(
+                TextShortener.shortenText(chatThread.name, 30)
+            )
             if (lastMessage != null) {
                 when(lastMessage.type) {
-                    ChatMessageType.AUDIO -> ParagraphMuted("${senderName}: ${stringResource(Res.string.chat_message_type_audio)}")
-                    ChatMessageType.IMAGE -> ParagraphMuted("${senderName}: ${stringResource(Res.string.chat_message_type_image)}")
-                    ChatMessageType.TEXT -> ParagraphMuted("${senderName}: ${lastMessage.messageShortPreview}")
+                    ChatMessageType.AUDIO -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_audio)}", 30))
+                    ChatMessageType.IMAGE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_image)}", 30))
+                    ChatMessageType.TEXT -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${lastMessage.message}", 30))
                 }
             }
         }

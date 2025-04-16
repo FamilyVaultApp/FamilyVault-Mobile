@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +35,7 @@ import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.screens.main.addFamilyMember.AddMemberToFamilyGroupScreen
+import com.github.familyvault.ui.screens.main.modifyFamilyMember.ModifyFamilyMemberScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.change_name_content
@@ -39,6 +43,7 @@ import familyvault.composeapp.generated.resources.family_group_add_new_member
 import familyvault.composeapp.generated.resources.family_group_management_title
 import familyvault.composeapp.generated.resources.family_group_members
 import familyvault.composeapp.generated.resources.text_field_group_name_label
+import familyvault.composeapp.generated.resources.user_modification_description
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -99,13 +104,13 @@ class FamilyGroupManagementScreen : Screen {
                         currentFamilyGroupName = familyGroupName
                         isChangingFamilyGroupName = false
                     }
-                }
-            )
+                })
         }
     }
 
     @Composable
     private fun FamilyGroupMembers() {
+        val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupMembers = remember { mutableStateListOf<FamilyMember>() }
 
@@ -125,14 +130,22 @@ class FamilyGroupManagementScreen : Screen {
             ) {
                 if (isLoadingMembers) {
                     Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
                     }
                 } else {
                     familyGroupMembers.forEach {
-                        FamilyMemberEntry(it)
+                        FamilyMemberEntry(it) {
+                            IconButton(onClick = {
+                                navigator.push(ModifyFamilyMemberScreen(it))
+                            }) {
+                                Icon(
+                                    Icons.Outlined.MoreHoriz,
+                                    contentDescription = stringResource(Res.string.user_modification_description),
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -149,7 +162,6 @@ class FamilyGroupManagementScreen : Screen {
             modifier = Modifier.fillMaxWidth(),
             onClick = {
                 navigator.push(AddMemberToFamilyGroupScreen())
-            }
-        )
+            })
     }
 }

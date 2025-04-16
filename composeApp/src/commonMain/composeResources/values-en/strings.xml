@@ -48,8 +48,10 @@
     <!-- Form validation errors-->
     <string name="form_empty_error">This field cannot be empty</string>
     <string name="form_overfill_error">You can enter maximum of %1$d characters</string>
-    <string name="form_password_not_equal_error">Hasła nie są zgodne ze sobą</string>
-    <string name="form_too_short_error">Wartość musi być dłuższa niż %1$d znaków</string>
+    <string name="form_password_not_equal_error">Passwords are not equal to each other</string>
+    <string name="form_too_short_error">Your input must be longer than %1$d characters</string>
+    <string name="form_creator_not_in_group">You cannot create group chat where you're not a member</string>
+    <string name="form_chat_group_members_empty">You cannot create group chat without any members</string>
 
     <!-- Bottom navigation bar items-->
     <string name="chat_tab">Chats</string>
@@ -82,6 +84,10 @@
 
     <!-- Chat -->
     <string name="chat_create_new">Create new chat</string>
+    <string name="chat_set_group_name">Group chat name</string>
+    <string name="chat_create_group_default_name">Family group</string>
+    <string name="chat_create_group_members">Group chat members</string>
+    <string name="chat_create_group_button_content">Create group chat</string>
     <string name="chat_send_message">Send message</string>
     <string name="chat_type_individual">Individual</string>
     <string name="chat_type_group">Groups</string>

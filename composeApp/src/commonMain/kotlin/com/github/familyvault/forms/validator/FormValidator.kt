@@ -1,5 +1,7 @@
 package com.github.familyvault.forms.validator
 
+import com.github.familyvault.models.FamilyMember
+
 class FormValidator {
     companion object {
         fun multipleValidators(vararg validatorResult: FormValidatorError?): FormValidatorError? {
@@ -30,6 +32,20 @@ class FormValidator {
         fun validateNotEqual(firstValue: String, secondValue: String): FormValidatorError? {
             if (firstValue != secondValue) {
                 return FormValidatorError.NOT_EQUAL
+            }
+            return null
+        }
+
+        fun validateGroupNotEmpty(chatMembers: List<FamilyMember>): FormValidatorError? {
+            if (chatMembers.isEmpty()) {
+                return FormValidatorError.CHAT_GROUP_MEMBERS_EMPTY
+            }
+            return null
+        }
+
+        fun validateCreatorIsGroupMember(chatMembers: List<FamilyMember>, currentUserPubKey: String): FormValidatorError? {
+            if (!chatMembers.any { it.publicKey == currentUserPubKey }) {
+                return FormValidatorError.CREATOR_NOT_IN_GROUP
             }
             return null
         }

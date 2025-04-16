@@ -50,6 +50,8 @@
     <string name="form_overfill_error">Możesz wprowadzić maksymalnie %1$d znaki</string>
     <string name="form_password_not_equal_error">Hasła nie są zgodne ze sobą</string>
     <string name="form_too_short_error">Wartość musi być dłuższe niż %1$d znaków</string>
+    <string name="form_creator_not_in_group">Nie możesz utworzyć chatu grupowego, w którym Ciebie nie ma</string>
+    <string name="form_chat_group_members_empty">Nie możesz utworzyć chatu grupowego bez żadnych członków</string>
 
     <!-- Bottom navigation bar items-->
     <string name="chat_tab">Wiadomości</string>
@@ -82,6 +84,10 @@
 
     <!-- Chat -->
     <string name="chat_create_new">Stwórz nowy chat</string>
+    <string name="chat_set_group_name">Nazwa grupy</string>
+    <string name="chat_create_group_default_name">Grupa rodzinna</string>
+    <string name="chat_create_group_members">Członkowie czatu grupowego</string>
+    <string name="chat_create_group_button_content">Utwórz chat</string>
     <string name="chat_send_message">Wyślij wiadomość</string>
     <string name="chat_type_individual">Indywidualny</string>
     <string name="chat_type_group">Grupowy</string>
@@ -90,6 +96,7 @@
     <string name="chat_creating">Tworzenie chatu...</string>
     <string name="chat_message_type_audio">Wiadomość głosowa</string>
     <string name="chat_message_type_image">Zdjęcie</string>
+
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
