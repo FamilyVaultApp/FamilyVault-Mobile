@@ -13,13 +13,13 @@ import androidx.compose.material3.TopAppBar as MdTopAppBar
 fun TopAppBar(
     title: String,
     showManagementButton: Boolean = true,
-    managementButtonNextScreen: Screen = FamilyGroupManagementScreen()
+    onManagementButtonClick: () -> Unit = {}
 ) {
     return MdTopAppBar(
         title = { Paragraph(title) },
         actions = {
             if (showManagementButton)
-                FamilyGroupManagementIcon(managementButtonNextScreen)
+                FamilyGroupManagementIcon(onManagementButtonClick)
         }
     )
 }

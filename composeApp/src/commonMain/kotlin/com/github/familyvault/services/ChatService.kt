@@ -44,7 +44,7 @@ class ChatService(
         )
     }
 
-    override suspend fun updateGroupChat(thread: ChatThread, members: List<FamilyMember>, newName: String?) {
+    override suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?) {
         val splitFamilyGroupMembersList = FamilyMembersSplitter.split(members)
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }

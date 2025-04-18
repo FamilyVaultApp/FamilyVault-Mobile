@@ -24,7 +24,7 @@ interface IPrivMxClient {
         threadId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        newName: String? = ""
+        newName: String? = null
     )
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun sendMessage(content: String, threadId: String, referenceMessageId: String = "")

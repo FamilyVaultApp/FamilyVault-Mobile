@@ -96,7 +96,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         managers: List<PrivMxUser>,
         newName: String?
     ) {
-        val thread = threadApi?.getThread(threadId) ?: throw Exception("Thread is null)")
+        val thread = requireNotNull(threadApi?.getThread(threadId)) { "Thread is null" }
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
         }
@@ -104,14 +104,20 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             UserWithPubKey(userId, publicKey)
         }
 
+        val privateMeta = if (newName != null) {
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(newName))
+        } else {
+            thread.privateMeta
+        }
+
         threadApi?.updateThread(
             thread.threadId,
             userList,
             managerList,
             thread.publicMeta,
-            if (newName != null) ThreadMetaEncoder.encode(ThreadPrivateMeta(newName)) else thread.privateMeta,
+            privateMeta,
             thread.version,
-            true
+            false
         )
     }
 

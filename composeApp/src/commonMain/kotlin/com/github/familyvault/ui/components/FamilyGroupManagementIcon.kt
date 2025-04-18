@@ -14,17 +14,10 @@ import familyvault.composeapp.generated.resources.family_group_management_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun FamilyGroupManagementIcon(nextScreen: Screen) {
-    val navigator = LocalNavigator.currentOrThrow
+fun FamilyGroupManagementIcon(onClick: () -> Unit) {
 
     return IconButton(
-        onClick = {
-            if (navigator.parent != null) {
-                navigator.parent?.push(nextScreen)
-            } else {
-                navigator.push(nextScreen)
-            }
-        }
+        onClick = onClick
     ) {
         Icon(
             Icons.Filled.Settings,

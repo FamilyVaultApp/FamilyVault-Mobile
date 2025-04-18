@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
+class ChatThreadEditScreen(private val chatThread: ChatThread? = null) : Screen {
 
     enum class GroupChatAction {
         Create,
@@ -147,7 +147,7 @@ class GroupChatEditScreen(private val chatThread: ChatThread? = null) : Screen {
                             if (groupChatAction == GroupChatAction.Create) {
                                 chatService.createGroupChat(form.groupName, form.familyMembers)
                             } else {
-                                chatService.updateGroupChat(chatThread!!, form.familyMembers, form.groupName)
+                                chatService.updateChatThread(chatThread!!, form.familyMembers, form.groupName)
                                 createGroupChatState = FormSubmitState.IDLE
                                 navigator.replaceAll(MainScreen())
                             }

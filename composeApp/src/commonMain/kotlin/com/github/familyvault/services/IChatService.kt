@@ -11,7 +11,7 @@ interface IChatService {
     fun retrieveLastMessage(chatThreadId: String): ChatMessage?
     fun sendMessage(chatThreadId: String, messageContent: String, respondToMessageId: String)
     suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
-    suspend fun updateGroupChat(thread: ChatThread, members: List<FamilyMember>, newName: String?)
+    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)
     suspend fun createIndividualChatsWithAllFamilyMembersForMember(member: FamilyMember)
     suspend fun populateDatabaseWithLastMessages(chatThreadId: String)
