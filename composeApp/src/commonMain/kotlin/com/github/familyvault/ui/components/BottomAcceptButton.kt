@@ -13,7 +13,7 @@ import familyvault.composeapp.generated.resources.next_button_content
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun InitialScreenButton(
+fun BottomAcceptButton(
     text: String = stringResource(Res.string.next_button_content),
     enabled: Boolean = true,
     onClick: () -> Unit) {

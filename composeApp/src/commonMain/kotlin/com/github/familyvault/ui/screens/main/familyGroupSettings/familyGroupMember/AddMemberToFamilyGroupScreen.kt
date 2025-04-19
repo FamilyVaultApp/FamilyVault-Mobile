@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main.addFamilyMember
+package com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -87,9 +87,9 @@ class AddMemberToFamilyGroupScreen : Screen {
             AnimatedNfcBeam()
             Headline3(
                 stringResource(Res.string.add_member_to_family_group_content),
-                MaterialTheme.colorScheme.onBackground,
-                TextAlign.Center,
-                Modifier.padding(AdditionalTheme.spacings.normalPadding)
+                color = MaterialTheme.colorScheme.onBackground,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(AdditionalTheme.spacings.normalPadding)
             )
             AddMemberToFamilyGroupContentButtons()
         }

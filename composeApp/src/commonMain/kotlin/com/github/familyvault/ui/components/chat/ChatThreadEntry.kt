@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.services.IFamilyGroupSessionService
-import com.github.familyvault.ui.components.UserAvatar
+import com.github.familyvault.ui.components.CharacterInCircle
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -50,7 +50,7 @@ fun ChatThreadEntry(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
     ) {
-        UserAvatar(chatThread.name)
+        CharacterInCircle(chatThread.name)
         Column {
             Headline3(
                 TextShortener.shortenText(chatThread.name, 30)

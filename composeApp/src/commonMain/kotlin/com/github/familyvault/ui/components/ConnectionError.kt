@@ -62,7 +62,7 @@ fun ConnectionError(connectionStatus: ConnectionStatus) {
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.Bottom
         ) {
-            InitialScreenButton(
+            BottomAcceptButton(
                 text = if (connectionStatus == ConnectionStatus.UserNotFound) {
                     stringResource(Res.string.user_not_found_button_content)
                 } else {

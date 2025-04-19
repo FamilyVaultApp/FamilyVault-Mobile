@@ -19,7 +19,7 @@ import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyMemberAdditionService
-import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.BottomAcceptButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
 import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
@@ -64,7 +64,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                 AssignPrivateKeyFormContent(
                     form,
                 )
-                InitialScreenButton(
+                BottomAcceptButton(
                     enabled = form.isFormValid(),
                 ) {
                     coroutineScope.launch {

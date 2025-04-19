@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main.addFamilyMember
+package com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable

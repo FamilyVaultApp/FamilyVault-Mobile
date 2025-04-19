@@ -28,7 +28,7 @@ fun FamilyMemberEntry(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
         ) {
-            UserAvatar(firstName = familyMember.firstname)
+            CharacterInCircle(firstName = familyMember.firstname)
             Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
         }
 

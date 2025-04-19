@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main.modifyFamilyMember
+package com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -55,7 +54,6 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
         val permissionGroup: FamilyGroupMemberPermissionGroup
     )
 
-
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -65,13 +63,22 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
         val familyGroupCredentialsRepository = koinInject<IFamilyGroupCredentialsRepository>()
 
         val options = listOf(
-            PermissionOption(stringResource(Res.string.user_permission_group_guardian), FamilyGroupMemberPermissionGroup.Guardian),
-            PermissionOption(stringResource(Res.string.user_permission_group_member), FamilyGroupMemberPermissionGroup.Member),
-            PermissionOption(stringResource(Res.string.user_permission_group_guest), FamilyGroupMemberPermissionGroup.Guest)
+            PermissionOption(
+                stringResource(Res.string.user_permission_group_guardian),
+                FamilyGroupMemberPermissionGroup.Guardian
+            ),
+            PermissionOption(
+                stringResource(Res.string.user_permission_group_member),
+                FamilyGroupMemberPermissionGroup.Member
+            ),
+            PermissionOption(
+                stringResource(Res.string.user_permission_group_guest),
+                FamilyGroupMemberPermissionGroup.Guest
+            )
         )
         var savingChanges by remember { mutableStateOf(false) }
         var showDialog by remember { mutableStateOf(false) }
-        var selectedPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest)}
+        var selectedPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest) }
         val coroutineScope = rememberCoroutineScope()
 
         Scaffold(
@@ -99,7 +106,8 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
                     ) {
                         RadioButton(
                             selected = selectedPermissionGroup == option.permissionGroup,
-                            onClick = { selectedPermissionGroup = option.permissionGroup
+                            onClick = {
+                                selectedPermissionGroup = option.permissionGroup
                             }
                         )
                         Spacer(modifier = Modifier.width(AdditionalTheme.spacings.large))
@@ -109,8 +117,12 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
             }
 
             Column(
-                modifier = Modifier.fillMaxHeight().padding(paddingValues).padding(AdditionalTheme.spacings.screenPadding),
-                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium, Alignment.Bottom),
+                modifier = Modifier.fillMaxHeight().padding(paddingValues)
+                    .padding(AdditionalTheme.spacings.screenPadding),
+                verticalArrangement = Arrangement.spacedBy(
+                    AdditionalTheme.spacings.medium,
+                    Alignment.Bottom
+                ),
             ) {
                 Button(
                     text = stringResource(Res.string.user_modification_save_button),
@@ -119,7 +131,10 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
                     onClick = {
                         coroutineScope.launch {
                             savingChanges = true
-                            permissionGroupService.changeFamilyMemberPermissionGroup(familyMember.fullname, selectedPermissionGroup)
+                            permissionGroupService.changeFamilyMemberPermissionGroup(
+                                familyMember.fullname,
+                                selectedPermissionGroup
+                            )
                             savingChanges = false
                             navigator.pop()
                         }
@@ -142,7 +157,9 @@ class ModifyFamilyMemberScreen(val familyMember: FamilyMember) : Screen {
                             familyMember.publicKey
                         )
                         if (familyMember.publicKey.compareTo(familyGroupSessionService.getPublicKey()) == 0) {
-                            familyGroupCredentialsRepository.deleteCredential(familyGroupSessionService.getContextId())
+                            familyGroupCredentialsRepository.deleteCredential(
+                                familyGroupSessionService.getContextId()
+                            )
                             navigator.replaceAll(StartScreen())
                         }
                         navigator.replace(MainScreen())

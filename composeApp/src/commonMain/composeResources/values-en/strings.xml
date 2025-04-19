@@ -16,7 +16,7 @@
     <string name="confirm_button_content">Confirm</string>
     <string name="scan_qr_code_button_content">Scan QR code</string>
     <string name="show_qr_code_button_content">Show QR code</string>
-    <string name="change_name_content">Change group name</string>
+    <string name="change_name_content">Change name</string>
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Connection modes</string>
@@ -67,11 +67,27 @@
 
     <string name="error_occurred_label">Error occurred</string>
 
-    <!-- Family group management-->
-    <string name="family_group_management_title">Family Group settings</string>
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+
+    <string name="setting_change_name_title">Change name</string>
+    <string name="setting_change_name_description_short">Change the name of the current family group</string>
+    <string name="setting_change_name_description_long">Use the form to give your family group a new name. Keep in mind that the change might not be visible to all users immediately.</string>
+
+    <string name="setting_members_title">Members</string>
+    <string name="setting_members_short">Manage your family group members</string>
+    <string name="setting_members_long">Below is a list of members in your family group. Tap the three-dot icon next to a member to manage them.</string>
+
+    <string name="setting_add_member_title">Add Member</string>
+    <string name="setting_add_member_short">Add a new member to your family group</string>
+
+    <string name="setting_change_family_group_title">Change Family Group</string>
+    <string name="setting_change_family_group_short">Switch to the view of another family group</string>
+
     <string name="family_group_members">Family Group members</string>
     <string name="family_group_add_new_member">Add new member</string>
     <string name="family_group_delete_member">Remove member</string>
+
 
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Add new member</string>
@@ -106,7 +122,6 @@
     <string name="user_not_found_title">User not found</string>
     <string name="user_not_found_content">We couldn't find you in this Family Group. It's possible that your account has been removed from it. You can remove this family group's data from your device using the button below.</string>
     <string name="user_not_found_button_content">Remove Family Group data</string>
-
 
     <!-- User modification -->
     <string name="user_modification_description">Modify family group member</string>

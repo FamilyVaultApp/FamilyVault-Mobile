@@ -22,6 +22,8 @@ import com.github.familyvault.services.JoinStatusService
 import com.github.familyvault.services.FamilyMemberPermissionGroupService
 import com.github.familyvault.services.IChatThreadListenerService
 import com.github.familyvault.services.IFamilyMemberAdditionService
+import com.github.familyvault.services.ISavedFamilyGroupsService
+import com.github.familyvault.services.SavedFamilyGroupsService
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.CurrentChatThreadsState
 import com.github.familyvault.states.ICurrentChatState
@@ -74,6 +76,9 @@ val sharedModules = module {
             get(), get()
         )
     }.bind<IFamilyMemberPermissionGroupService>()
+    single {
+        SavedFamilyGroupsService(get())
+    }.bind<ISavedFamilyGroupsService>()
 
     // Backend client
     single { FamilyVaultBackendClient() }.bind<IFamilyVaultBackendClient>()

@@ -67,8 +67,23 @@
 
     <string name="error_occurred_label">Wystąpił błąd</string>
 
-    <!-- Family group management-->
-    <string name="family_group_management_title">Ustawienia grupy rodzinnej</string>
+    <!-- Settings-->
+    <string name="settings_title">Ustawienia</string>
+
+    <string name="setting_change_name_title">Zmień nazwę</string>
+    <string name="setting_change_name_description_short">Zmień nazwę aktualnej grupy rodzinnej na inną</string>
+    <string name="setting_change_name_description_long">Skorzystaj z formularza, aby nadać grupie rodzinnej nową nazwę. Pamiętaj, że zmiana może nie być widoczna od razu u wszystkich użytkowników.</string>
+
+    <string name="setting_members_title">Członkowie</string>
+    <string name="setting_members_short">Zarządzaj członkami grupy rodzinnej</string>
+    <string name="setting_members_long">Poniżej znajduje się lista członków Twojej grupy rodzinnej. Kliknij ikonę trzech kropek obok wybranego członka, aby nim zarządzać.</string>
+
+    <string name="setting_add_member_title">Dodaj członka</string>
+    <string name="setting_add_member_short">Dodaj nowego członka do grupy rodzinnej</string>
+
+    <string name="setting_change_family_group_title">Zmień grupę rodzinną</string>
+    <string name="setting_change_family_group_short">Przejdź do widoku innej grupy rodzinnej</string>
+
     <string name="family_group_members">Członkowie grupy rodzinnej</string>
     <string name="family_group_add_new_member">Dodaj nowego członka</string>
     <string name="family_group_delete_member">Usuń członka</string>
@@ -94,7 +109,6 @@
     <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
     <string name="chat_creating">Tworzenie chatu...</string>
-
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>

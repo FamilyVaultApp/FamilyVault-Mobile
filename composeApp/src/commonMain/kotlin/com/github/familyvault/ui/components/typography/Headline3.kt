@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
@@ -12,13 +13,15 @@ fun Headline3(
     text: String,
     color: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign = TextAlign.Center,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fontWeight: FontWeight = FontWeight.Normal,
 ) {
     Text(
         text,
         style = MaterialTheme.typography.titleLarge,
         color = color,
         textAlign = textAlign,
-        modifier = modifier
+        fontWeight = fontWeight,
+        modifier = modifier,
     )
 }

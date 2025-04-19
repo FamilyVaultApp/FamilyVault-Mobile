@@ -13,7 +13,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.INotificationService
-import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.BottomAcceptButton
 import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.utils.IQrCodeGenerator
 import org.koin.compose.koinInject
@@ -44,7 +44,7 @@ class DebugScreenContextId : Screen {
                 contentDescription = "QR Code"
             )
 
-            InitialScreenButton(
+            BottomAcceptButton(
                 onClick = {
                     navigator.replaceAll(MainScreen())
                 }

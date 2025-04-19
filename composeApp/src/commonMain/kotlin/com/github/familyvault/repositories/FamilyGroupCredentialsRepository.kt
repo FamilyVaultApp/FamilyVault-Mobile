@@ -45,4 +45,9 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         val credentialDao = appDatabase.credentialDao()
         credentialDao.deleteCredential(contextId)
     }
+
+    override suspend fun getAllCredentials(): List<FamilyGroupCredential> {
+        val credentialDao = appDatabase.credentialDao()
+        return credentialDao.getAll()
+    }
 }
