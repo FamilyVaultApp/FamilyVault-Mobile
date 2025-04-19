@@ -6,6 +6,8 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -17,9 +19,17 @@ import org.jetbrains.compose.resources.stringResource
 object ChatTab : Tab {
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
+
         Column {
             TopAppBar(
-                stringResource(Res.string.chat_tab)
+                stringResource(Res.string.chat_tab),
+                showManagementButton = true,
+                onManagementButtonClick =  { if (navigator.parent != null) {
+                    navigator.parent?.push(FamilyGroupManagementScreen())
+                } else {
+                    navigator.push(FamilyGroupManagementScreen())
+                } }
             )
             SelectChatContent()
         }

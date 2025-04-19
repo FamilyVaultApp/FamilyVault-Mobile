@@ -45,6 +45,8 @@ class CurrentChatThreadsState(private val familyGroupSessionService: IFamilyGrou
         }
     }
 
+
+
     override fun editExistingChatThreadLastMessage(
         newMessage: ChatMessage, chatThread: ChatThread
     ) {
@@ -64,4 +66,13 @@ class CurrentChatThreadsState(private val familyGroupSessionService: IFamilyGrou
         )
     }
 
+    override fun editExistingChatThread(chatThread: ChatThread) {
+        val chatThreadList = if (chatThread.type == ChatThreadType.INDIVIDUAL) {
+            individualChatThreads
+        } else {
+            groupChatThreads
+        }
+        chatThreadList.removeAll { it.id.compareTo(chatThread.id) == 0 }
+        chatThreadList.add(chatThread)
+    }
 }

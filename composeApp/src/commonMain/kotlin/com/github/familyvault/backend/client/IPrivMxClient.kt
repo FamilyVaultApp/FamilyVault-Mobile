@@ -20,7 +20,12 @@ interface IPrivMxClient {
         type: String,
         name: String
     ): String
-
+    fun updateThread(
+        threadId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+        newName: String? = null
+    )
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun sendMessage(content: String, threadId: String, referenceMessageId: String = "")
     fun retrieveMessagesFromThread(
@@ -38,4 +43,6 @@ interface IPrivMxClient {
     )
 
     fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
+
+    fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit)
 }
