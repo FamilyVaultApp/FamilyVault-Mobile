@@ -27,7 +27,6 @@ import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatMessageEntry
 import com.github.familyvault.ui.components.overrides.TopAppBar
-import com.github.familyvault.ui.screens.main.FamilyGroupManagementScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -78,11 +77,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 TopAppBar(chatThread.name,
                     showManagementButton = chatThread.type == ChatThreadType.GROUP,
                     onManagementButtonClick = {
-                            if (navigator.parent != null) {
-                                navigator.parent?.push(ChatThreadEditScreen(chatThread))
-                            } else {
-                                navigator.push(ChatThreadEditScreen(chatThread))
-                            }
+                        navigator.parent?.push(ChatThreadEditScreen(chatThread.type, chatThread))
                     })
             },
         ) { paddingValues ->
