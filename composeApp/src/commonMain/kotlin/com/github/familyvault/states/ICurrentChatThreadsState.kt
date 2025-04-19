@@ -15,4 +15,5 @@ interface ICurrentChatThreadsState {
     fun addIndividualChatThreads(chatThreads: List<ChatThread>)
     fun addNewChatThread(chatThread: ChatThread)
     fun editExistingChatThreadLastMessage(newMessage: ChatMessage, chatThread: ChatThread)
+    fun editExistingChatThread(chatThread: ChatThread)
 }
