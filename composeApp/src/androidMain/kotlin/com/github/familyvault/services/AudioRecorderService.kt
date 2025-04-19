@@ -61,10 +61,10 @@ class AudioRecorderService(
         }
     }
 
-    override fun stop() {
+    override fun stop() : ByteArray {
         if (!isRecording)
         {
-            return
+            return ByteArray(0)
         }
         recordingJob?.cancel()
 
@@ -76,9 +76,7 @@ class AudioRecorderService(
         outputStream.close()
 
         isRecording = false
-    }
 
-    override fun getAudioBytes(): ByteArray {
         return outputStream.toByteArray()
     }
 

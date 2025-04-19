@@ -24,6 +24,11 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IChatService
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.chat_message_send_description
+import familyvault.composeapp.generated.resources.chat_recording_play_description
+import familyvault.composeapp.generated.resources.chat_recording_stop_description
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChatMessageVoiceMessageBubble(
@@ -75,7 +80,12 @@ fun ChatMessageVoiceMessageBubble(
             ) {
                 Icon(
                     imageVector = if (isPlaying) Icons.Default.Stop else Icons.Default.PlayArrow,
-                    contentDescription = null,
+                    contentDescription = stringResource(
+                        if (isPlaying)
+                            Res.string.chat_recording_stop_description
+                        else
+                            Res.string.chat_recording_play_description
+                    ),
                     tint = if (isAuthor) MaterialTheme.colorScheme.onPrimary else Color.Black
                 )
             }

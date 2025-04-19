@@ -96,6 +96,15 @@
     <string name="chat_creating">Creating chat...</string>
     <string name="chat_message_type_audio">Voice message</string>
     <string name="chat_message_type_image">Photo</string>
+    <string name="chat_message_send_description">Send message</string>
+    <string name="chat_recording_stop_description">Stop recording</string>
+    <string name="chat_recording_play_description">Play recording</string>
+    <string name="chat_start_recording_description">Start recording</string>
+    <string name="chat_cancel_recording_description">Cancel recording</string>
+    <string name="chat_add_multimedia_description">Add multimedia</string>
+
+
+
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>

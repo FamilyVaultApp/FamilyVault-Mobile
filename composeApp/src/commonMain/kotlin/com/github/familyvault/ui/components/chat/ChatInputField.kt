@@ -18,7 +18,12 @@ import com.github.familyvault.services.IAudioRecorderService
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.chat_add_multimedia_description
+import familyvault.composeapp.generated.resources.chat_cancel_recording_description
+import familyvault.composeapp.generated.resources.chat_message_send_description
 import familyvault.composeapp.generated.resources.chat_send_message
+import familyvault.composeapp.generated.resources.chat_start_recording_description
+import familyvault.composeapp.generated.resources.user_modification_description
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -50,7 +55,12 @@ fun ChatInputField(
         }) {
             Icon(
                 imageVector = if (isRecording) Icons.Default.Delete else Icons.Outlined.Image,
-                contentDescription = null,
+                contentDescription = stringResource(
+                    if (isRecording)
+                        Res.string.chat_cancel_recording_description
+                    else
+                        Res.string.chat_add_multimedia_description
+                ),
                 tint = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -66,7 +76,7 @@ fun ChatInputField(
             }) {
                 Icon(
                     imageVector = Icons.Outlined.Mic,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.chat_start_recording_description),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
@@ -116,8 +126,7 @@ fun ChatInputField(
             onClick = {
                 when {
                     isRecording -> {
-                        audioRecorder.stop()
-                        audioData = audioRecorder.getAudioBytes()
+                        audioData = audioRecorder.stop()
                         onVoiceMessageSend(audioData)
                         isRecording = false
                     }
@@ -131,7 +140,7 @@ fun ChatInputField(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.chat_message_send_description),
                 tint = MaterialTheme.colorScheme.primary
             )
         }
