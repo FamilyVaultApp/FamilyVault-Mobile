@@ -1,7 +1,7 @@
 package com.github.familyvault.models.enums
 
-enum class ChatMessageType {
+enum class ChatMessageContentType {
     TEXT,
-    AUDIO,
+    VOICE,
     IMAGE
 }

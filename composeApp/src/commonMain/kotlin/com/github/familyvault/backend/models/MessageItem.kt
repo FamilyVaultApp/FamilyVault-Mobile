@@ -2,7 +2,7 @@ package com.github.familyvault.backend.models
 
 import kotlinx.datetime.LocalDateTime
 
-data class MessageItem(
+data class ThreadMessageItem(
     val messageId: String,
     val messageContent: String?,
     val authorId: String,

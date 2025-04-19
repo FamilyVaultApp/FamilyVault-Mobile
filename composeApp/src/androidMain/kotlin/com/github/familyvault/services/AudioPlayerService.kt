@@ -1,14 +1,11 @@
 package com.github.familyvault.services
 
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
 import kotlinx.coroutines.*
 
-class AudioPlayerService(
-    private val context: Context
-) : IAudioPlayerService {
+class AudioPlayerService : IAudioPlayerService {
 
     private var audioTrack: AudioTrack? = null
     private var playingJob: Job? = null
@@ -26,8 +23,8 @@ class AudioPlayerService(
         audioTrack = AudioTrack.Builder()
             .setAudioAttributes(
                 AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build()
             )
             .setAudioFormat(
@@ -46,6 +43,7 @@ class AudioPlayerService(
             setPlaybackPositionUpdateListener(object : AudioTrack.OnPlaybackPositionUpdateListener {
                 override fun onMarkerReached(track: AudioTrack?) {
                     CoroutineScope(Dispatchers.Main).launch {
+                        stop()
                         onCompletion?.invoke()
                     }
                 }
@@ -66,10 +64,7 @@ class AudioPlayerService(
         playingJob = null
 
         audioTrack?.apply {
-            try {
-                stop()
-            } catch (_: Exception) {
-            }
+            stop()
             release()
         }
         audioTrack = null

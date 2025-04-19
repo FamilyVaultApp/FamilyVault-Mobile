@@ -5,5 +5,5 @@ interface IAudioRecorderService {
     fun stop()
     fun getAudioBytes(): ByteArray
     fun requestRecordingPermission()
-    fun checkRecordingPermission(): Boolean
+    fun haveRecordingPermission(): Boolean
 }

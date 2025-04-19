@@ -5,7 +5,7 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.ChatMessageType
+import com.github.familyvault.models.enums.ChatMessageContentType
 import com.github.familyvault.models.enums.ChatThreadType
 import com.github.familyvault.models.enums.StoreType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
@@ -33,8 +33,7 @@ class ChatService(
             contextId,
             users,
             managers,
-            StoreType.CHAT_FILES_STORE.toString(),
-            ByteArray(0)
+            StoreType.CHAT_FILES.toString()
         )
 
         val threadId = privMxClient.createThread(
@@ -85,23 +84,25 @@ class ChatService(
     override fun sendTextMessage(
         chatThreadId: String, messageContent: String, respondToMessageId: String
     ) {
-        privMxClient.sendMessage(messageContent, chatThreadId, ChatMessageType.TEXT.toString(), respondToMessageId)
+        privMxClient.sendMessage(chatThreadId, messageContent, ChatMessageContentType.TEXT.toString(), respondToMessageId)
     }
 
     override fun sendVoiceMessage(
         chatThreadId: String,
         audioData: ByteArray
     ) {
-        val storeId = privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId
-        val fileId = privMxClient.sendFileToStore(audioData, storeId)
+        val storeId =
+            privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId ?: return
 
-        privMxClient.sendMessage(fileId, chatThreadId, ChatMessageType.AUDIO.toString())
+        val fileId = privMxClient.sendByteArrayToStore(storeId, audioData)
+
+        privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.VOICE.toString())
     }
 
     override fun getVoiceMessage(
         fileId: String
     ): ByteArray {
-        return privMxClient.getFile(fileId)
+        return privMxClient.getFileAsByteArrayFromStore(fileId)
     }
 
     override suspend fun createIndividualChat(
@@ -121,8 +122,7 @@ class ChatService(
             contextId,
             users = threadUsers,
             managers = threadUsers,
-            StoreType.CHAT_FILES_STORE.toString(),
-            ByteArray(0)
+            StoreType.CHAT_FILES.toString()
         )
 
         privMxClient.createThread(

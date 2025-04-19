@@ -9,8 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.familyvault.models.chat.ChatMessage
-import com.github.familyvault.models.enums.ChatMessageType
-import com.github.familyvault.ui.components.typography.Paragraph
+import com.github.familyvault.models.enums.ChatMessageContentType
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
@@ -30,9 +29,9 @@ fun ChatMessageEntry(
             horizontalArrangement = if (isAuthor) Arrangement.End else Arrangement.Start,
         ) {
             when (message.type) {
-                ChatMessageType.TEXT -> ChatMessageTextBubble(message)
-                ChatMessageType.AUDIO -> ChatMessageRecordingBubble(message)
-                ChatMessageType.IMAGE -> null
+                ChatMessageContentType.TEXT -> ChatMessageTextBubble(message)
+                ChatMessageContentType.VOICE -> ChatMessageVoiceMessageBubble(message)
+                ChatMessageContentType.IMAGE -> null
             }
         }
     }

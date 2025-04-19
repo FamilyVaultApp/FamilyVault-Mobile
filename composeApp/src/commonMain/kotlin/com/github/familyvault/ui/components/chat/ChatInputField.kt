@@ -57,7 +57,7 @@ fun ChatInputField(
 
         if (!isRecording) {
             IconButton(onClick = {
-                if (!audioRecorder.checkRecordingPermission()) {
+                if (!audioRecorder.haveRecordingPermission()) {
                     audioRecorder.requestRecordingPermission()
                 } else {
                     audioRecorder.start()
@@ -95,7 +95,7 @@ fun ChatInputField(
                             )
                             .padding(horizontal = 12.dp)
                     ) {
-                        ChatInputWaveForm(
+                        VoiceMessageRecordingWaves(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -118,6 +118,7 @@ fun ChatInputField(
                     isRecording -> {
                         audioRecorder.stop()
                         audioData = audioRecorder.getAudioBytes()
+                        onVoiceMessageSend(audioData)
                         isRecording = false
                     }
 
@@ -133,13 +134,6 @@ fun ChatInputField(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
-        }
-    }
-
-    LaunchedEffect(audioData) {
-        if (audioData.isNotEmpty()) {
-            onVoiceMessageSend(audioData)
-            audioData = ByteArray(0)
         }
     }
 }

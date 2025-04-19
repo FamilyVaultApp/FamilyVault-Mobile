@@ -1,6 +1,6 @@
 package com.github.familyvault.models.chat
 
-import com.github.familyvault.models.enums.ChatMessageType
+import com.github.familyvault.models.enums.ChatMessageContentType
 import kotlinx.datetime.LocalDateTime
 
 data class ChatMessage(
@@ -10,7 +10,7 @@ data class ChatMessage(
     val senderPubKey: String,
     val sendDate: LocalDateTime,
     val isAuthor: Boolean,
-    val type: ChatMessageType
+    val type: ChatMessageContentType
 ) {
     override fun equals(other: Any?): Boolean {
         if (other is ChatMessage) {

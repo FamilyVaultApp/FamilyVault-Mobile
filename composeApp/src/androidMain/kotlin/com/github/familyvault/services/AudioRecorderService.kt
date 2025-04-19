@@ -32,41 +32,40 @@ class AudioRecorderService(
     }
 
     override fun start() {
-        if (isRecording) return
-        if (!checkRecordingPermission()) return
+        if (isRecording || !haveRecordingPermission())
+        {
+            return
+        }
 
         outputStream = ByteArrayOutputStream()
 
-        try {
-            audioRecord = AudioRecord(
-                MediaRecorder.AudioSource.MIC,
-                SAMPLE_RATE,
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                bufferSize
-            )
+        audioRecord = AudioRecord(
+            MediaRecorder.AudioSource.MIC,
+            SAMPLE_RATE,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
+            bufferSize
+        )
 
-            audioRecord?.startRecording()
-            isRecording = true
+        audioRecord?.startRecording()
+        isRecording = true
 
-            recordingJob = CoroutineScope(Dispatchers.IO).launch {
-                val buffer = ByteArray(bufferSize)
-                while (isRecording) {
-                    val read = audioRecord?.read(buffer, 0, buffer.size) ?: 0
-                    if (read > 0) {
-                        outputStream.write(buffer, 0, read)
-                    }
+        recordingJob = CoroutineScope(Dispatchers.IO).launch {
+            val buffer = ByteArray(bufferSize)
+            while (isRecording) {
+                val read = audioRecord?.read(buffer, 0, buffer.size) ?: 0
+                if (read > 0) {
+                    outputStream.write(buffer, 0, read)
                 }
             }
-        } catch (e: SecurityException) {
-            e.printStackTrace()
         }
     }
 
     override fun stop() {
-        if (!isRecording) return
-
-        isRecording = false
+        if (!isRecording)
+        {
+            return
+        }
         recordingJob?.cancel()
 
         audioRecord?.stop()
@@ -75,6 +74,8 @@ class AudioRecorderService(
 
         outputStream.flush()
         outputStream.close()
+
+        isRecording = false
     }
 
     override fun getAudioBytes(): ByteArray {
@@ -82,7 +83,7 @@ class AudioRecorderService(
     }
 
     override fun requestRecordingPermission() {
-        if (!checkRecordingPermission()) {
+        if (!haveRecordingPermission()) {
             ActivityCompat.requestPermissions(
                 context as Activity,
                 arrayOf(Manifest.permission.RECORD_AUDIO),
@@ -91,7 +92,7 @@ class AudioRecorderService(
         }
     }
 
-    override fun checkRecordingPermission(): Boolean {
+    override fun haveRecordingPermission(): Boolean {
         return ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.RECORD_AUDIO

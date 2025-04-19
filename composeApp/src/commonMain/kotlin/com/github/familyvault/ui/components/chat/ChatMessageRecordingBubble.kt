@@ -26,7 +26,7 @@ import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IChatService
 
 @Composable
-fun ChatMessageRecordingBubble(
+fun ChatMessageVoiceMessageBubble(
     message: ChatMessage
 ) {
     val audioPlayerService = koinInject<IAudioPlayerService>()
@@ -65,10 +65,10 @@ fun ChatMessageRecordingBubble(
                             isPlaying = false
                         } else {
                             val audio = chatService.getVoiceMessage(message.message)
-                            isPlaying = true
                             audioPlayerService.play(audio) {
                                 isPlaying = false
                             }
+                            isPlaying = true
                         }
                     }
                 }

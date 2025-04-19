@@ -3,4 +3,4 @@ package com.github.familyvault.backend.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StorePublicMeta(val tag: String)
+data class StorePublicMeta(val type: String)

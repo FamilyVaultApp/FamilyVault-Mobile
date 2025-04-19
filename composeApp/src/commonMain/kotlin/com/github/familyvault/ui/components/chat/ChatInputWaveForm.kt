@@ -21,9 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChatInputWaveForm(
+fun VoiceMessageRecordingWaves(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.primary
+    color: Color = MaterialTheme.colorScheme.onPrimary
 ) {
     val barCount = 35
     val barWidth = 2.dp

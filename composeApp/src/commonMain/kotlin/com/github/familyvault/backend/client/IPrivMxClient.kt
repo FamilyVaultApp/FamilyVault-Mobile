@@ -1,6 +1,6 @@
 package com.github.familyvault.backend.client
 
-import com.github.familyvault.backend.models.MessageItem
+import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadPrivateMeta
@@ -21,35 +21,34 @@ interface IPrivMxClient {
         tag: String,
         type: String,
         name: String,
-        referenceStoreId: String
+        referenceStoreId: String?
     ): String
 
     fun createStore(
         contextId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        type: String,
-        privateMeta: ByteArray
+        type: String
     ): String
 
     fun retrieveThread(threadId: String) : ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
-    fun sendMessage(content: String, threadId: String, type: String, referenceMessageId: String = "")
-    fun sendMessage(content: ByteArray, threadId: String, type: String, referenceMessageId: String = "")
-    fun getFile(fileId: String) : ByteArray
-    fun sendFileToStore(content: ByteArray, storeId: String) : String
+    fun sendMessage(threadId: String, content: String, type: String, referenceMessageId: String = "")
+    fun sendMessage(threadId: String, content: ByteArray, type: String, referenceMessageId: String = "")
+    fun getFileAsByteArrayFromStore(fileId: String) : ByteArray
+    fun sendByteArrayToStore(storeId: String, content: ByteArray) : String
     fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int
-    ): List<MessageItem>
+    ): List<ThreadMessageItem>
 
-    fun retrieveLastMessageFromThread(threadId: String): MessageItem?
+    fun retrieveLastMessageFromThread(threadId: String): ThreadMessageItem?
 
     /* Listeners */
     fun unregisterAllEvents(eventName: String)
     fun registerOnMessageCreated(
         eventName: String,
         threadId: String,
-        callback: (MessageItem) -> Unit
+        callback: (ThreadMessageItem) -> Unit
     )
 
     fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
