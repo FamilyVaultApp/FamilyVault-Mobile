@@ -16,6 +16,7 @@ object StoredChatMessageToChatMessageMapper {
             sendDate = Instant.fromEpochMilliseconds(storedChatMessage.createDate).toLocalDateTime(
                 TimeZone.UTC
             ),
-            isAuthor = storedChatMessage.authorPublicKey.compareTo(userId) == 0
+            isAuthor = storedChatMessage.authorPublicKey.compareTo(userId) == 0,
+            type = storedChatMessage.type
         )
 }

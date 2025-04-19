@@ -20,7 +20,7 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun ChatMessageBubble(
+fun ChatMessageTextBubble(
     message: ChatMessage
 ) {
     val sender = message.senderId

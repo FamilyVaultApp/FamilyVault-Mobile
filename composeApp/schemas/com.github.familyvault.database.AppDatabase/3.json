@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "fec4c6210890929a29300a9a6bbf7d53",
+    "identityHash": "20ae9aab8c1dc915ae24cc272765331c",
     "entities": [
       {
         "tableName": "FamilyGroupCredential",
@@ -66,7 +66,7 @@
       },
       {
         "tableName": "StoredChatMessage",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `chatThreadId` TEXT NOT NULL, `authorId` TEXT NOT NULL, `authorPublicKey` TEXT NOT NULL, `content` TEXT NOT NULL, `createDate` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `chatThreadId` TEXT NOT NULL, `authorId` TEXT NOT NULL, `authorPublicKey` TEXT NOT NULL, `content` TEXT NOT NULL, `createDate` INTEGER NOT NULL, `type` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -103,6 +103,12 @@
             "columnName": "createDate",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -115,7 +121,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fec4c6210890929a29300a9a6bbf7d53')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '20ae9aab8c1dc915ae24cc272765331c')"
     ]
   }
 }

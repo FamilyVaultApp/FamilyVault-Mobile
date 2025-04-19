@@ -3,6 +3,8 @@ package com.github.familyvault.backend.client
 import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadItem
+import com.github.familyvault.backend.models.ThreadPrivateMeta
+import com.github.familyvault.backend.models.ThreadPublicMeta
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
 interface IPrivMxClient {
@@ -18,11 +20,24 @@ interface IPrivMxClient {
         managers: List<PrivMxUser>,
         tag: String,
         type: String,
-        name: String
+        name: String,
+        referenceStoreId: String
     ): String
 
+    fun createStore(
+        contextId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+        type: String,
+        privateMeta: ByteArray
+    ): String
+
+    fun retrieveThread(threadId: String) : ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
-    fun sendMessage(content: String, threadId: String, referenceMessageId: String = "")
+    fun sendMessage(content: String, threadId: String, type: String, referenceMessageId: String = "")
+    fun sendMessage(content: ByteArray, threadId: String, type: String, referenceMessageId: String = "")
+    fun getFile(fileId: String) : ByteArray
+    fun sendFileToStore(content: ByteArray, storeId: String) : String
     fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int
     ): List<MessageItem>
