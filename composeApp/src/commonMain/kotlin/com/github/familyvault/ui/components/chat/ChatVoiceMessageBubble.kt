@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IChatService
-import com.github.familyvault.ui.components.CharacterInCircle
+import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -53,7 +53,7 @@ fun ChatVoiceMessageBubble(
         horizontalArrangement = if (isAuthor) Arrangement.End else Arrangement.Start,
     ) {
         if (!isAuthor) {
-            CharacterInCircle(firstName = sender, size = AdditionalTheme.spacings.large)
+            UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
             Spacer(modifier = Modifier.width(AdditionalTheme.spacings.medium))
         }
 

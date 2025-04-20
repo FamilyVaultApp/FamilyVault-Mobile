@@ -53,12 +53,7 @@ fun FamilyGroupEntry(
 
     Row(
         modifier = Modifier.defaultMinSize(minHeight = AdditionalTheme.sizing.entryMinSize)
-            .clickable(onClick = {
-                if (isCurrentFamilyGroup) {
-                    return@clickable
-                }
-                onSelect()
-            }).background(
+            .clickable(onClick = onSelect).background(
                 backgroundColor
             ).fillMaxWidth().padding(
                 vertical = AdditionalTheme.spacings.medium,
@@ -92,13 +87,7 @@ fun FamilyGroupEntry(
             }
         }
         IconButton(
-            onClick = {
-                if (familyGroup.isDefault) {
-                    return@IconButton
-                }
-
-                onSetDefault()
-            }
+            onClick = onSetDefault
         )
         {
             Icon(

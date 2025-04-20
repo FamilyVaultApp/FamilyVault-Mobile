@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
-import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.ISavedFamilyGroupsService
@@ -32,7 +31,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupSettingNameScreen : Screen {
+class FamilyGroupSettingChangeNameScreen : Screen {
     @Composable
     override fun Content() {
         val familyGroupService = koinInject<IFamilyGroupService>()

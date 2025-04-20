@@ -75,7 +75,7 @@ class FamilyGroupSettingsScreen : Screen {
                         title = stringResource(Res.string.setting_change_name_title),
                         description = stringResource(Res.string.setting_change_name_description_short),
                         onClick = {
-                            navigator.push(FamilyGroupSettingNameScreen())
+                            navigator.push(FamilyGroupSettingChangeNameScreen())
                         })
                     SettingItem(
                         Icons.Outlined.PersonAdd,

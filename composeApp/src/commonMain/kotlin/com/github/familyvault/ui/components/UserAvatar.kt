@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CharacterInCircle(
+fun UserAvatar(
     firstName: String,
     size: Dp? = null,
 ) {

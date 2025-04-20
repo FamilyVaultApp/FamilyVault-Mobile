@@ -80,8 +80,14 @@ class ChangeFamilyGroupScreen : Screen {
                     )
                     Column {
                         familyGroups.map {
+                            val isCurrentFamilyGroup = it.contextId == currentContextId
+
                             FamilyGroupEntry(
-                                it, it.contextId == currentContextId, onSelect = {
+                                it, isCurrentFamilyGroup, onSelect = {
+                                    if (isCurrentFamilyGroup) {
+                                        return@FamilyGroupEntry
+                                    }
+
                                     coroutineScope.launch {
                                         isChangingFamilyGroup = true
                                         familyGroupSessionService.disconnect()
@@ -96,6 +102,10 @@ class ChangeFamilyGroupScreen : Screen {
                                     }
                                 },
                                 onSetDefault = {
+                                    if (it.isDefault) {
+                                        return@FamilyGroupEntry
+                                    }
+
                                     coroutineScope.launch {
                                         isLoading = true
                                         savedFamilyGroupsService.changeDefaultFamilyGroupCredential(

@@ -82,7 +82,7 @@
     <string name="setting_members_short">Manage your family group members</string>
     <string name="setting_members_long">Below is a list of members in your family group. Tap the three-dot icon next to a member to manage them.</string>
 
-    <string name="setting_add_member_title">Add Member</string>
+    <string name="setting_add_member_title">Add member</string>
     <string name="setting_add_member_short">Add a new member to your family group</string>
 
     <string name="setting_change_family_group_title">Change family group</string>

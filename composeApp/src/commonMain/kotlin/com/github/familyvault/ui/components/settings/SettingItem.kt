@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,21 +37,16 @@ fun SettingItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = icon,
+            icon,
             contentDescription = description,
-            modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.primary
         )
 
-        Spacer(modifier = Modifier.width(AdditionalTheme.spacings.screenPadding))
+        Spacer(modifier = Modifier.width(AdditionalTheme.spacings.medium * 2))
 
-        Column(modifier = Modifier.weight(1f)) {
-            Paragraph(
-                text = title,
-            )
-            ParagraphMuted(
-                text = description,
-            )
+        Column {
+            Paragraph(title)
+            ParagraphMuted(description)
         }
     }
 }

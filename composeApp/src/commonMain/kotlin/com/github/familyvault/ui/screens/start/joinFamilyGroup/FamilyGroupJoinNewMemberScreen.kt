@@ -14,7 +14,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyGroupNewMemberForm
 import com.github.familyvault.ui.components.HeaderWithIcon
-import com.github.familyvault.ui.components.BottomAcceptButton
+import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.formsContent.NewFamilyMemberFormContent
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
@@ -39,7 +39,7 @@ class FamilyGroupJoinNewMemberScreen : Screen {
                 modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
             ) {
                 NewFamilyMemberFormContent(form)
-                BottomAcceptButton(
+                BottomNextButton(
                     text = stringResource(Res.string.next_button_content),
                     enabled = form.isFormValid()
                 ) {
