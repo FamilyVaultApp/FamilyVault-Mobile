@@ -5,7 +5,9 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.models.enums.ChatMessageContentType
 import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.models.enums.StoreType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
@@ -27,14 +29,23 @@ class ChatService(
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
 
+        val storeId = privMxClient.createStore(
+            contextId,
+            users,
+            managers,
+            StoreType.CHAT_FILES.toString()
+        )
+
         val threadId = privMxClient.createThread(
             contextId,
             users,
             managers,
             AppConfig.CHAT_THREAD_TAG,
             ChatThreadType.GROUP.toString(),
-            name
+            name,
+            storeId
         )
+
         return ChatThread(
             threadId,
             name,
@@ -42,6 +53,13 @@ class ChatService(
             lastMessage = null,
             ChatThreadType.GROUP,
         )
+    }
+
+    override suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?) {
+        val splitFamilyGroupMembersList = FamilyMembersSplitter.split(members)
+        val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
+        val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
+        privMxClient.updateThread(thread.id, users, managers, newName)
     }
 
     override fun retrieveAllChatThreads(): List<ChatThread> {
@@ -70,10 +88,28 @@ class ChatService(
             .map { it.copy(name = it.customNameIfIndividualOrDefault(user.id)) }
     }
 
-    override fun sendMessage(
+    override fun sendTextMessage(
         chatThreadId: String, messageContent: String, respondToMessageId: String
     ) {
-        privMxClient.sendMessage(messageContent, chatThreadId, respondToMessageId)
+        privMxClient.sendMessage(chatThreadId, messageContent, ChatMessageContentType.TEXT.toString(), respondToMessageId)
+    }
+
+    override fun sendVoiceMessage(
+        chatThreadId: String,
+        audioData: ByteArray
+    ) {
+        val storeId =
+            privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId ?: return
+
+        val fileId = privMxClient.sendByteArrayToStore(storeId, audioData)
+
+        privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.VOICE.toString())
+    }
+
+    override fun getVoiceMessage(
+        fileId: String
+    ): ByteArray {
+        return privMxClient.getFileAsByteArrayFromStore(fileId)
     }
 
     override suspend fun createIndividualChat(
@@ -89,6 +125,13 @@ class ChatService(
             )
         }
 
+        val storeId = privMxClient.createStore(
+            contextId,
+            users = threadUsers,
+            managers = threadUsers,
+            StoreType.CHAT_FILES.toString()
+        )
+
         privMxClient.createThread(
             contextId,
             users = threadUsers,
@@ -96,6 +139,7 @@ class ChatService(
             tag = AppConfig.CHAT_THREAD_TAG,
             type = ChatThreadType.INDIVIDUAL.toString(),
             name = threadUsers.joinToString { it.userId },
+            referenceStoreId = storeId
         )
     }
 

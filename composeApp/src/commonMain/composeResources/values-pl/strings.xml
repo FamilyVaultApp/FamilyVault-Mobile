@@ -107,6 +107,7 @@
     <!-- Chat -->
     <string name="chat_create_new">Stwórz nowy chat</string>
     <string name="chat_set_group_name">Nazwa grupy</string>
+    <string name="chat_settings">Ustawienia chatu</string>
     <string name="chat_create_group_default_name">Grupa rodzinna</string>
     <string name="chat_create_group_members">Członkowie czatu grupowego</string>
     <string name="chat_create_group_button_content">Utwórz chat</string>
@@ -116,6 +117,14 @@
     <string name="chat_recording_icon">Nagraj wiadomość głosową</string>
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
     <string name="chat_creating">Tworzenie chatu...</string>
+    <string name="chat_message_type_audio">Wiadomość głosowa</string>
+    <string name="chat_message_type_image">Zdjęcie</string>
+    <string name="chat_message_send_description">Wyślij wiadomość</string>
+    <string name="chat_recording_stop_description">Zatrzymaj nagranie</string>
+    <string name="chat_recording_play_description">Odsłuchaj nagranie</string>
+    <string name="chat_start_recording_description">Zacznij nagrywanie</string>
+    <string name="chat_cancel_recording_description">Anuluj nagrywanie</string>
+    <string name="chat_add_multimedia_description">Dodaj multimedia</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>

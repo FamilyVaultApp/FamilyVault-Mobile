@@ -86,7 +86,6 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
             topBar = {
                 TopAppBar(
                     familyMember.fullname,
-                    showManagementButton = false
                 )
             },
         ) { paddingValues ->

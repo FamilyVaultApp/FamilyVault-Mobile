@@ -45,7 +45,7 @@ class FamilyGroupSettingsScreen : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    stringResource(Res.string.settings_title), showManagementButton = false
+                    stringResource(Res.string.settings_title)
                 )
             },
         ) { paddingValues ->

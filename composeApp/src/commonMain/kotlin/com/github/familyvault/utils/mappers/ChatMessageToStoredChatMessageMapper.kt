@@ -12,6 +12,7 @@ object ChatMessageToStoredChatMessageMapper {
         authorId = chatMessage.senderId,
         authorPublicKey = chatMessage.senderPubKey,
         content = chatMessage.message,
-        createDate = chatMessage.sendDate.toInstant(TimeZone.UTC).toEpochMilliseconds()
+        createDate = chatMessage.sendDate.toInstant(TimeZone.UTC).toEpochMilliseconds(),
+        type = chatMessage.type
     )
 }

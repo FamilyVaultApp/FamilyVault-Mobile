@@ -63,7 +63,6 @@ class ChangeFamilyGroupScreen : Screen {
                 TopAppBar(
                     title = stringResource(Res.string.setting_change_family_group_title),
                     Icons.Outlined.Groups,
-                    showManagementButton = false
                 )
             }) { paddings ->
 

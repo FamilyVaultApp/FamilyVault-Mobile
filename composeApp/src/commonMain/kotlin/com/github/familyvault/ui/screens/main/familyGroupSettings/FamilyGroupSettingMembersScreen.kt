@@ -68,7 +68,6 @@ class FamilyGroupSettingMembersScreen : Screen {
                 TopAppBar(
                     stringResource(Res.string.setting_members_title),
                     icon = Icons.Outlined.Groups,
-                    showManagementButton = false
                 )
             }) { padding ->
             ContentWithAction(

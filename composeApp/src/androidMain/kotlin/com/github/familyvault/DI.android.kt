@@ -6,6 +6,10 @@ import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.createAppDatabase
 import com.github.familyvault.services.INotificationService
 import com.github.familyvault.services.NotificationService
+import com.github.familyvault.services.AudioPlayerService
+import com.github.familyvault.services.AudioRecorderService
+import com.github.familyvault.services.IAudioPlayerService
+import com.github.familyvault.services.IAudioRecorderService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.services.IQRCodeService
 import com.github.familyvault.services.NfcService
@@ -25,10 +29,14 @@ actual fun getPlatformModules() = module {
     /* QrCode */
     factory { QrCodeService(get()) }.bind<IQRCodeService>()
     factory { QrCodeGenerator() }.bind<IQrCodeGenerator>()
-    
+
     /* Notifications */
     factory { NotificationService(get()) }.bind<INotificationService>()
 
     /* NFC */
     factory {NfcService(get()) }.bind<INfcService>()
+
+    /* Audio service */
+    factory { AudioPlayerService() }.bind<IAudioPlayerService>()
+    factory { AudioRecorderService(get()) }.bind<IAudioRecorderService>()
 }

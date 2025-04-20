@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.github.familyvault.ui.components.FamilyGroupManagementIcon
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 import androidx.compose.material3.TopAppBar as MdTopAppBar
@@ -21,7 +20,7 @@ import androidx.compose.material3.TopAppBar as MdTopAppBar
 fun TopAppBar(
     title: String,
     icon: ImageVector? = null,
-    showManagementButton: Boolean = true,
+    actions: (@Composable () -> Unit)? = null
 ) {
     return MdTopAppBar(
         title = {
@@ -42,9 +41,7 @@ fun TopAppBar(
         },
 
         actions = {
-            if (showManagementButton) {
-                FamilyGroupManagementIcon()
-            }
+            actions?.invoke()
         }
     )
 }

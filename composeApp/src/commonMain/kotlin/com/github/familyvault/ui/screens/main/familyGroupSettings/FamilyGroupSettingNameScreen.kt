@@ -46,7 +46,6 @@ class FamilyGroupSettingNameScreen : Screen {
                 TopAppBar(
                     stringResource(Res.string.setting_change_name_title),
                     icon = Icons.Outlined.Edit,
-                    showManagementButton = false
                 )
             }) { paddings ->
             ContentWithAction(

@@ -45,6 +45,10 @@ class GroupChatEditForm : BasicForm() {
         afterEntryUpdate(formData.familyMembers)
     }
 
+    fun addAllMembersFromListToGroupChat(members: List<FamilyMember>) {
+        formData.familyMembers.list.addAll(members)
+    }
+
     override fun validateForm() {
         formData.groupName.validationError = FormValidator.multipleValidators(
             FormValidator.validateEmpty(groupName),

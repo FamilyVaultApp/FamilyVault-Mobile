@@ -19,4 +19,8 @@ object AppConfig {
 
     /* Chat */
     val CHAT_MESSAGES_PER_PAGE = 50
+    val CHAT_AUDIO_PLAYER_BAR_COUNT = 10
+
+    /* Audio */
+    val AUDIO_SAMPLE_RATE = 44100
 }
