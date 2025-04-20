@@ -1,6 +1,5 @@
 package com.github.familyvault.ui.components.chat
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -13,13 +12,11 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun VoiceMessageStopButton(onCancel: () -> Unit) {
-    Row {
-        IconButton(onClick = onCancel) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = stringResource(Res.string.chat_cancel_recording_description),
-                tint = MaterialTheme.colorScheme.error
-            )
-        }
+    IconButton(onClick = onCancel) {
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = stringResource(Res.string.chat_cancel_recording_description),
+            tint = MaterialTheme.colorScheme.error
+        )
     }
 }

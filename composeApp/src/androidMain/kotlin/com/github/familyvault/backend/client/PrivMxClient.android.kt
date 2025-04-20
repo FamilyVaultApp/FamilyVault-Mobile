@@ -127,9 +127,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     ): ThreadItem {
         val thread = requireNotNull(threadApi).getThread(threadId)
 
-        return thread.let {
-            PrivMxThreadToThreadItemMapper.map(thread)
-        }
+        return PrivMxThreadToThreadItemMapper.map(thread)
     }
 
     override fun updateThread(

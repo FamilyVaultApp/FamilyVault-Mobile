@@ -32,7 +32,7 @@ import familyvault.composeapp.generated.resources.chat_recording_stop_descriptio
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ChatMessageVoiceMessageBubble(
+fun ChatVoiceMessageBubble(
     message: ChatMessage
 ) {
     val audioPlayerService = koinInject<IAudioPlayerService>()
@@ -100,6 +100,12 @@ fun ChatMessageVoiceMessageBubble(
                 ChatAudioPlayerWaveform(
                     isPlaying = isPlaying,
                     isAuthor = isAuthor
+                )
+            }
+            if (!isAuthor) {
+                Paragraph(
+                    "${message.sendDate.hour}:${message.sendDate.minute}",
+                    color = AdditionalTheme.colors.mutedColor
                 )
             }
         }
