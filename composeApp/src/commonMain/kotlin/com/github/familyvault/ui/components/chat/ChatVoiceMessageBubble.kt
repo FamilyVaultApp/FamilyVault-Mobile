@@ -16,7 +16,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -26,7 +25,6 @@ import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.ui.components.typography.Paragraph
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.chat_message_send_description
 import familyvault.composeapp.generated.resources.chat_recording_play_description
 import familyvault.composeapp.generated.resources.chat_recording_stop_description
 import org.jetbrains.compose.resources.stringResource
