@@ -52,7 +52,7 @@ class ChangeFamilyGroupScreen : Screen {
         val coroutineScope = rememberCoroutineScope()
 
 
-        LaunchedEffect(savedFamilyGroupsService) {
+        LaunchedEffect(Unit) {
             isLoading = true
             familyGroups.addAll(savedFamilyGroupsService.getAllSavedFamilyGroups())
             isLoading = false
