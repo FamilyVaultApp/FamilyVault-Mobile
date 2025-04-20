@@ -13,6 +13,7 @@ interface IChatService {
     fun sendVoiceMessage(chatThreadId: String, audioData: ByteArray)
     fun getVoiceMessage(fileId: String) : ByteArray
     suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
+    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)
     suspend fun createIndividualChatsWithAllFamilyMembersForMember(member: FamilyMember)
     suspend fun populateDatabaseWithLastMessages(chatThreadId: String)

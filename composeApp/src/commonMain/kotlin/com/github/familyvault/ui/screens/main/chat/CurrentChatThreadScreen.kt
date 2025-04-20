@@ -19,7 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.models.enums.ChatThreadType
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.states.ICurrentChatState
@@ -35,10 +38,10 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
 
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
         chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val chatState = koinInject<ICurrentChatState>()
-
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
@@ -74,7 +77,11 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
 
         Scaffold(
             topBar = {
-                TopAppBar(chatThread.name, false)
+                TopAppBar(chatThread.name,
+                    showManagementButton = chatThread.type == ChatThreadType.GROUP,
+                    onManagementButtonClick = {
+                        navigator.parent?.push(ChatThreadEditScreen(chatThread.type, chatThread))
+                    })
             },
         ) { paddingValues ->
             Column(
