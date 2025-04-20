@@ -90,14 +90,10 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                         )
                     }
                 }
-                Box(
-                    modifier = Modifier.fillMaxWidth().padding(AdditionalTheme.spacings.small)
-                ) {
-                    ChatInputField(
-                        onTextMessageSend = { handleTextMessageSend(it) },
-                        onVoiceMessageSend = { handleVoiceMessageSend(it) }
-                    )
-                }
+                ChatInputField(
+                    onTextMessageSend = { handleTextMessageSend(it) },
+                    onVoiceMessageSend = { handleVoiceMessageSend(it) }
+                )
             }
         }
     }

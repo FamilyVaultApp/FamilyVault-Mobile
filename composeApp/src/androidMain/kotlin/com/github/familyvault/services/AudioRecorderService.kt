@@ -8,6 +8,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import androidx.core.app.ActivityCompat
+import com.github.familyvault.AppConfig
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
 
@@ -28,7 +29,7 @@ class AudioRecorderService(
 
     companion object {
         private const val RECORDING_PERMISSION_REQUEST_CODE = 1002
-        private const val SAMPLE_RATE = 44100
+        private val SAMPLE_RATE = AppConfig.AUDIO_SAMPLE_RATE
     }
 
     override fun start() {

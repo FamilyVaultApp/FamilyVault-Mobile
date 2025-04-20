@@ -3,6 +3,7 @@ package com.github.familyvault.services
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import com.github.familyvault.AppConfig
 import kotlinx.coroutines.*
 
 class AudioPlayerService : IAudioPlayerService {
@@ -10,14 +11,15 @@ class AudioPlayerService : IAudioPlayerService {
     private var audioTrack: AudioTrack? = null
     private var playingJob: Job? = null
 
+    private val audioPlayerScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     override fun play(audioData: ByteArray, onCompletion: (() -> Unit)?) {
         stop()
 
-        val sampleRate = 44100
+        val sampleRate = AppConfig.AUDIO_SAMPLE_RATE
         val channelConfig = AudioFormat.CHANNEL_OUT_MONO
         val audioFormat = AudioFormat.ENCODING_PCM_16BIT
         val minBufferSize = AudioTrack.getMinBufferSize(sampleRate, channelConfig, audioFormat)
-
         val totalSamples = audioData.size / 2
 
         audioTrack = AudioTrack.Builder()
@@ -42,7 +44,7 @@ class AudioPlayerService : IAudioPlayerService {
             setNotificationMarkerPosition(totalSamples)
             setPlaybackPositionUpdateListener(object : AudioTrack.OnPlaybackPositionUpdateListener {
                 override fun onMarkerReached(track: AudioTrack?) {
-                    CoroutineScope(Dispatchers.Main).launch {
+                    audioPlayerScope.launch {
                         stop()
                         onCompletion?.invoke()
                     }
@@ -53,7 +55,7 @@ class AudioPlayerService : IAudioPlayerService {
 
             play()
 
-            playingJob = CoroutineScope(Dispatchers.IO).launch {
+            playingJob = audioPlayerScope.launch(Dispatchers.IO) {
                 write(audioData, 0, audioData.size)
             }
         }

@@ -44,105 +44,70 @@ fun ChatInputField(
             .padding(AdditionalTheme.spacings.small, vertical = AdditionalTheme.spacings.large),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = {
-            if (isRecording) {
-                audioRecorder.stop()
-                isRecording = false
-                audioData = ByteArray(0)
-            } else {
-                // Obsługa zdjęć
-            }
-        }) {
-            Icon(
-                imageVector = if (isRecording) Icons.Default.Delete else Icons.Outlined.Image,
-                contentDescription = stringResource(
-                    if (isRecording)
-                        Res.string.chat_cancel_recording_description
-                    else
-                        Res.string.chat_add_multimedia_description
-                ),
-                tint = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+
+        if (isRecording) {
+            VoiceMessageStopButton(
+                onCancel = {
+                    audioRecorder.stop()
+                    isRecording = false
+                    audioData = ByteArray(0)
+                }
+            )
+        } else {
+            MultimediaSendButton(onClick = { /* Obsługa zdjęć */ })
+            VoiceMessageRecordButton(
+                onStart = {
+                    if (!audioRecorder.haveRecordingPermission()) {
+                        audioRecorder.requestRecordingPermission()
+                    } else {
+                        audioRecorder.start()
+                        isRecording = true
+                    }
+                }
             )
         }
 
-        if (!isRecording) {
-            IconButton(onClick = {
-                if (!audioRecorder.haveRecordingPermission()) {
-                    audioRecorder.requestRecordingPermission()
-                } else {
-                    audioRecorder.start()
-                    isRecording = true
-                }
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Mic,
-                    contentDescription = stringResource(Res.string.chat_start_recording_description),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+        Spacer(modifier = Modifier.width(AdditionalTheme.spacings.small))
+
+        AnimatedContent(
+            targetState = isRecording,
+            modifier = Modifier.weight(1f)
+        ) { recording ->
+            if (recording) {
+                VoiceMessageRecordingWaves(
+                    modifier = Modifier
+                        .height(AdditionalTheme.spacings.veryLarge)
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = MaterialTheme.shapes.large
+                        )
+                        .padding(horizontal = AdditionalTheme.spacings.normalPadding),
+                )
+            } else {
+                TextField(
+                    label = stringResource(Res.string.chat_send_message),
+                    modifier = Modifier
+                        .height(AdditionalTheme.spacings.veryLarge)
+                        .fillMaxWidth(),
+                    value = textMessage,
+                    onValueChange = { textMessage = it },
                 )
             }
         }
 
-        Spacer(modifier = Modifier.width(4.dp))
-
-        AnimatedContent(
-            targetState = isRecording,
-            modifier = Modifier
-                .weight(1f)
-        ) { recording ->
-            Box(
-                modifier = Modifier
-                    .height(60.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                if (recording) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                shape = MaterialTheme.shapes.large
-                            )
-                            .padding(horizontal = 12.dp)
-                    ) {
-                        VoiceMessageRecordingWaves(
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                } else {
-                    TextField(
-                        label = stringResource(Res.string.chat_send_message),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Transparent),
-                        value = textMessage,
-                        onValueChange = { textMessage = it },
-                    )
-                }
-            }
-        }
-
-        IconButton(
-            onClick = {
-                when {
-                    isRecording -> {
-                        audioData = audioRecorder.stop()
-                        onVoiceMessageSend(audioData)
-                        isRecording = false
-                    }
-
-                    textMessage.isNotBlank() -> {
-                        onTextMessageSend(textMessage)
-                        textMessage = ""
-                    }
-                }
+        SendButton(
+            isRecording = isRecording,
+            textMessage = textMessage,
+            onSendText = {
+                onTextMessageSend(textMessage)
+                textMessage = ""
             },
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = stringResource(Res.string.chat_message_send_description),
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
+            onSendVoice = {
+                audioData = audioRecorder.stop()
+                onVoiceMessageSend(audioData)
+                isRecording = false
+            }
+        )
     }
 }

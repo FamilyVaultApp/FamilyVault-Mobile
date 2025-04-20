@@ -47,7 +47,8 @@ data class AdditionalColors(
     val mutedColor: Color,
     val onMutedColor: Color,
     val onPrimaryContainerSecondColor: Color,
-    val otherChatBubbleColor: Color
+    val otherChatBubbleColor: Color,
+    val otherChatBubbleContentColor: Color
 )
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
@@ -60,7 +61,8 @@ private val LocalCustomColorsLight = staticCompositionLocalOf {
         mutedColor = Color(0xFFB3B3B3),
         onMutedColor = Color(0xff6D6D6D),
         onPrimaryContainerSecondColor = Color(0xff6D6D6D),
-        otherChatBubbleColor = Color(0xfff3f3f3)
+        otherChatBubbleColor = Color(0xfff3f3f3),
+        otherChatBubbleContentColor = Color(0xFF1C1B1F)
     )
 }
 
@@ -74,12 +76,14 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
         mutedColor = Color(0xFF858383),
         onMutedColor = Color(0xffB3B3B3),
         onPrimaryContainerSecondColor = Color(0xffB3B3B3),
-        otherChatBubbleColor = Color(0xfff3f3f3)
+        otherChatBubbleColor = Color(0xfff3f3f3),
+        otherChatBubbleContentColor = Color(0xFF1C1B1F)
     )
 }
 
 @Immutable
 data class Spacing(
+    val veryLarge: Dp,
     val large: Dp,
     val medium: Dp,
     val small: Dp,
@@ -89,6 +93,7 @@ data class Spacing(
 
 private val LocalSpacing = staticCompositionLocalOf {
     Spacing(
+        veryLarge = 60.dp,
         large = 40.dp,
         medium = 10.dp,
         small = 5.dp,

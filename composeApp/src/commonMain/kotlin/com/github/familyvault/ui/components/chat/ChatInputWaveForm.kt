@@ -22,8 +22,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun VoiceMessageRecordingWaves(
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.onPrimary
+    modifier: Modifier = Modifier
 ) {
     val barCount = 35
     val barWidth = 2.dp
@@ -49,8 +48,7 @@ fun VoiceMessageRecordingWaves(
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .height(24.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -60,7 +58,7 @@ fun VoiceMessageRecordingWaves(
                     .width(barWidth)
                     .height(heightAnim.value.dp)
                     .background(
-                        color = color,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         shape = MaterialTheme.shapes.extraSmall
                     )
             )

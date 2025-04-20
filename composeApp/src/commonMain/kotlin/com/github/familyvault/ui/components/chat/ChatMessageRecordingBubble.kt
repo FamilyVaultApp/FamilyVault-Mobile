@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.ui.components.typography.Paragraph
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_message_send_description
 import familyvault.composeapp.generated.resources.chat_recording_play_description
@@ -49,51 +50,58 @@ fun ChatMessageVoiceMessageBubble(
     ) {
         if (!isAuthor) {
             UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
+            Spacer(modifier = Modifier.width(AdditionalTheme.spacings.medium))
         }
 
-        Row(
-            modifier = Modifier
-                .padding(AdditionalTheme.spacings.medium)
-                .background(
-                    if (isAuthor) MaterialTheme.colorScheme.primary else AdditionalTheme.colors.otherChatBubbleColor,
-                    shape = MaterialTheme.shapes.medium
-                )
-                .padding(AdditionalTheme.spacings.medium),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small),
         ) {
-            IconButton(
-                onClick = {
-                    coroutineScope.launch {
-                        if (isPlaying) {
-                            audioPlayerService.stop()
-                            isPlaying = false
-                        } else {
-                            val audio = chatService.getVoiceMessage(message.message)
-                            audioPlayerService.play(audio) {
+            if (!isAuthor) {
+                Paragraph(sender, color = AdditionalTheme.colors.mutedColor)
+            }
+            Row(
+                modifier = Modifier
+                    .background(
+                        if (isAuthor) MaterialTheme.colorScheme.primary else AdditionalTheme.colors.otherChatBubbleColor,
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .padding(AdditionalTheme.spacings.medium),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                IconButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            if (isPlaying) {
+                                audioPlayerService.stop()
                                 isPlaying = false
+                            } else {
+                                val audio = chatService.getVoiceMessage(message.message)
+                                audioPlayerService.play(audio) {
+                                    isPlaying = false
+                                }
+                                isPlaying = true
                             }
-                            isPlaying = true
                         }
                     }
+                ) {
+                    Icon(
+                        imageVector = if (isPlaying) Icons.Default.Stop else Icons.Default.PlayArrow,
+                        contentDescription = stringResource(
+                            if (isPlaying)
+                                Res.string.chat_recording_stop_description
+                            else
+                                Res.string.chat_recording_play_description
+                        ),
+                        tint = if (isAuthor) MaterialTheme.colorScheme.onPrimary else AdditionalTheme.colors.otherChatBubbleContentColor
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = if (isPlaying) Icons.Default.Stop else Icons.Default.PlayArrow,
-                    contentDescription = stringResource(
-                        if (isPlaying)
-                            Res.string.chat_recording_stop_description
-                        else
-                            Res.string.chat_recording_play_description
-                    ),
-                    tint = if (isAuthor) MaterialTheme.colorScheme.onPrimary else Color.Black
+
+                ChatAudioPlayerWaveform(
+                    isPlaying = isPlaying,
+                    isAuthor = isAuthor
                 )
             }
-
-            ChatAudioPlayerWaveform(
-                isPlaying = isPlaying,
-                isAuthor = isAuthor
-            )
         }
     }
 }
