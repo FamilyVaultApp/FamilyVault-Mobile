@@ -66,6 +66,11 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         threadApi = connection!!.threadApi
     }
 
+    override fun disconnect() {
+        connection?.unregisterAll()
+        container.disconnectAll()
+    }
+
     override fun createThread(
         contextId: String,
         users: List<PrivMxUser>,

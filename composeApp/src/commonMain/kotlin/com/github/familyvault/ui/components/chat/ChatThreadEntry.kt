@@ -5,7 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -15,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.services.IFamilyGroupSessionService
-import com.github.familyvault.ui.components.UserAvatar
+import com.github.familyvault.ui.components.CharacterInCircle
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -42,7 +44,9 @@ fun ChatThreadEntry(
     }
 
     return Row(
-        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).background(backgroundColor)
+        modifier = Modifier.defaultMinSize(minHeight = AdditionalTheme.sizing.entryMinSize)
+            .fillMaxWidth()
+            .clickable(onClick = onClick).background(backgroundColor)
             .padding(
                 horizontal = AdditionalTheme.spacings.screenPadding,
                 vertical = AdditionalTheme.spacings.normalPadding,
@@ -50,7 +54,7 @@ fun ChatThreadEntry(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
     ) {
-        UserAvatar(chatThread.name)
+        CharacterInCircle(chatThread.name)
         Column {
             Headline3(
                 TextShortener.shortenText(chatThread.name, 30)

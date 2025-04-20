@@ -17,6 +17,9 @@ interface FamilyGroupCredentialDao {
     @Query("SELECT * FROM FamilyGroupCredential WHERE isDefault = 1 LIMIT 1")
     suspend fun getDefault(): FamilyGroupCredential?
 
+    @Query("SELECT * FROM FamilyGroupCredential WHERE contextId = :contextId")
+    suspend fun getByContextId(contextId: String): FamilyGroupCredential?
+
     @Transaction
     suspend fun setCredentialAsDefaultByContextIdAndUnsetOthers(contextId: String) {
         unsetDefaultForAllCredentials()

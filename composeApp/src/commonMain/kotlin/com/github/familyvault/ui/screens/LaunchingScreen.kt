@@ -13,8 +13,8 @@ import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.INotificationService
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
+import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.screens.start.StartScreen
-import com.github.familyvault.ui.screens.start.createFamilyGroup.DebugScreenContextId
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.launch
@@ -31,16 +31,18 @@ class LaunchingScreen : Screen {
 
         LaunchedEffect(Unit) {
             coroutineScope.launch {
-              if (!notificationService.checkNotificationPermission()) {
+                if (!notificationService.checkNotificationPermission()) {
                     notificationService.requestNotificationsPermission()
                 }
                 when (val connectionStatus = familyGroupService.assignDefaultStoredFamilyGroup()) {
                     ConnectionStatus.Success -> {
-                        navigator.replaceAll(DebugScreenContextId())
+                        navigator.replaceAll(MainScreen())
                     }
+
                     ConnectionStatus.NoCredentials -> {
                         navigator.replaceAll(StartScreen())
                     }
+
                     else -> {
                         navigator.replaceAll(ConnectionFailedScreen(connectionStatus))
                     }

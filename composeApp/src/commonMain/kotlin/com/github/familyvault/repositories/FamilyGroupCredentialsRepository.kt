@@ -43,6 +43,29 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
 
     override suspend fun deleteCredential(contextId: String) {
         val credentialDao = appDatabase.credentialDao()
+        val credential = requireNotNull(credentialDao.getByContextId(contextId))
         credentialDao.deleteCredential(contextId)
+
+        if (!credential.isDefault) {
+            return
+        }
+
+        val credentials = credentialDao.getAll()
+
+        if (credentials.isEmpty()) {
+            return
+        }
+
+        credentialDao.setCredentialAsDefaultByContextID(credentials.first().contextId)
+    }
+
+    override suspend fun getAllCredentials(): List<FamilyGroupCredential> {
+        val credentialDao = appDatabase.credentialDao()
+        return credentialDao.getAll()
+    }
+
+    override suspend fun getCredentialByContextId(contextId: String): FamilyGroupCredential {
+        val credentialDao = appDatabase.credentialDao()
+        return requireNotNull(credentialDao.getByContextId(contextId))
     }
 }

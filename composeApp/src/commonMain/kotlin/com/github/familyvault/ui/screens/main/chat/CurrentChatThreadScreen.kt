@@ -71,7 +71,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
 
         Scaffold(
             topBar = {
-                TopAppBar(chatThread.name, false)
+                TopAppBar(chatThread.name, showManagementButton = false)
             },
         ) { paddingValues ->
             Column(

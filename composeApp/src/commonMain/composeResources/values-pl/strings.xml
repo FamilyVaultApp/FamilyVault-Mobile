@@ -4,6 +4,8 @@
     <string name="app_icon_alt">Ikona aplikacji Family Vault</string>
     <string name="loading">Ładowanie...</string>
     <string name="you">Ty</string>
+    <string name="is_actual">Aktualna</string>
+    <string name="is_default">Domyślna</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -67,8 +69,28 @@
 
     <string name="error_occurred_label">Wystąpił błąd</string>
 
-    <!-- Family group management-->
-    <string name="family_group_management_title">Ustawienia grupy rodzinnej</string>
+    <!-- Settings-->
+    <string name="settings_title">Ustawienia</string>
+    <string name="settings_category_other_family_groups">Inne grupy rodzinne</string>
+    <string name="settings_category_management">Zarządzanie</string>
+
+    <string name="setting_change_name_title">Zmień nazwę</string>
+    <string name="setting_change_name_description_short">Zmień nazwę aktualnej grupy rodzinnej na inną</string>
+    <string name="setting_change_name_description_long">Skorzystaj z formularza, aby nadać grupie rodzinnej nową nazwę. Pamiętaj, że zmiana może nie być widoczna od razu u wszystkich użytkowników.</string>
+
+    <string name="setting_members_title">Członkowie</string>
+    <string name="setting_members_short">Zarządzaj członkami grupy rodzinnej</string>
+    <string name="setting_members_long">Poniżej znajduje się lista członków Twojej grupy rodzinnej. Kliknij ikonę trzech kropek obok wybranego członka, aby nim zarządzać.</string>
+
+    <string name="setting_add_member_title">Dodaj członka</string>
+    <string name="setting_add_member_short">Dodaj nowego członka do grupy rodzinnej</string>
+
+    <string name="setting_change_family_group_title">Zmień grupę rodzinną</string>
+    <string name="setting_change_family_group_short">Przełącz się na inną grupę rodzinną</string>
+
+    <string name="setting_join_or_create_family_group_title">Dołącz lub utwórz grupę rodzinną</string>
+    <string name="setting_join_or_create_family_group_short">Przejdź do ekranu dołączenia lub tworzenia nowej grupy rodzinnej</string>
+
     <string name="family_group_members">Członkowie grupy rodzinnej</string>
     <string name="family_group_add_new_member">Dodaj nowego członka</string>
     <string name="family_group_delete_member">Usuń członka</string>
@@ -95,7 +117,6 @@
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
     <string name="chat_creating">Tworzenie chatu...</string>
 
-
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
 
@@ -105,7 +126,7 @@
     <string name="connection_error_button_content">Ponów połączenie</string>
 
     <string name="user_not_found_title">Nie znaleziono użytkownika</string>
-    <string name="user_not_found_content">Nie udało się znaleźć Ciebie w tej Grupie Rodzinnej. Możliwe, że Twoje konto zostało z niej usunięte. Możesz usunąć dane tej grupy rodzinnej z urządzenia, korzystając z poniższego przycisku.</string>
+    <string name="user_not_found_content">Nie udało się znaleźć Ciebie w tej grupie rodzinnej. Możliwe, że Twoje konto zostało z niej usunięte. Możesz usunąć dane tej grupy rodzinnej z urządzenia, korzystając z poniższego przycisku.</string>
     <string name="user_not_found_button_content">Usuń dane grupy rodzinnej</string>
 
     <!-- User modification -->
@@ -116,4 +137,11 @@
     <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
     <string name="user_modification_remove_user_button_content">Usuń tego użytkownika</string>
     <string name="user_modification_save_button">Zapisz zmiany</string>
+
+    <!-- Select family group -->
+    <string name="select_family_group_description">Wybierz grupę rodzinną, do której chcesz dołączyć. Możesz też utworzyć nową, korzystając z przycisku na dole ekranu.</string>
+    <string name="select_family_group_join_or_create_button">Dołącz lub utwórz grupę rodzinną</string>
+    <string name="select_family_group_changing">Trwa zmiana grupy rodzinnej...</string>
+    <string name="family_group_default">Domyślna grupa rodzinna</string>
+    <string name="family_group_no_default">Niedomyślna grupa rodzinna</string>
 </resources>

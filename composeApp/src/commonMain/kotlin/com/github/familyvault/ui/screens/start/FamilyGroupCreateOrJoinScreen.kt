@@ -16,7 +16,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.ui.components.AppIconAndName
-import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.BottomAcceptButton
 import com.github.familyvault.ui.components.OptionButton
 import com.github.familyvault.ui.components.OptionButtonType
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -51,7 +51,7 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                     selectedAction = selectedAction,
                     onActionSelected = { selectedAction = it }
                 )
-                InitialScreenButton(
+                BottomAcceptButton(
                     enabled = selectedAction != null,
                     onClick = {
                         if (selectedAction == FamilyGroupAction.Join) {

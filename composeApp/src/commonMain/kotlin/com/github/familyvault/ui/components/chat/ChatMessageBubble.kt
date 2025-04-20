@@ -10,12 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.github.familyvault.models.chat.ChatMessage
-import com.github.familyvault.ui.components.UserAvatar
+import com.github.familyvault.ui.components.CharacterInCircle
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 
@@ -33,7 +32,7 @@ fun ChatMessageBubble(
     ) {
         if (!isAuthor) {
             Box(Modifier.padding(top = AdditionalTheme.spacings.medium)) {
-                UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
+                CharacterInCircle(firstName = sender, size = AdditionalTheme.spacings.large)
             }
         }
         Column(

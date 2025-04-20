@@ -17,6 +17,7 @@ import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.screens.LaunchingScreen
+import com.github.familyvault.ui.screens.main.ChangeFamilyGroupScreen
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.connection_error_title
 import familyvault.composeapp.generated.resources.user_not_found_title
@@ -62,20 +63,26 @@ fun ConnectionError(connectionStatus: ConnectionStatus) {
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.Bottom
         ) {
-            InitialScreenButton(
+            BottomAcceptButton(
                 text = if (connectionStatus == ConnectionStatus.UserNotFound) {
                     stringResource(Res.string.user_not_found_button_content)
                 } else {
                     stringResource(Res.string.connection_error_button_content)
                 },
                 onClick = {
-                    if (connectionStatus == ConnectionStatus.UserNotFound) {
-                        val contextId = familyGroupSessionService.getContextId()
-                        coroutineScope.launch {
-                            familyGroupCredentialsRepository.deleteCredential(contextId)
+                    when (connectionStatus) {
+                        ConnectionStatus.UserNotFound -> {
+                            val contextId = familyGroupSessionService.getContextId()
+                            coroutineScope.launch {
+                                familyGroupCredentialsRepository.deleteCredential(contextId)
+                            }
+                            navigator.replaceAll(ChangeFamilyGroupScreen())
+                        }
+
+                        else -> {
+                            navigator.replaceAll(LaunchingScreen())
                         }
                     }
-                    navigator.replaceAll(LaunchingScreen())
                 }
             )
         }

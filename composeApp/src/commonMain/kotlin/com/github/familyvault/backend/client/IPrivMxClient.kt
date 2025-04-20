@@ -10,6 +10,7 @@ interface IPrivMxClient {
     fun encryptPrivateKeyPassword(password: String): String
     fun decryptPrivateKeyPassword(encryptedPassword: String): String
     fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String)
+    fun disconnect()
 
     /* Thread */
     fun createThread(

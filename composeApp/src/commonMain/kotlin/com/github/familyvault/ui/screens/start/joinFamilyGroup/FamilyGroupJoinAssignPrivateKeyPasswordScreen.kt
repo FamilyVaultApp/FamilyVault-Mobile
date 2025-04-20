@@ -20,7 +20,7 @@ import com.github.familyvault.models.NewFamilyMemberData
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
-import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.BottomAcceptButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
 import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
@@ -63,7 +63,7 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                 AssignPrivateKeyFormContent(
                     form,
                 )
-                InitialScreenButton(
+                BottomAcceptButton(
                     enabled = form.isFormValid(),
                 ) {
                     coroutineScope.launch {

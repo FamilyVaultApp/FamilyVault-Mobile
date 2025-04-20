@@ -20,7 +20,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.enums.ConnectionMode
 import com.github.familyvault.ui.components.AppIconAndName
 import com.github.familyvault.ui.components.InfoBox
-import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.BottomAcceptButton
 import com.github.familyvault.ui.components.OptionButton
 import com.github.familyvault.ui.components.OptionButtonType
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -52,7 +52,7 @@ class StartScreen : Screen {
                     selectedConnectionMode = selectedConnectionMode,
                     onModeSelected = { selectedConnectionMode = it }
                 )
-                InitialScreenButton(
+                BottomAcceptButton(
                     enabled = selectedConnectionMode != null,
                     onClick = {
                         navigator.push(FamilyGroupCreateOrJoinScreen())
