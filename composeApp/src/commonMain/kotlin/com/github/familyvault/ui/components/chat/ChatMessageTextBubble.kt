@@ -20,7 +20,7 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun ChatMessageBubble(
+fun ChatMessageTextBubble(
     message: ChatMessage
 ) {
     val sender = message.senderId
@@ -32,9 +32,7 @@ fun ChatMessageBubble(
         horizontalArrangement = if (message.isAuthor) Arrangement.End else Arrangement.Start,
     ) {
         if (!isAuthor) {
-            Box(Modifier.padding(top = AdditionalTheme.spacings.medium)) {
-                UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
-            }
+            UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
         }
         Column(
             modifier = Modifier.padding(start = AdditionalTheme.spacings.medium),
@@ -55,7 +53,7 @@ fun ChatMessageBubble(
                     text = messageContent,
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = if (isAuthor) TextAlign.End else TextAlign.Start,
-                    color = if (isAuthor) MaterialTheme.colorScheme.onPrimary else Color.Black
+                    color = if (isAuthor) MaterialTheme.colorScheme.onPrimary else AdditionalTheme.colors.otherChatBubbleContentColor
                 )
             }
             if (!isAuthor) {

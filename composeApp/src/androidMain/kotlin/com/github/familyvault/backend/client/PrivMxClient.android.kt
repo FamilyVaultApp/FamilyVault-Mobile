@@ -2,11 +2,15 @@ package com.github.familyvault.backend.client
 
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
-import com.github.familyvault.backend.models.MessageItem
 import com.github.familyvault.backend.models.PrivMxUser
+import com.github.familyvault.backend.models.StorePublicMeta
 import com.github.familyvault.backend.models.ThreadItem
+import com.github.familyvault.backend.models.ThreadMessageItem
+import com.github.familyvault.backend.models.ThreadMessagePrivateMeta
+import com.github.familyvault.backend.utils.ThreadMessageEncoder
 import com.github.familyvault.backend.models.ThreadPrivateMeta
 import com.github.familyvault.backend.models.ThreadPublicMeta
+import com.github.familyvault.backend.utils.StoreMetaEncoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.utils.EncryptUtils
@@ -14,12 +18,16 @@ import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
+import com.simplito.java.privmx_endpoint.modules.store.StoreApi
 import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.java.privmx_endpoint_extra.events.EventType
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
 import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
 import com.simplito.java.privmx_endpoint_extra.model.Modules
 import com.simplito.java.privmx_endpoint_extra.model.SortOrder
+import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream
+import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamReader
+import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
 import kotlin.random.Random
 
 class PrivMxClient : IPrivMxClient, AutoCloseable {
@@ -31,6 +39,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
     private var connection: PrivmxEndpoint? = null
     private var threadApi: ThreadApi? = null
+    private var storeApi: StoreApi? = null
 
     override fun generatePairOfPrivateAndPublicKey(
         password: String,
@@ -64,6 +73,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             throw FamilyVaultPrivMxException(e.code, e.message ?: "")
         }
         threadApi = connection!!.threadApi
+        storeApi = connection!!.storeApi
     }
 
     override fun createThread(
@@ -72,7 +82,29 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         managers: List<PrivMxUser>,
         tag: String,
         type: String,
-        name: String
+        name: String,
+        referenceStoreId: String?
+    ): String {
+        val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+        val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+        val threadId = threadApi?.createThread(
+            contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
+            ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId))
+        )
+
+        return requireNotNull(threadId) { "Received empty threadsPagingList" }
+    }
+
+    override fun createStore(
+        contextId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+        type: String
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -81,13 +113,21 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             UserWithPubKey(userId, publicKey)
         }
 
-        val threadId = threadApi?.createThread(
+        val storeId = storeApi?.createStore(
             contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
-            ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name))
+            StoreMetaEncoder.encode(StorePublicMeta(type)),
+            ByteArray(0)
         )
 
-        return requireNotNull(threadId) { "Received empty threadsPagingList" }
+        return requireNotNull(storeId) { "Received empty storeId" }
+    }
+
+    override fun retrieveThread(
+        threadId: String,
+    ): ThreadItem {
+        val thread = requireNotNull(threadApi).getThread(threadId)
+
+        return PrivMxThreadToThreadItemMapper.map(thread)
     }
 
     override fun updateThread(
@@ -105,7 +145,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
 
         val privateMeta = if (newName != null) {
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(newName))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(newName, ""))
         } else {
             thread.privateMeta
         }
@@ -139,20 +179,65 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return threadsList
     }
 
-    override fun sendMessage(content: String, threadId: String, referenceMessageId: String) {
-        val threadApi = requireNotNull(threadApi)
+    override fun sendMessage(
+        threadId: String,
+        content: String,
+        type: String,
+        referenceMessageId: String
+    ) {
+        sendMessage(threadId, content.encodeToByteArray(), type, referenceMessageId)
+    }
 
+    override fun sendMessage(
+        threadId: String,
+        content: ByteArray,
+        type: String,
+        referenceMessageId: String
+    ) {
+        val threadApi = requireNotNull(threadApi)
         val publicMeta = ByteArray(0)
-        val privateMeta = ByteArray(0)
+        val privateMeta = ThreadMessagePrivateMeta(type)
 
         threadApi.sendMessage(
-            threadId, publicMeta, privateMeta, content.encodeToByteArray()
+            threadId, publicMeta, ThreadMessageEncoder.encode(privateMeta), content
         )
+    }
+
+    override fun getFileAsByteArrayFromStore(fileId: String): ByteArray {
+        var data = ByteArray(0)
+
+        StoreFileStreamReader.openFile(
+            storeApi,
+            fileId,
+        ).also {
+            do {
+                val chunk = it.read(StoreFileStream.OPTIMAL_SEND_SIZE)
+                data += chunk
+            } while (chunk.size.toLong() == StoreFileStream.OPTIMAL_SEND_SIZE)
+        }.close()
+
+        return data
+    }
+
+    override fun sendByteArrayToStore(
+        storeId: String, content: ByteArray
+    ): String {
+        val fileId = StoreFileStreamWriter.createFile(
+            storeApi,
+            storeId,
+            ByteArray(0),
+            ByteArray(0),
+            content.size.toLong(),
+        ).also {
+            it.write(content)
+        }.close()
+
+        return fileId
     }
 
     override fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int
-    ): List<MessageItem> {
+    ): List<ThreadMessageItem> {
         val threadApi = requireNotNull(threadApi)
 
         val messagesPagingList = threadApi.listMessages(
@@ -166,7 +251,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return messages ?: emptyList()
     }
 
-    override fun retrieveLastMessageFromThread(threadId: String): MessageItem? {
+    override fun retrieveLastMessageFromThread(threadId: String): ThreadMessageItem? {
         val threadApi = requireNotNull(threadApi)
 
         val messages = threadApi.listMessages(threadId, 0, 1, SortOrder.DESC).readItems
@@ -187,7 +272,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     override fun registerOnMessageCreated(
         eventName: String,
         threadId: String,
-        callback: (MessageItem) -> Unit
+        callback: (ThreadMessageItem) -> Unit
     ) {
         requireNotNull(connection).registerCallback(
             eventName, EventType.ThreadNewMessageEvent(threadId)

@@ -1,7 +1,9 @@
 package com.github.familyvault.ui.screens.main.chat
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -27,6 +29,7 @@ import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatMessageEntry
 import com.github.familyvault.ui.components.overrides.TopAppBar
+import com.github.familyvault.ui.theme.AdditionalTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
@@ -94,17 +97,26 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                         )
                     }
                 }
-
-                ChatInputField(onTextMessageSend = { handleTextMessageSend(chatThread.id, it) })
+                ChatInputField(
+                    onTextMessageSend = { handleTextMessageSend(it) },
+                    onVoiceMessageSend = { handleVoiceMessageSend(it) }
+                )
             }
         }
     }
 
-    private fun handleTextMessageSend(chatThreadId: String, message: String) {
+    private fun handleTextMessageSend(message: String) {
         if (message.isEmpty()) {
             return
         }
-        chatService.sendMessage(chatThreadId, message, respondToMessageId = "")
+        chatService.sendTextMessage(chatThread.id, message, respondToMessageId = "")
+    }
+
+    private fun handleVoiceMessageSend(audio: ByteArray) {
+        if (audio.isEmpty()) {
+            return
+        }
+        chatService.sendVoiceMessage(chatThread.id, audio)
     }
 
     private suspend fun scrollToLastMessage(
