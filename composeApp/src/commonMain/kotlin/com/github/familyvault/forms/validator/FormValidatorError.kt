@@ -2,12 +2,12 @@ package com.github.familyvault.forms.validator
 
 import androidx.compose.runtime.Composable
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.form_chat_group_members_empty
+import familyvault.composeapp.generated.resources.form_creator_not_in_group
 import familyvault.composeapp.generated.resources.form_empty_error
 import familyvault.composeapp.generated.resources.form_overfill_error
 import familyvault.composeapp.generated.resources.form_password_not_equal_error
 import familyvault.composeapp.generated.resources.form_too_short_error
-import familyvault.composeapp.generated.resources.form_creator_not_in_group
-import familyvault.composeapp.generated.resources.form_chat_group_members_empty
 import org.jetbrains.compose.resources.stringResource
 
 enum class FormValidatorError {

@@ -28,7 +28,6 @@ import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatMessageEntry
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
 import com.github.familyvault.ui.components.overrides.TopAppBar
-import com.github.familyvault.ui.screens.main.familyGroupSettings.FamilyGroupSettingsScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 

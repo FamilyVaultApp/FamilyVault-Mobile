@@ -19,8 +19,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.enums.ConnectionMode
 import com.github.familyvault.ui.components.AppIconAndName
-import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.BottomNextButton
+import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.OptionButton
 import com.github.familyvault.ui.components.OptionButtonType
 import com.github.familyvault.ui.components.screen.StartScreenScaffold

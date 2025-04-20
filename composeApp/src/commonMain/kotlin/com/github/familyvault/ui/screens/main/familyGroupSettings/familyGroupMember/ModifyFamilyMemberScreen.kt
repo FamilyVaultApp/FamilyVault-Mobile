@@ -36,15 +36,14 @@ import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.screens.main.ChangeFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.MainScreen
-import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.user_modification_choose_permission_content
+import familyvault.composeapp.generated.resources.user_modification_remove_user_button_content
+import familyvault.composeapp.generated.resources.user_modification_save_button
 import familyvault.composeapp.generated.resources.user_permission_group_guardian
 import familyvault.composeapp.generated.resources.user_permission_group_guest
 import familyvault.composeapp.generated.resources.user_permission_group_member
-import familyvault.composeapp.generated.resources.user_modification_save_button
-import familyvault.composeapp.generated.resources.user_modification_remove_user_button_content
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

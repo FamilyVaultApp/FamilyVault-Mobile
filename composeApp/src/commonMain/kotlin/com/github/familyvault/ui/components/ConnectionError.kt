@@ -19,12 +19,12 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.screens.LaunchingScreen
 import com.github.familyvault.ui.screens.main.ChangeFamilyGroupScreen
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.connection_error_title
-import familyvault.composeapp.generated.resources.user_not_found_title
-import familyvault.composeapp.generated.resources.user_not_found_content
-import familyvault.composeapp.generated.resources.connection_error_content
 import familyvault.composeapp.generated.resources.connection_error_button_content
+import familyvault.composeapp.generated.resources.connection_error_content
+import familyvault.composeapp.generated.resources.connection_error_title
 import familyvault.composeapp.generated.resources.user_not_found_button_content
+import familyvault.composeapp.generated.resources.user_not_found_content
+import familyvault.composeapp.generated.resources.user_not_found_title
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

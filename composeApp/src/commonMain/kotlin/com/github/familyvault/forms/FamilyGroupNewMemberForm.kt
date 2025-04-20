@@ -1,8 +1,8 @@
 package com.github.familyvault.forms
 
-import com.github.familyvault.models.forms.FormDataStringEntry
 import com.github.familyvault.forms.validator.FormValidator
 import com.github.familyvault.forms.validator.FormValidatorError
+import com.github.familyvault.models.forms.FormDataStringEntry
 
 data class FamilyMemberNewMemberFormData(
     val firstname: FormDataStringEntry = FormDataStringEntry(),

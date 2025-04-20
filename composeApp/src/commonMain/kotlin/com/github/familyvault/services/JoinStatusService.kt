@@ -4,8 +4,8 @@ import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.requests.GetJoinStatusRequest
 import com.github.familyvault.backend.requests.UpdateJoinStatusRequest
-import com.github.familyvault.models.JoinStatusInfo
 import com.github.familyvault.models.JoinStatus
+import com.github.familyvault.models.JoinStatusInfo
 import com.github.familyvault.models.enums.JoinStatusState
 import kotlinx.coroutines.delay
 

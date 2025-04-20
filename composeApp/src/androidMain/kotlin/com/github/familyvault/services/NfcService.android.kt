@@ -1,8 +1,8 @@
 package com.github.familyvault.services
 
 import android.app.Activity
-import android.content.Intent
 import android.content.Context
+import android.content.Intent
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
 import android.nfc.Tag

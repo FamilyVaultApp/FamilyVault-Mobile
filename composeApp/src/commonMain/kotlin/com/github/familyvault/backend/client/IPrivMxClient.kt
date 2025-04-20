@@ -1,10 +1,8 @@
 package com.github.familyvault.backend.client
 
-import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadItem
-import com.github.familyvault.backend.models.ThreadPrivateMeta
-import com.github.familyvault.backend.models.ThreadPublicMeta
+import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
 interface IPrivMxClient {

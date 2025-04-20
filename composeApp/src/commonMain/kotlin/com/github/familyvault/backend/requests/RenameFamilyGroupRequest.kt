@@ -1,6 +1,5 @@
 package com.github.familyvault.backend.requests
 
-import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import kotlinx.serialization.Serializable
 
 @Serializable
