@@ -9,7 +9,7 @@ import com.github.familyvault.database.familyGroupCredential.FamilyGroupCredenti
 
 @Database(
     entities = [FamilyGroupCredential::class, StoredChatMessage::class],
-    version = 3,
+    version = 4,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun credentialDao(): FamilyGroupCredentialDao

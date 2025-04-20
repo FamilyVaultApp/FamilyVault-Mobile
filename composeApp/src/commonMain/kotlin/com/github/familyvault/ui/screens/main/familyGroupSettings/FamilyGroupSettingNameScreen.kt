@@ -13,8 +13,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
+import com.github.familyvault.services.ISavedFamilyGroupsService
 import com.github.familyvault.ui.components.ContentWithAction
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
@@ -35,6 +37,7 @@ class FamilyGroupSettingNameScreen : Screen {
     override fun Content() {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val savedFamilyGroupsService = koinInject<ISavedFamilyGroupsService>()
         val coroutineScope = rememberCoroutineScope()
 
         var familyGroupName by remember { mutableStateOf(familyGroupSessionService.getFamilyGroupName()) }
@@ -72,7 +75,10 @@ class FamilyGroupSettingNameScreen : Screen {
                                 familyGroupService.renameCurrentFamilyGroup(
                                     name = familyGroupName
                                 )
-                                familyGroupSessionService.updateFamilyGroupName(familyGroupName)
+                                savedFamilyGroupsService.changeFamilyGroupName(
+                                    familyGroupSessionService.getContextId(),
+                                    familyGroupName
+                                )
                                 currentFamilyGroupName = familyGroupName
                                 isChangingFamilyGroupName = false
                             }

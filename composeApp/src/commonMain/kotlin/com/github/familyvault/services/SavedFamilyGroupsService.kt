@@ -20,4 +20,8 @@ class SavedFamilyGroupsService(
     override suspend fun changeDefaultFamilyGroupCredential(contextId: String) {
         familyGroupCredentialsRepository.setDefaultCredentialByContextId(contextId)
     }
+
+    override suspend fun changeFamilyGroupName(contextId: String, familyName: String) {
+        familyGroupCredentialsRepository.updateCredentialFamilyGroupName(contextId, familyName)
+    }
 }

@@ -42,8 +42,8 @@ interface FamilyGroupCredentialDao {
     @Upsert
     suspend fun upsert(data: FamilyGroupCredential)
 
-    @Query("UPDATE FamilyGroupCredential SET name = :name WHERE contextId = :contextId")
-    suspend fun updateCredentialName(contextId: String, name: String)
+    @Query("UPDATE FamilyGroupCredential SET familyGroupName = :familyGroupName WHERE contextId = :contextId")
+    suspend fun updateCredentialFamilyGroupName(contextId: String, familyGroupName: String)
 
     @Query("DELETE FROM FamilyGroupCredential WHERE contextId = :contextId")
     suspend fun deleteCredential(contextId: String)

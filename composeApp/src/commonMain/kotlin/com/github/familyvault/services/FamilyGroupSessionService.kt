@@ -23,7 +23,7 @@ class FamilyGroupSessionService(
     override fun assignSession(familyGroupCredential: FamilyGroupCredential) {
         assignSession(
             AppConfig.PRIVMX_BRIDGE_URL,
-            familyGroupCredential.name,
+            familyGroupCredential.familyGroupName,
             familyGroupCredential.solutionId,
             familyGroupCredential.contextId,
             PublicEncryptedPrivateKeyPair(

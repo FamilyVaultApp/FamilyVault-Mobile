@@ -6,7 +6,7 @@ import com.github.familyvault.models.FamilyGroup
 object FamilyGroupCredentialToFamilyGroupMapper {
     fun map(familyGroupCredential: FamilyGroupCredential): FamilyGroup = FamilyGroup(
         contextId = familyGroupCredential.contextId,
-        name = familyGroupCredential.name,
+        name = familyGroupCredential.familyGroupName,
         isDefault = familyGroupCredential.isDefault
     )
 }

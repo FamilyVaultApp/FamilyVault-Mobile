@@ -16,7 +16,7 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         val credentialDao = appDatabase.credentialDao()
         credentialDao.insertDefaultCredentialAndUnsetOthers(
             FamilyGroupCredential(
-                name = name,
+                familyGroupName = name,
                 solutionId = solutionId,
                 contextId = contextId,
                 encryptedPrivateKey = keyPairs.encryptedPrivateKey,
@@ -38,7 +38,7 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
 
     override suspend fun updateCredentialFamilyGroupName(contextId: String, name: String) {
         val credentialDao = appDatabase.credentialDao()
-        credentialDao.updateCredentialName(contextId, name)
+        credentialDao.updateCredentialFamilyGroupName(contextId, name)
     }
 
     override suspend fun deleteCredential(contextId: String) {
