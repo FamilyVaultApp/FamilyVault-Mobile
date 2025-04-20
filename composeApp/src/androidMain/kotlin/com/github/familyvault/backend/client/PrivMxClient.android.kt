@@ -147,7 +147,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
 
         val privateMeta = if (newName != null) {
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(newName))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(newName, ""))
         } else {
             thread.privateMeta
         }
