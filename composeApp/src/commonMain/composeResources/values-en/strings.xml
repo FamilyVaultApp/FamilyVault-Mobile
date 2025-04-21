@@ -4,6 +4,8 @@
     <string name="app_icon_alt">FamilyVault icon</string>
     <string name="loading">Loading...</string>
     <string name="you">You</string>
+    <string name="is_actual">Actual</string>
+    <string name="is_default">Default</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -16,7 +18,7 @@
     <string name="confirm_button_content">Confirm</string>
     <string name="scan_qr_code_button_content">Scan QR code</string>
     <string name="show_qr_code_button_content">Show QR code</string>
-    <string name="change_name_content">Change group name</string>
+    <string name="change_name_content">Change name</string>
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Connection modes</string>
@@ -67,9 +69,29 @@
 
     <string name="error_occurred_label">Error occurred</string>
 
-    <!-- Family group management-->
-    <string name="family_group_management_title">Family Group settings</string>
-    <string name="family_group_members">Family Group members</string>
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_category_other_family_groups">Other family groups</string>
+    <string name="settings_category_management">Management</string>
+
+    <string name="setting_change_name_title">Change name</string>
+    <string name="setting_change_name_description_short">Change the name of the current family group</string>
+    <string name="setting_change_name_description_long">Use the form to give your family group a new name. Keep in mind that the change might not be visible to all users immediately.</string>
+
+    <string name="setting_members_title">Members</string>
+    <string name="setting_members_short">Manage your family group members</string>
+    <string name="setting_members_long">Below is a list of members in your family group. Tap the three-dot icon next to a member to manage them.</string>
+
+    <string name="setting_add_member_title">Add member</string>
+    <string name="setting_add_member_short">Add a new member to your family group</string>
+
+    <string name="setting_change_family_group_title">Change family group</string>
+    <string name="setting_change_family_group_short">Switch to a different family group</string>
+
+    <string name="setting_join_or_create_family_group_title">Join or create a family group</string>
+    <string name="setting_join_or_create_family_group_short">Go to the screen for joining or creating a new family group</string>
+
+    <string name="family_group_members">Family group members</string>
     <string name="family_group_add_new_member">Add new member</string>
     <string name="family_group_delete_member">Remove member</string>
 
@@ -85,6 +107,7 @@
     <!-- Chat -->
     <string name="chat_create_new">Create new chat</string>
     <string name="chat_set_group_name">Group chat name</string>
+    <string name="chat_settings">Chat settings</string>
     <string name="chat_create_group_default_name">Family group</string>
     <string name="chat_create_group_members">Group chat members</string>
     <string name="chat_create_group_button_content">Create group chat</string>
@@ -103,9 +126,6 @@
     <string name="chat_cancel_recording_description">Cancel recording</string>
     <string name="chat_add_multimedia_description">Add multimedia</string>
 
-
-
-
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>
 
@@ -115,9 +135,8 @@
     <string name="connection_error_button_content">Retry connection</string>
 
     <string name="user_not_found_title">User not found</string>
-    <string name="user_not_found_content">We couldn't find you in this Family Group. It's possible that your account has been removed from it. You can remove this family group's data from your device using the button below.</string>
-    <string name="user_not_found_button_content">Remove Family Group data</string>
-
+    <string name="user_not_found_content">We couldn't find you in this family group. It's possible that your account has been removed from it. You can remove this family group's data from your device using the button below.</string>
+    <string name="user_not_found_button_content">Remove family group data</string>
 
     <!-- User modification -->
     <string name="user_modification_description">Modify family group member</string>
@@ -127,4 +146,11 @@
     <string name="user_modification_choose_permission_content">Select this user's permission group.</string>
     <string name="user_modification_remove_user_button_content">Remove this user</string>
     <string name="user_modification_save_button">Save changes</string>
+
+    <!-- Select family group -->
+    <string name="select_family_group_description">Select a family group to join, or create a new one using the button at the bottom of the screen.</string>
+    <string name="select_family_group_join_or_create_button">Join or create a family group</string>
+    <string name="select_family_group_changing">Changing family group...</string>
+    <string name="family_group_default">Default family group</string>
+    <string name="family_group_no_default">No default family group</string>
 </resources>

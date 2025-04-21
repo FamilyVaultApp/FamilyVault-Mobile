@@ -9,7 +9,10 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import androidx.core.app.ActivityCompat
 import com.github.familyvault.AppConfig
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
 class AudioRecorderService(

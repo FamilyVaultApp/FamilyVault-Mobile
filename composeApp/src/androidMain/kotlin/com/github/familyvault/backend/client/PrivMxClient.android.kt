@@ -7,10 +7,10 @@ import com.github.familyvault.backend.models.StorePublicMeta
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.backend.models.ThreadMessagePrivateMeta
-import com.github.familyvault.backend.utils.ThreadMessageEncoder
 import com.github.familyvault.backend.models.ThreadPrivateMeta
 import com.github.familyvault.backend.models.ThreadPublicMeta
 import com.github.familyvault.backend.utils.StoreMetaEncoder
+import com.github.familyvault.backend.utils.ThreadMessageEncoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.utils.EncryptUtils
@@ -74,6 +74,11 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
         threadApi = connection!!.threadApi
         storeApi = connection!!.storeApi
+    }
+
+    override fun disconnect() {
+        connection?.unregisterAll()
+        container.disconnectAll()
     }
 
     override fun createThread(

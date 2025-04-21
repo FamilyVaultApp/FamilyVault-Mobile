@@ -1,10 +1,12 @@
 package com.github.familyvault.services
 
+import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.PrivMxErrorCodes
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.backend.requests.GetMemberFromFamilyGroupRequest
+import com.github.familyvault.database.familyGroupCredential.FamilyGroupCredential
 import com.github.familyvault.models.FamilyGroupSession
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
@@ -17,6 +19,19 @@ class FamilyGroupSessionService(
 ) : IFamilyGroupSessionService {
     private var session: FamilyGroupSession? = null
     private var currentUser: FamilyMember? = null
+
+    override fun assignSession(familyGroupCredential: FamilyGroupCredential) {
+        assignSession(
+            AppConfig.PRIVMX_BRIDGE_URL,
+            familyGroupCredential.familyGroupName,
+            familyGroupCredential.solutionId,
+            familyGroupCredential.contextId,
+            PublicEncryptedPrivateKeyPair(
+                familyGroupCredential.publicKey,
+                familyGroupCredential.encryptedPrivateKey
+            )
+        )
+    }
 
     override fun assignSession(
         bridgeUrl: String,
@@ -52,6 +67,11 @@ class FamilyGroupSessionService(
         return ConnectionStatus.Success
     }
 
+    override fun disconnect() {
+        privMxClient.disconnect()
+        session = null
+    }
+
     override fun getContextId(): String {
         return requireNotNull(session?.contextId)
     }
@@ -82,4 +102,6 @@ class FamilyGroupSessionService(
     override fun getPublicKey(): String {
         return requireNotNull(session?.keyPair?.publicKey)
     }
+
+    override fun isSessionAssigned(): Boolean = session != null
 }

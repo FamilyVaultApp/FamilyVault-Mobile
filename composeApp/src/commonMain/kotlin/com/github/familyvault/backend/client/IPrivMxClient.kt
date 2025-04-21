@@ -1,10 +1,8 @@
 package com.github.familyvault.backend.client
 
-import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadItem
-import com.github.familyvault.backend.models.ThreadPrivateMeta
-import com.github.familyvault.backend.models.ThreadPublicMeta
+import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 
 interface IPrivMxClient {
@@ -12,6 +10,7 @@ interface IPrivMxClient {
     fun encryptPrivateKeyPassword(password: String): String
     fun decryptPrivateKeyPassword(encryptedPassword: String): String
     fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String)
+    fun disconnect()
 
     /* Thread */
     fun createThread(

@@ -3,6 +3,7 @@ package com.github.familyvault.ui.components.chat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -19,7 +20,8 @@ fun ChatMessageEntry(
     val isAuthor = message.isAuthor
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.defaultMinSize(minHeight = AdditionalTheme.sizing.entryMinSize)
+            .fillMaxWidth(),
         horizontalAlignment = if (isAuthor) Alignment.End else Alignment.Start
     ) {
         Row(

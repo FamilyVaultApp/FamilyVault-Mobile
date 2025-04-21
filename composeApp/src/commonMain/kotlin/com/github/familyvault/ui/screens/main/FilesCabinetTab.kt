@@ -9,7 +9,9 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.github.familyvault.ui.components.SettingsIconButton
 import com.github.familyvault.ui.components.overrides.TopAppBar
+import com.github.familyvault.ui.screens.main.familyGroupSettings.FamilyGroupSettingsScreen
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.file_cabinet_tab
 import org.jetbrains.compose.resources.stringResource
@@ -21,14 +23,11 @@ object FilesCabinetTab : Tab {
 
         TopAppBar(
             stringResource(Res.string.file_cabinet_tab),
-            showManagementButton = true,
-            onManagementButtonClick = {
-                if (navigator.parent != null) {
-                    navigator.parent?.push(FamilyGroupManagementScreen())
-                } else {
-                    navigator.push(FamilyGroupManagementScreen())
+            actions = {
+                SettingsIconButton {
+                    navigator.parent?.push(FamilyGroupSettingsScreen())
                 }
-            }
+            },
         )
     }
 

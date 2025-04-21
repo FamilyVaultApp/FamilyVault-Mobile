@@ -19,12 +19,13 @@ import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyMemberAdditionService
-import com.github.familyvault.ui.components.InitialScreenButton
+import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
 import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
+import com.github.familyvault.ui.screens.main.MainScreen
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.creating_family_group_label
 import kotlinx.coroutines.launch
@@ -64,7 +65,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                 AssignPrivateKeyFormContent(
                     form,
                 )
-                InitialScreenButton(
+                BottomNextButton(
                     enabled = form.isFormValid(),
                 ) {
                     coroutineScope.launch {
@@ -79,7 +80,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                             )
                             familyMemberAdditionService.afterJoinedToFamilyMembersOperations()
 
-                            navigator.replaceAll(DebugScreenContextId())
+                            navigator.replaceAll(MainScreen())
                             createFamilyGroupState = FormSubmitState.IDLE
                         } catch (e: Exception) {
                             createFamilyGroupState = FormSubmitState.ERROR

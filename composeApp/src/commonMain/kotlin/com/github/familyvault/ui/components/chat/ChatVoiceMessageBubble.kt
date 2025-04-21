@@ -1,7 +1,13 @@
 package com.github.familyvault.ui.components.chat
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
@@ -17,17 +23,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.familyvault.models.chat.ChatMessage
-import com.github.familyvault.ui.components.UserAvatar
-import com.github.familyvault.ui.theme.AdditionalTheme
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Paragraph
+import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_recording_play_description
 import familyvault.composeapp.generated.resources.chat_recording_stop_description
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun ChatVoiceMessageBubble(

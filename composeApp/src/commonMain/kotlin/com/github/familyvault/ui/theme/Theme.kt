@@ -82,14 +82,25 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
 }
 
 @Immutable
+data class Sizing(
+    val entryMinSize: Dp
+)
+
+@Immutable
 data class Spacing(
     val veryLarge: Dp,
     val large: Dp,
     val medium: Dp,
     val small: Dp,
     val normalPadding: Dp,
-    val screenPadding: Dp
+    val screenPadding: Dp,
 )
+
+private val LocalSizing = staticCompositionLocalOf {
+    Sizing(
+        entryMinSize = 65.dp
+    )
+}
 
 private val LocalSpacing = staticCompositionLocalOf {
     Spacing(
@@ -113,8 +124,7 @@ data class Roundness(
 
 @Composable
 fun AppTheme(
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit
 ) {
     val colors = if (useDarkTheme) darkScheme else lightScheme
 
@@ -127,12 +137,11 @@ fun AppTheme(
 
 object AdditionalTheme {
     val colors: AdditionalColors
-        @Composable
-        get() = if (isSystemInDarkTheme()) LocalCustomColorsDark.current else LocalCustomColorsLight.current
+        @Composable get() = if (isSystemInDarkTheme()) LocalCustomColorsDark.current else LocalCustomColorsLight.current
     val spacings: Spacing
-        @Composable
-        get() = LocalSpacing.current
+        @Composable get() = LocalSpacing.current
+    val sizing: Sizing
+        @Composable get() = LocalSizing.current
     val roundness: Roundness
-        @Composable
-        get() = LocalRoundness.current
+        @Composable get() = LocalRoundness.current
 }

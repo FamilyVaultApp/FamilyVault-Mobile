@@ -12,7 +12,7 @@ import android.util.Log
 import java.io.UnsupportedEncodingException
 import java.math.BigInteger
 import java.nio.charset.Charset
-import java.util.*
+import java.util.Arrays
 
 /**
  * Created by Qifan on 05/12/2018.

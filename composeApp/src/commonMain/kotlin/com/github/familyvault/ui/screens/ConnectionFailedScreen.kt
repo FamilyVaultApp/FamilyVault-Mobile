@@ -6,13 +6,11 @@ import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.ui.components.ConnectionError
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 
-class ConnectionFailedScreen(private val connectionStatus: ConnectionStatus): Screen {
-
+class ConnectionFailedScreen(private val connectionStatus: ConnectionStatus) : Screen {
     @Composable
     override fun Content() {
         StartScreenScaffold {
             ConnectionError(connectionStatus)
         }
     }
-
 }

@@ -83,7 +83,6 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
         topBar = {
             TopAppBar(
                 title = if (groupChatAction == GroupChatAction.Create) stringResource(Res.string.chat_create_new) else chatThread!!.name,
-                showManagementButton = false
             )
         },
     ) { paddingValues ->

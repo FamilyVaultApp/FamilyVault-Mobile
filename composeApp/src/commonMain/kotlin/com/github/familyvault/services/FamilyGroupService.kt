@@ -1,7 +1,6 @@
 package com.github.familyvault.services
 
 import com.github.familyvault.AppConfig
-import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.exceptions.FamilyVaultBackendNoConnectionException
@@ -15,8 +14,8 @@ import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
 import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
-import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.ConnectionStatus
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 
 class FamilyGroupService(
@@ -46,6 +45,9 @@ class FamilyGroupService(
                 contextId, username, pairOfKeys.publicKey, FamilyGroupMemberPermissionGroup.Guardian
             )
         )
+        if (familyGroupSessionService.isSessionAssigned()) {
+            familyGroupSessionService.disconnect()
+        }
         familyGroupSessionService.assignSession(
             AppConfig.PRIVMX_BRIDGE_URL, familyGroupName, solutionId, contextId, pairOfKeys
         )
@@ -65,6 +67,10 @@ class FamilyGroupService(
         val solutionId = familyVaultBackendClient.getSolutionId().solutionId
         val familyGroupInformation =
             familyVaultBackendClient.getFamilyGroupName(GetFamilyGroupNameRequest(contextId))
+
+        if (familyGroupSessionService.isSessionAssigned()) {
+            familyGroupSessionService.disconnect()
+        }
 
         familyGroupSessionService.assignSession(
             AppConfig.PRIVMX_BRIDGE_URL,
@@ -168,7 +174,13 @@ class FamilyGroupService(
         val contextId = familyGroupSessionService.getContextId()
         val publicKey = familyGroupSessionService.getPublicKey()
 
-        return familyVaultBackendClient.getMemberFromFamilyGroup(GetMemberFromFamilyGroupRequest(contextId, null, publicKey)).member
+        return familyVaultBackendClient.getMemberFromFamilyGroup(
+            GetMemberFromFamilyGroupRequest(
+                contextId,
+                null,
+                publicKey
+            )
+        ).member
     }
 
     override suspend fun removeMemberFromCurrentFamilyGroup(

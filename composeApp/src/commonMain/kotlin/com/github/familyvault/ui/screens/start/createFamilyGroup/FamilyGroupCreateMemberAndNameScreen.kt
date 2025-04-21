@@ -15,8 +15,8 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyGroupNameForm
 import com.github.familyvault.forms.FamilyGroupNewMemberForm
+import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.HeaderWithIcon
-import com.github.familyvault.ui.components.InitialScreenButton
 import com.github.familyvault.ui.components.formsContent.FamilyGroupNameFormContent
 import com.github.familyvault.ui.components.formsContent.NewFamilyMemberFormContent
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -42,7 +42,7 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
                 verticalArrangement = Arrangement.Bottom
             ) {
                 FamilyGroupCreateForm(newFamilyMemberForm, familyGroupNameForm)
-                InitialScreenButton(
+                BottomNextButton(
                     text = stringResource(Res.string.create_new_family_group_title),
                     enabled = newFamilyMemberForm.isFormValid() && familyGroupNameForm.isFormValid()
                 ) {

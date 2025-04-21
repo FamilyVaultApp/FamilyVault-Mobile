@@ -14,7 +14,7 @@ import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
-import com.github.familyvault.ui.screens.start.createFamilyGroup.DebugScreenContextId
+import com.github.familyvault.ui.screens.main.MainScreen
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
 import org.jetbrains.compose.resources.stringResource
@@ -47,7 +47,7 @@ class FamilyGroupJoinWaitingScreen : Screen {
             )
             familyMemberAdditionService.afterJoinedToFamilyMembersOperations()
 
-            navigator.replaceAll(DebugScreenContextId())
+            navigator.replaceAll(MainScreen())
         }
 
 
