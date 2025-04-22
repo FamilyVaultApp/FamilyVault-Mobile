@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.familyvault.services.MediaPickerService
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 
 class MainActivity : ComponentActivity() {
@@ -13,6 +15,8 @@ class MainActivity : ComponentActivity() {
         initKoin {
             androidContext(this@MainActivity)
         }
+
+        get<MediaPickerService>().initializeWithActivity(this@MainActivity)
 
         setContent {
             App()
