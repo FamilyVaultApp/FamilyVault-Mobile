@@ -33,7 +33,7 @@ fun ChatMessageEntry(
             when (message.type) {
                 ChatMessageContentType.TEXT -> ChatMessageTextBubble(message)
                 ChatMessageContentType.VOICE -> ChatVoiceMessageBubble(message)
-                ChatMessageContentType.IMAGE -> null
+                ChatMessageContentType.MEDIA -> null
             }
         }
     }

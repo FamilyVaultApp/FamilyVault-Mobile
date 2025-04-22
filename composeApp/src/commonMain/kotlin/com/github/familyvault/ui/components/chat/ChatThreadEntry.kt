@@ -64,7 +64,7 @@ fun ChatThreadEntry(
             if (lastMessage != null) {
                 when(lastMessage.type) {
                     ChatMessageContentType.VOICE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_audio)}", 30))
-                    ChatMessageContentType.IMAGE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_image)}", 30))
+                    ChatMessageContentType.MEDIA -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_image)}", 30))
                     ChatMessageContentType.TEXT -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${lastMessage.message}", 30))
                 }
             }

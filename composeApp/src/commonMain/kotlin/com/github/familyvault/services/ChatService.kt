@@ -106,7 +106,25 @@ class ChatService(
         privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.VOICE.toString())
     }
 
+    override fun sendMediaMessage(
+        chatThreadId: String,
+        mediaByteArray: ByteArray
+    ) {
+        val storeId =
+            privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId ?: return
+
+        val fileId = privMxClient.sendByteArrayToStore(storeId, mediaByteArray)
+
+        privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.MEDIA.toString())
+    }
+
     override fun getVoiceMessage(
+        fileId: String
+    ): ByteArray {
+        return privMxClient.getFileAsByteArrayFromStore(fileId)
+    }
+
+    override fun getMediaMessage(
         fileId: String
     ): ByteArray {
         return privMxClient.getFileAsByteArrayFromStore(fileId)

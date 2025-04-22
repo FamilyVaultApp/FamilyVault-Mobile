@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.familyvault.services.IAudioRecorderService
+import com.github.familyvault.services.IMediaPickerService
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -27,9 +28,11 @@ import org.koin.compose.koinInject
 @Composable
 fun ChatInputField(
     onTextMessageSend: (message: String) -> Unit,
-    onVoiceMessageSend: (audio: ByteArray) -> Unit
+    onVoiceMessageSend: (audio: ByteArray) -> Unit,
+    onMediaMessageSend: (media: List<ByteArray>) -> Unit
 ) {
     val audioRecorder = koinInject<IAudioRecorderService>()
+    val mediaPicker = koinInject<IMediaPickerService>()
 
     var textMessage by remember { mutableStateOf("") }
     var isRecording by remember { mutableStateOf(false) }
@@ -51,7 +54,11 @@ fun ChatInputField(
                 }
             )
         } else {
-            MultimediaSendButton(onClick = { /* Obsługa zdjęć */ })
+            MultimediaSendButton(
+                onClick = {
+                    mediaPicker.pickMedia()
+                }
+            )
             VoiceMessageRecordButton(
                 onStart = {
                     if (!audioRecorder.haveRecordingPermission()) {
@@ -96,6 +103,7 @@ fun ChatInputField(
         SendButton(
             isRecording = isRecording,
             textMessage = textMessage,
+            selectedMediaUrl = mediaPicker.selectedMediaUrl,
             onSendText = {
                 onTextMessageSend(textMessage)
                 textMessage = ""
@@ -104,6 +112,13 @@ fun ChatInputField(
                 audioData = audioRecorder.stop()
                 onVoiceMessageSend(audioData)
                 isRecording = false
+            },
+            onSendMedia = {
+                val mediaByteArrays = mediaPicker.selectedMediaUrl.mapNotNull { uriString ->
+                    mediaPicker.getBytesFromUri(uriString)
+                }
+                mediaPicker.selectedMediaUrl.clear()
+                onMediaMessageSend(mediaByteArrays)
             }
         )
     }

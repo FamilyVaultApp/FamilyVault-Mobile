@@ -23,6 +23,7 @@ import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.ChatThreadType
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.services.IMediaPickerService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatMessageEntry
@@ -101,7 +102,8 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 }
                 ChatInputField(
                     onTextMessageSend = { handleTextMessageSend(it) },
-                    onVoiceMessageSend = { handleVoiceMessageSend(it) }
+                    onVoiceMessageSend = { handleVoiceMessageSend(it) },
+                    onMediaMessageSend = { handleMediaMessageSend(it) }
                 )
             }
         }
@@ -119,6 +121,16 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
             return
         }
         chatService.sendVoiceMessage(chatThread.id, audio)
+    }
+
+    private fun handleMediaMessageSend(uriByteArrays: List<ByteArray>) {
+        if (uriByteArrays.isEmpty()) {
+            return
+        }
+
+        uriByteArrays.forEach { mediaByteArray ->
+            chatService.sendMediaMessage(chatThread.id, mediaByteArray)
+        }
     }
 
     private suspend fun scrollToLastMessage(
