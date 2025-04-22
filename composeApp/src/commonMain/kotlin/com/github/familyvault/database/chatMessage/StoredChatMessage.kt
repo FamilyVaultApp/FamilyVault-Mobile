@@ -2,7 +2,7 @@ package com.github.familyvault.database.chatMessage
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.github.familyvault.models.enums.ChatMessageContentType
+import com.github.familyvault.models.enums.chat.ChatMessageContentType
 
 @Entity
 data class StoredChatMessage(

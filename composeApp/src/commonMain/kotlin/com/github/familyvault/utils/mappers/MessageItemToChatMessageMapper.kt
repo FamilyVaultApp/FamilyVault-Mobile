@@ -2,7 +2,7 @@ package com.github.familyvault.utils.mappers
 
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.chat.ChatMessage
-import com.github.familyvault.models.enums.ChatMessageContentType
+import com.github.familyvault.models.enums.chat.ChatMessageContentType
 
 object MessageItemToChatMessageMapper {
     fun map(msg: ThreadMessageItem, userId: String): ChatMessage = ChatMessage(
