@@ -1,62 +1,70 @@
-package com.github.familyvault.ui.components.chat
+package com.github.familyvault.ui.components.chat.bubbles
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import com.github.familyvault.models.chat.ChatMessage
+import com.github.familyvault.models.enums.chat.ChatMessageAdditionalInfo
+import com.github.familyvault.models.enums.chat.shouldRenderMessageSendDate
+import com.github.familyvault.models.enums.chat.shouldRenderSenderName
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.TimeFormatter
 
 @Composable
-fun ChatMessageTextBubble(
-    message: ChatMessage
+fun ChatMessageBubbleWrapper(
+    message: ChatMessage,
+    additionalInfo: ChatMessageAdditionalInfo,
+    content: @Composable () -> Unit
 ) {
     val sender = message.senderId
-    val messageContent = message.message
     val isAuthor = message.isAuthor
 
     Row(
         modifier = Modifier.fillMaxWidth(0.75f),
         horizontalArrangement = if (message.isAuthor) Arrangement.End else Arrangement.Start,
     ) {
-        if (!isAuthor) {
-            UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
+        if (!isAuthor && additionalInfo.shouldRenderSenderName()) {
+            Box(modifier = Modifier.padding(top = AdditionalTheme.spacings.medium)) {
+                UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
+            }
+        } else {
+            Spacer(modifier = Modifier.width(AdditionalTheme.spacings.large))
         }
         Column(
             modifier = Modifier.padding(start = AdditionalTheme.spacings.medium),
-            verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small)
+            verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small),
+            horizontalAlignment = if (message.isAuthor) Alignment.End else Alignment.Start
         ) {
-            if (!isAuthor) {
+            if (!isAuthor && additionalInfo.shouldRenderSenderName()) {
                 Paragraph(message.senderId, color = AdditionalTheme.colors.mutedColor)
             }
-            Box(
+            Row(
                 modifier = Modifier
                     .background(
                         if (isAuthor) MaterialTheme.colorScheme.primary else AdditionalTheme.colors.otherChatBubbleColor,
                         shape = MaterialTheme.shapes.medium
                     )
                     .padding(AdditionalTheme.spacings.medium),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = messageContent,
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = if (isAuthor) TextAlign.End else TextAlign.Start,
-                    color = if (isAuthor) MaterialTheme.colorScheme.onPrimary else AdditionalTheme.colors.otherChatBubbleContentColor
-                )
+                content()
             }
-            if (!isAuthor) {
+            if (additionalInfo.shouldRenderMessageSendDate()) {
                 Paragraph(
-                    "${message.sendDate.hour}:${message.sendDate.minute}",
+                    TimeFormatter.formatTime(message.sendDate),
                     color = AdditionalTheme.colors.mutedColor
                 )
             }

@@ -1,6 +1,6 @@
 package com.github.familyvault.backend.models
 
-import com.github.familyvault.models.enums.ChatMessageContentType
+import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import kotlinx.serialization.Serializable
 
 @Serializable

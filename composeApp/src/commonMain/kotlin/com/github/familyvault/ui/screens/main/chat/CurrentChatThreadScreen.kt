@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -20,13 +20,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
-import com.github.familyvault.ui.components.chat.ChatMessageEntry
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
+import com.github.familyvault.ui.components.chat.messageEntry.ChatMessageEntry
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -76,16 +76,14 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    chatThread.name,
-                    actions = {
+                    chatThread.name, actions = {
                         if (chatThread.type === ChatThreadType.GROUP) {
                             ChatThreadSettingsButton {
                                 navigator.push(ChatThreadEditScreen(chatThread.type, chatThread))
                             }
                         }
                     })
-            }
-        ) { paddingValues ->
+            }) { paddingValues ->
             Column(
                 modifier = Modifier.fillMaxSize().padding(paddingValues)
             ) {
@@ -93,16 +91,19 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                     modifier = Modifier.weight(1f),
                     state = listState,
                 ) {
-                    items(items = chatState.messages, key = { it.id }) { message ->
+                    itemsIndexed(
+                        items = chatState.messages,
+                        key = { _, message -> message.id }) { index, message ->
                         ChatMessageEntry(
-                            message
+                            message,
+                            prevMessage = chatState.messages.getOrNull(index - 1),
+                            nextMessage = chatState.messages.getOrNull(index + 1)
                         )
                     }
                 }
                 ChatInputField(
                     onTextMessageSend = { handleTextMessageSend(it) },
-                    onVoiceMessageSend = { handleVoiceMessageSend(it) }
-                )
+                    onVoiceMessageSend = { handleVoiceMessageSend(it) })
             }
         }
     }

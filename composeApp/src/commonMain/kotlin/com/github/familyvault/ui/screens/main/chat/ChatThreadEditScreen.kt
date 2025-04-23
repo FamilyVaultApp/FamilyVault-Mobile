@@ -3,7 +3,7 @@ package com.github.familyvault.ui.screens.main.chat
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.models.enums.chat.ChatThreadType
 
 class ChatThreadEditScreen(
     private val chatType: ChatThreadType,

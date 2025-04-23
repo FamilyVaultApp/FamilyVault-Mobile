@@ -3,7 +3,7 @@ package com.github.familyvault.states
 import androidx.compose.runtime.mutableStateListOf
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IFamilyGroupSessionService
 
 class CurrentChatThreadsState(private val familyGroupSessionService: IFamilyGroupSessionService) :

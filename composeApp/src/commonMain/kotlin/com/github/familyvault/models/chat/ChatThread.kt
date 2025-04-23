@@ -1,6 +1,6 @@
 package com.github.familyvault.models.chat
 
-import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.models.enums.chat.ChatThreadType
 
 data class ChatThread(
     val id: String,
