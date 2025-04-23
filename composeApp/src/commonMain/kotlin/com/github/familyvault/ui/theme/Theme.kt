@@ -83,7 +83,8 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
 
 @Immutable
 data class Sizing(
-    val entryMinSize: Dp
+    val entryMinSize: Dp,
+    val tasksCategoryButtonHeight: Dp
 )
 
 @Immutable
@@ -98,7 +99,8 @@ data class Spacing(
 
 private val LocalSizing = staticCompositionLocalOf {
     Sizing(
-        entryMinSize = 65.dp
+        entryMinSize = 65.dp,
+        tasksCategoryButtonHeight = 40.dp
     )
 }
 
@@ -114,12 +116,16 @@ private val LocalSpacing = staticCompositionLocalOf {
 }
 
 private val LocalRoundness = staticCompositionLocalOf {
-    Roundness(normalPercent = 7)
+    Roundness(
+        normalPercent = 7,
+        medium = 20.dp
+    )
 }
 
 @Immutable
 data class Roundness(
-    val normalPercent: Int
+    val normalPercent: Int,
+    val medium: Dp
 )
 
 @Composable

@@ -6,6 +6,8 @@
     <string name="you">You</string>
     <string name="is_actual">Actual</string>
     <string name="is_default">Default</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -153,4 +155,10 @@
     <string name="select_family_group_changing">Changing family group...</string>
     <string name="family_group_default">Default family group</string>
     <string name="family_group_no_default">No default family group</string>
+
+    <!-- Tasks -->
+    <string name="tasks_add_new_category">Add new</string>
+    <string name="tasks_settings">Configure</string>
+    <string name="tasks_completed">Completed</string>
+    <string name="tasks_assign">Assign family member to task</string>
 </resources>
