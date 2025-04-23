@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.enums.chat.ChatMessageAdditionalInfo
 import com.github.familyvault.models.enums.chat.shouldRenderMessageSendDate
-import com.github.familyvault.models.enums.chat.shouldRenderSenderData
+import com.github.familyvault.models.enums.chat.shouldRenderSenderName
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -35,7 +35,7 @@ fun ChatMessageBubbleWrapper(
         modifier = Modifier.fillMaxWidth(0.75f),
         horizontalArrangement = if (message.isAuthor) Arrangement.End else Arrangement.Start,
     ) {
-        if (!isAuthor && additionalInfo.shouldRenderSenderData()) {
+        if (!isAuthor && additionalInfo.shouldRenderSenderName()) {
             Box(modifier = Modifier.padding(top = AdditionalTheme.spacings.medium)) {
                 UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
             }
@@ -47,7 +47,7 @@ fun ChatMessageBubbleWrapper(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small),
             horizontalAlignment = if (message.isAuthor) Alignment.End else Alignment.Start
         ) {
-            if (!isAuthor && additionalInfo.shouldRenderSenderData()) {
+            if (!isAuthor && additionalInfo.shouldRenderSenderName()) {
                 Paragraph(message.senderId, color = AdditionalTheme.colors.mutedColor)
             }
             Row(

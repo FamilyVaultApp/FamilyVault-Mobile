@@ -7,7 +7,7 @@ enum class ChatMessageAdditionalInfo {
     EMPTY,
 }
 
-fun ChatMessageAdditionalInfo.shouldRenderSenderData(): Boolean =
+fun ChatMessageAdditionalInfo.shouldRenderSenderName(): Boolean =
     this == ChatMessageAdditionalInfo.SENDER_NAME || this == ChatMessageAdditionalInfo.FULL
 
 fun ChatMessageAdditionalInfo.shouldRenderMessageSendDate(): Boolean =
