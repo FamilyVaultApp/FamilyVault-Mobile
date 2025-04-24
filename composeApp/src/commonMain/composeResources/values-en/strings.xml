@@ -118,7 +118,7 @@
     <string name="chat_attach_photo">Attach photo</string>
     <string name="chat_creating">Creating chat...</string>
     <string name="chat_message_type_audio">Voice message</string>
-    <string name="chat_message_type_image">Photo</string>
+    <string name="chat_message_type_media">Media</string>
     <string name="chat_message_send_description">Send message</string>
     <string name="chat_recording_stop_description">Stop recording</string>
     <string name="chat_recording_play_description">Play recording</string>

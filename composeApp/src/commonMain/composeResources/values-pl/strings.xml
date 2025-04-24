@@ -118,7 +118,7 @@
     <string name="chat_attach_photo">Dołącz zdjęcie</string>
     <string name="chat_creating">Tworzenie chatu...</string>
     <string name="chat_message_type_audio">Wiadomość głosowa</string>
-    <string name="chat_message_type_image">Zdjęcie</string>
+    <string name="chat_message_type_media">Media</string>
     <string name="chat_message_send_description">Wyślij wiadomość</string>
     <string name="chat_recording_stop_description">Zatrzymaj nagranie</string>
     <string name="chat_recording_play_description">Odsłuchaj nagranie</string>
