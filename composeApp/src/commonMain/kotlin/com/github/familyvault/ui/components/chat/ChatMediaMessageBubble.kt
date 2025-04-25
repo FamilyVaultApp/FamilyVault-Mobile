@@ -77,7 +77,7 @@ fun ChatMediaMessageBubble(
                 imageBitmap?.let {
                     Image(
                         bitmap = it,
-                        contentDescription = stringResource(Res.string.chat_image_description),
+                        contentDescription = stringResource(Res.string.chat_media_description),
                         modifier = Modifier.size(AdditionalTheme.sizing.large)
                     )
                 }
