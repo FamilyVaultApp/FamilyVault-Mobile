@@ -28,7 +28,7 @@ import org.koin.compose.koinInject
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.chat_image_description
+import familyvault.composeapp.generated.resources.chat_media_description
 import org.jetbrains.compose.resources.stringResource
 
 
