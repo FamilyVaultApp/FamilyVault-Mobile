@@ -8,45 +8,45 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.models.chat.ChatMessage
-import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.services.IMediaPickerService
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
-import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.chat_recording_play_description
-import familyvault.composeapp.generated.resources.chat_recording_stop_description
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.chat_image_description
+import org.jetbrains.compose.resources.stringResource
+
 
 @Composable
 fun ChatMediaMessageBubble(
     message: ChatMessage
 ) {
-    val audioPlayerService = koinInject<IAudioPlayerService>()
-    val chatService = koinInject<IChatService>()
-    val coroutineScope = rememberCoroutineScope()
-
-    val sender = message.senderId
     val isAuthor = message.isAuthor
+    val sender = message.senderId
 
-    var isPlaying by remember { mutableStateOf(false) }
+    val chatService = koinInject<IChatService>()
+    val mediaPickerService = koinInject<IMediaPickerService>()
+    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+    LaunchedEffect(message.message) {
+        val bytes = chatService.getMediaMessage(message.message)
+        imageBitmap = mediaPickerService.getBitmapFromBytes(bytes)
+    }
 
     Row(
         modifier = Modifier.fillMaxWidth(0.75f),
@@ -63,6 +63,7 @@ fun ChatMediaMessageBubble(
             if (!isAuthor) {
                 Paragraph(sender, color = AdditionalTheme.colors.mutedColor)
             }
+
             Row(
                 modifier = Modifier
                     .background(
@@ -71,41 +72,17 @@ fun ChatMediaMessageBubble(
                     )
                     .padding(AdditionalTheme.spacings.medium),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Center
             ) {
-                IconButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            if (isPlaying) {
-                                audioPlayerService.stop()
-                                isPlaying = false
-                            } else {
-                                val audio = chatService.getVoiceMessage(message.message)
-                                audioPlayerService.play(audio) {
-                                    isPlaying = false
-                                }
-                                isPlaying = true
-                            }
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = if (isPlaying) Icons.Default.Stop else Icons.Default.PlayArrow,
-                        contentDescription = stringResource(
-                            if (isPlaying)
-                                Res.string.chat_recording_stop_description
-                            else
-                                Res.string.chat_recording_play_description
-                        ),
-                        tint = if (isAuthor) MaterialTheme.colorScheme.onPrimary else AdditionalTheme.colors.otherChatBubbleContentColor
+                imageBitmap?.let {
+                    Image(
+                        bitmap = it,
+                        contentDescription = stringResource(Res.string.chat_image_description),
+                        modifier = Modifier.size(AdditionalTheme.sizing.large)
                     )
                 }
-
-                ChatAudioPlayerWaveform(
-                    isPlaying = isPlaying,
-                    isAuthor = isAuthor
-                )
             }
+
             if (!isAuthor) {
                 Paragraph(
                     "${message.sendDate.hour}:${message.sendDate.minute}",

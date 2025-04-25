@@ -125,6 +125,8 @@
     <string name="chat_start_recording_description">Zacznij nagrywanie</string>
     <string name="chat_cancel_recording_description">Anuluj nagrywanie</string>
     <string name="chat_add_multimedia_description">Dodaj multimedia</string>
+    <string name="chat_image_description">Image</string>
+
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>

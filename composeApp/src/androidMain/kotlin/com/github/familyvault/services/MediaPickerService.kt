@@ -1,11 +1,15 @@
 package com.github.familyvault.services
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 
 class MediaPickerService : IMediaPickerService {
     private lateinit var pickFileLauncher: ActivityResultLauncher<PickVisualMediaRequest>
@@ -33,5 +37,10 @@ class MediaPickerService : IMediaPickerService {
         return context.contentResolver.openInputStream(uri)?.use {
             it.readBytes()
         }
+    }
+
+    override fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap? {
+        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return bitmap?.asImageBitmap()
     }
 }
