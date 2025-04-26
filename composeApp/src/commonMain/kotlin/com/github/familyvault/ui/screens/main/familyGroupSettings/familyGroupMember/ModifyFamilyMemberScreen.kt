@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
+import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
@@ -61,6 +63,8 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupCredentialsRepository = koinInject<IFamilyGroupCredentialsRepository>()
+        val chatService = koinInject<IChatService>()
+        val familyMembers = remember { mutableListOf<FamilyMember>() }
 
         val options = listOf(
             PermissionOption(
@@ -76,6 +80,11 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                 FamilyGroupMemberPermissionGroup.Guest
             )
         )
+
+        LaunchedEffect(Unit) {
+            familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
+        }
+
         var savingChanges by remember { mutableStateOf(false) }
         var showDialog by remember { mutableStateOf(false) }
         var selectedPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest) }
@@ -134,6 +143,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                                 familyMember.fullname,
                                 selectedPermissionGroup
                             )
+                            chatService.updateThreadsAfterUserPermissionChange(familyMember, familyMembers)
                             savingChanges = false
                             navigator.pop()
                         }

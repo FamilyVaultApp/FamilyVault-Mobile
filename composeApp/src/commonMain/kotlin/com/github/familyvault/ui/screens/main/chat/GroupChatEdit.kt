@@ -138,12 +138,13 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 coroutineScope.launch {
                     try {
                         if (groupChatAction == GroupChatAction.Create) {
-                            chatService.createGroupChat(form.groupName, form.familyMembers)
+                            chatService.createGroupChat(form.groupName, form.familyMembers, myUserData!!)
                         } else {
                             chatService.updateChatThread(
                                 chatThread!!,
                                 form.familyMembers,
-                                form.groupName
+                                form.groupName,
+                                null
                             )
                             createGroupChatState = FormSubmitState.IDLE
                             navigator.replaceAll(MainScreen())

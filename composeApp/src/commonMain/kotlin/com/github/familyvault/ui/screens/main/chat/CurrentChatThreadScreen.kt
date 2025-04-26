@@ -7,22 +7,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
@@ -39,26 +44,32 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
+        val familyGroupService = koinInject<IFamilyGroupService>()
         val chatState = koinInject<ICurrentChatState>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
-
+        val chatThreadManagers = remember { mutableListOf<String>() }
+        var myUserData: FamilyMember? by remember { mutableStateOf(null) }
+        var isLoadingUserData by remember { mutableStateOf(true) }
         LaunchedEffect(chatThread) {
             chatState.update(chatThread.id)
-
+            myUserData = familyGroupService.retrieveMyFamilyMemberData()
+            println("1")
             chatService.populateDatabaseWithLastMessages(chatThread.id)
+            println("2")
             chatState.populateStateFromService()
-
+            println("3")
+            chatThreadManagers.addAll(chatService.retrieveChatThreadManagers(chatThread.id))
+            println("4")
             chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                 coroutineScope.launch {
                     scrollToLastMessage(listState, chatState)
                 }
             }
-
+            isLoadingUserData = false
             scrollToLastMessage(listState, chatState)
         }
-
         LaunchedEffect(isAtTop) {
             if (isAtTop && chatState.messages.isNotEmpty()) {
                 val currentLookingMessage = chatState.messages[listState.firstVisibleItemIndex]
@@ -72,39 +83,47 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 chatMessageListenerService.unregisterAllListeners()
             }
         }
-
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    chatThread.name, actions = {
-                        if (chatThread.type === ChatThreadType.GROUP) {
-                            ChatThreadSettingsButton {
-                                navigator.push(ChatThreadEditScreen(chatThread.type, chatThread))
+        if (!isLoadingUserData) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        chatThread.name, actions = {
+                            if (chatThread.type === ChatThreadType.GROUP && myUserData!!.id in chatThreadManagers) {
+                                ChatThreadSettingsButton {
+                                    navigator.push(
+                                        ChatThreadEditScreen(
+                                            chatThread.type,
+                                            chatThread
+                                        )
+                                    )
+                                }
                             }
-                        }
-                    })
-            }) { paddingValues ->
-            Column(
-                modifier = Modifier.fillMaxSize().padding(paddingValues)
-            ) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    state = listState,
+                        })
+                }) { paddingValues ->
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(paddingValues)
                 ) {
-                    itemsIndexed(
-                        items = chatState.messages,
-                        key = { _, message -> message.id }) { index, message ->
-                        ChatMessageEntry(
-                            message,
-                            prevMessage = chatState.messages.getOrNull(index - 1),
-                            nextMessage = chatState.messages.getOrNull(index + 1)
-                        )
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        state = listState,
+                    ) {
+                        itemsIndexed(
+                            items = chatState.messages,
+                            key = { _, message -> message.id }) { index, message ->
+                            ChatMessageEntry(
+                                message,
+                                prevMessage = chatState.messages.getOrNull(index - 1),
+                                nextMessage = chatState.messages.getOrNull(index + 1)
+                            )
+                        }
                     }
+                    ChatInputField(
+                        onTextMessageSend = { handleTextMessageSend(it) },
+                        onVoiceMessageSend = { handleVoiceMessageSend(it) })
                 }
-                ChatInputField(
-                    onTextMessageSend = { handleTextMessageSend(it) },
-                    onVoiceMessageSend = { handleVoiceMessageSend(it) })
             }
+        } else {
+            CircularProgressIndicator()
         }
     }
 
