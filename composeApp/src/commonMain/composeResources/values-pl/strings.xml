@@ -6,6 +6,8 @@
     <string name="you">Ty</string>
     <string name="is_actual">Aktualna</string>
     <string name="is_default">Domyślna</string>
+    <string name="collapse">Zwiń</string>
+    <string name="expand">Rozwiń</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -153,4 +155,10 @@
     <string name="select_family_group_changing">Trwa zmiana grupy rodzinnej...</string>
     <string name="family_group_default">Domyślna grupa rodzinna</string>
     <string name="family_group_no_default">Niedomyślna grupa rodzinna</string>
+
+    <!-- Tasks -->
+    <string name="tasks_add_new_category">Dodaj nową</string>
+    <string name="tasks_settings">Konfiguruj</string>
+    <string name="tasks_completed">Ukończone</string>
+    <string name="tasks_assign">Przypisz członka rodziny do zadania</string>
 </resources>

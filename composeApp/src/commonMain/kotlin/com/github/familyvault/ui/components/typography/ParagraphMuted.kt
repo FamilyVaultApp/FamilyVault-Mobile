@@ -2,6 +2,7 @@ package com.github.familyvault.ui.components.typography
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import com.github.familyvault.ui.theme.AdditionalTheme
 
@@ -9,12 +10,14 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 fun ParagraphMuted(
     text: String,
     modifier: Modifier = Modifier,
-    fontStyle: FontStyle = FontStyle.Normal
+    fontStyle: FontStyle = FontStyle.Normal,
+    textStyle: TextStyle = TextStyle.Default
 ) {
     return Paragraph(
         text,
         AdditionalTheme.colors.onMutedColor,
         modifier = modifier,
-        fontStyle = fontStyle
+        fontStyle = fontStyle,
+        textStyle = textStyle
     )
 }
