@@ -17,7 +17,6 @@ import androidx.compose.ui.layout.ContentScale
 import com.github.familyvault.services.IMediaPickerService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.chat_add_multimedia_description
 import familyvault.composeapp.generated.resources.chat_remove_multimedia_description
 import org.jetbrains.compose.resources.stringResource
 
