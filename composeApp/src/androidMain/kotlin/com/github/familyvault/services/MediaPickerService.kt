@@ -29,7 +29,7 @@ class MediaPickerService : IMediaPickerService {
     }
 
     override fun pickMedia() {
-        pickFileLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+        pickFileLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     override fun getBytesFromUri(uriString: String): ByteArray? {

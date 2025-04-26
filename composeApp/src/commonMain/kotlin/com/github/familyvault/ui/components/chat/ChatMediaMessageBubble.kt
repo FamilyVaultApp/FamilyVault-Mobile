@@ -1,36 +1,26 @@
 package com.github.familyvault.ui.components.chat
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.draw.clip
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IMediaPickerService
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
-import org.koin.compose.koinInject
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.size
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_media_description
 import org.jetbrains.compose.resources.stringResource
-
+import org.koin.compose.koinInject
 
 @Composable
 fun ChatMediaMessageBubble(
@@ -42,6 +32,7 @@ fun ChatMediaMessageBubble(
     val chatService = koinInject<IChatService>()
     val mediaPickerService = koinInject<IMediaPickerService>()
     var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+    var isFullScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(message.message) {
         val bytes = chatService.getMediaMessage(message.message)
@@ -59,28 +50,28 @@ fun ChatMediaMessageBubble(
 
         Column(
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small),
+            horizontalAlignment = if (isAuthor) Alignment.End else Alignment.Start
         ) {
             if (!isAuthor) {
-                Paragraph(sender, color = AdditionalTheme.colors.mutedColor)
+                Paragraph(
+                    text = sender,
+                    color = AdditionalTheme.colors.mutedColor
+                )
             }
 
-            Row(
-                modifier = Modifier
-                    .background(
-                        if (isAuthor) MaterialTheme.colorScheme.primary else AdditionalTheme.colors.otherChatBubbleColor,
-                        shape = MaterialTheme.shapes.medium
-                    )
-                    .padding(AdditionalTheme.spacings.medium),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                imageBitmap?.let {
-                    Image(
-                        bitmap = it,
-                        contentDescription = stringResource(Res.string.chat_media_description),
-                        modifier = Modifier.size(AdditionalTheme.sizing.large)
-                    )
-                }
+            imageBitmap?.let { bitmap ->
+                Image(
+                    bitmap = bitmap,
+                    contentDescription = stringResource(Res.string.chat_media_description),
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .clickable { isFullScreen = true }
+                        .sizeIn(
+                            maxWidth = AdditionalTheme.sizing.large,
+                            maxHeight = AdditionalTheme.sizing.veryLarge
+                        )
+                        .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent))
+                )
             }
 
             if (!isAuthor) {
@@ -90,5 +81,12 @@ fun ChatMediaMessageBubble(
                 )
             }
         }
+    }
+
+    if (isFullScreen && imageBitmap != null) {
+        FullScreenImage(
+            imageBitmap = imageBitmap!!,
+            onDismiss = { isFullScreen = false }
+        )
     }
 }
