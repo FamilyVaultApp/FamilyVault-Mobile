@@ -85,7 +85,9 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
 data class Sizing(
     val veryLarge: Dp,
     val large: Dp,
-    val entryMinSize: Dp
+    val medium: Dp,
+    val entryMinSize: Dp,
+    val small: Dp
 )
 
 @Immutable
@@ -102,7 +104,9 @@ private val LocalSizing = staticCompositionLocalOf {
     Sizing(
         veryLarge = 400.dp,
         large = 250.dp,
-        entryMinSize = 65.dp
+        medium = 80.dp,
+        entryMinSize = 65.dp,
+        small = 20.dp
     )
 }
 

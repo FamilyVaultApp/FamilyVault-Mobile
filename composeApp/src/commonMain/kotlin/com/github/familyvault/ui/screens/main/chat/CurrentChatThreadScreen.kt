@@ -41,11 +41,14 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val chatState = koinInject<ICurrentChatState>()
+        val mediaPicker = koinInject<IMediaPickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
 
         LaunchedEffect(chatThread) {
+            mediaPicker.selectedMediaUrl.clear()
+
             chatState.update(chatThread.id)
 
             chatService.populateDatabaseWithLastMessages(chatThread.id)
