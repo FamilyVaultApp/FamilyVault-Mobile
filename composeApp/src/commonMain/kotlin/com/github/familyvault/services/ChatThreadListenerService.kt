@@ -2,7 +2,7 @@ package com.github.familyvault.services
 
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.ChatThreadType
+import com.github.familyvault.models.enums.chat.ChatThreadType
 
 class ChatThreadListenerService(
     private val privMxClient: IPrivMxClient,

@@ -5,9 +5,9 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.ChatMessageContentType
-import com.github.familyvault.models.enums.ChatThreadType
 import com.github.familyvault.models.enums.StoreType
+import com.github.familyvault.models.enums.chat.ChatMessageContentType
+import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper

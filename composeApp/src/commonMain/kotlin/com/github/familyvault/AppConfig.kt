@@ -7,7 +7,7 @@ object AppConfig {
 
     const val SECRET: String = "q8v9P2z4J1lZxT6rMb0KdQ"
     const val BACKEND_REQUEST_INTERVAL_LENGTH_MS: Long = 2000
-  
+
     /* Notifications permission */
     const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1001
     const val NOTIFICATION_CHANNEL_NAME = "FamilyVault"

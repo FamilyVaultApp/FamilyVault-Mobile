@@ -2,7 +2,7 @@ package com.github.familyvault.utils.mappers
 
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.database.chatMessage.StoredChatMessage
-import com.github.familyvault.models.enums.ChatMessageContentType
+import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 

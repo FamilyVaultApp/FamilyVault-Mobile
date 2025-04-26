@@ -1,6 +1,6 @@
 package com.github.familyvault.models.chat
 
-import com.github.familyvault.models.enums.ChatMessageContentType
+import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import kotlinx.datetime.LocalDateTime
 
 data class ChatMessage(

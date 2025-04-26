@@ -14,8 +14,8 @@ class CurrentChatState(
         private set
 
     override fun update(chatThreadId: String) {
-        this.chatThreadId = chatThreadId
         messages.clear()
+        this.chatThreadId = chatThreadId
         currentPage = 0
     }
 
