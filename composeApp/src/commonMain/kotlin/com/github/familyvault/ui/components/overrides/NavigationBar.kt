@@ -1,6 +1,5 @@
 package com.github.familyvault.ui.components.overrides
 
-import androidx.compose.foundation.border
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material3.Icon
@@ -10,7 +9,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
@@ -20,6 +20,7 @@ import androidx.compose.material3.NavigationBar as MdNavigationBar
 
 @Composable
 fun NavigationBar(vararg tabs: Tab) {
+    val borderColor = AdditionalTheme.colors.borderColor
     val tabNavigator = LocalTabNavigator.current
     val navigationBarColors = NavigationBarItemDefaults.colors().copy(
         selectedIndicatorColor = MaterialTheme.colorScheme.primaryContainer,
@@ -30,8 +31,15 @@ fun NavigationBar(vararg tabs: Tab) {
     MdNavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primaryContainer,
-        modifier = Modifier.border(1.dp, AdditionalTheme.colors.borderColor, RectangleShape)
-    ) {
+        modifier = Modifier.drawBehind {
+                val strokeWidth = 1.dp.toPx()
+                drawLine(
+                    color = borderColor,
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
+                    strokeWidth = strokeWidth
+                )
+            }) {
         tabs.forEach { tab ->
             val options = tab.options
             NavigationBarItem(
@@ -46,8 +54,7 @@ fun NavigationBar(vararg tabs: Tab) {
                 selected = tabNavigator.current == tab,
                 onClick = {
                     tabNavigator.current = tab
-                }
-            )
+                })
         }
     }
 }

@@ -86,8 +86,9 @@ data class Sizing(
     val veryLarge: Dp,
     val large: Dp,
     val medium: Dp,
+    val small: Dp,
     val entryMinSize: Dp,
-    val small: Dp
+    val tasksCategoryButtonHeight: Dp
 )
 
 @Immutable
@@ -105,8 +106,9 @@ private val LocalSizing = staticCompositionLocalOf {
         veryLarge = 400.dp,
         large = 250.dp,
         medium = 80.dp,
+        small = 20.dp,
         entryMinSize = 65.dp,
-        small = 20.dp
+        tasksCategoryButtonHeight = 40.dp
     )
 }
 
@@ -122,12 +124,16 @@ private val LocalSpacing = staticCompositionLocalOf {
 }
 
 private val LocalRoundness = staticCompositionLocalOf {
-    Roundness(normalPercent = 7)
+    Roundness(
+        normalPercent = 7,
+        medium = 20.dp
+    )
 }
 
 @Immutable
 data class Roundness(
-    val normalPercent: Int
+    val normalPercent: Int,
+    val medium: Dp
 )
 
 @Composable

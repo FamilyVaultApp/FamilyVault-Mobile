@@ -1,5 +1,6 @@
 package com.github.familyvault.ui.screens.main
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Task
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.github.familyvault.ui.components.SettingsIconButton
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.screens.main.familyGroupSettings.FamilyGroupSettingsScreen
+import com.github.familyvault.ui.screens.main.tasks.TasksContent
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.task_board_tab
 import org.jetbrains.compose.resources.stringResource
@@ -21,14 +23,17 @@ object TaskTab : Tab {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        TopAppBar(
-            stringResource(Res.string.task_board_tab),
-            actions = {
-                SettingsIconButton {
-                    navigator.parent?.push(FamilyGroupSettingsScreen())
-                }
-            },
-        )
+        Column {
+            TopAppBar(
+                stringResource(Res.string.task_board_tab),
+                actions = {
+                    SettingsIconButton {
+                        navigator.parent?.push(FamilyGroupSettingsScreen())
+                    }
+                },
+            )
+            TasksContent()
+        }
     }
 
     override val options: TabOptions
