@@ -9,6 +9,7 @@ interface IMediaPickerService {
     fun getBytesFromUri(uriString: String): ByteArray?
     fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap
     fun getSelectedMediaAsByteArrays(): List<ByteArray>
+    fun compressImage(imageByteArray: ByteArray, quality: Int): ByteArray
     fun clearSelectedMedia()
     fun removeSelectedMedia(uri: String)
 }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.net.toUri
+import java.io.ByteArrayOutputStream
 
 class MediaPickerService : IMediaPickerService {
     private lateinit var pickFileLauncher: ActivityResultLauncher<PickVisualMediaRequest>
@@ -62,6 +63,17 @@ class MediaPickerService : IMediaPickerService {
         selectedMediaUrls.remove(uri)
     }
 
+    override fun compressImage(imageByteArray: ByteArray, quality: Int): ByteArray {
+        val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+
+        val rotatedBitmap = fixImageRotation(bitmap, imageByteArray)
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream)
+
+        return byteArrayOutputStream.toByteArray()
+    }
+
     private fun fixImageRotation(bitmap: Bitmap, imageBytes: ByteArray): Bitmap {
         return try {
             val exif = ExifInterface(imageBytes.inputStream())
@@ -76,6 +88,8 @@ class MediaPickerService : IMediaPickerService {
                 ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
                 ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
                 ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+                ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.postScale(-1f, 1f)
+                ExifInterface.ORIENTATION_FLIP_VERTICAL -> matrix.postScale(1f, -1f)
             }
 
             Bitmap.createBitmap(

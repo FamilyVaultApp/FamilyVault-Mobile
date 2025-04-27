@@ -115,7 +115,9 @@ class ChatService(
         val storeId =
             privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId ?: return
 
-        val fileId = privMxClient.sendByteArrayToStore(storeId, mediaByteArray)
+        val compressedMedia = mediaPickerService.compressImage(mediaByteArray, 25)
+
+        val fileId = privMxClient.sendByteArrayToStore(storeId, compressedMedia)
 
         privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.IMAGE.toString())
     }
