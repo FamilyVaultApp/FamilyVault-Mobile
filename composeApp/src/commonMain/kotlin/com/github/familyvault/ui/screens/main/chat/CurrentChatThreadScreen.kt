@@ -23,7 +23,7 @@ import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
-import com.github.familyvault.services.IMediaPickerService
+import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
@@ -41,13 +41,13 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val chatState = koinInject<ICurrentChatState>()
-        val mediaPicker = koinInject<IMediaPickerService>()
+        val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
 
         LaunchedEffect(chatThread) {
-            mediaPicker.clearSelectedMedia()
+            mediaPicker.clearSelectedImages()
 
             chatState.update(chatThread.id)
 
@@ -108,7 +108,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 ChatInputField(
                     onTextMessageSend = { handleTextMessageSend(it) },
                     onVoiceMessageSend = { handleVoiceMessageSend(it) },
-                    onMediaMessageSend = { handleMediaMessageSend(it) }
+                    onImageMessageSend = { handleImageMessageSend(it) }
                 )
             }
         }
@@ -128,13 +128,13 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         chatService.sendVoiceMessage(chatThread.id, audio)
     }
 
-    private fun handleMediaMessageSend(uriByteArrays: List<ByteArray>) {
+    private fun handleImageMessageSend(uriByteArrays: List<ByteArray>) {
         if (uriByteArrays.isEmpty()) {
             return
         }
 
         uriByteArrays.forEach { mediaByteArray ->
-            chatService.sendMediaMessage(chatThread.id, mediaByteArray)
+            chatService.sendImageMessage(chatThread.id, mediaByteArray)
         }
     }
 

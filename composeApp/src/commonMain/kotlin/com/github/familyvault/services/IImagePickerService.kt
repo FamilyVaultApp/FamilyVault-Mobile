@@ -2,13 +2,13 @@ package com.github.familyvault.services
 
 import androidx.compose.ui.graphics.ImageBitmap
 
-interface IMediaPickerService {
-    fun openMediaPickerForSelectingMedia()
+interface IImagePickerService {
+    fun openMediaPickerForSelectingImages()
     fun getBytesFromUri(uriString: String): ByteArray?
     fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap
-    fun getSelectedMediaAsByteArrays(): List<ByteArray>
-    fun getSelectedMedialUrls(): List<String>
+    fun getSelectedImageAsByteArrays(): List<ByteArray>
+    fun getSelectedImageUrls(): List<String>
     fun compressImage(imageByteArray: ByteArray, quality: Int): ByteArray
-    fun clearSelectedMedia()
-    fun removeSelectedMedia(uri: String)
+    fun clearSelectedImages()
+    fun removeSelectedImage(uri: String)
 }

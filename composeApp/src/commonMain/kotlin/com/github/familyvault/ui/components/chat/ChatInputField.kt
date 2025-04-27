@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.familyvault.services.IAudioRecorderService
-import com.github.familyvault.services.IMediaPickerService
+import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -29,22 +29,22 @@ import org.koin.compose.koinInject
 fun ChatInputField(
     onTextMessageSend: (message: String) -> Unit,
     onVoiceMessageSend: (audio: ByteArray) -> Unit,
-    onMediaMessageSend: (media: List<ByteArray>) -> Unit
+    onImageMessageSend: (media: List<ByteArray>) -> Unit
 ) {
     val audioRecorder = koinInject<IAudioRecorderService>()
-    val mediaPicker = koinInject<IMediaPickerService>()
+    val imagePicker = koinInject<IImagePickerService>()
 
     var textMessage by remember { mutableStateOf("") }
     var isRecording by remember { mutableStateOf(false) }
     var audioData by remember { mutableStateOf(ByteArray(0)) }
 
-    SelectedMediaPreview(
-        selectedMedia = mediaPicker.getSelectedMedialUrls(),
-        onRemoveMedia = { uri ->
-            mediaPicker.removeSelectedMedia(uri)
+    SelectedImagesPreview(
+        selectedImages = imagePicker.getSelectedImageUrls(),
+        onRemoveImage = { uri ->
+            imagePicker.removeSelectedImage(uri)
         },
-        getBytesFromUri = { uri -> mediaPicker.getBytesFromUri(uri) },
-        getBitmapFromBytes = { bytes -> mediaPicker.getBitmapFromBytes(bytes) }
+        getBytesFromUri = { uri -> imagePicker.getBytesFromUri(uri) },
+        getBitmapFromBytes = { bytes -> imagePicker.getBitmapFromBytes(bytes) }
     )
 
     Row(
@@ -68,7 +68,7 @@ fun ChatInputField(
         } else {
             MultimediaPickerButton(
                 onClick = {
-                    mediaPicker.openMediaPickerForSelectingMedia()
+                    imagePicker.openMediaPickerForSelectingImages()
                 }
             )
             VoiceMessageRecordButton(
@@ -115,7 +115,7 @@ fun ChatInputField(
         SendButton(
             isRecording = isRecording,
             textMessage = textMessage,
-            selectedMediaUrls = mediaPicker.getSelectedMedialUrls(),
+            selectedImageUrls = imagePicker.getSelectedImageUrls(),
             onSendText = {
                 onTextMessageSend(textMessage)
                 textMessage = ""
@@ -125,10 +125,10 @@ fun ChatInputField(
                 onVoiceMessageSend(audioData)
                 isRecording = false
             },
-            onSendMedia = {
-                val mediaByteArrays = mediaPicker.getSelectedMediaAsByteArrays()
-                mediaPicker.clearSelectedMedia()
-                onMediaMessageSend(mediaByteArrays)
+            onSendImage = {
+                val mediaByteArrays = imagePicker.getSelectedImageAsByteArrays()
+                imagePicker.clearSelectedImages()
+                onImageMessageSend(mediaByteArrays)
             }
         )
     }

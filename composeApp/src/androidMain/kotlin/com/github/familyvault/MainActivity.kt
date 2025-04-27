@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.familyvault.services.MediaPickerService
+import com.github.familyvault.services.ImagePickerService
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
             androidContext(this@MainActivity)
         }
 
-        get<MediaPickerService>().initializeWithActivity(this@MainActivity)
+        get<ImagePickerService>().initializeWithActivity(this@MainActivity)
 
         setContent {
             App()

@@ -24,7 +24,7 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_message_type_audio
-import familyvault.composeapp.generated.resources.chat_message_type_media
+import familyvault.composeapp.generated.resources.chat_message_type_image
 import familyvault.composeapp.generated.resources.you
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -64,7 +64,7 @@ fun ChatThreadEntry(
             if (lastMessage != null) {
                 when(lastMessage.type) {
                     ChatMessageContentType.VOICE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_audio)}", 30))
-                    ChatMessageContentType.IMAGE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_media)}", 30))
+                    ChatMessageContentType.IMAGE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_image)}", 30))
                     ChatMessageContentType.TEXT -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${lastMessage.message}", 30))
                 }
             }

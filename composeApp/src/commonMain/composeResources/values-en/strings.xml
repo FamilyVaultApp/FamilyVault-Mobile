@@ -120,7 +120,7 @@
     <string name="chat_attach_photo">Attach photo</string>
     <string name="chat_creating">Creating chat...</string>
     <string name="chat_message_type_audio">Voice message</string>
-    <string name="chat_message_type_media">Media</string>
+    <string name="chat_message_type_image">Image</string>
     <string name="chat_message_send_description">Send message</string>
     <string name="chat_recording_stop_description">Stop recording</string>
     <string name="chat_recording_play_description">Play recording</string>
@@ -129,7 +129,7 @@
     <string name="chat_add_multimedia_description">Add multimedia</string>
     <string name="chat_media_full_screen">Full screen</string>
     <string name="chat_remove_multimedia_description">Remove multimedia</string>
-    <string name="chat_media_preview">Media preview</string>
+    <string name="chat_image_preview">Image preview</string>
     <string name="chat_image_error">Error occurred loading an image</string>
     <string name="chat_image_loading">Loading an image</string>
 

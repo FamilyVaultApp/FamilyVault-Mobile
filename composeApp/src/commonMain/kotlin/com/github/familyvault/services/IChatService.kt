@@ -12,10 +12,10 @@ interface IChatService {
     fun retrieveLastMessage(chatThreadId: String): ChatMessage?
     fun sendTextMessage(chatThreadId: String, messageContent: String, respondToMessageId: String)
     fun sendVoiceMessage(chatThreadId: String, audioData: ByteArray)
-    fun sendMediaMessage(chatThreadId: String, mediaByteArray: ByteArray)
+    fun sendImageMessage(chatThreadId: String, mediaByteArray: ByteArray)
     fun getVoiceMessage(fileId: String) : ByteArray
-    fun getMediaMessage(fileId: String) : ByteArray
-    fun getImageMediaBitmap(chatMessage: String): ImageBitmap?
+    fun getImageMessage(fileId: String) : ByteArray
+    fun getImageBitmap(chatMessage: String): ImageBitmap?
     suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
     suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)

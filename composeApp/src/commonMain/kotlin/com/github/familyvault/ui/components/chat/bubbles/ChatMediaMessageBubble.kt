@@ -24,7 +24,7 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_image_error
 import familyvault.composeapp.generated.resources.chat_image_loading
-import familyvault.composeapp.generated.resources.chat_message_type_media
+import familyvault.composeapp.generated.resources.chat_message_type_image
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun ChatMediaMessageBubble(
+fun ChatImageMessageBubble(
     chatMessage: ChatMessage,
     additionalInfo: ChatMessageAdditionalInfo
 ) {
@@ -52,7 +52,7 @@ fun ChatMediaMessageBubble(
         } else {
             isLoading = true
             val bitmap = withContext(Dispatchers.IO) {
-                chatService.getImageMediaBitmap(chatMessage.message)
+                chatService.getImageBitmap(chatMessage.message)
             }
             imageBitmap = bitmap
             imageBitmap?.let {
@@ -75,7 +75,7 @@ fun ChatMediaMessageBubble(
         } else if (imageBitmap != null) {
             Image(
                 bitmap = imageBitmap!!,
-                contentDescription = stringResource(Res.string.chat_message_type_media),
+                contentDescription = stringResource(Res.string.chat_message_type_image),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .clickable { isFullScreen = true }

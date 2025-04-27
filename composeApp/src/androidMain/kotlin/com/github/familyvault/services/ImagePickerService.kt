@@ -15,10 +15,10 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.net.toUri
 import java.io.ByteArrayOutputStream
 
-class MediaPickerService : IMediaPickerService {
+class ImagePickerService : IImagePickerService {
     private lateinit var pickFileLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var context: Context
-    private val selectedMediaUrls = mutableStateListOf<String>()
+    private val selectedImageUrls = mutableStateListOf<String>()
 
     fun initializeWithActivity(activity: ComponentActivity) {
         context = activity
@@ -26,12 +26,12 @@ class MediaPickerService : IMediaPickerService {
             activity.registerForActivityResult(
                 ActivityResultContracts.PickMultipleVisualMedia()
             ) {
-                clearSelectedMedia()
-                selectedMediaUrls.addAll(it.map { u -> u.toString() })
+                clearSelectedImages()
+                selectedImageUrls.addAll(it.map { u -> u.toString() })
             }
     }
 
-    override fun openMediaPickerForSelectingMedia() {
+    override fun openMediaPickerForSelectingImages() {
         pickFileLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
@@ -41,15 +41,15 @@ class MediaPickerService : IMediaPickerService {
         }
     }
 
-    override fun getSelectedMediaAsByteArrays(): List<ByteArray> {
-        val bytes = selectedMediaUrls.mapNotNull { uriString ->
+    override fun getSelectedImageAsByteArrays(): List<ByteArray> {
+        val bytes = selectedImageUrls.mapNotNull { uriString ->
             getBytesFromUri(uriString)
         }
-        clearSelectedMedia()
+        clearSelectedImages()
         return bytes
     }
 
-    override fun getSelectedMedialUrls(): List<String> = selectedMediaUrls
+    override fun getSelectedImageUrls(): List<String> = selectedImageUrls
 
     override fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap {
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
@@ -57,12 +57,12 @@ class MediaPickerService : IMediaPickerService {
         return rotatedBitmap.asImageBitmap()
     }
 
-    override fun clearSelectedMedia() {
-        selectedMediaUrls.clear()
+    override fun clearSelectedImages() {
+        selectedImageUrls.clear()
     }
 
-    override fun removeSelectedMedia(uri: String) {
-        selectedMediaUrls.remove(uri)
+    override fun removeSelectedImage(uri: String) {
+        selectedImageUrls.remove(uri)
     }
 
     override fun compressImage(imageByteArray: ByteArray, quality: Int): ByteArray {

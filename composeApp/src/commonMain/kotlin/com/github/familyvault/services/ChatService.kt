@@ -20,7 +20,7 @@ class ChatService(
     private val familyGroupSessionService: IFamilyGroupSessionService,
     private val privMxClient: IPrivMxClient,
     private val storedChatMessageRepository: IStoredChatMessageRepository,
-    private val mediaPickerService: IMediaPickerService,
+    private val imagePickerService: IImagePickerService,
 ) : IChatService {
     override suspend fun createGroupChat(
         name: String, members: List<FamilyMember>
@@ -108,16 +108,16 @@ class ChatService(
         privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.VOICE.toString())
     }
 
-    override fun sendMediaMessage(
+    override fun sendImageMessage(
         chatThreadId: String,
         mediaByteArray: ByteArray
     ) {
         val storeId =
             privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId ?: return
 
-        val compressedMedia = mediaPickerService.compressImage(mediaByteArray, 25)
+        val compressedImage = imagePickerService.compressImage(mediaByteArray, 25)
 
-        val fileId = privMxClient.sendByteArrayToStore(storeId, compressedMedia)
+        val fileId = privMxClient.sendByteArrayToStore(storeId, compressedImage)
 
         privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.IMAGE.toString())
     }
@@ -128,15 +128,15 @@ class ChatService(
         return privMxClient.getFileAsByteArrayFromStore(fileId)
     }
 
-    override fun getMediaMessage(
+    override fun getImageMessage(
         fileId: String
     ): ByteArray {
         return privMxClient.getFileAsByteArrayFromStore(fileId)
     }
 
-    override fun getImageMediaBitmap(chatMessage: String): ImageBitmap? {
-        val bytes = getMediaMessage(chatMessage)
-        return mediaPickerService.getBitmapFromBytes(bytes)
+    override fun getImageBitmap(chatMessage: String): ImageBitmap? {
+        val bytes = getImageMessage(chatMessage)
+        return imagePickerService.getBitmapFromBytes(bytes)
     }
 
     override suspend fun createIndividualChat(
