@@ -34,16 +34,23 @@ fun ChatMediaMessageBubble(
 ) {
     val chatService = koinInject<IChatService>()
 
-    var imageBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
+    val imageCache = remember { mutableMapOf<String, ImageBitmap?>() }
+
+    var imageBitmap by remember(chatMessage.message) { mutableStateOf<ImageBitmap?>(null) }
+    var isLoading by remember(chatMessage.message) { mutableStateOf(true) }
     var isFullScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(chatMessage.message) {
-        launch {
+        if (imageCache.containsKey(chatMessage.message)) {
+            imageBitmap = imageCache[chatMessage.message]
+            isLoading = false
+        } else {
+            isLoading = true
             val bitmap = withContext(Dispatchers.IO) {
                 chatService.getImageMediaBitmap(chatMessage.message)
             }
             imageBitmap = bitmap
+            imageCache[chatMessage.message] = bitmap
             isLoading = false
         }
     }
