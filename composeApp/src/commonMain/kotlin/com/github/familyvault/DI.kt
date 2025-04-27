@@ -22,14 +22,18 @@ import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.ISavedFamilyGroupsService
+import com.github.familyvault.services.ITaskService
 import com.github.familyvault.services.JoinStatusService
 import com.github.familyvault.services.SavedFamilyGroupsService
+import com.github.familyvault.services.TaskService
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.CurrentChatThreadsState
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.ICurrentChatThreadsState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
+import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.states.JoinFamilyGroupPayloadState
+import com.github.familyvault.states.TaskListState
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
@@ -79,6 +83,9 @@ val sharedModules = module {
     single {
         SavedFamilyGroupsService(get())
     }.bind<ISavedFamilyGroupsService>()
+    single {
+        TaskService(get(), get(), get())
+    }.bind<ITaskService>()
 
     // Backend client
     single { FamilyVaultBackendClient() }.bind<IFamilyVaultBackendClient>()
@@ -87,6 +94,7 @@ val sharedModules = module {
     single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()
     single { CurrentChatState(get()) }.bind<ICurrentChatState>()
     single { CurrentChatThreadsState(get()) }.bind<ICurrentChatThreadsState>()
+    single { TaskListState(get()) }.bind<ITaskListState>()
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {

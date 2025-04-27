@@ -157,8 +157,14 @@
     <string name="family_group_no_default">No default family group</string>
 
     <!-- Tasks -->
-    <string name="tasks_add_new_category">Add new</string>
-    <string name="tasks_settings">Configure</string>
-    <string name="tasks_completed">Completed</string>
-    <string name="tasks_assign">Assign family member to task</string>
+    <string name="task_add_new_list_short">Add new</string>
+    <string name="task_add_new_list">New task list</string>
+    <string name="task_add_new_list_description">Here you can create a new list to better organize tasks for your family and quickly assign responsibilities.</string>
+    <string name="task_list">Task list</string>
+    <string name="task_settings">Configure</string>
+    <string name="task_completed">Completed</string>
+    <string name="task_assign">Assign family member to task</string>
+    <string name="no_task_list_title">No task list</string>
+    <string name="no_task_list_description">Create your first task list by clicking the button below.</string>
+    <string name="task_list_creating">Creating a new task list...</string>
 </resources>

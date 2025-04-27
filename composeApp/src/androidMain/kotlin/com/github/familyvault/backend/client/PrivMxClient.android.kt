@@ -184,6 +184,17 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return threadsList
     }
 
+    override fun retrieveAllThreadsWithTag(
+        contextId: String,
+        tag: String,
+        startIndex: Int,
+        pageSize: Int
+    ): List<ThreadItem> {
+        val threads = retrieveAllThreads(contextId, startIndex, pageSize)
+
+        return threads.filter { it.publicMeta.tag == tag }
+    }
+
     override fun sendMessage(
         threadId: String,
         content: String,

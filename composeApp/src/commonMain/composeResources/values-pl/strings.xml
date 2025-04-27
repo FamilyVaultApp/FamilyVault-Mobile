@@ -157,8 +157,14 @@
     <string name="family_group_no_default">Niedomyślna grupa rodzinna</string>
 
     <!-- Tasks -->
-    <string name="tasks_add_new_category">Dodaj nową</string>
-    <string name="tasks_settings">Konfiguruj</string>
-    <string name="tasks_completed">Ukończone</string>
-    <string name="tasks_assign">Przypisz członka rodziny do zadania</string>
+    <string name="task_add_new_list_short">Dodaj nową</string>
+    <string name="task_add_new_list">Nowa lista zadań</string>
+    <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania w rodzinie i szybko przypisywać obowiązki.</string>
+    <string name="task_list">Lista zadań</string>
+    <string name="task_settings">Konfiguruj</string>
+    <string name="task_completed">Ukończone</string>
+    <string name="task_assign">Przypisz członka rodziny do zadania</string>
+    <string name="no_task_list_title">Brak listy zadań</string>
+    <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając w przycisk poniżej.</string>
+    <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
 </resources>

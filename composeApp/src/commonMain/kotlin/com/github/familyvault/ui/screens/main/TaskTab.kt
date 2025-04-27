@@ -13,7 +13,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.github.familyvault.ui.components.SettingsIconButton
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.screens.main.familyGroupSettings.FamilyGroupSettingsScreen
-import com.github.familyvault.ui.screens.main.tasks.TasksContent
+import com.github.familyvault.ui.screens.main.tasks.TaskTabContent
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.task_board_tab
 import org.jetbrains.compose.resources.stringResource
@@ -32,7 +32,7 @@ object TaskTab : Tab {
                     }
                 },
             )
-            TasksContent()
+            TaskTabContent()
         }
     }
 

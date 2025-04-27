@@ -6,7 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.tasks_assign
+import familyvault.composeapp.generated.resources.task_assign
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -15,7 +15,7 @@ fun AssignMemberToTaskButton(onClick: () -> Unit) {
         onClick = onClick
     ) {
         Icon(
-            Icons.AutoMirrored.Outlined.ArrowForward, stringResource(Res.string.tasks_assign)
+            Icons.AutoMirrored.Outlined.ArrowForward, stringResource(Res.string.task_assign)
         )
     }
 }
