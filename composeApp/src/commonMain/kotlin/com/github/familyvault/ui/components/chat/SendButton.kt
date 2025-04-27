@@ -14,19 +14,19 @@ import org.jetbrains.compose.resources.stringResource
 fun SendButton(
     isRecording: Boolean,
     textMessage: String,
-    selectedMediaUrl: List<String>,
+    selectedMediaUrls: List<String>,
     onSendText: () -> Unit,
     onSendVoice: () -> Unit,
     onSendMedia: () -> Unit
 ) {
-    val enabled = isRecording || textMessage.isNotBlank() || selectedMediaUrl.isNotEmpty()
+    val enabled = isRecording || textMessage.isNotBlank() || selectedMediaUrls.isNotEmpty()
 
     IconButton(
         onClick = {
             when {
                 isRecording -> onSendVoice()
                 textMessage.isNotBlank() -> onSendText()
-                selectedMediaUrl.isNotEmpty() -> onSendMedia()
+                selectedMediaUrls.isNotEmpty() -> onSendMedia()
             }
         },
         enabled = enabled

@@ -42,7 +42,9 @@ fun ChatMessageEntry(
                     message, additionalInfo
                 )
 
-                ChatMessageContentType.MEDIA -> ChatMediaMessageBubble(message)
+                ChatMessageContentType.IMAGE -> ChatMediaMessageBubble(
+                    message, additionalInfo
+                )
             }
         }
     }

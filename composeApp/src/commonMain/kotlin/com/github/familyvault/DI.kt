@@ -60,6 +60,7 @@ val sharedModules = module {
             get(),
             get(),
             get(),
+            get(),
         )
     }.bind<IChatService>()
     single {

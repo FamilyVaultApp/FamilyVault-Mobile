@@ -20,13 +20,17 @@ import androidx.compose.ui.layout.ContentScale
 import com.github.familyvault.services.IMediaPickerService
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.chat_media_preview
 import familyvault.composeapp.generated.resources.chat_remove_multimedia_description
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SelectedMediaPreview(mediaPicker: IMediaPickerService) {
-    val selectedMedia = mediaPicker.selectedMediaUrl
-
+fun SelectedMediaPreview(
+    selectedMedia: List<String>,
+    onRemoveMedia: (String) -> Unit,
+    getBytesFromUri: (String) -> ByteArray?,
+    getBitmapFromBytes: (ByteArray) -> androidx.compose.ui.graphics.ImageBitmap
+) {
     if (selectedMedia.isNotEmpty()) {
         LazyRow(
             modifier = Modifier
@@ -38,8 +42,8 @@ fun SelectedMediaPreview(mediaPicker: IMediaPickerService) {
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
             items(selectedMedia) { uriString ->
-                val imageBytes = mediaPicker.getBytesFromUri(uriString)
-                val bitmap = imageBytes?.let { mediaPicker.getBitmapFromBytes(it) }
+                val imageBytes = getBytesFromUri(uriString)
+                val bitmap = imageBytes?.let { getBitmapFromBytes(it) }
 
                 bitmap?.let {
                     Box(
@@ -49,7 +53,7 @@ fun SelectedMediaPreview(mediaPicker: IMediaPickerService) {
                     ) {
                         Image(
                             bitmap = it,
-                            contentDescription = null,
+                            contentDescription = stringResource(Res.string.chat_media_preview),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
@@ -63,7 +67,7 @@ fun SelectedMediaPreview(mediaPicker: IMediaPickerService) {
                                 .clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .clickable {
-                                    mediaPicker.selectedMediaUrl.remove(uriString)
+                                    onRemoveMedia(uriString)
                                 }
                         )
                     }

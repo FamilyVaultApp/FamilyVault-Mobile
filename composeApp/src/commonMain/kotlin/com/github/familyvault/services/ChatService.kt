@@ -1,5 +1,6 @@
 package com.github.familyvault.services
 
+import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
@@ -19,6 +20,7 @@ class ChatService(
     private val familyGroupSessionService: IFamilyGroupSessionService,
     private val privMxClient: IPrivMxClient,
     private val storedChatMessageRepository: IStoredChatMessageRepository,
+    private val mediaPickerService: IMediaPickerService,
 ) : IChatService {
     override suspend fun createGroupChat(
         name: String, members: List<FamilyMember>
@@ -115,7 +117,7 @@ class ChatService(
 
         val fileId = privMxClient.sendByteArrayToStore(storeId, mediaByteArray)
 
-        privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.MEDIA.toString())
+        privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.IMAGE.toString())
     }
 
     override fun getVoiceMessage(
@@ -128,6 +130,11 @@ class ChatService(
         fileId: String
     ): ByteArray {
         return privMxClient.getFileAsByteArrayFromStore(fileId)
+    }
+
+    override fun getImageMediaBitmap(chatMessage: String): ImageBitmap? {
+        val bytes = getMediaMessage(chatMessage)
+        return mediaPickerService.getBitmapFromBytes(bytes)
     }
 
     override suspend fun createIndividualChat(

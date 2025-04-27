@@ -3,9 +3,12 @@ package com.github.familyvault.services
 import androidx.compose.ui.graphics.ImageBitmap
 
 interface IMediaPickerService {
-    val selectedMediaUrl: MutableList<String>
+    val selectedMediaUrls: MutableList<String>
 
-    fun pickMedia()
+    fun openMediaPickerForSelectingMedia()
     fun getBytesFromUri(uriString: String): ByteArray?
-    fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap?
+    fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap
+    fun getSelectedMediaAsByteArrays(): List<ByteArray>
+    fun clearSelectedMedia()
+    fun removeSelectedMedia(uri: String)
 }

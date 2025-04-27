@@ -1,5 +1,6 @@
 package com.github.familyvault.services
 
+import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
@@ -14,6 +15,7 @@ interface IChatService {
     fun sendMediaMessage(chatThreadId: String, mediaByteArray: ByteArray)
     fun getVoiceMessage(fileId: String) : ByteArray
     fun getMediaMessage(fileId: String) : ByteArray
+    fun getImageMediaBitmap(chatMessage: String): ImageBitmap?
     suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
     suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)

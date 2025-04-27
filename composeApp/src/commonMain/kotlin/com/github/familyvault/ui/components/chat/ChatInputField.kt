@@ -38,15 +38,21 @@ fun ChatInputField(
     var isRecording by remember { mutableStateOf(false) }
     var audioData by remember { mutableStateOf(ByteArray(0)) }
 
-    SelectedMediaPreview(mediaPicker)
+    SelectedMediaPreview(
+        selectedMedia = mediaPicker.selectedMediaUrls,
+        onRemoveMedia = { uri ->
+            mediaPicker.removeSelectedMedia(uri)
+        },
+        getBytesFromUri = { uri -> mediaPicker.getBytesFromUri(uri) },
+        getBitmapFromBytes = { bytes -> mediaPicker.getBitmapFromBytes(bytes) }
+    )
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
                 AdditionalTheme.spacings.small,
-                bottom = AdditionalTheme.spacings.large,
-                top = AdditionalTheme.spacings.small
+                bottom = AdditionalTheme.spacings.large
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -62,7 +68,7 @@ fun ChatInputField(
         } else {
             MultimediaPickerButton(
                 onClick = {
-                    mediaPicker.pickMedia()
+                    mediaPicker.openMediaPickerForSelectingMedia()
                 }
             )
             VoiceMessageRecordButton(
@@ -109,7 +115,7 @@ fun ChatInputField(
         SendButton(
             isRecording = isRecording,
             textMessage = textMessage,
-            selectedMediaUrl = mediaPicker.selectedMediaUrl,
+            selectedMediaUrls = mediaPicker.selectedMediaUrls,
             onSendText = {
                 onTextMessageSend(textMessage)
                 textMessage = ""
@@ -120,10 +126,8 @@ fun ChatInputField(
                 isRecording = false
             },
             onSendMedia = {
-                val mediaByteArrays = mediaPicker.selectedMediaUrl.mapNotNull { uriString ->
-                    mediaPicker.getBytesFromUri(uriString)
-                }
-                mediaPicker.selectedMediaUrl.clear()
+                val mediaByteArrays = mediaPicker.getSelectedMediaAsByteArrays()
+                mediaPicker.clearSelectedMedia()
                 onMediaMessageSend(mediaByteArrays)
             }
         )

@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.components.chat
+package com.github.familyvault.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.window.Dialog
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_media_full_screen
 import org.jetbrains.compose.resources.stringResource
@@ -19,7 +20,7 @@ fun FullScreenImage(
     imageBitmap: ImageBitmap,
     onDismiss: () -> Unit
 ) {
-    androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
+    Dialog(onDismissRequest = onDismiss) {
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)

@@ -47,7 +47,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
 
         LaunchedEffect(chatThread) {
-            mediaPicker.selectedMediaUrl.clear()
+            mediaPicker.clearSelectedMedia()
 
             chatState.update(chatThread.id)
 
