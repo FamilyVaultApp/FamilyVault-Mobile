@@ -143,7 +143,10 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                                 familyMember.fullname,
                                 selectedPermissionGroup
                             )
-                            chatService.updateThreadsAfterUserPermissionChange(familyMember, familyMembers)
+                            val updatedUser = familyGroupService.retrieveFamilyGroupMembersList().single { it.publicKey == familyMember.publicKey }
+                            if (updatedUser.permissionGroup == selectedPermissionGroup) {
+                                chatService.updateThreadsAfterUserPermissionChange(updatedUser, familyGroupService.retrieveFamilyGroupMembersList())
+                            }
                             savingChanges = false
                             navigator.pop()
                         }

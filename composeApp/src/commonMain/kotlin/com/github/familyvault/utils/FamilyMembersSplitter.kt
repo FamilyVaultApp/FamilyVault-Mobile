@@ -19,7 +19,6 @@ object FamilyMembersSplitter : IFamilyMembersSplitter {
             }
             members.add(member)
         }
-
         return SplitFamilyMembers(guardians, members)
     }
 }
