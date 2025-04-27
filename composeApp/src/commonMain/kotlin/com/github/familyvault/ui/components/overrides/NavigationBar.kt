@@ -32,14 +32,14 @@ fun NavigationBar(vararg tabs: Tab) {
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.primaryContainer,
         modifier = Modifier.drawBehind {
-                val strokeWidth = 1.dp.toPx()
-                drawLine(
-                    color = borderColor,
-                    start = Offset(0f, 0f),
-                    end = Offset(size.width, 0f),
-                    strokeWidth = strokeWidth
-                )
-            }) {
+            val strokeWidth = 2.dp.toPx()
+            drawLine(
+                color = borderColor,
+                start = Offset(0f, 0f),
+                end = Offset(size.width, 0f),
+                strokeWidth = strokeWidth
+            )
+        }) {
         tabs.forEach { tab ->
             val options = tab.options
             NavigationBarItem(
