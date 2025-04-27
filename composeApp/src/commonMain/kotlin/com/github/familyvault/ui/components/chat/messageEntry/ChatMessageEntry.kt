@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
-import com.github.familyvault.ui.components.chat.ChatMediaMessageBubble
+import com.github.familyvault.ui.components.chat.bubbles.ChatMediaMessageBubble
 import com.github.familyvault.ui.components.chat.bubbles.ChatMessageTextBubble
 import com.github.familyvault.ui.components.chat.bubbles.ChatVoiceMessageBubble
 import com.github.familyvault.ui.theme.AdditionalTheme

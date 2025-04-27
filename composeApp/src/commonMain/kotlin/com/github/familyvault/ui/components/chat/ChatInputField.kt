@@ -39,7 +39,7 @@ fun ChatInputField(
     var audioData by remember { mutableStateOf(ByteArray(0)) }
 
     SelectedMediaPreview(
-        selectedMedia = mediaPicker.selectedMediaUrls,
+        selectedMedia = mediaPicker.getSelectedMedialUrls(),
         onRemoveMedia = { uri ->
             mediaPicker.removeSelectedMedia(uri)
         },
@@ -115,7 +115,7 @@ fun ChatInputField(
         SendButton(
             isRecording = isRecording,
             textMessage = textMessage,
-            selectedMediaUrls = mediaPicker.selectedMediaUrls,
+            selectedMediaUrls = mediaPicker.getSelectedMedialUrls(),
             onSendText = {
                 onTextMessageSend(textMessage)
                 textMessage = ""

@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream
 class MediaPickerService : IMediaPickerService {
     private lateinit var pickFileLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var context: Context
-    override val selectedMediaUrls = mutableStateListOf<String>()
+    private val selectedMediaUrls = mutableStateListOf<String>()
 
     fun initializeWithActivity(activity: ComponentActivity) {
         context = activity
@@ -48,6 +48,8 @@ class MediaPickerService : IMediaPickerService {
         clearSelectedMedia()
         return bytes
     }
+
+    override fun getSelectedMedialUrls(): List<String> = selectedMediaUrls
 
     override fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap {
         val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)

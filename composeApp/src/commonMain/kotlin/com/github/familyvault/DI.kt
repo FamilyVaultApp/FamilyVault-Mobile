@@ -1,5 +1,7 @@
 package com.github.familyvault
 
+import com.github.familyvault.states.ChatImagesState
+import com.github.familyvault.states.IChatImagesState
 import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
@@ -88,6 +90,7 @@ val sharedModules = module {
     single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()
     single { CurrentChatState(get()) }.bind<ICurrentChatState>()
     single { CurrentChatThreadsState(get()) }.bind<ICurrentChatThreadsState>()
+    single { ChatImagesState() }.bind<IChatImagesState>()
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {
