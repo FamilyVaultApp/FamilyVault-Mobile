@@ -26,7 +26,7 @@ class TasksListForm : BasicForm() {
     override fun validateForm() {
         formData.listName.validationError = FormValidator.multipleValidators(
             FormValidator.validateEmpty(listName),
-            FormValidator.validateTooLong(listName)
+            FormValidator.validateTooLong(listName, maxLength = 32)
         )
     }
 

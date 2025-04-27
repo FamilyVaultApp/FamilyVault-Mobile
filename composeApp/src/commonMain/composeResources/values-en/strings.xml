@@ -51,7 +51,7 @@
 
     <!-- Form validation errors-->
     <string name="form_empty_error">This field cannot be empty</string>
-    <string name="form_overfill_error">You can enter maximum of %1$d characters</string>
+    <string name="form_overfill_error">The entered text is too long</string>
     <string name="form_password_not_equal_error">Passwords are not equal to each other</string>
     <string name="form_too_short_error">Your input must be longer than %1$d characters</string>
     <string name="form_creator_not_in_group">You cannot create group chat where you're not a member</string>

@@ -41,7 +41,7 @@ class TaskNewListScreen : Screen {
     override fun Content() {
         val localNavigator = LocalNavigator.currentOrThrow
         val tasksService = koinInject<ITaskService>()
-        val tasksNewListForm = TasksListForm()
+        val tasksNewListForm = remember { TasksListForm() }
 
         var isCreating by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()

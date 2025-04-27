@@ -51,7 +51,7 @@
 
     <!-- Form validation errors-->
     <string name="form_empty_error">To pole nie może być puste</string>
-    <string name="form_overfill_error">Możesz wprowadzić maksymalnie %1$d znaki</string>
+    <string name="form_overfill_error">Wpisany tekst jest za długi</string>
     <string name="form_password_not_equal_error">Hasła nie są zgodne ze sobą</string>
     <string name="form_too_short_error">Wartość musi być dłuższe niż %1$d znaków</string>
     <string name="form_creator_not_in_group">Nie możesz utworzyć chatu grupowego, w którym Ciebie nie ma</string>

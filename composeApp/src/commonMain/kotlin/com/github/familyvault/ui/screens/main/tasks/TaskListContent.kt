@@ -57,26 +57,28 @@ fun TaskListContent() {
             modifier = Modifier.padding(AdditionalTheme.spacings.screenPadding),
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
-            TaskGroupPending(
-                selectedTaskList?.name ?: "", listOf(
-                    Task(
-                        id = "1", name = "Milk", description = "Description", completed = false
-                    ), Task(
-                        id = "2", name = "Egg", description = "Description", completed = false
+            if (selectedTaskList != null) {
+                TaskGroupPending(
+                    selectedTaskList!!.name, listOf(
+                        Task(
+                            id = "1", name = "Milk", description = "Description", completed = false
+                        ), Task(
+                            id = "2", name = "Egg", description = "Description", completed = false
+                        )
                     )
                 )
-            )
-            TaskGroupCompleted(
-                listOf(
-                    Task(
-                        id = "3", name = "Flour", description = "Description", completed = true
-                    ), Task(
-                        id = "4", name = "Oil", description = "Description", completed = true
-                    ), Task(
-                        id = "5", name = "Petrol", description = "Description", completed = true
+                TaskGroupCompleted(
+                    listOf(
+                        Task(
+                            id = "3", name = "Flour", description = "Description", completed = true
+                        ), Task(
+                            id = "4", name = "Oil", description = "Description", completed = true
+                        ), Task(
+                            id = "5", name = "Petrol", description = "Description", completed = true
+                        )
                     )
                 )
-            )
+            }
         }
     }
 }
