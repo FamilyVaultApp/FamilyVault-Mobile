@@ -29,6 +29,7 @@ interface IPrivMxClient {
         managers: List<PrivMxUser>,
         type: String
     ): String
+
     fun updateThread(
         threadId: String,
         users: List<PrivMxUser>,
@@ -36,12 +37,31 @@ interface IPrivMxClient {
         newName: String? = null
     )
 
-    fun retrieveThread(threadId: String) : ThreadItem
+    fun retrieveThread(threadId: String): ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
-    fun sendMessage(threadId: String, content: String, type: String, referenceMessageId: String = "")
-    fun sendMessage(threadId: String, content: ByteArray, type: String, referenceMessageId: String = "")
-    fun getFileAsByteArrayFromStore(fileId: String) : ByteArray
-    fun sendByteArrayToStore(storeId: String, content: ByteArray) : String
+    fun retrieveAllThreadsWithTag(
+        contextId: String,
+        tag: String,
+        startIndex: Int,
+        pageSize: Int
+    ): List<ThreadItem>
+
+    fun sendMessage(
+        threadId: String,
+        content: String,
+        type: String,
+        referenceMessageId: String = ""
+    )
+
+    fun sendMessage(
+        threadId: String,
+        content: ByteArray,
+        type: String,
+        referenceMessageId: String = ""
+    )
+
+    fun getFileAsByteArrayFromStore(fileId: String): ByteArray
+    fun sendByteArrayToStore(storeId: String, content: ByteArray): String
     fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int
     ): List<ThreadMessageItem>
