@@ -51,23 +51,17 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
-        var isLoadingUserData by remember { mutableStateOf(true) }
         LaunchedEffect(chatThread) {
             chatState.update(chatThread.id)
-            myUserData = familyGroupService.retrieveMyFamilyMemberData()
-            println("1")
             chatService.populateDatabaseWithLastMessages(chatThread.id)
-            println("2")
             chatState.populateStateFromService()
-            println("3")
-            chatThreadManagers.addAll(chatService.retrieveChatThreadManagers(chatThread.id))
-            println("4")
+            chatThreadManagers.addAll(chatService.retrievePublicKeysOfChatThreadManagers(chatThread.id))
             chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                 coroutineScope.launch {
                     scrollToLastMessage(listState, chatState)
                 }
             }
-            isLoadingUserData = false
+            myUserData = familyGroupService.retrieveMyFamilyMemberData()
             scrollToLastMessage(listState, chatState)
         }
         LaunchedEffect(isAtTop) {
@@ -83,12 +77,12 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 chatMessageListenerService.unregisterAllListeners()
             }
         }
-        if (!isLoadingUserData) {
+        if (myUserData != null) {
             Scaffold(
                 topBar = {
                     TopAppBar(
                         chatThread.name, actions = {
-                            if (chatThread.type === ChatThreadType.GROUP && myUserData!!.id in chatThreadManagers) {
+                            if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers) {
                                 ChatThreadSettingsButton {
                                     navigator.push(
                                         ChatThreadEditScreen(

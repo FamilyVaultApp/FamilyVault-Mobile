@@ -138,7 +138,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 coroutineScope.launch {
                     try {
                         if (groupChatAction == GroupChatAction.Create) {
-                            chatService.createGroupChat(form.groupName, form.familyMembers, myUserData!!)
+                            chatService.createGroupChat(form.groupName, form.familyMembers)
                         } else {
                             chatService.updateChatThread(
                                 chatThread!!,

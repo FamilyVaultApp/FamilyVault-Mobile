@@ -4,5 +4,7 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.SplitFamilyMembers
 
 interface IFamilyMembersSplitter {
-    fun split(familyGroupMembers: List<FamilyMember>, currentMember: FamilyMember? = null): SplitFamilyMembers
+    fun split(familyGroupMembers: List<FamilyMember>): SplitFamilyMembers
+
+    fun splitWithProvidedMemberAsManager(familyGroupMembers: List<FamilyMember>, currentMember: FamilyMember? = null): SplitFamilyMembers
 }

@@ -31,6 +31,7 @@ import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
+import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.RemoveFamilyMemberDialog
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -65,6 +66,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
         val familyGroupCredentialsRepository = koinInject<IFamilyGroupCredentialsRepository>()
         val chatService = koinInject<IChatService>()
         val familyMembers = remember { mutableListOf<FamilyMember>() }
+        var isLoadingData by remember { mutableStateOf(true) }
 
         val options = listOf(
             PermissionOption(
@@ -83,6 +85,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
 
         LaunchedEffect(Unit) {
             familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
+            isLoadingData = false
         }
 
         var savingChanges by remember { mutableStateOf(false) }
@@ -97,70 +100,77 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                 )
             },
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingValues)
-                    .padding(AdditionalTheme.spacings.screenPadding),
-                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
-            ) {
-                Headline3(stringResource(Res.string.user_modification_choose_permission_content))
-                options.forEachIndexed { index, option ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .clickable { selectedPermissionGroup = option.permissionGroup }
-                            .fillMaxWidth()
-                    ) {
-                        RadioButton(
-                            selected = selectedPermissionGroup == option.permissionGroup,
-                            onClick = {
-                                selectedPermissionGroup = option.permissionGroup
-                            }
-                        )
-                        Spacer(modifier = Modifier.width(AdditionalTheme.spacings.large))
-                        Paragraph(option.label)
-                    }
-                }
-            }
-
-            Column(
-                modifier = Modifier.fillMaxHeight().padding(paddingValues)
-                    .padding(AdditionalTheme.spacings.screenPadding),
-                verticalArrangement = Arrangement.spacedBy(
-                    AdditionalTheme.spacings.medium,
-                    Alignment.Bottom
-                ),
-            ) {
-                Button(
-                    text = stringResource(Res.string.user_modification_save_button),
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !savingChanges,
-                    onClick = {
-                        coroutineScope.launch {
-                            savingChanges = true
-                            permissionGroupService.changeFamilyMemberPermissionGroup(
-                                familyMember.fullname,
-                                selectedPermissionGroup
+            if (!isLoadingData) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingValues)
+                        .padding(AdditionalTheme.spacings.screenPadding),
+                    verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
+                ) {
+                    Headline3(stringResource(Res.string.user_modification_choose_permission_content))
+                    options.forEachIndexed { index, option ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .clickable { selectedPermissionGroup = option.permissionGroup }
+                                .fillMaxWidth()
+                        ) {
+                            RadioButton(
+                                selected = selectedPermissionGroup == option.permissionGroup,
+                                onClick = {
+                                    selectedPermissionGroup = option.permissionGroup
+                                }
                             )
-                            val updatedUser = familyGroupService.retrieveFamilyGroupMembersList().single { it.publicKey == familyMember.publicKey }
-                            if (updatedUser.permissionGroup == selectedPermissionGroup) {
-                                chatService.updateThreadsAfterUserPermissionChange(updatedUser, familyGroupService.retrieveFamilyGroupMembersList())
-                            }
-                            savingChanges = false
-                            navigator.pop()
+                            Spacer(modifier = Modifier.width(AdditionalTheme.spacings.large))
+                            Paragraph(option.label)
                         }
                     }
-                )
-                Button(
-                    text = stringResource(Res.string.user_modification_remove_user_button_content),
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !savingChanges,
-                    containerColor = MaterialTheme.colorScheme.error,
-                    onClick = {
-                        showDialog = true
-                    }
-                )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxHeight().padding(paddingValues)
+                        .padding(AdditionalTheme.spacings.screenPadding),
+                    verticalArrangement = Arrangement.spacedBy(
+                        AdditionalTheme.spacings.medium,
+                        Alignment.Bottom
+                    ),
+                ) {
+                    Button(
+                        text = stringResource(Res.string.user_modification_save_button),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !savingChanges,
+                        onClick = {
+                            coroutineScope.launch {
+                                savingChanges = true
+                                permissionGroupService.changeFamilyMemberPermissionGroup(
+                                    familyMember.fullname,
+                                    selectedPermissionGroup
+                                )
+                                val updatedUser = familyGroupService.retrieveFamilyMemberDataByPublicKey(familyMember.publicKey)
+                                if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
+                                    chatService.updateGroupChatThreadsAfterUserPermissionChange(
+                                        updatedUser,
+                                        familyGroupService.retrieveFamilyGroupMembersList()
+                                    )
+                                }
+                                savingChanges = false
+                                navigator.pop()
+                            }
+                        }
+                    )
+                    Button(
+                        text = stringResource(Res.string.user_modification_remove_user_button_content),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !savingChanges,
+                        containerColor = MaterialTheme.colorScheme.error,
+                        onClick = {
+                            showDialog = true
+                        }
+                    )
+                }
+            } else {
+                CircularProgressIndicatorDialog("")
             }
             if (showDialog) {
                 RemoveFamilyMemberDialog(onConfirm = {

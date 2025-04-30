@@ -88,7 +88,8 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         tag: String,
         type: String,
         name: String,
-        referenceStoreId: String?
+        referenceStoreId: String?,
+        groupChatCreators: List<PrivMxUser>
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -97,9 +98,9 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             UserWithPubKey(userId, publicKey)
         }
         val threadId = threadApi?.createThread(
-            contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
+            contextId, userList, managerList,
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, managerList.map { it.pubKey }))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, groupChatCreators.map { it.publicKey }))
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }

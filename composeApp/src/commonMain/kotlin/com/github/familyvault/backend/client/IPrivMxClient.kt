@@ -20,7 +20,8 @@ interface IPrivMxClient {
         tag: String,
         type: String,
         name: String,
-        referenceStoreId: String?
+        referenceStoreId: String?,
+        groupChatCreators: List<PrivMxUser>
     ): String
 
     fun createStore(

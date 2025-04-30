@@ -13,14 +13,14 @@ interface IChatService {
     fun sendTextMessage(chatThreadId: String, messageContent: String, respondToMessageId: String)
     fun sendVoiceMessage(chatThreadId: String, audioData: ByteArray)
     fun getVoiceMessage(fileId: String) : ByteArray
-    suspend fun createGroupChat(name: String, members: List<FamilyMember>, currentUser: FamilyMember): ChatThread
-    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, currentUser: FamilyMember? = null)
+    suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
+    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, groupChatCreator: FamilyMember? = null)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)
     suspend fun createIndividualChatsWithAllFamilyMembersForMember(member: FamilyMember)
     suspend fun populateDatabaseWithLastMessages(chatThreadId: String)
     suspend fun retrieveMessagesFirstPage(chatThreadId: String): List<ChatMessage>
     suspend fun retrieveMessagesPage(chatThreadId: String, page: Int): List<ChatMessage>
-    suspend fun retrieveChatThreadManagers(threadId: String): List<String>
-    suspend fun updateThreadsAfterUserPermissionChange(updatedUser: FamilyMember, familyMembers: List<FamilyMember>)
-    suspend fun retrieveThreadPrivateMeta(threadId: String): ThreadPrivateMeta
+    suspend fun retrievePublicKeysOfChatThreadManagers(threadId: String): List<String>
+    suspend fun updateGroupChatThreadsAfterUserPermissionChange(updatedUser: FamilyMember, familyMembers: List<FamilyMember>)
+    suspend fun retrieveChatThreadInitialManagers(threadId: String): List<String>
 }
