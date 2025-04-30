@@ -1,8 +1,10 @@
 package com.github.familyvault.services
 
+import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.chat.ChatImageMessageMetadata
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.StoreType
@@ -13,12 +15,14 @@ import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
 import com.github.familyvault.utils.mappers.MessageItemToStoredChatMessageMapper
 import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
+import kotlinx.serialization.json.Json
 
 class ChatService(
     private val familyGroupService: IFamilyGroupService,
     private val familyGroupSessionService: IFamilyGroupSessionService,
     private val privMxClient: IPrivMxClient,
     private val storedChatMessageRepository: IStoredChatMessageRepository,
+    private val imagePickerService: IImagePickerService,
 ) : IChatService {
     override suspend fun createGroupChat(
         name: String, members: List<FamilyMember>
@@ -116,10 +120,43 @@ class ChatService(
         privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.VOICE.toString())
     }
 
+    override fun sendImageMessage(
+        chatThreadId: String,
+        imageByteArray: ByteArray
+    ) {
+        val storeId =
+            requireNotNull(privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId)
+
+        val rotatedAndCompressedImage =
+            imagePickerService.compressAndRotateImage(imageByteArray)
+        val imageSize = imagePickerService.getImageAsByteArraySize(rotatedAndCompressedImage)
+        val fileId = privMxClient.sendByteArrayToStore(storeId, rotatedAndCompressedImage)
+
+        val chatImageMessageMetadata =
+            ChatImageMessageMetadata(fileId, imageSize.height, imageSize.width)
+
+        privMxClient.sendMessage(
+            chatThreadId,
+            Json.encodeToString(chatImageMessageMetadata),
+            ChatMessageContentType.IMAGE.toString()
+        )
+    }
+
     override fun getVoiceMessage(
         fileId: String
     ): ByteArray {
         return privMxClient.getFileAsByteArrayFromStore(fileId)
+    }
+
+    override fun getImageMessage(
+        fileId: String
+    ): ByteArray {
+        return privMxClient.getFileAsByteArrayFromStore(fileId)
+    }
+
+    override fun getImageBitmap(chatMessage: String): ImageBitmap? {
+        val bytes = getImageMessage(chatMessage)
+        return imagePickerService.getBitmapFromBytes(bytes)
     }
 
     override suspend fun createIndividualChat(

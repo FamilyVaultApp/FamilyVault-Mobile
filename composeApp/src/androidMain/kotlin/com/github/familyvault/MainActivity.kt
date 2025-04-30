@@ -11,6 +11,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.familyvault.services.ImagePickerService
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 
 class MainActivity : ComponentActivity() {
@@ -19,6 +21,8 @@ class MainActivity : ComponentActivity() {
         initKoin {
             androidContext(this@MainActivity)
         }
+
+        get<ImagePickerService>().initializeWithActivity(this@MainActivity)
 
         setContent {
             SystemBarColorChanger()
