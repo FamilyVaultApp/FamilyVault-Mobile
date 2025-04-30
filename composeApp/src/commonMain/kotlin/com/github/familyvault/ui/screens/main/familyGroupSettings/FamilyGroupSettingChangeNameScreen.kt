@@ -20,7 +20,7 @@ import com.github.familyvault.ui.components.ContentWithAction
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.overrides.TopAppBar
-import com.github.familyvault.ui.components.settings.SettingHeader
+import com.github.familyvault.ui.components.settings.DescriptionSection
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.change_name_content
@@ -54,7 +54,7 @@ class FamilyGroupSettingChangeNameScreen : Screen {
                 modifier = Modifier.padding(AdditionalTheme.spacings.screenPadding)
                     .padding(paddings),
                 content = {
-                    SettingHeader(
+                    DescriptionSection(
                         description = stringResource(Res.string.setting_change_name_description_long),
                     )
                     TextField(

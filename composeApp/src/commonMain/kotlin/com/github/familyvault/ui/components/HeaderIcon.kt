@@ -12,28 +12,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun HeaderIcon(
-    icon: ImageVector,
-    contentDescription: String? = "",
+    icon: ImageVector, contentDescription: String? = "", size: Dp = 140.dp
 ) {
     Box(
-        modifier = Modifier
-        .fillMaxWidth(),
-    contentAlignment = Alignment.Center
+        modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center
     ) {
         Box(
-            modifier = Modifier
-                .size(140.dp)
+            modifier = Modifier.size(size)
                 .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = rememberVectorPainter(icon),
                 contentDescription = contentDescription,
-                modifier = Modifier.size(85.dp),
+                modifier = Modifier.size(size / 2),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }

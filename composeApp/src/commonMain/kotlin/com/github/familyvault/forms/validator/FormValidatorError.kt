@@ -27,10 +27,7 @@ fun validationErrorToString(validationError: FormValidatorError): String {
             FormValidatorConfig.MIN_LENGTH
         )
         FormValidatorError.NOT_EQUAL -> stringResource(Res.string.form_password_not_equal_error)
-        FormValidatorError.TOO_LONG -> stringResource(
-            Res.string.form_overfill_error,
-            FormValidatorConfig.MAX_LENGTH
-        )
+        FormValidatorError.TOO_LONG -> stringResource(Res.string.form_overfill_error)
         FormValidatorError.IS_EMPTY -> stringResource(Res.string.form_empty_error)
         FormValidatorError.CREATOR_NOT_IN_GROUP -> stringResource(Res.string.form_creator_not_in_group)
         FormValidatorError.CHAT_GROUP_MEMBERS_EMPTY -> stringResource(Res.string.form_chat_group_members_empty)

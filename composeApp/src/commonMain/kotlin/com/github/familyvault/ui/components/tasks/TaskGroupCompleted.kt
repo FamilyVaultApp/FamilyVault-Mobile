@@ -15,7 +15,7 @@ import androidx.compose.runtime.setValue
 import com.github.familyvault.models.tasks.Task
 import com.github.familyvault.ui.components.CollapseButton
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.tasks_completed
+import familyvault.composeapp.generated.resources.task_completed
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -23,7 +23,7 @@ fun TaskGroupCompleted(tasks: List<Task>) {
     var isCollapsed by remember { mutableStateOf(true) }
     val durationOfAnimation = 150
 
-    TaskGroup(stringResource(Res.string.tasks_completed), primary = false, tasks = {
+    TaskGroup(stringResource(Res.string.task_completed), primary = false, tasks = {
         AnimatedVisibility(
             visible = !isCollapsed,
             enter = fadeIn(tween(durationMillis = durationOfAnimation)) + expandVertically(

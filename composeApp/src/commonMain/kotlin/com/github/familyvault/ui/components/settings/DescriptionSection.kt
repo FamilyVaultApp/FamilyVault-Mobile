@@ -10,7 +10,7 @@ import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun SettingHeader(
+fun DescriptionSection(
     description: String,
     additionalPaddingOnBottom: Boolean = true,
     modifier: Modifier = Modifier

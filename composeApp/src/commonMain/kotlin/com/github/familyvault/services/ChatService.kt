@@ -66,7 +66,8 @@ class ChatService(
 
     override fun retrieveAllChatThreads(): List<ChatThread> {
         val contextId = familyGroupSessionService.getContextId()
-        val threadItems = privMxClient.retrieveAllThreads(contextId, 0, 100)
+        val threadItems =
+            privMxClient.retrieveAllThreadsWithTag(contextId, AppConfig.CHAT_THREAD_TAG, 0, 100)
 
         return threadItems.map {
             ChatThread(
@@ -93,7 +94,12 @@ class ChatService(
     override fun sendTextMessage(
         chatThreadId: String, messageContent: String, respondToMessageId: String
     ) {
-        privMxClient.sendMessage(chatThreadId, messageContent, ChatMessageContentType.TEXT.toString(), respondToMessageId)
+        privMxClient.sendMessage(
+            chatThreadId,
+            messageContent,
+            ChatMessageContentType.TEXT.toString(),
+            respondToMessageId
+        )
     }
 
     override fun sendVoiceMessage(

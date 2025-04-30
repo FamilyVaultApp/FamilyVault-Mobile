@@ -83,8 +83,9 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
 
 @Immutable
 data class Sizing(
+    val headerIconNormal: Dp,
     val entryMinSize: Dp,
-    val tasksCategoryButtonHeight: Dp
+    val taskListButtonHeight: Dp
 )
 
 @Immutable
@@ -99,8 +100,9 @@ data class Spacing(
 
 private val LocalSizing = staticCompositionLocalOf {
     Sizing(
+        headerIconNormal = 80.dp,
         entryMinSize = 65.dp,
-        tasksCategoryButtonHeight = 40.dp
+        taskListButtonHeight = 40.dp
     )
 }
 
