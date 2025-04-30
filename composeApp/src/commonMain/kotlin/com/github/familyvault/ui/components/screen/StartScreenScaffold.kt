@@ -16,12 +16,13 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
 fun StartScreenScaffold(content: @Composable () -> Unit) {
-    Scaffold{
+    Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .height(IntrinsicSize.Max)
+                .padding(paddingValues)
         ) {
             Column(
                 modifier = Modifier

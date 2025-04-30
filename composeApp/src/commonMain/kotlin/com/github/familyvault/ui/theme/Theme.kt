@@ -87,8 +87,9 @@ data class Sizing(
     val large: Dp,
     val medium: Dp,
     val small: Dp,
+    val headerIconNormal: Dp,
     val entryMinSize: Dp,
-    val tasksCategoryButtonHeight: Dp
+    val taskListButtonHeight: Dp
 )
 
 @Immutable
@@ -103,12 +104,13 @@ data class Spacing(
 
 private val LocalSizing = staticCompositionLocalOf {
     Sizing(
+        headerIconNormal = 80.dp,
         veryLarge = 400.dp,
         large = 250.dp,
         medium = 80.dp,
         small = 20.dp,
         entryMinSize = 65.dp,
-        tasksCategoryButtonHeight = 40.dp
+        taskListButtonHeight = 40.dp
     )
 }
 

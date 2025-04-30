@@ -31,7 +31,7 @@ import com.github.familyvault.ui.components.ContentWithAction
 import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
-import com.github.familyvault.ui.components.settings.SettingHeader
+import com.github.familyvault.ui.components.settings.DescriptionSection
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.AddMemberToFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.ModifyFamilyMemberScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -70,7 +70,7 @@ class FamilyGroupSettingMembersScreen : Screen {
                 modifier = Modifier.padding(padding)
                     .padding(AdditionalTheme.spacings.screenPadding),
                 content = {
-                    SettingHeader(
+                    DescriptionSection(
                         description = stringResource(Res.string.setting_members_long),
                     )
                     Column(

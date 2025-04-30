@@ -72,7 +72,8 @@ class ChatService(
 
     override fun retrieveAllChatThreads(): List<ChatThread> {
         val contextId = familyGroupSessionService.getContextId()
-        val threadItems = privMxClient.retrieveAllThreads(contextId, 0, 100)
+        val threadItems =
+            privMxClient.retrieveAllThreadsWithTag(contextId, AppConfig.CHAT_THREAD_TAG, 0, 100)
 
         return threadItems.map {
             ChatThread(

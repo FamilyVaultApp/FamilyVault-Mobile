@@ -25,7 +25,7 @@ import com.github.familyvault.ui.components.FamilyGroupEntry
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
-import com.github.familyvault.ui.components.settings.SettingHeader
+import com.github.familyvault.ui.components.settings.DescriptionSection
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -74,7 +74,7 @@ class ChangeFamilyGroupScreen : Screen {
                 modifier = Modifier.padding(paddings)
                     .padding(vertical = AdditionalTheme.spacings.screenPadding),
                 content = {
-                    SettingHeader(
+                    DescriptionSection(
                         description = stringResource(Res.string.select_family_group_description),
                         modifier = Modifier.padding(horizontal = AdditionalTheme.spacings.screenPadding)
                     )

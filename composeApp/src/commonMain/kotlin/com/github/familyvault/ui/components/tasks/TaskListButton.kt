@@ -20,7 +20,7 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun TasksCategoryButton(
+fun TaskListButton(
     title: String,
     icon: ImageVector? = null,
     selected: Boolean = false,
@@ -38,7 +38,7 @@ fun TasksCategoryButton(
     }
 
     Box(
-        modifier = Modifier.height(AdditionalTheme.sizing.tasksCategoryButtonHeight)
+        modifier = Modifier.height(AdditionalTheme.sizing.taskListButtonHeight)
             .clip(RoundedCornerShape(Int.MAX_VALUE.dp)).clickable(onClick = onClick)
             .background(backgroundColor).padding(
                 vertical = AdditionalTheme.spacings.medium,

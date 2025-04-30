@@ -15,8 +15,11 @@ class FormValidator {
             return null
         }
 
-        fun validateTooLong(value: String): FormValidatorError? {
-            if (value.length > FormValidatorConfig.MAX_LENGTH) {
+        fun validateTooLong(
+            value: String,
+            maxLength: Int = FormValidatorConfig.DEFAULT_MAX_LENGTH
+        ): FormValidatorError? {
+            if (value.length > maxLength) {
                 return FormValidatorError.TOO_LONG
             }
             return null
@@ -43,7 +46,10 @@ class FormValidator {
             return null
         }
 
-        fun validateCreatorIsGroupMember(chatMembers: List<FamilyMember>, currentUserPubKey: String): FormValidatorError? {
+        fun validateCreatorIsGroupMember(
+            chatMembers: List<FamilyMember>,
+            currentUserPubKey: String
+        ): FormValidatorError? {
             if (!chatMembers.any { it.publicKey == currentUserPubKey }) {
                 return FormValidatorError.CREATOR_NOT_IN_GROUP
             }

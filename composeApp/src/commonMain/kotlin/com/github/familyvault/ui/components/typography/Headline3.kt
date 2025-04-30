@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun Headline3(
@@ -15,6 +16,8 @@ fun Headline3(
     textAlign: TextAlign = TextAlign.Center,
     modifier: Modifier = Modifier,
     fontWeight: FontWeight = FontWeight.Normal,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip
 ) {
     Text(
         text,
@@ -23,5 +26,7 @@ fun Headline3(
         textAlign = textAlign,
         fontWeight = fontWeight,
         modifier = modifier,
+        maxLines = maxLines,
+        overflow = overflow
     )
 }
