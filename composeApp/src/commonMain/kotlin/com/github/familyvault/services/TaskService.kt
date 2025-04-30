@@ -26,7 +26,8 @@ class TaskService(
             tag = AppConfig.TASK_THREAD_TAG,
             type = TaskThreadType.LIST.toString(),
             name = name,
-            referenceStoreId = null
+            referenceStoreId = null,
+            splitFamilyMembers.guardians.map { it.toPrivMxUser() }
         )
     }
 
