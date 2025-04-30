@@ -129,9 +129,7 @@
     <string name="chat_add_multimedia_description">Dodaj multimedia</string>
     <string name="chat_media_full_screen">Pełny obraz</string>
     <string name="chat_remove_multimedia_description">Usuń multimedia</string>
-    <string name="chat_media_preview">Podgląd media</string>
-    <string name="chat_image_error">Błąd podczas ładowania obrazka</string>
-    <string name="chat_image_loading">Ładowanie obrazka</string>
+    <string name="chat_image_preview">Podgląd media</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>

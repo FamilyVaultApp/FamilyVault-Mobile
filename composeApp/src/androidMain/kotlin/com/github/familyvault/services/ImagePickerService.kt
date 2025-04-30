@@ -13,6 +13,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.net.toUri
+import com.github.familyvault.AppConfig
+import com.github.familyvault.models.ImageSize
 import java.io.ByteArrayOutputStream
 
 class ImagePickerService : IImagePickerService {
@@ -22,13 +24,12 @@ class ImagePickerService : IImagePickerService {
 
     fun initializeWithActivity(activity: ComponentActivity) {
         context = activity
-        pickFileLauncher =
-            activity.registerForActivityResult(
-                ActivityResultContracts.PickMultipleVisualMedia()
-            ) {
-                clearSelectedImages()
-                selectedImageUrls.addAll(it.map { u -> u.toString() })
-            }
+        pickFileLauncher = activity.registerForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia()
+        ) {
+            clearSelectedImages()
+            selectedImageUrls.addAll(it.map { u -> u.toString() })
+        }
     }
 
     override fun openMediaPickerForSelectingImages() {
@@ -52,8 +53,7 @@ class ImagePickerService : IImagePickerService {
     override fun getSelectedImageUrls(): List<String> = selectedImageUrls
 
     override fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap {
-        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        val rotatedBitmap = fixImageRotation(bitmap, imageBytes)
+        val rotatedBitmap = fixImageRotation(imageBytes)
         return rotatedBitmap.asImageBitmap()
     }
 
@@ -65,23 +65,39 @@ class ImagePickerService : IImagePickerService {
         selectedImageUrls.remove(uri)
     }
 
-    override fun compressImage(imageByteArray: ByteArray, quality: Int): ByteArray {
-        val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+    override fun compressAndRotateImage(
+        imageByteArray: ByteArray,
+        compressionQuality: Int?
+    ): ByteArray {
+        val rotatedImage = fixImageRotation(imageByteArray)
 
-        val rotatedBitmap = fixImageRotation(bitmap, imageByteArray)
+        return compressImage(
+            rotatedImage,
+            compressionQuality ?: AppConfig.DEFAULT_COMPRESSION_QUALITY
+        )
+    }
 
+    override fun getImageAsByteArraySize(image: ByteArray): ImageSize {
+        val imageBitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
+        return ImageSize(imageBitmap.height, imageBitmap.width)
+    }
+
+    private fun compressImage(bitmap: Bitmap, quality: Int): ByteArray {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream)
+
+        bitmap.compress(
+            Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream
+        )
 
         return byteArrayOutputStream.toByteArray()
     }
 
-    private fun fixImageRotation(bitmap: Bitmap, imageBytes: ByteArray): Bitmap {
-        return try {
+    private fun fixImageRotation(imageBytes: ByteArray): Bitmap {
+        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        try {
             val exif = ExifInterface(imageBytes.inputStream())
             val orientation = exif.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL
+                ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL
             )
 
             val matrix = Matrix()
@@ -94,18 +110,13 @@ class ImagePickerService : IImagePickerService {
                 ExifInterface.ORIENTATION_FLIP_VERTICAL -> matrix.postScale(1f, -1f)
             }
 
-            Bitmap.createBitmap(
-                bitmap,
-                0,
-                0,
-                bitmap.width,
-                bitmap.height,
-                matrix,
-                true
+            return Bitmap.createBitmap(
+                bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            bitmap
+            return bitmap
         }
     }
+
 }

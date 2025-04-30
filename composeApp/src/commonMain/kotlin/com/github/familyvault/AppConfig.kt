@@ -18,9 +18,12 @@ object AppConfig {
     const val CHAT_THREAD_TAG = "FV_CHAT"
 
     /* Chat */
-    val CHAT_MESSAGES_PER_PAGE = 50
-    val CHAT_AUDIO_PLAYER_BAR_COUNT = 10
+    const val CHAT_MESSAGES_PER_PAGE = 50
+    const val CHAT_AUDIO_PLAYER_BAR_COUNT = 10
 
     /* Audio */
-    val AUDIO_SAMPLE_RATE = 44100
+    const val AUDIO_SAMPLE_RATE = 44100
+
+    /* Images */
+    const val DEFAULT_COMPRESSION_QUALITY = 25
 }

@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.chat.ChatImageMessageMetadata
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.StoreType
@@ -14,6 +15,7 @@ import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
 import com.github.familyvault.utils.mappers.MessageItemToStoredChatMessageMapper
 import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
+import kotlinx.serialization.json.Json
 
 class ChatService(
     private val familyGroupService: IFamilyGroupService,
@@ -57,7 +59,11 @@ class ChatService(
         )
     }
 
-    override suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?) {
+    override suspend fun updateChatThread(
+        thread: ChatThread,
+        members: List<FamilyMember>,
+        newName: String?
+    ) {
         val splitFamilyGroupMembersList = FamilyMembersSplitter.split(members)
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
@@ -93,7 +99,12 @@ class ChatService(
     override fun sendTextMessage(
         chatThreadId: String, messageContent: String, respondToMessageId: String
     ) {
-        privMxClient.sendMessage(chatThreadId, messageContent, ChatMessageContentType.TEXT.toString(), respondToMessageId)
+        privMxClient.sendMessage(
+            chatThreadId,
+            messageContent,
+            ChatMessageContentType.TEXT.toString(),
+            respondToMessageId
+        )
     }
 
     override fun sendVoiceMessage(
@@ -110,16 +121,24 @@ class ChatService(
 
     override fun sendImageMessage(
         chatThreadId: String,
-        mediaByteArray: ByteArray
+        imageByteArray: ByteArray
     ) {
         val storeId =
-            privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId ?: return
+            requireNotNull(privMxClient.retrieveThread(chatThreadId).privateMeta.referenceStoreId)
 
-        val compressedImage = imagePickerService.compressImage(mediaByteArray, 25)
+        val rotatedAndCompressedImage =
+            imagePickerService.compressAndRotateImage(imageByteArray)
+        val imageSize = imagePickerService.getImageAsByteArraySize(rotatedAndCompressedImage)
+        val fileId = privMxClient.sendByteArrayToStore(storeId, rotatedAndCompressedImage)
 
-        val fileId = privMxClient.sendByteArrayToStore(storeId, compressedImage)
+        val chatImageMessageMetadata =
+            ChatImageMessageMetadata(fileId, imageSize.height, imageSize.width)
 
-        privMxClient.sendMessage(chatThreadId, fileId, ChatMessageContentType.IMAGE.toString())
+        privMxClient.sendMessage(
+            chatThreadId,
+            Json.encodeToString(chatImageMessageMetadata),
+            ChatMessageContentType.IMAGE.toString()
+        )
     }
 
     override fun getVoiceMessage(
