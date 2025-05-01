@@ -153,6 +153,8 @@
     <string name="user_modification_choose_permission_content">Select this user's permission group.</string>
     <string name="user_modification_remove_user_button_content">Remove this user</string>
     <string name="user_modification_save_button">Save changes</string>
+    <string name="user_modification_no_permission">Only guardians can change member roles.</string>
+    <string name="user_modification_last_guardian_error">You are the last Guardian in the group. At least one Guardian must remain.</string>
 
     <!-- Select family group -->
     <string name="select_family_group_description">Select a family group to join, or create a new one using the button at the bottom of the screen.</string>
