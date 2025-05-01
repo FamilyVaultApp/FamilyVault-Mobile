@@ -88,7 +88,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
             form.setGroupName(chatThread!!.name)
             val filteredMembers = familyMembers.filter { it.fullname in chatThread.participantsIds }
             form.addAllMembersFromListToGroupChat(filteredMembers)
-            chatIconType = chatThread.icon!!
+            chatIconType = chatThread.icon?: ChatIconType.GROUP
         }
 
         isLoadingFamilyMembers = false

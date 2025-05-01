@@ -100,7 +100,6 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
         }
-        println(threadIcon?.name)
         val threadId = threadApi?.createThread(
             contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
