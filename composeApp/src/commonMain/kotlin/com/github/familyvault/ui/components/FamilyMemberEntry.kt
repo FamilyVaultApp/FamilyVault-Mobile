@@ -32,16 +32,14 @@ fun FamilyMemberEntry(
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
         ) {
             UserAvatar(firstName = familyMember.firstname)
-            if (additionalDescription != null) {
-                Column {
-                    Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
+            Column {
+                Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
+                additionalDescription?.let {
                     ParagraphMuted(
                         text = additionalDescription,
                         modifier = Modifier.padding(top = AdditionalTheme.spacings.small)
                     )
                 }
-            } else {
-                Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
             }
         }
         actionComponent()
