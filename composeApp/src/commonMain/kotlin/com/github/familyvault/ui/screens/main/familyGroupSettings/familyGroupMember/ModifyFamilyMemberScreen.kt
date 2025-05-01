@@ -78,7 +78,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
         )
         var savingChanges by remember { mutableStateOf(false) }
         var showDialog by remember { mutableStateOf(false) }
-        var selectedPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest) }
+        var selectedPermissionGroup by remember { mutableStateOf(familyMember.permissionGroup) }
         val coroutineScope = rememberCoroutineScope()
 
         Scaffold(
