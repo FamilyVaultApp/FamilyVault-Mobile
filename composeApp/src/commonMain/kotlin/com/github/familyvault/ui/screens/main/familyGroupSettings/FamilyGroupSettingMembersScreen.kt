@@ -3,6 +3,8 @@ package com.github.familyvault.ui.screens.main.familyGroupSettings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -26,24 +28,40 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.ContentWithAction
-import com.github.familyvault.ui.components.FamilyMemberEntry
+import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.settings.DescriptionSection
+import com.github.familyvault.ui.components.typography.Paragraph
+import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.AddMemberToFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.ModifyFamilyMemberScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.family_group_add_new_member
 import familyvault.composeapp.generated.resources.setting_members_long
 import familyvault.composeapp.generated.resources.setting_members_title
 import familyvault.composeapp.generated.resources.user_modification_description
+import familyvault.composeapp.generated.resources.user_permission_group_guardian
+import familyvault.composeapp.generated.resources.user_permission_group_guest
+import familyvault.composeapp.generated.resources.user_permission_group_member
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class FamilyGroupSettingMembersScreen : Screen {
+
+    @Composable
+    private fun getPermissionGroupString(permissionGroup: FamilyGroupMemberPermissionGroup): String {
+        return when (permissionGroup) {
+            FamilyGroupMemberPermissionGroup.Guardian -> stringResource(Res.string.user_permission_group_guardian)
+            FamilyGroupMemberPermissionGroup.Member -> stringResource(Res.string.user_permission_group_member)
+            FamilyGroupMemberPermissionGroup.Guest -> stringResource(Res.string.user_permission_group_guest)
+        }
+    }
 
     @Composable
     override fun Content() {
@@ -84,17 +102,14 @@ class FamilyGroupSettingMembersScreen : Screen {
                                 CircularProgressIndicator()
                             }
                         } else {
-                            familyGroupMembers.forEach {
-                                FamilyMemberEntry(it) {
-                                    IconButton(onClick = {
-                                        navigator.push(ModifyFamilyMemberScreen(it))
-                                    }) {
-                                        Icon(
-                                            Icons.Outlined.MoreHoriz,
-                                            contentDescription = stringResource(Res.string.user_modification_description),
-                                        )
+                            familyGroupMembers.forEach { member ->
+                                FamilyMemberEntryWithPermission(
+                                    familyMember = member,
+                                    permissionGroupText = getPermissionGroupString(member.permissionGroup),
+                                    onActionClick = {
+                                        navigator.push(ModifyFamilyMemberScreen(member))
                                     }
-                                }
+                                )
                             }
                         }
                     }
@@ -103,6 +118,40 @@ class FamilyGroupSettingMembersScreen : Screen {
                     AddFamilyMemberButton()
                 }
             )
+        }
+    }
+
+    @Composable
+    private fun FamilyMemberEntryWithPermission(
+        familyMember: FamilyMember,
+        permissionGroupText: String,
+        onActionClick: () -> Unit
+    ) {
+        Row(
+            modifier = Modifier.defaultMinSize(minHeight = AdditionalTheme.sizing.entryMinSize)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
+            ) {
+                UserAvatar(firstName = familyMember.firstname)
+                Column {
+                    Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
+                    ParagraphMuted(
+                        text = permissionGroupText,
+                        modifier = Modifier.padding(top = AdditionalTheme.spacings.small)
+                    )
+                }
+            }
+            IconButton(onClick = onActionClick) {
+                Icon(
+                    Icons.Outlined.MoreHoriz,
+                    contentDescription = stringResource(Res.string.user_modification_description),
+                )
+            }
         }
     }
 
