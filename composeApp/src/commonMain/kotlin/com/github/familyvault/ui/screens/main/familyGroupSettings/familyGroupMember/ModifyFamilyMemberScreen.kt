@@ -40,6 +40,7 @@ import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.user_modification_choose_permission_content
+import familyvault.composeapp.generated.resources.user_modification_last_guardian_error
 import familyvault.composeapp.generated.resources.user_modification_no_permission
 import familyvault.composeapp.generated.resources.user_modification_remove_user_button_content
 import familyvault.composeapp.generated.resources.user_modification_save_button
@@ -66,13 +67,23 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
 
         var currentUserPermissionGroup by remember { mutableStateOf<FamilyGroupMemberPermissionGroup?>(null) }
         var isLoading by remember { mutableStateOf(true) }
+        var isLastGuardian by remember { mutableStateOf(false) }
+        var allFamilyMembers by remember { mutableStateOf<List<FamilyMember>>(emptyList()) }
 
         val coroutineScope = rememberCoroutineScope()
 
         DisposableEffect(Unit) {
             coroutineScope.launch {
+                allFamilyMembers = familyGroupService.retrieveFamilyGroupMembersList()
                 val myMemberData = familyGroupService.retrieveMyFamilyMemberData()
                 currentUserPermissionGroup = myMemberData.permissionGroup
+
+                val guardianCount = allFamilyMembers.count { 
+                    it.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian 
+                }
+                isLastGuardian = guardianCount == 1 && 
+                                  familyMember.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian
+                
                 isLoading = false
             }
             onDispose { }
@@ -98,6 +109,12 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
 
         val isGuardian = currentUserPermissionGroup == FamilyGroupMemberPermissionGroup.Guardian
 
+        fun isOptionDisabled(option: PermissionOption): Boolean {
+            return isLastGuardian && 
+                   familyMember.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian &&
+                   option.permissionGroup != FamilyGroupMemberPermissionGroup.Guardian
+        }
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -115,28 +132,32 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                 if (!isLoading) {
                     Headline3(stringResource(Res.string.user_modification_choose_permission_content))
                     options.forEachIndexed { index, option ->
+                        val optionDisabled = isOptionDisabled(option)
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .clickable(enabled = isGuardian) { 
-                                    if (isGuardian) selectedPermissionGroup = option.permissionGroup 
+                                .clickable(enabled = isGuardian && !optionDisabled) { 
+                                    if (isGuardian && !optionDisabled) 
+                                        selectedPermissionGroup = option.permissionGroup 
                                 }
                                 .fillMaxWidth()
                         ) {
                             RadioButton(
                                 selected = selectedPermissionGroup == option.permissionGroup,
                                 onClick = {
-                                    if (isGuardian) selectedPermissionGroup = option.permissionGroup
+                                    if (isGuardian && !optionDisabled) 
+                                        selectedPermissionGroup = option.permissionGroup
                                 },
-                                enabled = isGuardian
+                                enabled = isGuardian && !optionDisabled
                             )
                             Spacer(modifier = Modifier.width(AdditionalTheme.spacings.large))
                             Paragraph(
                                 text = option.label,
-                                color = if (isGuardian) 
-                                          MaterialTheme.colorScheme.onSurface 
-                                       else 
-                                          AdditionalTheme.colors.mutedColor
+                                color = when {
+                                    !isGuardian -> AdditionalTheme.colors.mutedColor
+                                    optionDisabled -> AdditionalTheme.colors.mutedColor
+                                    else -> MaterialTheme.colorScheme.onSurface
+                                }
                             )
                         }
                     }
@@ -144,6 +165,17 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                     if (!isGuardian) {
                         Paragraph(
                             stringResource(Res.string.user_modification_no_permission),
+                            modifier = Modifier.padding(top = AdditionalTheme.spacings.medium),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+
+                    if (isGuardian && 
+                        isLastGuardian && 
+                        familyMember.publicKey == familyGroupSessionService.getPublicKey() && 
+                        familyMember.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
+                        Paragraph(
+                            stringResource(Res.string.user_modification_last_guardian_error),
                             modifier = Modifier.padding(top = AdditionalTheme.spacings.medium),
                             color = MaterialTheme.colorScheme.error
                         )
@@ -163,7 +195,10 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                     Button(
                         text = stringResource(Res.string.user_modification_save_button),
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !savingChanges,
+                        enabled = !savingChanges && 
+                                 !(isLastGuardian && 
+                                   familyMember.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian && 
+                                   selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
                         onClick = {
                             coroutineScope.launch {
                                 savingChanges = true
@@ -181,7 +216,8 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                 Button(
                     text = stringResource(Res.string.user_modification_remove_user_button_content),
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !savingChanges && isGuardian,
+                    enabled = !savingChanges && isGuardian && 
+                              !(isLastGuardian && familyMember.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian),
                     containerColor = MaterialTheme.colorScheme.error,
                     onClick = {
                         showDialog = true
