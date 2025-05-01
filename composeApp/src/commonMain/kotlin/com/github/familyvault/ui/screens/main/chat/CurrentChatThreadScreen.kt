@@ -115,11 +115,12 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                             )
                         }
                     }
-                ChatInputField(
-                    onTextMessageSend = { handleTextMessageSend(it) },
-                    onVoiceMessageSend = { handleVoiceMessageSend(it) },
-                    onImageMessageSend = { handleImageMessageSend(it) }
-                )
+                    ChatInputField(
+                        onTextMessageSend = { handleTextMessageSend(it) },
+                        onVoiceMessageSend = { handleVoiceMessageSend(it) },
+                        onImageMessageSend = { handleImageMessageSend(it) }
+                    )
+                }
             }
         } else {
             CircularProgressIndicator()
