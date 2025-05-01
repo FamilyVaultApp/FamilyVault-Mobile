@@ -5,8 +5,9 @@ import com.github.familyvault.models.tasks.Task
 import kotlinx.serialization.json.Json
 
 object ThreadMessageItemToTask {
-    fun map(threadMessageItem: ThreadMessageItem): Task = Task(
+    fun map(threadMessageItem: ThreadMessageItem, wasFetchedLater: Boolean = false): Task = Task(
         id = threadMessageItem.messageId,
-        content = Json.decodeFromString(requireNotNull(threadMessageItem.messageContent))
+        content = Json.decodeFromString(requireNotNull(threadMessageItem.messageContent)),
+        wasFetchedLater = wasFetchedLater
     )
 }

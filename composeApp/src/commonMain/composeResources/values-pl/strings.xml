@@ -8,6 +8,8 @@
     <string name="is_default">Domyślna</string>
     <string name="collapse">Zwiń</string>
     <string name="expand">Rozwiń</string>
+    <string name="title">Tytuł</string>
+    <string name="description">Opis</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -42,7 +44,7 @@
     <string name="text_field_name_label">Imię</string>
     <string name="text_field_surname_label">Nazwisko</string>
     <string name="text_field_group_name_label">Nazwa grupy rodzinnej</string>
-    <string name="creating_family_group_label">Tworzenie grupy rodzinnej</string>
+    <string name="creating_family_group_label">Tworzenie grupy rodzinnej...</string>
 
     <!-- Joining family group-->
     <string name="join_family_group_title">Dołącz do grupy rodzinnej</string>
@@ -163,7 +165,6 @@
     <string name="task_add_new_list_short">Dodaj nową</string>
     <string name="task_add_new_list">Nowa lista zadań</string>
     <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania w rodzinie i szybko przypisywać obowiązki.</string>
-    <string name="task_list_title">Tytuł</string>
     <string name="task_settings">Konfiguruj</string>
     <string name="task_completed">Ukończone</string>
     <string name="task_assign">Przypisz członka rodziny do zadania</string>
@@ -172,6 +173,4 @@
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
     <string name="task_new">Nowe zadanie</string>
     <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>
-    <string name="task_name">Tytuł</string>
-    <string name="task_description">Opis</string>
 </resources>

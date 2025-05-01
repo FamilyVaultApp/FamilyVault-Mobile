@@ -6,24 +6,24 @@ import com.github.familyvault.forms.TaskForm
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.TextField
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.task_description
-import familyvault.composeapp.generated.resources.task_name
+import familyvault.composeapp.generated.resources.description
+import familyvault.composeapp.generated.resources.title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun TaskFormContent(form: TaskForm) {
     Column {
         TextField(
-            label = stringResource(Res.string.task_name),
-            value = form.name,
+            label = stringResource(Res.string.title),
+            value = form.title,
             supportingText = {
-                ValidationErrorMessage(form.nameValidationError)
+                ValidationErrorMessage(form.titleValidationError)
             },
-            onValueChange = { form.setName(it) }
+            onValueChange = { form.setTitle(it) }
         )
-        
+
         TextField(
-            label = stringResource(Res.string.task_description),
+            label = stringResource(Res.string.description),
             value = form.description,
             supportingText = {
                 ValidationErrorMessage(form.descriptionValidationError)

@@ -46,7 +46,7 @@ class TaskService(
     override suspend fun createNewTask(taskListId: String, name: String, description: String) {
         val serializedTaskContent = Json.encodeToString(
             TaskContent(
-                name, description, completed = false, assignedMemberId = null
+                name, description, completed = false, assignedMemberPubKey = null
             )
         )
 

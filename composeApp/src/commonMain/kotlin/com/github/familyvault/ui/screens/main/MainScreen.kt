@@ -1,5 +1,7 @@
 package com.github.familyvault.ui.screens.main
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.GroupAdd
@@ -7,6 +9,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -21,6 +24,7 @@ import com.github.familyvault.ui.screens.main.tasks.TaskNewScreen
 import com.github.familyvault.ui.theme.AppTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_new
+import familyvault.composeapp.generated.resources.task_new
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -32,14 +36,21 @@ class MainScreen : Screen {
             // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
             // TODO: usunąć po naprawieniu blędu w compose.
             AppTheme {
-                Scaffold(bottomBar = {
-                    NavigationBar(
-                        ChatTab, FilesCabinetTab, TaskTab
-                    )
-                }, floatingActionButton = {
-                    FloatingCurrentTabActionButton()
-                }) {
-                    CurrentTab()
+                Scaffold(
+                    bottomBar = {
+                        NavigationBar(
+                            ChatTab, FilesCabinetTab, TaskTab
+                        )
+                    },
+                    floatingActionButton = {
+                        FloatingCurrentTabActionButton()
+                    }
+                ) { paddingValues ->
+                    Box(
+                        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
+                    ) {
+                        CurrentTab()
+                    }
                 }
             }
         }
@@ -87,7 +98,7 @@ class MainScreen : Screen {
         }) {
             Icon(
                 Icons.Filled.AddTask,
-                stringResource(Res.string.chat_create_new),
+                stringResource(Res.string.task_new),
             )
         }
     }

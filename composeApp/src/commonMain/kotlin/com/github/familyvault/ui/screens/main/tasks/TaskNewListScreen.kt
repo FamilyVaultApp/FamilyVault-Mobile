@@ -31,7 +31,7 @@ import familyvault.composeapp.generated.resources.create_button_content
 import familyvault.composeapp.generated.resources.loading
 import familyvault.composeapp.generated.resources.task_add_new_list
 import familyvault.composeapp.generated.resources.task_add_new_list_description
-import familyvault.composeapp.generated.resources.task_list_title
+import familyvault.composeapp.generated.resources.title
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -64,7 +64,7 @@ class TaskNewListScreen : Screen {
                             stringResource(Res.string.task_add_new_list_description)
                         )
                         TextField(
-                            label = stringResource(Res.string.task_list_title),
+                            label = stringResource(Res.string.title),
                             value = tasksNewListForm.listName,
                             onValueChange = { tasksNewListForm.setTaskListName(it) },
                             supportingText = { ValidationErrorMessage(tasksNewListForm.taskListNameValidationError) }

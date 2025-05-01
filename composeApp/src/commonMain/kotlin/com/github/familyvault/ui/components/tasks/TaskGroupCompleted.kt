@@ -45,7 +45,7 @@ fun TaskGroupCompleted(tasks: List<Task>) {
             )
         ) {
             Column {
-                tasks.map {
+                tasks.forEach {
                     TaskEntry(it, onCompletedClick = {
                         coroutineScope.launch {
                             taskListState.markTaskAsIncomplete(it.id)

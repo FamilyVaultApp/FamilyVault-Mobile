@@ -6,7 +6,7 @@ import com.github.familyvault.models.forms.FormDataStringEntry
 import com.github.familyvault.models.forms.FormDataStringTouchedEntry
 
 data class TaskFormData(
-    val name: FormDataStringEntry = FormDataStringEntry(),
+    val title: FormDataStringEntry = FormDataStringEntry(),
     val description: FormDataStringTouchedEntry = FormDataStringTouchedEntry()
 )
 
@@ -14,11 +14,11 @@ class TaskForm : BaseForm() {
     var formData: TaskFormData = TaskFormData()
         private set
 
-    val name: String
-        get() = formData.name.value
+    val title: String
+        get() = formData.title.value
 
-    val nameValidationError: FormValidatorError?
-        get() = formData.name.getValidationErrorIfTouched()
+    val titleValidationError: FormValidatorError?
+        get() = formData.title.getValidationErrorIfTouched()
 
     val description: String
         get() = formData.description.value
@@ -26,9 +26,9 @@ class TaskForm : BaseForm() {
     val descriptionValidationError: FormValidatorError?
         get() = formData.description.getValidationErrorIfTouched()
 
-    fun setName(name: String) {
-        formData.name.value = name
-        afterEntryUpdate(formData.name)
+    fun setTitle(title: String) {
+        formData.title.value = title
+        afterEntryUpdate(formData.title)
     }
 
     fun setDescription(description: String) {
@@ -37,9 +37,8 @@ class TaskForm : BaseForm() {
     }
 
     override fun validateForm() {
-        formData.name.validationError = FormValidator.multipleValidators(
-            FormValidator.validateEmpty(name),
-            FormValidator.validateTooLong(name, maxLength = 32)
+        formData.title.validationError = FormValidator.multipleValidators(
+            FormValidator.validateEmpty(title), FormValidator.validateTooLong(title, maxLength = 32)
         )
 
         formData.description.validationError = FormValidator.multipleValidators(
@@ -48,6 +47,6 @@ class TaskForm : BaseForm() {
     }
 
     override fun isFormValid(): Boolean {
-        return formData.description.isValid() && formData.name.isValid()
+        return formData.title.isValid() && formData.description.isValid()
     }
 }

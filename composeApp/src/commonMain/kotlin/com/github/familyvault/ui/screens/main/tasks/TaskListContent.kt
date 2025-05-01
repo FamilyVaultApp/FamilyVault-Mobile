@@ -2,7 +2,12 @@ package com.github.familyvault.ui.screens.main.tasks
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -28,20 +33,17 @@ fun TaskListContent() {
     val taskListenerService = koinInject<ITaskListenerService>()
 
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(taskListState.selectedTaskList) {
-        if (taskListState.selectedTaskList == null) {
-            return@LaunchedEffect
-        }
-
-        val selectedTaskId = requireNotNull(taskListState.selectedTaskList).id
-        taskListenerService.unregisterAllListeners()
-
-        taskListenerService.startListeningForNewTask(selectedTaskId) {
-            taskListState.addNewTask(it)
-        }
-        taskListenerService.startListeningForTaskUpdates(selectedTaskId) {
-            taskListState.updateTask(it)
+        taskListState.selectedTaskList?.let { selected ->
+            taskListenerService.unregisterAllListeners()
+            taskListenerService.startListeningForNewTask(selected.id) {
+                taskListState.addNewTask(it)
+            }
+            taskListenerService.startListeningForTaskUpdates(selected.id) {
+                taskListState.updateTask(it)
+            }
         }
     }
 
@@ -59,14 +61,17 @@ fun TaskListContent() {
     }
 
     Column(
-        modifier = Modifier.padding(vertical = AdditionalTheme.spacings.screenPadding)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = AdditionalTheme.spacings.screenPadding)
     ) {
         HorizontalScrollableRow(
             modifier = Modifier.padding(horizontal = AdditionalTheme.spacings.screenPadding)
         ) {
             taskListState.taskLists.forEach {
                 TaskListButton(
-                    title = it.name, selected = it == taskListState.selectedTaskList
+                    title = it.name,
+                    selected = it == taskListState.selectedTaskList
                 ) {
                     coroutineScope.launch {
                         taskListState.selectTaskList(it.id)
@@ -77,19 +82,25 @@ fun TaskListContent() {
                 localNavigator.parent?.push(TaskNewListScreen())
             }
         }
+
+        Spacer(modifier = Modifier.height(AdditionalTheme.spacings.screenPadding))
+
         Column(
-            modifier = Modifier.padding(AdditionalTheme.spacings.screenPadding),
-            verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
+            verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
+            modifier = Modifier.fillMaxSize()
+                .padding(horizontal = AdditionalTheme.spacings.screenPadding)
+                .verticalScroll(scrollState)
         ) {
-            if (taskListState.selectedTaskList != null) {
+            taskListState.selectedTaskList?.let { list ->
                 TaskGroupPending(
-                    taskListState.selectedTaskList!!.name,
-                    taskListState.tasks.filter { !it.content.completed }
+                    categoryTitle = list.name,
+                    tasks = taskListState.tasks.filter { !it.content.completed }
                 )
                 TaskGroupCompleted(
-                    taskListState.tasks.filter { it.content.completed }
+                    tasks = taskListState.tasks.filter { it.content.completed }
                 )
             }
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.screenPadding))
         }
     }
 }

@@ -12,9 +12,9 @@ import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
+import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
 import com.github.familyvault.utils.mappers.ThreadMessageItemToChatMessageMapper
 import com.github.familyvault.utils.mappers.ThreadMessageItemToStoredChatMessageMapper
-import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
 import kotlinx.serialization.json.Json
 
 class ChatService(

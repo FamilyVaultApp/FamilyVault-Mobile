@@ -65,7 +65,6 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
     override suspend fun markTaskAsIncomplete(taskId: String) =
         changeTaskCompleteStatus(taskId, completeStatus = false)
 
-
     private suspend fun changeTaskCompleteStatus(taskId: String, completeStatus: Boolean) {
         var task = tasks.first { it.id == taskId }
         task = task.copy(content = task.content.copy(completed = completeStatus))

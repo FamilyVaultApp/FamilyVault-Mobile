@@ -1,7 +1,6 @@
 package com.github.familyvault.ui.screens.main.tasks
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -20,7 +19,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.TaskForm
 import com.github.familyvault.services.ITaskService
 import com.github.familyvault.ui.components.ContentWithActionButton
-import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.formsContent.TaskFormContent
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -52,14 +50,6 @@ class TaskNewScreen(private val taskListId: String) : Screen {
                     icon = Icons.Outlined.Task,
                 )
             }) { paddingValues ->
-
-            if (isCreatingTask) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    LoaderWithText("...")
-                }
-                return@Scaffold
-            }
-
             ContentWithActionButton(
                 modifier = Modifier.padding(paddingValues)
                     .padding(AdditionalTheme.spacings.screenPadding), content = {
@@ -71,13 +61,13 @@ class TaskNewScreen(private val taskListId: String) : Screen {
                     Button(
                         stringResource(Res.string.create_button_content),
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = form.isFormValid(),
+                        enabled = form.isFormValid() && !isCreatingTask,
                         onClick = {
+                            isCreatingTask = true
                             coroutineScope.launch {
-                                isCreatingTask = true
                                 taskService.createNewTask(
                                     taskListId,
-                                    form.name,
+                                    form.title,
                                     form.description
                                 )
                                 isCreatingTask = false

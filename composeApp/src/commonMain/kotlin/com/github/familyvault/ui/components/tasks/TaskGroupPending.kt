@@ -1,5 +1,6 @@
 package com.github.familyvault.ui.components.tasks
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import com.github.familyvault.models.tasks.Task
@@ -17,15 +18,18 @@ fun TaskGroupPending(categoryTitle: String, tasks: List<Task>) {
         title = categoryTitle,
         primary = true,
         tasks = {
-            tasks.map {
-                TaskEntry(
-                    it,
-                    onCompletedClick = {
-                        coroutineScope.launch {
-                            taskListState.markTaskAsCompleted(it.id)
-                        }
-                    }
-                )
+            Column {
+                tasks.forEach {
+                    AnimatedTaskEntry(
+                        it,
+                        shouldAnimate = it.wasFetchedLater,
+                        onCompletedClick = {
+                            coroutineScope.launch {
+                                taskListState.markTaskAsCompleted(it.id)
+                            }
+                        },
+                    )
+                }
             }
         },
         actionButton = {

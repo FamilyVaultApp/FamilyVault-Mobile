@@ -15,7 +15,7 @@ class TaskListenerService(
     override fun startListeningForNewTask(taskListId: String, onNewTask: (Task) -> Unit) {
         privMxClient.registerOnMessageCreated(CREATE_EVENT_NAME, taskListId) {
             onNewTask(
-                ThreadMessageItemToTask.map(it)
+                ThreadMessageItemToTask.map(it, wasFetchedLater = true)
             )
         }
 
@@ -24,7 +24,7 @@ class TaskListenerService(
     override fun startListeningForTaskUpdates(taskListId: String, onUpdateTask: (Task) -> Unit) {
         privMxClient.registerOnMessageUpdate(UPDATE_EVENT_NAME, taskListId) {
             onUpdateTask(
-                ThreadMessageItemToTask.map(it)
+                ThreadMessageItemToTask.map(it, wasFetchedLater = true)
             )
         }
     }

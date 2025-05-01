@@ -29,14 +29,15 @@ fun TaskEntry(task: Task, onCompletedClick: (Task) -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
         ) {
             Checkbox(
                 task.content.completed,
                 onCheckedChange = { onCompletedClick(task) },
             )
             Column {
-                Paragraph(task.content.name, textStyle = textStyle)
+                Paragraph(task.content.title, textStyle = textStyle)
                 if (task.content.description.isNotEmpty()) {
                     ParagraphMuted(task.content.description, textStyle = textStyle)
                 }
