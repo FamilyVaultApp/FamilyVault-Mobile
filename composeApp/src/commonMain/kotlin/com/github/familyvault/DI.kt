@@ -8,25 +8,27 @@ import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.repositories.StoredChatMessageRepository
-import com.github.familyvault.services.ChatMessagesListenerService
+import com.github.familyvault.services.listeners.ChatMessagesListenerService
 import com.github.familyvault.services.ChatService
-import com.github.familyvault.services.ChatThreadListenerService
+import com.github.familyvault.services.listeners.ChatThreadListenerService
 import com.github.familyvault.services.FamilyGroupService
 import com.github.familyvault.services.FamilyGroupSessionService
 import com.github.familyvault.services.FamilyMemberAdditionService
 import com.github.familyvault.services.FamilyMemberPermissionGroupService
-import com.github.familyvault.services.IChatMessagesListenerService
+import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
-import com.github.familyvault.services.IChatThreadListenerService
+import com.github.familyvault.services.listeners.IChatThreadListenerService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.ISavedFamilyGroupsService
+import com.github.familyvault.services.listeners.ITaskListenerService
 import com.github.familyvault.services.ITaskService
 import com.github.familyvault.services.JoinStatusService
 import com.github.familyvault.services.SavedFamilyGroupsService
+import com.github.familyvault.services.listeners.TaskListenerService
 import com.github.familyvault.services.TaskService
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.CurrentChatThreadsState
@@ -73,6 +75,7 @@ val sharedModules = module {
         ChatMessagesListenerService(get(), get(), get(), get())
     }.bind<IChatMessagesListenerService>()
     single { ChatThreadListenerService(get()) }.bind<IChatThreadListenerService>()
+    single { TaskListenerService(get()) }.bind<ITaskListenerService>()
     single {
         FamilyMemberAdditionService(
             get(), get(), get()

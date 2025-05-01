@@ -11,7 +11,7 @@ data class GroupChatEditFormData(
     var familyMembers: FormDataListEntry<FamilyMember> = FormDataListEntry(),
 )
 
-class GroupChatEditForm : BasicForm() {
+class GroupChatEditForm : BaseForm() {
 
     var formData: GroupChatEditFormData = GroupChatEditFormData()
         private set

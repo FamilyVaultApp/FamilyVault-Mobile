@@ -8,7 +8,7 @@ data class TasksListFormData(
     val listName: FormDataStringEntry = FormDataStringEntry()
 )
 
-class TasksListForm : BasicForm() {
+class TasksListForm : BaseForm() {
     var formData: TasksListFormData = TasksListFormData()
         private set
 

@@ -16,7 +16,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.ISavedFamilyGroupsService
-import com.github.familyvault.ui.components.ContentWithAction
+import com.github.familyvault.ui.components.ContentWithActionButton
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -50,7 +50,7 @@ class FamilyGroupSettingChangeNameScreen : Screen {
                     icon = Icons.Outlined.Edit,
                 )
             }) { paddings ->
-            ContentWithAction(
+            ContentWithActionButton(
                 modifier = Modifier.padding(AdditionalTheme.spacings.screenPadding)
                     .padding(paddings),
                 content = {

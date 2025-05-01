@@ -12,8 +12,8 @@ import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
-import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
-import com.github.familyvault.utils.mappers.MessageItemToStoredChatMessageMapper
+import com.github.familyvault.utils.mappers.ThreadMessageItemToChatMessageMapper
+import com.github.familyvault.utils.mappers.ThreadMessageItemToStoredChatMessageMapper
 import com.github.familyvault.utils.mappers.StoredChatMessageToChatMessageMapper
 import kotlinx.serialization.json.Json
 
@@ -215,7 +215,7 @@ class ChatService(
         val userPublicKey = familyGroupSessionService.getPublicKey()
         val message = privMxClient.retrieveLastMessageFromThread(chatThreadId) ?: return null
 
-        return MessageItemToChatMessageMapper.map(message, userPublicKey)
+        return ThreadMessageItemToChatMessageMapper.map(message, userPublicKey)
     }
 
     override suspend fun populateDatabaseWithLastMessages(chatThreadId: String) {
@@ -239,7 +239,7 @@ class ChatService(
                     return
                 }
                 storedChatMessageRepository.addNewStoredChatMessage(
-                    MessageItemToStoredChatMessageMapper.map(privMxMessage, chatThreadId)
+                    ThreadMessageItemToStoredChatMessageMapper.map(privMxMessage, chatThreadId)
                 )
             }
             currentPage++

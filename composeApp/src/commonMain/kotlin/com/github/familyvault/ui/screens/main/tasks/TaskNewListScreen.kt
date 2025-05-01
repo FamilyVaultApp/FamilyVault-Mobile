@@ -18,7 +18,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.TasksListForm
 import com.github.familyvault.services.ITaskService
-import com.github.familyvault.ui.components.ContentWithAction
+import com.github.familyvault.ui.components.ContentWithActionButton
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.overrides.Button
@@ -31,7 +31,7 @@ import familyvault.composeapp.generated.resources.create_button_content
 import familyvault.composeapp.generated.resources.loading
 import familyvault.composeapp.generated.resources.task_add_new_list
 import familyvault.composeapp.generated.resources.task_add_new_list_description
-import familyvault.composeapp.generated.resources.task_list
+import familyvault.composeapp.generated.resources.task_list_title
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -56,7 +56,7 @@ class TaskNewListScreen : Screen {
                 icon = Icons.Outlined.Task,
             )
         }, content = { paddingValues ->
-            ContentWithAction(
+            ContentWithActionButton(
                 modifier = Modifier.padding(paddingValues)
                     .padding(AdditionalTheme.spacings.screenPadding), content = {
                     Column {
@@ -64,7 +64,7 @@ class TaskNewListScreen : Screen {
                             stringResource(Res.string.task_add_new_list_description)
                         )
                         TextField(
-                            label = stringResource(Res.string.task_list),
+                            label = stringResource(Res.string.task_list_title),
                             value = tasksNewListForm.listName,
                             onValueChange = { tasksNewListForm.setTaskListName(it) },
                             supportingText = { ValidationErrorMessage(tasksNewListForm.taskListNameValidationError) }

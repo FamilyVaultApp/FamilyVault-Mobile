@@ -4,16 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.models.tasks.Task
-import com.github.familyvault.models.tasks.TaskList
+import com.github.familyvault.services.listeners.ITaskListenerService
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.HorizontalScrollableRow
 import com.github.familyvault.ui.components.tasks.TaskGroupCompleted
@@ -21,18 +18,43 @@ import com.github.familyvault.ui.components.tasks.TaskGroupPending
 import com.github.familyvault.ui.components.tasks.TaskListButton
 import com.github.familyvault.ui.components.tasks.TaskNewListButton
 import com.github.familyvault.ui.theme.AdditionalTheme
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
 fun TaskListContent() {
     val localNavigator = LocalNavigator.currentOrThrow
     val taskListState = koinInject<ITaskListState>()
+    val taskListenerService = koinInject<ITaskListenerService>()
 
-    var selectedTaskList by remember { mutableStateOf<TaskList?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(taskListState.selectedTaskList) {
+        if (taskListState.selectedTaskList == null) {
+            return@LaunchedEffect
+        }
+
+        val selectedTaskId = requireNotNull(taskListState.selectedTaskList).id
+        taskListenerService.unregisterAllListeners()
+
+        taskListenerService.startListeningForNewTask(selectedTaskId) {
+            taskListState.addNewTask(it)
+        }
+        taskListenerService.startListeningForTaskUpdates(selectedTaskId) {
+            taskListState.updateTask(it)
+        }
+    }
 
     LaunchedEffect(taskListState.taskLists) {
-        if (selectedTaskList == null) {
-            selectedTaskList = taskListState.taskLists.firstOrNull()
+        if (taskListState.selectedTaskList == null) {
+            taskListState.selectFirstTaskList()
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            taskListenerService.unregisterAllListeners()
+            taskListState.unselectTaskList()
         }
     }
 
@@ -44,9 +66,11 @@ fun TaskListContent() {
         ) {
             taskListState.taskLists.forEach {
                 TaskListButton(
-                    title = it.name, selected = it == selectedTaskList
+                    title = it.name, selected = it == taskListState.selectedTaskList
                 ) {
-                    selectedTaskList = it
+                    coroutineScope.launch {
+                        taskListState.selectTaskList(it.id)
+                    }
                 }
             }
             TaskNewListButton {
@@ -57,26 +81,13 @@ fun TaskListContent() {
             modifier = Modifier.padding(AdditionalTheme.spacings.screenPadding),
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
-            if (selectedTaskList != null) {
+            if (taskListState.selectedTaskList != null) {
                 TaskGroupPending(
-                    selectedTaskList!!.name, listOf(
-                        Task(
-                            id = "1", name = "Milk", description = "Description", completed = false
-                        ), Task(
-                            id = "2", name = "Egg", description = "Description", completed = false
-                        )
-                    )
+                    taskListState.selectedTaskList!!.name,
+                    taskListState.tasks.filter { !it.content.completed }
                 )
                 TaskGroupCompleted(
-                    listOf(
-                        Task(
-                            id = "3", name = "Flour", description = "Description", completed = true
-                        ), Task(
-                            id = "4", name = "Oil", description = "Description", completed = true
-                        ), Task(
-                            id = "5", name = "Petrol", description = "Description", completed = true
-                        )
-                    )
+                    taskListState.tasks.filter { it.content.completed }
                 )
             }
         }

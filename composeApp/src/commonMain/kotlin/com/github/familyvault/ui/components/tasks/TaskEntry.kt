@@ -15,12 +15,13 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 
 @Composable
-fun TaskEntry(task: Task, onCompletedChange: (Boolean) -> Unit) {
-    val textStyle = if (task.completed) {
+fun TaskEntry(task: Task, onCompletedClick: (Task) -> Unit) {
+    val textStyle = if (task.content.completed) {
         TextStyle(textDecoration = TextDecoration.LineThrough)
     } else {
         TextStyle.Default
     }
+
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -30,16 +31,17 @@ fun TaskEntry(task: Task, onCompletedChange: (Boolean) -> Unit) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(task.completed, onCheckedChange = onCompletedChange, enabled = !task.completed)
+            Checkbox(
+                task.content.completed,
+                onCheckedChange = { onCompletedClick(task) },
+            )
             Column {
-                Paragraph(task.name, textStyle = textStyle)
-                if (task.description.isNotEmpty()) {
-                    ParagraphMuted(task.description, textStyle = textStyle)
+                Paragraph(task.content.name, textStyle = textStyle)
+                if (task.content.description.isNotEmpty()) {
+                    ParagraphMuted(task.content.description, textStyle = textStyle)
                 }
             }
         }
-        AssignMemberToTaskButton {
-
-        }
+        AssignMemberToTaskButton {}
     }
 }

@@ -1,11 +1,12 @@
-package com.github.familyvault.services
+package com.github.familyvault.services.listeners
 
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.repositories.IStoredChatMessageRepository
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.states.ICurrentChatState
-import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
-import com.github.familyvault.utils.mappers.MessageItemToStoredChatMessageMapper
+import com.github.familyvault.utils.mappers.ThreadMessageItemToChatMessageMapper
+import com.github.familyvault.utils.mappers.ThreadMessageItemToStoredChatMessageMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,8 +28,8 @@ class ChatMessagesListenerService(
         onNewMessage: (newMessage: ChatMessage) -> Unit
     ) {
         privMxClient.registerOnMessageCreated(EVENT_NAME, chatThreadId) {
-            val chatMessage = MessageItemToChatMessageMapper.map(it, sessionService.getPublicKey())
-            val storedChatMessage = MessageItemToStoredChatMessageMapper.map(it, chatThreadId)
+            val chatMessage = ThreadMessageItemToChatMessageMapper.map(it, sessionService.getPublicKey())
+            val storedChatMessage = ThreadMessageItemToStoredChatMessageMapper.map(it, chatThreadId)
 
             currentChatState.addNewChatMessage(chatMessage)
             serviceScope.launch {

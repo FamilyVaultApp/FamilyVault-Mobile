@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.services.IChatMessagesListenerService
+import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
-import com.github.familyvault.services.IChatThreadListenerService
+import com.github.familyvault.services.listeners.IChatThreadListenerService
 import com.github.familyvault.states.ICurrentChatThreadsState
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.ParagraphStickyHeader

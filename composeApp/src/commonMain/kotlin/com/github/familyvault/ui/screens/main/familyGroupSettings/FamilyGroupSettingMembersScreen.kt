@@ -27,7 +27,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.services.IFamilyGroupService
-import com.github.familyvault.ui.components.ContentWithAction
+import com.github.familyvault.ui.components.ContentWithActionButton
 import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -66,7 +66,7 @@ class FamilyGroupSettingMembersScreen : Screen {
                     icon = Icons.Outlined.Groups,
                 )
             }) { padding ->
-            ContentWithAction(
+            ContentWithActionButton(
                 modifier = Modifier.padding(padding)
                     .padding(AdditionalTheme.spacings.screenPadding),
                 content = {
