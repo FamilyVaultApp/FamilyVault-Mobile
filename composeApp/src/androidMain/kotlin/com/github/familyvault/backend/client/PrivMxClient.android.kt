@@ -11,8 +11,11 @@ import com.github.familyvault.backend.models.ThreadPrivateMeta
 import com.github.familyvault.backend.models.ThreadPublicMeta
 import com.github.familyvault.backend.utils.StoreMetaEncoder
 import com.github.familyvault.backend.utils.ThreadMessageEncoder
+import com.github.familyvault.backend.utils.ThreadMetaDecoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.enums.chat.ChatIconType
+import com.github.familyvault.models.enums.chat.icon
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
@@ -88,7 +91,8 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         tag: String,
         type: String,
         name: String,
-        referenceStoreId: String?
+        referenceStoreId: String?,
+        threadIcon: ChatIconType?
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -96,10 +100,11 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
         }
+        println(threadIcon?.name)
         val threadId = threadApi?.createThread(
             contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon))
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }
@@ -139,7 +144,8 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         threadId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        newName: String?
+        newName: String?,
+        groupChatIcon: ChatIconType?
     ) {
         val thread = requireNotNull(threadApi?.getThread(threadId)) { "Thread is null" }
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
@@ -149,11 +155,10 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             UserWithPubKey(userId, publicKey)
         }
 
-        val privateMeta = if (newName != null) {
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(newName, ""))
-        } else {
-            thread.privateMeta
-        }
+        val decodedPrivateMeta = ThreadMetaDecoder.decodePrivateMeta(thread.privateMeta)
+
+        val privateMeta = ThreadMetaEncoder.encode(decodedPrivateMeta.copy(name = newName ?: decodedPrivateMeta.name, threadIcon = groupChatIcon
+            ?: decodedPrivateMeta.threadIcon))
 
         threadApi?.updateThread(
             thread.threadId,

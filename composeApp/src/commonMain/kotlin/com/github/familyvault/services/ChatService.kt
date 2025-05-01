@@ -10,6 +10,7 @@ import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.StoreType
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import com.github.familyvault.models.enums.chat.ChatThreadType
+import com.github.familyvault.models.enums.chat.ChatIconType
 import com.github.familyvault.repositories.IStoredChatMessageRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
 import com.github.familyvault.utils.mappers.MessageItemToChatMessageMapper
@@ -25,7 +26,7 @@ class ChatService(
     private val imagePickerService: IImagePickerService,
 ) : IChatService {
     override suspend fun createGroupChat(
-        name: String, members: List<FamilyMember>
+        name: String, members: List<FamilyMember>, groupChatIcon: ChatIconType?
     ): ChatThread {
         val contextId = familyGroupSessionService.getContextId()
 
@@ -47,7 +48,8 @@ class ChatService(
             AppConfig.CHAT_THREAD_TAG,
             ChatThreadType.GROUP.toString(),
             name,
-            storeId
+            storeId,
+            groupChatIcon
         )
 
         return ChatThread(
@@ -56,18 +58,20 @@ class ChatService(
             (users.map { it.userId } + managers.map { it.userId }).distinct(),
             lastMessage = null,
             ChatThreadType.GROUP,
+            groupChatIcon
         )
     }
 
     override suspend fun updateChatThread(
         thread: ChatThread,
         members: List<FamilyMember>,
-        newName: String?
+        newName: String?,
+        groupChatIcon: ChatIconType?
     ) {
         val splitFamilyGroupMembersList = FamilyMembersSplitter.split(members)
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
-        privMxClient.updateThread(thread.id, users, managers, newName)
+        privMxClient.updateThread(thread.id, users, managers, newName, groupChatIcon)
     }
 
     override fun retrieveAllChatThreads(): List<ChatThread> {
@@ -82,6 +86,7 @@ class ChatService(
                 (it.managers + it.users).distinct(),
                 retrieveLastMessage(it.threadId),
                 ChatThreadType.valueOf(it.publicMeta.type),
+                it.privateMeta.threadIcon
             )
         }
     }

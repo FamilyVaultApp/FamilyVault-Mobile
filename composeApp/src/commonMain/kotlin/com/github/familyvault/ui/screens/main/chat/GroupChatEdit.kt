@@ -1,11 +1,17 @@
 package com.github.familyvault.ui.screens.main.chat
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
@@ -16,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -23,9 +30,13 @@ import com.github.familyvault.forms.GroupChatEditForm
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FormSubmitState
+import com.github.familyvault.models.enums.chat.ChatIconType
+import com.github.familyvault.models.enums.chat.GroupChatMembership
+import com.github.familyvault.models.enums.chat.icon
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.FamilyMemberEntry
+import com.github.familyvault.ui.components.GroupChatIconPickerElement
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
@@ -60,6 +71,9 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
     val form by remember { mutableStateOf(GroupChatEditForm()) }
     val groupChatAction = if (chatThread == null) GroupChatAction.Create else GroupChatAction.Edit
     val coroutineScope = rememberCoroutineScope()
+    var chatIconType by remember { mutableStateOf(ChatIconType.GROUP)}
+
+    val chatIconTypes = ChatIconType.entries
 
     LaunchedEffect(Unit) {
         isLoadingFamilyMembers = true
@@ -74,6 +88,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
             form.setGroupName(chatThread!!.name)
             val filteredMembers = familyMembers.filter { it.fullname in chatThread.participantsIds }
             form.addAllMembersFromListToGroupChat(filteredMembers)
+            chatIconType = chatThread.icon!!
         }
 
         isLoadingFamilyMembers = false
@@ -101,6 +116,25 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 label = stringResource(Res.string.chat_set_group_name),
                 supportingText = { ValidationErrorMessage(form.groupNameValidationError) }
             )
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                    chatIconTypes.forEach { icon ->
+                        Box(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.background, CircleShape)
+                                .clickable {
+                                    chatIconType = icon
+                                }
+                                .padding(AdditionalTheme.spacings.small)
+                        ) {
+                            GroupChatIconPickerElement(icon.icon, isPicked = chatIconType == icon)
+                        }
+                    }
+            }
             Headline3(stringResource(Res.string.chat_create_group_members))
             if (isLoadingFamilyMembers) {
                 CircularProgressIndicator()
@@ -138,12 +172,13 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 coroutineScope.launch {
                     try {
                         if (groupChatAction == GroupChatAction.Create) {
-                            chatService.createGroupChat(form.groupName, form.familyMembers)
+                            chatService.createGroupChat(form.groupName, form.familyMembers, chatIconType)
                         } else {
                             chatService.updateChatThread(
                                 chatThread!!,
                                 form.familyMembers,
-                                form.groupName
+                                form.groupName,
+                                chatIconType
                             )
                             createGroupChatState = FormSubmitState.IDLE
                             navigator.replaceAll(MainScreen())
@@ -166,7 +201,7 @@ private fun FamilyMemberSwitchItem(
     onToggle: () -> Unit,
     isCurrentMember: Boolean
 ) {
-    FamilyMemberEntry(member) {
+    FamilyMemberEntry(member, if (isSelected) GroupChatMembership.CURRENT_MEMBER else GroupChatMembership.NOT_CURRENT_MEMBER) {
         Switch(
             checked = isSelected || isCurrentMember,
             onCheckedChange = { onToggle() },

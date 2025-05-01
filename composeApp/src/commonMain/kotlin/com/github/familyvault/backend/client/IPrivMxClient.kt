@@ -4,6 +4,7 @@ import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.enums.chat.ChatIconType
 
 interface IPrivMxClient {
     fun generatePairOfPrivateAndPublicKey(password: String): PublicEncryptedPrivateKeyPair
@@ -20,7 +21,8 @@ interface IPrivMxClient {
         tag: String,
         type: String,
         name: String,
-        referenceStoreId: String?
+        referenceStoreId: String?,
+        threadIcon: ChatIconType? = null
     ): String
 
     fun createStore(
@@ -34,7 +36,8 @@ interface IPrivMxClient {
         threadId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        newName: String? = null
+        newName: String? = null,
+        groupChatIcon: ChatIconType? = null
     )
 
     fun retrieveThread(threadId: String): ThreadItem
