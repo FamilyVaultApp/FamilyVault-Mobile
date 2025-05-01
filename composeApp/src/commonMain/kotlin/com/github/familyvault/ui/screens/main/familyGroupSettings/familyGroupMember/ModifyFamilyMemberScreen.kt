@@ -72,7 +72,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
 
         val coroutineScope = rememberCoroutineScope()
 
-        DisposableEffect(Unit) {
+        LaunchedEffect(Unit) {
             coroutineScope.launch {
                 allFamilyMembers = familyGroupService.retrieveFamilyGroupMembersList()
                 val myMemberData = familyGroupService.retrieveMyFamilyMemberData()
@@ -86,8 +86,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                 
                 isLoading = false
             }
-            onDispose { }
-        }
+            }
 
         val options = listOf(
             PermissionOption(
