@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.enums.chat.ChatMessageAdditionalInfo
 import com.github.familyvault.models.enums.chat.shouldRenderMessageSendDate
@@ -26,6 +27,7 @@ import com.github.familyvault.utils.TimeFormatter
 fun ChatMessageBubbleWrapper(
     message: ChatMessage,
     additionalInfo: ChatMessageAdditionalInfo,
+    additionalPaddings: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val sender = message.senderId
@@ -56,7 +58,7 @@ fun ChatMessageBubbleWrapper(
                         if (isAuthor) MaterialTheme.colorScheme.primary else AdditionalTheme.colors.otherChatBubbleColor,
                         shape = MaterialTheme.shapes.medium
                     )
-                    .padding(AdditionalTheme.spacings.medium),
+                    .padding(if (additionalPaddings) AdditionalTheme.spacings.medium else 0.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {

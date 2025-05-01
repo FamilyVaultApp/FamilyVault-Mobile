@@ -11,7 +11,7 @@ import familyvault.composeapp.generated.resources.chat_add_multimedia_descriptio
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MultimediaSendButton(onClick: () -> Unit) {
+fun MultimediaPickerButton(onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.Outlined.Image,

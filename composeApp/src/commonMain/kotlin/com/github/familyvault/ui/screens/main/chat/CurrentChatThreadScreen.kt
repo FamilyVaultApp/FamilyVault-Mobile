@@ -28,6 +28,7 @@ import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
@@ -46,12 +47,15 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
         val chatState = koinInject<ICurrentChatState>()
+        val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
         LaunchedEffect(chatThread) {
+            mediaPicker.clearSelectedImages()
+
             chatState.update(chatThread.id)
             chatService.populateDatabaseWithLastMessages(chatThread.id)
             chatState.populateStateFromService()
@@ -111,10 +115,11 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                             )
                         }
                     }
-                    ChatInputField(
-                        onTextMessageSend = { handleTextMessageSend(it) },
-                        onVoiceMessageSend = { handleVoiceMessageSend(it) })
-                }
+                ChatInputField(
+                    onTextMessageSend = { handleTextMessageSend(it) },
+                    onVoiceMessageSend = { handleVoiceMessageSend(it) },
+                    onImageMessageSend = { handleImageMessageSend(it) }
+                )
             }
         } else {
             CircularProgressIndicator()
@@ -133,6 +138,16 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
             return
         }
         chatService.sendVoiceMessage(chatThread.id, audio)
+    }
+
+    private fun handleImageMessageSend(uriByteArrays: List<ByteArray>) {
+        if (uriByteArrays.isEmpty()) {
+            return
+        }
+
+        uriByteArrays.forEach { mediaByteArray ->
+            chatService.sendImageMessage(chatThread.id, mediaByteArray)
+        }
     }
 
     private suspend fun scrollToLastMessage(

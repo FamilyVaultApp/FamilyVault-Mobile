@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.github.familyvault.services.IAudioRecorderService
+import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -27,18 +28,32 @@ import org.koin.compose.koinInject
 @Composable
 fun ChatInputField(
     onTextMessageSend: (message: String) -> Unit,
-    onVoiceMessageSend: (audio: ByteArray) -> Unit
+    onVoiceMessageSend: (audio: ByteArray) -> Unit,
+    onImageMessageSend: (media: List<ByteArray>) -> Unit
 ) {
     val audioRecorder = koinInject<IAudioRecorderService>()
+    val imagePicker = koinInject<IImagePickerService>()
 
     var textMessage by remember { mutableStateOf("") }
     var isRecording by remember { mutableStateOf(false) }
     var audioData by remember { mutableStateOf(ByteArray(0)) }
 
+    SelectedImagesPreview(
+        selectedImages = imagePicker.getSelectedImageUrls(),
+        onRemoveImage = { uri ->
+            imagePicker.removeSelectedImage(uri)
+        },
+        getBytesFromUri = { uri -> imagePicker.getBytesFromUri(uri) },
+        getBitmapFromBytes = { bytes -> imagePicker.getBitmapFromBytes(bytes) }
+    )
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(AdditionalTheme.spacings.small, vertical = AdditionalTheme.spacings.large),
+            .padding(
+                AdditionalTheme.spacings.small,
+                bottom = AdditionalTheme.spacings.large
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -51,7 +66,11 @@ fun ChatInputField(
                 }
             )
         } else {
-            MultimediaSendButton(onClick = { /* Obsługa zdjęć */ })
+            MultimediaPickerButton(
+                onClick = {
+                    imagePicker.openMediaPickerForSelectingImages()
+                }
+            )
             VoiceMessageRecordButton(
                 onStart = {
                     if (!audioRecorder.haveRecordingPermission()) {
@@ -96,6 +115,7 @@ fun ChatInputField(
         SendButton(
             isRecording = isRecording,
             textMessage = textMessage,
+            selectedImageUrls = imagePicker.getSelectedImageUrls(),
             onSendText = {
                 onTextMessageSend(textMessage)
                 textMessage = ""
@@ -104,6 +124,11 @@ fun ChatInputField(
                 audioData = audioRecorder.stop()
                 onVoiceMessageSend(audioData)
                 isRecording = false
+            },
+            onSendImage = {
+                val mediaByteArrays = imagePicker.getSelectedImageAsByteArrays()
+                imagePicker.clearSelectedImages()
+                onImageMessageSend(mediaByteArrays)
             }
         )
     }

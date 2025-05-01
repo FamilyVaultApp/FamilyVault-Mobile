@@ -8,9 +8,11 @@ import com.github.familyvault.services.AudioPlayerService
 import com.github.familyvault.services.AudioRecorderService
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IAudioRecorderService
+import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.services.INotificationService
 import com.github.familyvault.services.IQRCodeService
+import com.github.familyvault.services.ImagePickerService
 import com.github.familyvault.services.NfcService
 import com.github.familyvault.services.NotificationService
 import com.github.familyvault.services.QrCodeService
@@ -34,9 +36,11 @@ actual fun getPlatformModules() = module {
     factory { NotificationService(get()) }.bind<INotificationService>()
 
     /* NFC */
-    factory {NfcService(get()) }.bind<INfcService>()
+    factory { NfcService(get()) }.bind<INfcService>()
 
     /* Audio service */
     factory { AudioPlayerService() }.bind<IAudioPlayerService>()
     factory { AudioRecorderService(get()) }.bind<IAudioRecorderService>()
+
+    single { ImagePickerService() }.bind<IImagePickerService>()
 }
