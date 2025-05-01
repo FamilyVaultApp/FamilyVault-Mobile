@@ -3,8 +3,6 @@ package com.github.familyvault.ui.screens.main.familyGroupSettings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -32,16 +30,12 @@ import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.ContentWithAction
 import com.github.familyvault.ui.components.FamilyMemberEntry
-import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.settings.DescriptionSection
-import com.github.familyvault.ui.components.typography.Paragraph
-import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.AddMemberToFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.ModifyFamilyMemberScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
-import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.family_group_add_new_member
 import familyvault.composeapp.generated.resources.setting_members_long
