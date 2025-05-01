@@ -14,15 +14,15 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyGroupNameFormData
-import com.github.familyvault.forms.FamilyMemberNewMemberFormData
-import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
+import com.github.familyvault.forms.FamilyMemberMemberFormData
+import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
-import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
+import com.github.familyvault.ui.components.formsContent.PrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.screens.main.MainScreen
@@ -33,7 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
-    private val familyGroupDraft: FamilyMemberNewMemberFormData,
+    private val familyGroupDraft: FamilyMemberMemberFormData,
     private val familyGroupNameDraft: FamilyGroupNameFormData
 ) : Screen {
     @Composable
@@ -41,7 +41,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyMemberAdditionService = koinInject<IFamilyMemberAdditionService>()
         val navigator = LocalNavigator.currentOrThrow
-        val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
+        val form by remember { mutableStateOf(PrivateKeyPasswordForm()) }
 
         val coroutineScope = rememberCoroutineScope()
         var createFamilyGroupState by remember { mutableStateOf(FormSubmitState.IDLE) }
@@ -62,7 +62,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
             Column(
                 modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
             ) {
-                AssignPrivateKeyFormContent(
+                PrivateKeyFormContent(
                     form,
                 )
                 BottomNextButton(

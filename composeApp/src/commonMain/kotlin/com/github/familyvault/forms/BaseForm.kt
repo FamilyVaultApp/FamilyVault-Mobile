@@ -1,6 +1,6 @@
 package com.github.familyvault.forms
 
-import com.github.familyvault.models.forms.BaseFormDataEntry
+import com.github.familyvault.forms.models.BaseFormDataEntry
 
 abstract class BaseForm {
     abstract fun validateForm()

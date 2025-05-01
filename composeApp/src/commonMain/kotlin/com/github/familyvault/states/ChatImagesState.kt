@@ -12,5 +12,4 @@ class ChatImagesState : IChatImagesState {
     override fun getImageOrNull(id: String): ImageBitmap? {
         return imageCache[id]
     }
-
 }

@@ -3,15 +3,21 @@ package com.github.familyvault.ui.components.formsContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import com.github.familyvault.forms.TaskForm
+import com.github.familyvault.states.IFamilyMembersState
+import com.github.familyvault.ui.components.FamilyMemberPicker
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.TextField
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.assignee
 import familyvault.composeapp.generated.resources.description
 import familyvault.composeapp.generated.resources.title
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun TaskFormContent(form: TaskForm) {
+    val familyMembersState = koinInject<IFamilyMembersState>()
+
     Column {
         TextField(
             label = stringResource(Res.string.title),
@@ -29,6 +35,15 @@ fun TaskFormContent(form: TaskForm) {
                 ValidationErrorMessage(form.descriptionValidationError)
             },
             onValueChange = { form.setDescription(it) }
+        )
+
+        FamilyMemberPicker(
+            label = stringResource(Res.string.assignee),
+            familyMembers = familyMembersState.getAllFamilyMembers(),
+            selectedPubKey = form.pubKeyOfAssignedMember,
+            onPick = {
+                form.setPubKeyOfAssignedMember(it?.publicKey)
+            }
         )
     }
 }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
+import com.github.familyvault.ui.components.DangerButton
 import com.github.familyvault.ui.components.dialogs.RemoveFamilyMemberDialog
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -139,11 +139,10 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         }
                     }
                 )
-                Button(
+                DangerButton(
                     text = stringResource(Res.string.user_modification_remove_user_button_content),
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !savingChanges,
-                    containerColor = MaterialTheme.colorScheme.error,
                     onClick = {
                         showDialog = true
                     }

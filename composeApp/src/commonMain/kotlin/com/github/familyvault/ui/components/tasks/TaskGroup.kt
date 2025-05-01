@@ -31,11 +31,17 @@ fun TaskGroup(
     }
 
     Column(
-        modifier = Modifier.clip(RoundedCornerShape(AdditionalTheme.roundness.medium))
-            .background(backgroundColor).padding(AdditionalTheme.spacings.medium).fillMaxWidth()
+        modifier = Modifier
+            .clip(RoundedCornerShape(AdditionalTheme.roundness.medium))
+            .background(backgroundColor)
+            .padding(AdditionalTheme.spacings.medium)
+            .fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(AdditionalTheme.spacings.small),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = AdditionalTheme.spacings.small)
+                .padding(start = AdditionalTheme.spacings.small),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {

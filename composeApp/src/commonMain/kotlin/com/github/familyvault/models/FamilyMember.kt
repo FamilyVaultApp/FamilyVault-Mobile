@@ -18,4 +18,15 @@ data class FamilyMember(
         get() = fullname
 
     fun toPrivMxUser() = PrivMxUser(fullname, publicKey)
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is FamilyMember) {
+            return false
+        }
+        return other.id == id
+    }
+
+    override fun hashCode(): Int {
+        return this::class.hashCode()
+    }
 }

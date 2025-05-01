@@ -14,8 +14,8 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.backend.client.IPrivMxClient
-import com.github.familyvault.forms.FamilyMemberNewMemberFormData
-import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
+import com.github.familyvault.forms.FamilyMemberMemberFormData
+import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.models.NewFamilyMemberData
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IJoinStatusService
@@ -23,7 +23,7 @@ import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
-import com.github.familyvault.ui.components.formsContent.AssignPrivateKeyFormContent
+import com.github.familyvault.ui.components.formsContent.PrivateKeyFormContent
 import com.github.familyvault.ui.components.privateKey.PrivateKeyAssignPasswordHeader
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberDraft: FamilyMemberNewMemberFormData) :
+class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberDraft: FamilyMemberMemberFormData) :
     Screen {
     @Composable
     override fun Content() {
@@ -40,7 +40,7 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
         val joinStatusService = koinInject<IJoinStatusService>()
         val privMxClient = koinInject<IPrivMxClient>()
         val coroutineScope = rememberCoroutineScope()
-        val form by remember { mutableStateOf(PrivateKeyAssignPasswordForm()) }
+        val form by remember { mutableStateOf(PrivateKeyPasswordForm()) }
         val navigator = LocalNavigator.currentOrThrow
         var preparingToJoinFamilyGroupState by remember { mutableStateOf(FormSubmitState.IDLE) }
 
@@ -60,7 +60,7 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
             Column(
                 modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
             ) {
-                AssignPrivateKeyFormContent(
+                PrivateKeyFormContent(
                     form,
                 )
                 BottomNextButton(
