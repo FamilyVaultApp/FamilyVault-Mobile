@@ -21,7 +21,7 @@ interface IPrivMxClient {
         type: String,
         name: String,
         referenceStoreId: String?,
-        groupChatCreators: List<PrivMxUser>
+        threadCreators: List<PrivMxUser>
     ): String
 
     fun createStore(

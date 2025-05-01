@@ -19,16 +19,17 @@ object FamilyMembersSplitter : IFamilyMembersSplitter {
         return SplitFamilyMembers(guardians.distinct(), members.distinct())
     }
 
-    override fun splitWithProvidedMemberAsManager(
+    override fun splitWithProvidedMembersAsManagers(
         familyGroupMembers: List<FamilyMember>,
-        currentMember: FamilyMember?
+        additionalManagers: List<FamilyMember?>
     ): SplitFamilyMembers {
         val guardians: MutableList<FamilyMember> = mutableListOf()
         val members: MutableList<FamilyMember> = mutableListOf()
 
-        if (currentMember != null) {
-            guardians.add(currentMember)
+        additionalManagers.filterNotNull().forEach { manager ->
+            guardians.add(manager)
         }
+
         for (member in familyGroupMembers) {
             if (member.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
                 guardians.add(member)

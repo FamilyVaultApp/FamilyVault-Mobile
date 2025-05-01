@@ -84,6 +84,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
         )
 
         LaunchedEffect(Unit) {
+            isLoadingData = true
             familyMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
             isLoadingData = false
         }
@@ -169,8 +170,6 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         }
                     )
                 }
-            } else {
-                CircularProgressIndicatorDialog("")
             }
             if (showDialog) {
                 RemoveFamilyMemberDialog(onConfirm = {

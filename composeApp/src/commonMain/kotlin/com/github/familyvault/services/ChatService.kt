@@ -30,7 +30,7 @@ class ChatService(
     ): ChatThread {
         val contextId = familyGroupSessionService.getContextId()
         val currentUser = familyGroupSessionService.getCurrentUser()
-        val splitFamilyGroupMembersList = FamilyMembersSplitter.splitWithProvidedMemberAsManager(members, currentUser)
+        val splitFamilyGroupMembersList = FamilyMembersSplitter.splitWithProvidedMembersAsManagers(members, listOf(currentUser))
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
 
@@ -61,8 +61,17 @@ class ChatService(
         )
     }
 
-    override suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, groupChatCreator: FamilyMember?) {
-        val splitFamilyGroupMembersList = FamilyMembersSplitter.splitWithProvidedMemberAsManager(members, groupChatCreator)
+    private suspend fun retrieveThreadInitialManagers(thread: ChatThread): List<FamilyMember> {
+        val initialManagersPublicKeys = retrieveChatThreadInitialManagers(thread.id)
+        return familyGroupService.retrieveFamilyGroupMembersList().filter { initialManagersPublicKeys.contains(it.publicKey)}
+    }
+
+    override suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, chatCreator: FamilyMember?) {
+        val initialManagers = retrieveThreadInitialManagers(thread).toMutableList()
+        if (chatCreator != null) {
+            initialManagers.add(chatCreator)
+        }
+        val splitFamilyGroupMembersList = FamilyMembersSplitter.splitWithProvidedMembersAsManagers(members, initialManagers)
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
         privMxClient.updateThread(thread.id, users, managers, newName)
@@ -185,7 +194,7 @@ class ChatService(
             type = ChatThreadType.INDIVIDUAL.toString(),
             name = threadUsers.joinToString { it.userId },
             referenceStoreId = storeId,
-            groupChatCreators = listOf(firstMember.toPrivMxUser(), secondMember.toPrivMxUser())
+            threadCreators = listOf(firstMember.toPrivMxUser(), secondMember.toPrivMxUser())
         )
     }
 
@@ -224,21 +233,19 @@ class ChatService(
 
     override suspend fun updateGroupChatThreadsAfterUserPermissionChange(updatedUser: FamilyMember, familyMembers: List<FamilyMember>) {
         val threadsList = retrieveAllChatThreads().filter { it.type == ChatThreadType.GROUP }
-
-        if (updatedUser.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
-            for (thread in threadsList) {
-                if (updatedUser.id in thread.participantsIds) {
-                    updateChatThread(thread, familyMembers, null, updatedUser)
-                }
-            }
-        } else {
-            for (thread in threadsList) {
-                if (retrieveChatThreadInitialManagers(thread.id).contains(updatedUser.publicKey)) {
+        for (thread in threadsList) {
+            if (updatedUser.id in thread.participantsIds) {
+                if (updatedUser.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
                     updateChatThread(thread, familyMembers, null, updatedUser)
                 } else {
-                    updateChatThread(thread, familyMembers, null, null)
+                    if (retrieveChatThreadInitialManagers(thread.id).contains(updatedUser.publicKey)) {
+                        updateChatThread(thread, familyMembers, null, updatedUser)
+                    } else {
+                        updateChatThread(thread, familyMembers, null, null)
+                    }
                 }
             }
+
         }
     }
 

@@ -18,7 +18,7 @@ interface IChatService {
     fun getImageMessage(fileId: String) : ByteArray
     fun getImageBitmap(chatMessage: String): ImageBitmap?
     suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
-    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, groupChatCreator: FamilyMember? = null)
+    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, chatCreator: FamilyMember? = null)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)
     suspend fun createIndividualChatsWithAllFamilyMembersForMember(member: FamilyMember)
     suspend fun populateDatabaseWithLastMessages(chatThreadId: String)

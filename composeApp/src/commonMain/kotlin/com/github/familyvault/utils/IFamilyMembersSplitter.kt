@@ -6,5 +6,5 @@ import com.github.familyvault.models.SplitFamilyMembers
 interface IFamilyMembersSplitter {
     fun split(familyGroupMembers: List<FamilyMember>): SplitFamilyMembers
 
-    fun splitWithProvidedMemberAsManager(familyGroupMembers: List<FamilyMember>, currentMember: FamilyMember? = null): SplitFamilyMembers
+    fun splitWithProvidedMembersAsManagers(familyGroupMembers: List<FamilyMember>, additionalManagers: List<FamilyMember?>): SplitFamilyMembers
 }

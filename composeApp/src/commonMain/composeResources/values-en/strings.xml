@@ -113,6 +113,7 @@
     <string name="chat_create_group_default_name">Family group</string>
     <string name="chat_create_group_members">Group chat members</string>
     <string name="chat_create_group_button_content">Create group chat</string>
+    <string name="chat_edit_group_button_content">Save changes</string>
     <string name="chat_send_message">Send message</string>
     <string name="chat_type_individual">Individual</string>
     <string name="chat_type_group">Groups</string>

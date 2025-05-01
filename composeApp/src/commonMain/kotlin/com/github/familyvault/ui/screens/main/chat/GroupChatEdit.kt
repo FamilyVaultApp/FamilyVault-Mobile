@@ -35,6 +35,7 @@ import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_group_button_content
+import familyvault.composeapp.generated.resources.chat_edit_group_button_content
 import familyvault.composeapp.generated.resources.chat_create_group_members
 import familyvault.composeapp.generated.resources.chat_create_new
 import familyvault.composeapp.generated.resources.chat_set_group_name
@@ -133,7 +134,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 .padding(AdditionalTheme.spacings.screenPadding),
             verticalArrangement = Arrangement.Bottom,
         ) {
-            CreateGroupChatButton(form.isFormValid() && !isLoadingFamilyMembers, {
+            CreateGroupChatButton(form.isFormValid() && !isLoadingFamilyMembers, groupChatAction, {
                 createGroupChatState = FormSubmitState.PENDING
                 coroutineScope.launch {
                     try {
@@ -144,7 +145,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                                 chatThread!!,
                                 form.familyMembers,
                                 form.groupName,
-                                null
+                                chatCreator = null
                             )
                             createGroupChatState = FormSubmitState.IDLE
                             navigator.replaceAll(MainScreen())
@@ -153,6 +154,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                         navigator.pop()
                     } catch (e: Exception) {
                         createGroupChatState = FormSubmitState.ERROR
+                        println(e)
                     }
                 }
             })
@@ -178,10 +180,10 @@ private fun FamilyMemberSwitchItem(
 
 
 @Composable
-private fun CreateGroupChatButton(enabled: Boolean, onClick: () -> Unit) {
+private fun CreateGroupChatButton(enabled: Boolean, groupChatAction: GroupChatAction,onClick: () -> Unit) {
     Button(
         modifier = Modifier.fillMaxWidth(),
-        text = stringResource(Res.string.chat_create_group_button_content),
+        text = if (groupChatAction == GroupChatAction.Create) stringResource(Res.string.chat_create_group_button_content) else stringResource(Res.string.chat_edit_group_button_content),
         enabled = enabled,
         onClick = onClick
     )

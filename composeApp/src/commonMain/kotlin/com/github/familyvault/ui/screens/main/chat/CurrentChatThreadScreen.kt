@@ -24,6 +24,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
@@ -81,12 +82,12 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 chatMessageListenerService.unregisterAllListeners()
             }
         }
-        if (myUserData != null) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        chatThread.name, actions = {
-                            if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    chatThread.name, actions = {
+                        if (myUserData != null) {
+                            if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers && myUserData?.permissionGroup != FamilyGroupMemberPermissionGroup.Guest) {
                                 ChatThreadSettingsButton {
                                     navigator.push(
                                         ChatThreadEditScreen(
@@ -96,34 +97,32 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                                     )
                                 }
                             }
-                        })
-                }) { paddingValues ->
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(paddingValues)
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                        state = listState,
-                    ) {
-                        itemsIndexed(
-                            items = chatState.messages,
-                            key = { _, message -> message.id }) { index, message ->
-                            ChatMessageEntry(
-                                message,
-                                prevMessage = chatState.messages.getOrNull(index - 1),
-                                nextMessage = chatState.messages.getOrNull(index + 1)
-                            )
                         }
+                    })
+            }) { paddingValues ->
+            Column(
+                modifier = Modifier.fillMaxSize().padding(paddingValues)
+            ) {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    state = listState,
+                ) {
+                    itemsIndexed(
+                        items = chatState.messages,
+                        key = { _, message -> message.id }) { index, message ->
+                        ChatMessageEntry(
+                            message,
+                            prevMessage = chatState.messages.getOrNull(index - 1),
+                            nextMessage = chatState.messages.getOrNull(index + 1)
+                        )
                     }
-                    ChatInputField(
-                        onTextMessageSend = { handleTextMessageSend(it) },
-                        onVoiceMessageSend = { handleVoiceMessageSend(it) },
-                        onImageMessageSend = { handleImageMessageSend(it) }
-                    )
                 }
+                ChatInputField(
+                    onTextMessageSend = { handleTextMessageSend(it) },
+                    onVoiceMessageSend = { handleVoiceMessageSend(it) },
+                    onImageMessageSend = { handleImageMessageSend(it) }
+                )
             }
-        } else {
-            CircularProgressIndicator()
         }
     }
 
