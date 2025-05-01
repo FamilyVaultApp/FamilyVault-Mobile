@@ -151,6 +151,7 @@
     <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
     <string name="user_modification_remove_user_button_content">Usuń tego użytkownika</string>
     <string name="user_modification_save_button">Zapisz zmiany</string>
+    <string name="user_modification_no_permission">Tylko opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
 
     <!-- Select family group -->
     <string name="select_family_group_description">Wybierz grupę rodzinną, do której chcesz dołączyć. Możesz też utworzyć nową, korzystając z przycisku na dole ekranu.</string>
