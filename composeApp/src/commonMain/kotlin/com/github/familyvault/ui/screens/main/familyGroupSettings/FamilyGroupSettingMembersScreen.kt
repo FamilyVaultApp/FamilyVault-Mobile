@@ -31,6 +31,7 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.ContentWithAction
+import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -103,13 +104,19 @@ class FamilyGroupSettingMembersScreen : Screen {
                             }
                         } else {
                             familyGroupMembers.forEach { member ->
-                                FamilyMemberEntryWithPermission(
+                                FamilyMemberEntry(
                                     familyMember = member,
-                                    permissionGroupText = getPermissionGroupString(member.permissionGroup),
-                                    onActionClick = {
+                                    additionalDescription = getPermissionGroupString(member.permissionGroup)
+                                ) {
+                                    IconButton(onClick = {
                                         navigator.push(ModifyFamilyMemberScreen(member))
+                                    }) {
+                                        Icon(
+                                            Icons.Outlined.MoreHoriz,
+                                            contentDescription = stringResource(Res.string.user_modification_description),
+                                        )
                                     }
-                                )
+                                }
                             }
                         }
                     }
@@ -118,40 +125,6 @@ class FamilyGroupSettingMembersScreen : Screen {
                     AddFamilyMemberButton()
                 }
             )
-        }
-    }
-
-    @Composable
-    private fun FamilyMemberEntryWithPermission(
-        familyMember: FamilyMember,
-        permissionGroupText: String,
-        onActionClick: () -> Unit
-    ) {
-        Row(
-            modifier = Modifier.defaultMinSize(minHeight = AdditionalTheme.sizing.entryMinSize)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium),
-            ) {
-                UserAvatar(firstName = familyMember.firstname)
-                Column {
-                    Paragraph(TextShortener.shortenText(familyMember.fullname, 30))
-                    ParagraphMuted(
-                        text = permissionGroupText,
-                        modifier = Modifier.padding(top = AdditionalTheme.spacings.small)
-                    )
-                }
-            }
-            IconButton(onClick = onActionClick) {
-                Icon(
-                    Icons.Outlined.MoreHoriz,
-                    contentDescription = stringResource(Res.string.user_modification_description),
-                )
-            }
         }
     }
 
