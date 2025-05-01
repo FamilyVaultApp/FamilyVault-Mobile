@@ -2,7 +2,7 @@ package com.github.familyvault.forms
 
 import com.github.familyvault.models.forms.BaseFormDataEntry
 
-abstract class BasicForm {
+abstract class BaseForm {
     abstract fun validateForm()
 
     abstract fun isFormValid(): Boolean

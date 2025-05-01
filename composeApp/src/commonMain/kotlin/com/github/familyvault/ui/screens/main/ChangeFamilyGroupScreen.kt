@@ -20,7 +20,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyGroup
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.ISavedFamilyGroupsService
-import com.github.familyvault.ui.components.ContentWithAction
+import com.github.familyvault.ui.components.ContentWithActionButton
 import com.github.familyvault.ui.components.FamilyGroupEntry
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.overrides.Button
@@ -70,7 +70,7 @@ class ChangeFamilyGroupScreen : Screen {
                 CircularProgressIndicatorDialog(stringResource(Res.string.select_family_group_changing))
             }
 
-            ContentWithAction(
+            ContentWithActionButton(
                 modifier = Modifier.padding(paddings)
                     .padding(vertical = AdditionalTheme.spacings.screenPadding),
                 content = {

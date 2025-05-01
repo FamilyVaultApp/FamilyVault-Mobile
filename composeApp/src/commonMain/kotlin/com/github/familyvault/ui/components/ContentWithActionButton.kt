@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ContentWithAction(
+fun ContentWithActionButton(
     content: @Composable () -> Unit,
     actionButton: @Composable () -> Unit,
     modifier: Modifier = Modifier

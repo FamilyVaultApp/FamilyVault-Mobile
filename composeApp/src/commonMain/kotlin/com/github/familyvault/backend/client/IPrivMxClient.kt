@@ -60,6 +60,11 @@ interface IPrivMxClient {
         referenceMessageId: String = ""
     )
 
+    fun updateMessageContent(
+        messageId: String,
+        content: String,
+    )
+
     fun getFileAsByteArrayFromStore(fileId: String): ByteArray
     fun sendByteArrayToStore(storeId: String, content: ByteArray): String
     fun retrieveMessagesFromThread(
@@ -76,7 +81,12 @@ interface IPrivMxClient {
         callback: (ThreadMessageItem) -> Unit
     )
 
-    fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
+    fun registerOnMessageUpdate(
+        eventName: String,
+        threadId: String,
+        callback: (ThreadMessageItem) -> Unit
+    )
 
+    fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
     fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit)
 }

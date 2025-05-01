@@ -8,7 +8,7 @@ data class FamilyGroupNameFormData(
     val familyGroupName: FormDataStringEntry = FormDataStringEntry(),
 )
 
-class FamilyGroupNameForm : BasicForm() {
+class FamilyGroupNameForm : BaseForm() {
     var formData = FamilyGroupNameFormData()
         private set
 
