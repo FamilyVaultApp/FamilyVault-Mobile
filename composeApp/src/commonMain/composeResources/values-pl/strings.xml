@@ -111,10 +111,13 @@
     <string name="chat_set_group_name">Nazwa grupy</string>
     <string name="chat_settings">Ustawienia chatu</string>
     <string name="chat_create_group_default_name">Grupa rodzinna</string>
-    <string name="chat_create_group_members">Członkowie czatu grupowego</string>
+    <string name="chat_create_group_members">Członkowie</string>
+    <string name="chat_icon_icon_alt">Ikona czatu grupowego</string>
+    <string name="chat_icon_icon_picker">Ikona</string>
     <string name="chat_create_group_button_content">Utwórz chat</string>
-    <string name="chat_create_group_user_is_member">Currently a member</string>
-    <string name="chat_create_group_user_is_not_member">Currently not a member</string>
+    <string name="chat_save_edited_group_button_content">Zapisz zmiany</string>
+    <string name="chat_create_group_user_is_member">Jest członkiem czatu</string>
+    <string name="chat_create_group_user_is_not_member">Nie jest członkiem czatu</string>
     <string name="chat_send_message">Wyślij wiadomość</string>
     <string name="chat_type_individual">Indywidualny</string>
     <string name="chat_type_group">Grupowy</string>

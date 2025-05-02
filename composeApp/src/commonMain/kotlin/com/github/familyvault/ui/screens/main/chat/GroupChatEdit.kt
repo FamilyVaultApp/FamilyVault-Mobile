@@ -30,8 +30,7 @@ import com.github.familyvault.forms.GroupChatEditForm
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FormSubmitState
-import com.github.familyvault.models.enums.chat.ChatIconType
-import com.github.familyvault.models.enums.chat.GroupChatMembership
+import com.github.familyvault.models.enums.chat.ThreadIconType
 import com.github.familyvault.models.enums.chat.icon
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
@@ -42,13 +41,19 @@ import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TextField
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.typography.Headline3
+import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_group_button_content
 import familyvault.composeapp.generated.resources.chat_create_group_members
+import familyvault.composeapp.generated.resources.chat_create_group_user_is_member
+import familyvault.composeapp.generated.resources.chat_create_group_user_is_not_member
 import familyvault.composeapp.generated.resources.chat_create_new
 import familyvault.composeapp.generated.resources.chat_set_group_name
+import familyvault.composeapp.generated.resources.chat_icon_icon_picker
+import familyvault.composeapp.generated.resources.chat_save_edited_group_button_content
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -71,9 +76,9 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
     val form by remember { mutableStateOf(GroupChatEditForm()) }
     val groupChatAction = if (chatThread == null) GroupChatAction.Create else GroupChatAction.Edit
     val coroutineScope = rememberCoroutineScope()
-    var chatIconType by remember { mutableStateOf(ChatIconType.GROUP) }
+    var selectedChatIconType by remember { mutableStateOf(ThreadIconType.GROUP)}
 
-    val chatIconTypes = ChatIconType.entries
+    val chatIconTypes = ThreadIconType.entries
 
     LaunchedEffect(Unit) {
         isLoadingFamilyMembers = true
@@ -88,7 +93,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
             form.setGroupName(chatThread!!.name)
             val filteredMembers = familyMembers.filter { it.fullname in chatThread.participantsIds }
             form.addAllMembersFromListToGroupChat(filteredMembers)
-            chatIconType = chatThread.icon ?: ChatIconType.GROUP
+            selectedChatIconType = chatThread.iconType?: ThreadIconType.GROUP
         }
 
         isLoadingFamilyMembers = false
@@ -116,6 +121,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 label = stringResource(Res.string.chat_set_group_name),
                 supportingText = { ValidationErrorMessage(form.groupNameValidationError) }
             )
+            Headline3(stringResource(Res.string.chat_icon_icon_picker))
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
@@ -123,8 +129,8 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                     .fillMaxWidth()
             ) {
                 chatIconTypes.forEach {
-                    GroupChatIconPickerElement(it.icon, isPicked = chatIconType == it) {
-                        chatIconType = it
+                    GroupChatIconPickerElement(it.icon, isPicked = selectedChatIconType == it) {
+                        selectedChatIconType = it
                     }
                 }
             }
@@ -136,9 +142,11 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                     member = myUserData!!,
                     isSelected = true,
                     onToggle = {},
-                    isCurrentMember = true
+                    isCurrentUser = true,
+                    isCurrentlyMember = true
                 )
                 familyMembers.forEach { member ->
+                    val isCurrentlyMember = (chatThread != null && chatThread.participantsIds.contains(member.id))
                     FamilyMemberSwitchItem(
                         member = member,
                         isSelected = form.familyMembers.contains(member),
@@ -149,7 +157,8 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                                 form.addMemberToGroupChat(member)
                             }
                         },
-                        isCurrentMember = member.publicKey == myPublicKey
+                        isCurrentUser = member.publicKey == myPublicKey,
+                        isCurrentlyMember = isCurrentlyMember
                     )
                 }
             }
@@ -160,22 +169,18 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 .padding(AdditionalTheme.spacings.screenPadding),
             verticalArrangement = Arrangement.Bottom,
         ) {
-            CreateGroupChatButton(form.isFormValid() && !isLoadingFamilyMembers, {
+            CreateGroupChatButton(form.isFormValid() && !isLoadingFamilyMembers, groupChatAction, {
                 createGroupChatState = FormSubmitState.PENDING
                 coroutineScope.launch {
                     try {
                         if (groupChatAction == GroupChatAction.Create) {
-                            chatService.createGroupChat(
-                                form.groupName,
-                                form.familyMembers,
-                                chatIconType
-                            )
+                            chatService.createGroupChat(form.groupName, form.familyMembers, selectedChatIconType)
                         } else {
                             chatService.updateChatThread(
                                 chatThread!!,
                                 form.familyMembers,
                                 form.groupName,
-                                chatIconType
+                                selectedChatIconType
                             )
                             createGroupChatState = FormSubmitState.IDLE
                             navigator.replaceAll(MainScreen())
@@ -196,26 +201,43 @@ private fun FamilyMemberSwitchItem(
     member: FamilyMember,
     isSelected: Boolean,
     onToggle: () -> Unit,
-    isCurrentMember: Boolean
+    isCurrentUser: Boolean,
+    isCurrentlyMember: Boolean
 ) {
-    FamilyMemberEntry(
-        member,
-        if (isSelected) GroupChatMembership.CURRENT_MEMBER else GroupChatMembership.NOT_CURRENT_MEMBER
-    ) {
+    FamilyMemberEntry(member,
+        additionalDescription = { FamilyMemberEntryAdditionalDescription(if (isCurrentlyMember) "CURRENT_MEMBER" else "NOT_CURRENT_MEMBER") }) {
         Switch(
-            checked = isSelected || isCurrentMember,
+            checked = isSelected || isCurrentUser,
             onCheckedChange = { onToggle() },
-            enabled = !isCurrentMember
+            enabled = !isCurrentUser
         )
     }
 }
 
 
 @Composable
-private fun CreateGroupChatButton(enabled: Boolean, onClick: () -> Unit) {
+private fun FamilyMemberEntryAdditionalDescription(additionalDescription: String)
+{
+    Paragraph(
+        TextShortener.shortenText(
+            when (additionalDescription) {
+                "NOT_CURRENT_MEMBER" -> stringResource(Res.string.chat_create_group_user_is_not_member)
+                "CURRENT_MEMBER" -> stringResource(Res.string.chat_create_group_user_is_member)
+                else -> ""
+            }
+        ), color = when (additionalDescription) {
+            "CURRENT_MEMBER" -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.onBackground
+        }
+    )
+}
+
+
+@Composable
+private fun CreateGroupChatButton(enabled: Boolean, groupChatAction: GroupChatAction, onClick: () -> Unit) {
     Button(
         modifier = Modifier.fillMaxWidth(),
-        text = stringResource(Res.string.chat_create_group_button_content),
+        text = if (groupChatAction == GroupChatAction.Create) stringResource(Res.string.chat_create_group_button_content) else stringResource(Res.string.chat_save_edited_group_button_content),
         enabled = enabled,
         onClick = onClick
     )

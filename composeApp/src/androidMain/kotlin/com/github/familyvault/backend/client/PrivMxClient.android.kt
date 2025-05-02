@@ -14,8 +14,7 @@ import com.github.familyvault.backend.utils.ThreadMessageEncoder
 import com.github.familyvault.backend.utils.ThreadMetaDecoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
-import com.github.familyvault.models.enums.chat.ChatIconType
-import com.github.familyvault.models.enums.chat.icon
+import com.github.familyvault.models.enums.chat.ThreadIconType
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
@@ -92,7 +91,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         type: String,
         name: String,
         referenceStoreId: String?,
-        threadIcon: ChatIconType?
+        threadIcon: ThreadIconType?
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -144,7 +143,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
         newName: String?,
-        groupChatIcon: ChatIconType?
+        threadIcon: ThreadIconType?
     ) {
         val thread = requireNotNull(threadApi?.getThread(threadId)) { "Thread is null" }
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
@@ -156,8 +155,12 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
 
         val decodedPrivateMeta = ThreadMetaDecoder.decodePrivateMeta(thread.privateMeta)
 
-        val privateMeta = ThreadMetaEncoder.encode(decodedPrivateMeta.copy(name = newName ?: decodedPrivateMeta.name, threadIcon = groupChatIcon
-            ?: decodedPrivateMeta.threadIcon))
+        val privateMeta = ThreadMetaEncoder.encode(
+            decodedPrivateMeta.copy(
+                name = newName ?: decodedPrivateMeta.name,
+                threadIcon = threadIcon ?: decodedPrivateMeta.threadIcon
+            )
+        )
 
         threadApi?.updateThread(
             thread.threadId,

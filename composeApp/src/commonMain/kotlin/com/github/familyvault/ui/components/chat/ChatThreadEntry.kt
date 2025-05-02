@@ -58,10 +58,10 @@ fun ChatThreadEntry(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
     ) {
-        if (chatThread.icon == null) {
+        if (chatThread.iconType == null) {
             UserAvatar(chatThread.name)
         } else {
-            MainScreenGroupChatIcon(chatThread.icon.icon)
+            MainScreenGroupChatIcon(chatThread.iconType.icon)
         }
 
         Column {

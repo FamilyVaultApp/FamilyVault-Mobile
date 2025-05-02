@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.chat.ChatThread
-import com.github.familyvault.models.enums.chat.ChatIconType
+import com.github.familyvault.models.enums.chat.ThreadIconType
 
 interface IChatService {
     fun retrieveAllChatThreads(): List<ChatThread>
@@ -17,8 +17,8 @@ interface IChatService {
     fun getVoiceMessage(fileId: String) : ByteArray
     fun getImageMessage(fileId: String) : ByteArray
     fun getImageBitmap(chatMessage: String): ImageBitmap?
-    suspend fun createGroupChat(name: String, members: List<FamilyMember>, groupChatIcon: ChatIconType? = null): ChatThread
-    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, groupChatIcon: ChatIconType? = null)
+    suspend fun createGroupChat(name: String, members: List<FamilyMember>, chatIcon: ThreadIconType): ChatThread
+    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, chatIcon: ThreadIconType)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)
     suspend fun createIndividualChatsWithAllFamilyMembersForMember(member: FamilyMember)
     suspend fun populateDatabaseWithLastMessages(chatThreadId: String)
