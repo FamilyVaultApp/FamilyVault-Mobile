@@ -9,7 +9,7 @@ data class PrivateKeyAssignPasswordFormData(
     val repeatPassword: FormDataStringEntry = FormDataStringEntry()
 )
 
-class PrivateKeyAssignPasswordForm : BasicForm() {
+class PrivateKeyAssignPasswordForm : BaseForm() {
     var formData: PrivateKeyAssignPasswordFormData = PrivateKeyAssignPasswordFormData()
         private set
 

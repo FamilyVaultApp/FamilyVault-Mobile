@@ -226,6 +226,21 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         )
     }
 
+    override fun updateMessageContent(
+        messageId: String,
+        content: String,
+    ) {
+        val threadApi = requireNotNull(threadApi)
+
+        val message = threadApi.getMessage(messageId)
+        threadApi.updateMessage(
+            messageId,
+            message.publicMeta,
+            message.privateMeta,
+            content.encodeToByteArray()
+        )
+    }
+
     override fun getFileAsByteArrayFromStore(fileId: String): ByteArray {
         var data = ByteArray(0)
 
@@ -299,6 +314,18 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     ) {
         requireNotNull(connection).registerCallback(
             eventName, EventType.ThreadNewMessageEvent(threadId)
+        ) {
+            callback(PrivMxMessageToMessageItemMapper.map(it))
+        }
+    }
+
+    override fun registerOnMessageUpdate(
+        eventName: String,
+        threadId: String,
+        callback: (ThreadMessageItem) -> Unit
+    ) {
+        requireNotNull(connection).registerCallback(
+            eventName, EventType.ThreadMessageUpdatedEvent(threadId)
         ) {
             callback(PrivMxMessageToMessageItemMapper.map(it))
         }

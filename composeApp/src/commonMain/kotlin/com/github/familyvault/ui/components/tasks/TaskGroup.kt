@@ -27,7 +27,7 @@ fun TaskGroup(
     val backgroundColor = if (primary) {
         MaterialTheme.colorScheme.primaryContainer
     } else {
-        MaterialTheme.colorScheme.surfaceContainerLow
+        MaterialTheme.colorScheme.surfaceContainer
     }
 
     Column(

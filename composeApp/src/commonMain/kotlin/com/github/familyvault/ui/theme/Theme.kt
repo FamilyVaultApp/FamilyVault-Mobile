@@ -22,6 +22,8 @@ private val lightScheme = lightColorScheme(
     onSecondaryContainer = onSecondaryContainerLight,
     background = backgroundLight,
     onBackground = onBackgroundLight,
+    surface = surfaceLight,
+    surfaceContainer = surfaceContainerLight
 )
 
 private val darkScheme = darkColorScheme(
@@ -35,6 +37,8 @@ private val darkScheme = darkColorScheme(
     onSecondaryContainer = onSecondaryContainerDark,
     background = backgroundDark,
     onBackground = onBackgroundDark,
+    surface = surfaceDark,
+    surfaceContainer = surfaceContainerDark
 )
 
 @Immutable
@@ -89,7 +93,8 @@ data class Sizing(
     val small: Dp,
     val headerIconNormal: Dp,
     val entryMinSize: Dp,
-    val taskListButtonHeight: Dp
+    val taskListButtonHeight: Dp,
+    val shadowSize: Dp
 )
 
 @Immutable
@@ -110,7 +115,8 @@ private val LocalSizing = staticCompositionLocalOf {
         medium = 80.dp,
         small = 20.dp,
         entryMinSize = 65.dp,
-        taskListButtonHeight = 40.dp
+        taskListButtonHeight = 40.dp,
+        shadowSize = 4.dp
     )
 }
 

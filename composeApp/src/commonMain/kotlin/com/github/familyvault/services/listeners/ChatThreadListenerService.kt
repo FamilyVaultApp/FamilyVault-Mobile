@@ -1,4 +1,4 @@
-package com.github.familyvault.services
+package com.github.familyvault.services.listeners
 
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.chat.ChatThread
@@ -8,8 +8,8 @@ class ChatThreadListenerService(
     private val privMxClient: IPrivMxClient,
 ) : IChatThreadListenerService {
     companion object {
-        const val CREATE_EVENT_NAME = "THREAD_CREATE"
-        const val UPDATE_EVENT_NAME = "THREAD_UPDATE"
+        const val CREATE_EVENT_NAME = "CHAT_THREAD_CREATE"
+        const val UPDATE_EVENT_NAME = "CHAT_THREAD_UPDATE"
     }
 
     override fun startListeningForNewChatThread(onNewChatThread: (ChatThread) -> Unit) {

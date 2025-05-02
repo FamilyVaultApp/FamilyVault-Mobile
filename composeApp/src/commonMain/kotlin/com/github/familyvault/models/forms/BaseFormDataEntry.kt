@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import com.github.familyvault.forms.validator.FormValidatorError
 
 abstract class BaseFormDataEntry {
-    var touched: Boolean by mutableStateOf(false)
+    open var touched: Boolean by mutableStateOf(false)
     var validationError: FormValidatorError? by mutableStateOf(null)
 
     fun getValidationErrorIfTouched(): FormValidatorError? {

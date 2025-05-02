@@ -6,7 +6,7 @@ import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 
-object MessageItemToStoredChatMessageMapper {
+object ThreadMessageItemToStoredChatMessageMapper {
     fun map(msg: ThreadMessageItem, chatThreadId: String): StoredChatMessage = StoredChatMessage(
         id = msg.messageId,
         chatThreadId = chatThreadId,

@@ -24,7 +24,7 @@ fun TaskTabContent() {
 
     LaunchedEffect(Unit) {
         isLoading = true
-        tasksCategoriesState.populateFromServices()
+        tasksCategoriesState.populateTaskListFromServices()
         isLoading = false
     }
 
