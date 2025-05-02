@@ -1,6 +1,7 @@
 package com.github.familyvault.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -10,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.Dp
@@ -17,11 +19,17 @@ import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun GroupChatIconPickerElement(icon: ImageVector, size: Dp = 40.dp, isPicked: Boolean = false) {
+fun GroupChatIconPickerElement(
+    icon: ImageVector, size: Dp = 40.dp, isPicked: Boolean = false, onClick: () -> Unit
+) {
+    val backgroundColor =
+        if (isPicked) MaterialTheme.colorScheme.primaryContainer else AdditionalTheme.colors.borderColor
 
     Box(
-        modifier = Modifier.size(size)
-            .background(if (isPicked) MaterialTheme.colorScheme.primaryContainer else AdditionalTheme.colors.borderColor, CircleShape),
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(backgroundColor)
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Icon(

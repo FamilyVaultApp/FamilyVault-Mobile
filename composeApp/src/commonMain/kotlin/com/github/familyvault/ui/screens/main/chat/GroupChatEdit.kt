@@ -71,7 +71,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
     val form by remember { mutableStateOf(GroupChatEditForm()) }
     val groupChatAction = if (chatThread == null) GroupChatAction.Create else GroupChatAction.Edit
     val coroutineScope = rememberCoroutineScope()
-    var chatIconType by remember { mutableStateOf(ChatIconType.GROUP)}
+    var chatIconType by remember { mutableStateOf(ChatIconType.GROUP) }
 
     val chatIconTypes = ChatIconType.entries
 
@@ -88,7 +88,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
             form.setGroupName(chatThread!!.name)
             val filteredMembers = familyMembers.filter { it.fullname in chatThread.participantsIds }
             form.addAllMembersFromListToGroupChat(filteredMembers)
-            chatIconType = chatThread.icon?: ChatIconType.GROUP
+            chatIconType = chatThread.icon ?: ChatIconType.GROUP
         }
 
         isLoadingFamilyMembers = false
@@ -122,18 +122,11 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                    chatIconTypes.forEach { icon ->
-                        Box(
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.background, CircleShape)
-                                .clickable {
-                                    chatIconType = icon
-                                }
-                                .padding(AdditionalTheme.spacings.small)
-                        ) {
-                            GroupChatIconPickerElement(icon.icon, isPicked = chatIconType == icon)
-                        }
+                chatIconTypes.forEach {
+                    GroupChatIconPickerElement(it.icon, isPicked = chatIconType == it) {
+                        chatIconType = it
                     }
+                }
             }
             Headline3(stringResource(Res.string.chat_create_group_members))
             if (isLoadingFamilyMembers) {
@@ -172,7 +165,11 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                 coroutineScope.launch {
                     try {
                         if (groupChatAction == GroupChatAction.Create) {
-                            chatService.createGroupChat(form.groupName, form.familyMembers, chatIconType)
+                            chatService.createGroupChat(
+                                form.groupName,
+                                form.familyMembers,
+                                chatIconType
+                            )
                         } else {
                             chatService.updateChatThread(
                                 chatThread!!,
@@ -201,7 +198,10 @@ private fun FamilyMemberSwitchItem(
     onToggle: () -> Unit,
     isCurrentMember: Boolean
 ) {
-    FamilyMemberEntry(member, if (isSelected) GroupChatMembership.CURRENT_MEMBER else GroupChatMembership.NOT_CURRENT_MEMBER) {
+    FamilyMemberEntry(
+        member,
+        if (isSelected) GroupChatMembership.CURRENT_MEMBER else GroupChatMembership.NOT_CURRENT_MEMBER
+    ) {
         Switch(
             checked = isSelected || isCurrentMember,
             onCheckedChange = { onToggle() },
