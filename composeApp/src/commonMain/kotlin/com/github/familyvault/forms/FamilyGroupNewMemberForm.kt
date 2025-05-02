@@ -9,7 +9,7 @@ data class FamilyMemberNewMemberFormData(
     val surname: FormDataStringEntry = FormDataStringEntry(),
 )
 
-class FamilyGroupNewMemberForm : BasicForm() {
+class FamilyGroupNewMemberForm : BaseForm() {
     var formData = FamilyMemberNewMemberFormData()
         private set
 

@@ -4,7 +4,7 @@ import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.chat.ChatMessage
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
 
-object MessageItemToChatMessageMapper {
+object ThreadMessageItemToChatMessageMapper {
     fun map(msg: ThreadMessageItem, userId: String): ChatMessage = ChatMessage(
         id = msg.messageId,
         senderPubKey = msg.authorPublicKey,

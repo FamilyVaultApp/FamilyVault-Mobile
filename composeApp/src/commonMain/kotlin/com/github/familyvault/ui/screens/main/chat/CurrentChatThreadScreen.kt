@@ -26,10 +26,10 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
-import com.github.familyvault.services.IChatMessagesListenerService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IImagePickerService
+import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton

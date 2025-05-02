@@ -8,6 +8,8 @@
     <string name="is_default">Domyślna</string>
     <string name="collapse">Zwiń</string>
     <string name="expand">Rozwiń</string>
+    <string name="title">Tytuł</string>
+    <string name="description">Opis</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -42,7 +44,7 @@
     <string name="text_field_name_label">Imię</string>
     <string name="text_field_surname_label">Nazwisko</string>
     <string name="text_field_group_name_label">Nazwa grupy rodzinnej</string>
-    <string name="creating_family_group_label">Tworzenie grupy rodzinnej</string>
+    <string name="creating_family_group_label">Tworzenie grupy rodzinnej...</string>
 
     <!-- Joining family group-->
     <string name="join_family_group_title">Dołącz do grupy rodzinnej</string>
@@ -152,6 +154,8 @@
     <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
     <string name="user_modification_remove_user_button_content">Usuń tego użytkownika</string>
     <string name="user_modification_save_button">Zapisz zmiany</string>
+    <string name="user_modification_no_permission">Tylko opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
+    <string name="user_modification_last_guardian_error">Jesteś ostatnim Opiekunem w grupie. W grupie musi pozostać co najmniej jeden Opiekun.</string>
 
     <!-- Select family group -->
     <string name="select_family_group_description">Wybierz grupę rodzinną, do której chcesz dołączyć. Możesz też utworzyć nową, korzystając z przycisku na dole ekranu.</string>
@@ -164,11 +168,12 @@
     <string name="task_add_new_list_short">Dodaj nową</string>
     <string name="task_add_new_list">Nowa lista zadań</string>
     <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania w rodzinie i szybko przypisywać obowiązki.</string>
-    <string name="task_list">Lista zadań</string>
     <string name="task_settings">Konfiguruj</string>
     <string name="task_completed">Ukończone</string>
     <string name="task_assign">Przypisz członka rodziny do zadania</string>
     <string name="no_task_list_title">Brak listy zadań</string>
     <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając w przycisk poniżej.</string>
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
+    <string name="task_new">Nowe zadanie</string>
+    <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>
 </resources>

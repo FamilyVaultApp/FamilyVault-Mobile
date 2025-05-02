@@ -1,4 +1,4 @@
-package com.github.familyvault.services
+package com.github.familyvault.services.listeners
 
 interface IListenerService {
     fun unregisterAllListeners()
