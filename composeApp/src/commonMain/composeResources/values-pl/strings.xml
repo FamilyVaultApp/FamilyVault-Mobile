@@ -179,4 +179,5 @@
     <!-- File Cabinet -->
     <string name="file_cabinet_photos">Zdjęcia</string>
     <string name="file_cabinet_documents">Dokumenty</string>
+    <string name="file_cabinet_upload">Prześlij</string>
 </resources>

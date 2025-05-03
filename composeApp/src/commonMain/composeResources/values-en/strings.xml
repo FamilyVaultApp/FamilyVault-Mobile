@@ -179,4 +179,5 @@
     <!-- File Cabinet -->
     <string name="file_cabinet_photos">Photos</string>
     <string name="file_cabinet_documents">Documents</string>
+    <string name="file_cabinet_upload">Upload</string>
 </resources>
