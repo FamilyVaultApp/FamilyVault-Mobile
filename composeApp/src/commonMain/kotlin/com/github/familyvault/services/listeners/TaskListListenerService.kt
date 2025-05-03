@@ -34,7 +34,7 @@ class TaskListListenerService(
     }
 
     override fun unregisterAllListeners() {
-        privMxClient.unregisterAllEvents(ChatThreadListenerService.CREATE_EVENT_NAME)
-        privMxClient.unregisterAllEvents(ChatThreadListenerService.UPDATE_EVENT_NAME)
+        privMxClient.unregisterAllEvents(CREATE_EVENT_NAME)
+        privMxClient.unregisterAllEvents(UPDATE_EVENT_NAME)
     }
 }
