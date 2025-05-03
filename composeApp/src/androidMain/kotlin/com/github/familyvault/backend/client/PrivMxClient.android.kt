@@ -253,7 +253,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return data
     }
 
-    override fun getFilesAsByteArrayFromStore(storeId: String, limit: Long, skip: Long): List<ByteArray> {
+    override fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<ByteArray> {
         val files = storeApi!!.listFiles(
             storeId,
             skip,

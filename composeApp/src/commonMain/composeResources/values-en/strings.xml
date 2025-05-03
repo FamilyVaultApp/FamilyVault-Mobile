@@ -180,4 +180,5 @@
     <string name="file_cabinet_photos">Photos</string>
     <string name="file_cabinet_documents">Documents</string>
     <string name="file_cabinet_upload">Upload</string>
+    <string name="file_cabinet_photo_card">Photo card</string>
 </resources>

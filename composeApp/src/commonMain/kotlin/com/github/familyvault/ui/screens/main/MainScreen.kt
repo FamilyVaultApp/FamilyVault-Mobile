@@ -114,7 +114,7 @@ class MainScreen : Screen {
             LaunchedEffect(Unit) {
                 val images = imagePicker.pickImagesAndReturnByteArrays()
                 images.forEach { mediaByteArray ->
-                    fileCabinetService.sendImageToFamilyGroupStore("68165dda5f527a52295586b1", mediaByteArray)
+                    fileCabinetService.sendImageToFamilyGroupStore("681683795ab9a882f10e66d2", mediaByteArray)
                 }
                 startPicker = false
             }
