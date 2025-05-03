@@ -23,7 +23,6 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.github.familyvault.models.enums.chat.ChatThreadType
-import com.github.familyvault.services.FileCabinetService
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.states.ITaskListState
