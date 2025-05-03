@@ -175,4 +175,8 @@
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
     <string name="task_new">Nowe zadanie</string>
     <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>
+
+    <!-- File Cabinet -->
+    <string name="file_cabinet_photos">Zdjęcia</string>
+    <string name="file_cabinet_documents">Dokumenty</string>
 </resources>

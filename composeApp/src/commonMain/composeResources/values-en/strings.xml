@@ -175,4 +175,8 @@
     <string name="task_list_creating">Creating a new task list...</string>
     <string name="task_new">New task</string>
     <string name="task_new_description">Create a new task with a description that you can assign to a selected member of your family group.</string>
+
+    <!-- File Cabinet -->
+    <string name="file_cabinet_photos">Photos</string>
+    <string name="file_cabinet_documents">Documents</string>
 </resources>
