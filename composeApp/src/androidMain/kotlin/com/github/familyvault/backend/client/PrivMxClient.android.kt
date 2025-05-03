@@ -16,6 +16,8 @@ import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
+import com.simplito.java.privmx_endpoint.model.File
+import com.simplito.java.privmx_endpoint.model.PagingList
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
 import com.simplito.java.privmx_endpoint.modules.store.StoreApi
@@ -28,6 +30,7 @@ import com.simplito.java.privmx_endpoint_extra.model.SortOrder
 import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream
 import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamReader
 import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
+import io.ktor.http.content.MultiPartData
 import kotlin.random.Random
 
 class PrivMxClient : IPrivMxClient, AutoCloseable {
@@ -248,6 +251,24 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }.close()
 
         return data
+    }
+
+    override fun getFilesAsByteArrayFromStore(storeId: String, limit: Long, skip: Long): List<ByteArray> {
+        val files = storeApi!!.listFiles(
+            storeId,
+            skip,
+            limit,
+            SortOrder.DESC
+        )
+
+        return files.readItems.mapNotNull { file ->
+            try {
+                getFileAsByteArrayFromStore(file.info.fileId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
     }
 
     override fun sendByteArrayToStore(
