@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.services.listeners.ITaskListenerService
+import com.github.familyvault.services.listeners.ITaskListListenerService
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.HorizontalScrollableRow
 import com.github.familyvault.ui.components.tasks.TaskGroupCompleted
@@ -31,11 +32,21 @@ fun TaskListContent() {
     val localNavigator = LocalNavigator.currentOrThrow
     val taskListState = koinInject<ITaskListState>()
     val taskListenerService = koinInject<ITaskListenerService>()
+    val taskListListenerService = koinInject<ITaskListListenerService>()
 
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(taskListState.selectedTaskList) {
+
+        taskListState.populateTaskListFromServices()
+
+        taskListListenerService.startListeningForTaskListThread {
+            coroutineScope.launch {
+                taskListState.populateTaskListFromServices()
+            }
+        }
+
         taskListState.selectedTaskList?.let { selected ->
             taskListenerService.unregisterAllListeners()
             taskListenerService.startListeningForNewTask(selected.id) {

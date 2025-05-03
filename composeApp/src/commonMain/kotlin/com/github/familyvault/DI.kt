@@ -27,7 +27,9 @@ import com.github.familyvault.services.listeners.ChatThreadListenerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.listeners.IChatThreadListenerService
 import com.github.familyvault.services.listeners.ITaskListenerService
+import com.github.familyvault.services.listeners.ITaskListListenerService
 import com.github.familyvault.services.listeners.TaskListenerService
+import com.github.familyvault.services.listeners.TaskListListenerService
 import com.github.familyvault.states.ChatImagesState
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.CurrentChatThreadsState
@@ -75,6 +77,7 @@ val sharedModules = module {
         ChatMessagesListenerService(get(), get(), get(), get())
     }.bind<IChatMessagesListenerService>()
     single { ChatThreadListenerService(get()) }.bind<IChatThreadListenerService>()
+    single { TaskListListenerService(get()) }.bind<ITaskListListenerService>()
     single { TaskListenerService(get()) }.bind<ITaskListenerService>()
     single {
         FamilyMemberAdditionService(

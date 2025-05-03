@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.github.familyvault.services.listeners.ITaskListListenerService
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.LoaderWithText
 import familyvault.composeapp.generated.resources.Res
@@ -19,12 +20,22 @@ import org.koin.compose.koinInject
 @Composable
 fun TaskTabContent() {
     val tasksCategoriesState = koinInject<ITaskListState>()
+    val taskListListenerService = koinInject<ITaskListListenerService>()
 
     var isLoading by remember { mutableStateOf(true) }
-
+    var isTaskListEmpty by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         isLoading = true
         tasksCategoriesState.populateTaskListFromServices()
+        if (tasksCategoriesState.isEmpty())
+        {
+            taskListListenerService.startListeningForTaskListThread {
+                isTaskListEmpty = false
+            }
+            taskListListenerService.unregisterAllListeners()
+        } else {
+            isTaskListEmpty = false
+        }
         isLoading = false
     }
 
@@ -34,7 +45,7 @@ fun TaskTabContent() {
                 stringResource(Res.string.loading), modifier = Modifier.fillMaxSize()
             )
         } else {
-            if (tasksCategoriesState.isEmpty()) {
+            if (isTaskListEmpty) {
                 TasksNoCategoriesContent()
             } else {
                 TaskListContent()
