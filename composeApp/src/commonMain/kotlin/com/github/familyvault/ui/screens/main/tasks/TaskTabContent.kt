@@ -31,8 +31,8 @@ fun TaskTabContent() {
         {
             taskListListenerService.startListeningForTaskListThread {
                 isTaskListEmpty = false
+                taskListListenerService.unregisterAllListeners()
             }
-            taskListListenerService.unregisterAllListeners()
         } else {
             isTaskListEmpty = false
         }
