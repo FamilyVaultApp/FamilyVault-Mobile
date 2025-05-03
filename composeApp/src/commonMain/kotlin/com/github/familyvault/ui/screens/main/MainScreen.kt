@@ -39,7 +39,7 @@ class MainScreen : Screen {
                 Scaffold(
                     bottomBar = {
                         NavigationBar(
-                            ChatTab, FilesCabinetTab, TaskTab
+                            ChatTab, TaskTab, FilesCabinetTab
                         )
                     },
                     floatingActionButton = {
@@ -87,12 +87,12 @@ class MainScreen : Screen {
     @Composable
     private fun FloatingTaskActionButton() {
         val taskListState = koinInject<ITaskListState>()
+        if (taskListState.selectedTaskList == null) {
+            return
+        }
         val navigator = LocalNavigator.currentOrThrow
 
         FloatingActionButton(onClick = {
-            if (taskListState.selectedTaskList == null) {
-                return@FloatingActionButton
-            }
             navigator.parent?.push(TaskNewScreen(requireNotNull(taskListState.selectedTaskList).id))
 
         }) {
