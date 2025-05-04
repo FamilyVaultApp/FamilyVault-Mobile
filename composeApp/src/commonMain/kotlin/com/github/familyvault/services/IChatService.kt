@@ -1,5 +1,6 @@
 package com.github.familyvault.services
 
+import com.github.familyvault.backend.models.ThreadPrivateMeta
 import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatMessage
@@ -17,10 +18,13 @@ interface IChatService {
     fun getImageMessage(fileId: String) : ByteArray
     fun getImageBitmap(chatMessage: String): ImageBitmap?
     suspend fun createGroupChat(name: String, members: List<FamilyMember>): ChatThread
-    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?)
+    suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, chatCreator: FamilyMember? = null)
     suspend fun createIndividualChat(firstMember: FamilyMember, secondMember: FamilyMember)
     suspend fun createIndividualChatsWithAllFamilyMembersForMember(member: FamilyMember)
     suspend fun populateDatabaseWithLastMessages(chatThreadId: String)
     suspend fun retrieveMessagesFirstPage(chatThreadId: String): List<ChatMessage>
     suspend fun retrieveMessagesPage(chatThreadId: String, page: Int): List<ChatMessage>
+    suspend fun retrievePublicKeysOfChatThreadManagers(threadId: String): List<String>
+    suspend fun updateGroupChatThreadsAfterUserPermissionChange(updatedUser: FamilyMember, familyMembers: List<FamilyMember>)
+    suspend fun retrieveChatThreadInitialManagers(threadId: String): List<String>
 }

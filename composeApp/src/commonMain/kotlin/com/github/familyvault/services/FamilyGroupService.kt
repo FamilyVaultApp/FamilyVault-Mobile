@@ -210,6 +210,18 @@ class FamilyGroupService(
         ).member
     }
 
+    override suspend fun retrieveFamilyMemberDataByPublicKey(publicKey: String): FamilyMember {
+        val contextId = familyGroupSessionService.getContextId()
+
+        return familyVaultBackendClient.getMemberFromFamilyGroup(
+            GetMemberFromFamilyGroupRequest(
+                contextId,
+                null,
+                publicKey
+            )
+        ).member
+    }
+
     override suspend fun removeMemberFromCurrentFamilyGroup(
         userPubKey: String
     ) {
