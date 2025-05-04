@@ -80,7 +80,8 @@ class FamilyGroupService(
             tag = AppConfig.FILE_CABINET_THREAD_TAG,
             type = FileCabinetThreadType.IMAGES.toString(),
             name = familyGroupName,
-            referenceStoreId = storeId
+            referenceStoreId = storeId,
+            threadInitialCreators = emptyList()
         )
     }
 
