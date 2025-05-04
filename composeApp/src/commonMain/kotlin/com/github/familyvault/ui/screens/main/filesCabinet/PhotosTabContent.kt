@@ -36,7 +36,7 @@ import org.koin.compose.koinInject
 fun PhotosTabContent() {
     val fileCabinetService = koinInject<IFileCabinetService>()
     val imagePicker = koinInject<IImagePickerService>()
-    val storeId = fileCabinetService.storeId
+    val storeId = fileCabinetService.retrieveFileCabinetStoreId()
 
     var imageByteArrays by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }

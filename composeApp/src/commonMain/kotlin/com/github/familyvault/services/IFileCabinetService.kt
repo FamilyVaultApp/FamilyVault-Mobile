@@ -1,10 +1,12 @@
 package com.github.familyvault.services
 
+import com.github.familyvault.backend.models.ThreadItem
+
 interface IFileCabinetService {
-    val storeId: String?
+    fun retrieveFileCabinetThread(): ThreadItem
+    fun retrieveFileCabinetStoreId(): String
 
     fun sendImageToFamilyGroupStore (
-        threadId: String,
         imageByteArray: ByteArray
     )
 

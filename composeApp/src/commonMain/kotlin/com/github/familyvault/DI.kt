@@ -95,7 +95,7 @@ val sharedModules = module {
         TaskService(get(), get(), get())
     }.bind<ITaskService>()
     single {
-        FileCabinetService(get(), get())
+        FileCabinetService(get(), get(), get())
     }.bind<IFileCabinetService>()
 
     // Backend client

@@ -16,7 +16,10 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
+import com.github.familyvault.models.enums.StoreType
+import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
+import com.github.familyvault.utils.FamilyMembersSplitter
 
 class FamilyGroupService(
     private val familyGroupCredentialsRepository: IFamilyGroupCredentialsRepository,
@@ -54,6 +57,30 @@ class FamilyGroupService(
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
             familyGroupName, solutionId, contextId, pairOfKeys, encryptedPassword
+        )
+
+        val splitFamilyMembers = FamilyMembersSplitter.split(
+            retrieveFamilyGroupMembersList()
+        )
+
+        val users = splitFamilyMembers.members.map { it.toPrivMxUser() }
+        val managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() }
+
+        val storeId = privMxClient.createStore(
+            contextId,
+            users,
+            managers,
+            StoreType.FILE_CABINET.toString()
+        )
+
+        privMxClient.createThread(
+            contextId = contextId,
+            users = users,
+            managers = managers,
+            tag = AppConfig.FILE_CABINET_THREAD_TAG,
+            type = ChatThreadType.GROUP.toString(),
+            name = familyGroupName,
+            referenceStoreId = storeId
         )
     }
 
