@@ -27,6 +27,6 @@ data class FamilyMember(
     }
 
     override fun hashCode(): Int {
-        return this::class.hashCode()
+        return id.hashCode()
     }
 }
