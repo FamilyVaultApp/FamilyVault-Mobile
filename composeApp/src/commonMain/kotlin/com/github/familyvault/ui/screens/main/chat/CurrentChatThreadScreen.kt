@@ -79,7 +79,7 @@ class CurrentChatThreadScreen : Screen {
         DisposableEffect(Unit) {
             onDispose {
                 chatMessageListenerService.unregisterAllListeners()
-                currentChatState.
+                currentChatState.clear()
             }
         }
 

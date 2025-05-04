@@ -8,6 +8,7 @@ interface ICurrentChatState {
     val chatThread: ChatThread?
 
     fun update(chatThread: ChatThread)
+    fun clear()
     suspend fun populateStateFromService()
     suspend fun getNextPageFromService()
     fun addNewChatMessage(chatMessage: ChatMessage)

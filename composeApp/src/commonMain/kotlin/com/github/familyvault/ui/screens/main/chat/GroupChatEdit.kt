@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.forms.GroupChatEditForm
+import com.github.familyvault.forms.GroupChatForm
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IChatService
@@ -61,7 +61,7 @@ fun GroupChatEdit() {
     var myUserData: FamilyMember? by remember { mutableStateOf(null) }
     val familyMembers = remember { mutableStateListOf<FamilyMember>() }
     var createGroupChatState by remember { mutableStateOf(FormSubmitState.IDLE) }
-    val form by remember { mutableStateOf(GroupChatEditForm()) }
+    val form by remember { mutableStateOf(GroupChatForm()) }
     val groupChatAction = if (chatThread == null) GroupChatAction.Create else GroupChatAction.Edit
     val coroutineScope = rememberCoroutineScope()
 

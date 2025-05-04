@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main.tasks
+package com.github.familyvault.ui.screens.main.tasks.task
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +18,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.TaskForm
 import com.github.familyvault.services.ITaskService
+import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.ContentWithActionButton
 import com.github.familyvault.ui.components.formsContent.TaskFormContent
 import com.github.familyvault.ui.components.overrides.Button
@@ -38,6 +39,7 @@ class TaskNewScreen(private val taskListId: String) : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val taskService = koinInject<ITaskService>()
+        val taskListState = koinInject<ITaskListState>()
 
         val form: TaskForm by remember { mutableStateOf(TaskForm()) }
         val coroutineScope = rememberCoroutineScope()
@@ -68,13 +70,17 @@ class TaskNewScreen(private val taskListId: String) : Screen {
                                 taskService.createNewTask(
                                     taskListId,
                                     form.title,
-                                    form.description
+                                    form.description,
+                                    form.pubKeyOfAssignedMember
                                 )
+                                taskListState.populateTaskFormTaskListFromServices()
                                 isCreatingTask = false
                                 navigator.pop()
                             }
-                        })
-                })
+                        }
+                    )
+                }
+            )
         }
     }
 }

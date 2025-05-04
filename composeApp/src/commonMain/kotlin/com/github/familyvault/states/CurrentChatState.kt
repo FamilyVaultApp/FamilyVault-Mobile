@@ -25,6 +25,11 @@ class CurrentChatState(
         currentPage = 0
     }
 
+    override fun clear() {
+        currentPage = 0
+        messages.clear()
+    }
+
     override suspend fun populateStateFromService() {
         val chatMessagesFromService =
             chatService.retrieveMessagesFirstPage(requireNotNull(chatThread?.id))
