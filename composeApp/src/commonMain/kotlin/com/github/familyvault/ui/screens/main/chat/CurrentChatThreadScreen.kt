@@ -80,6 +80,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         DisposableEffect(Unit) {
             onDispose {
                 chatMessageListenerService.unregisterAllListeners()
+                chatState.clear()
             }
         }
         Scaffold(

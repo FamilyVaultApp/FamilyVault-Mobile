@@ -15,6 +15,7 @@ interface ITaskListState {
     suspend fun markTaskAsCompleted(taskId: String)
     suspend fun markTaskAsIncomplete(taskId: String)
     suspend fun populateTaskListFromServices()
+    suspend fun populateTaskFormTaskListFromServices()
     suspend fun selectFirstTaskList()
     suspend fun selectTaskList(id: String)
 }

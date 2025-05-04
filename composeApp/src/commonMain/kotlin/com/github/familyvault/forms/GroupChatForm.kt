@@ -1,20 +1,18 @@
 package com.github.familyvault.forms
 
+import com.github.familyvault.forms.models.FormDataListEntry
+import com.github.familyvault.forms.models.FormDataStringEntry
 import com.github.familyvault.forms.validator.FormValidator
 import com.github.familyvault.forms.validator.FormValidatorError
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.models.forms.FormDataListEntry
-import com.github.familyvault.models.forms.FormDataStringEntry
 
-data class GroupChatEditFormData(
+data class GroupChatFormData(
     val groupName: FormDataStringEntry = FormDataStringEntry(),
     var familyMembers: FormDataListEntry<FamilyMember> = FormDataListEntry(),
 )
 
-class GroupChatEditForm : BaseForm() {
-
-    var formData: GroupChatEditFormData = GroupChatEditFormData()
-        private set
+class GroupChatForm : BaseForm() {
+    private var formData: GroupChatFormData = GroupChatFormData()
 
     val groupName: String
         get() = formData.groupName.value

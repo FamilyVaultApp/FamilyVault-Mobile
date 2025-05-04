@@ -11,23 +11,29 @@ import androidx.compose.ui.text.input.VisualTransformation
 import com.github.familyvault.ui.components.typography.Paragraph
 
 @Composable
-fun TextField(
+fun  TextField(
     label: String,
     modifier: Modifier = Modifier,
     value: String = "",
     enabled: Boolean = true,
+    readOnly: Boolean = false,
     isPassword: Boolean = false,
     onValueChange: (String) -> Unit = {},
-    supportingText: @Composable (() -> Unit)? = null
+    supportingText: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     OutlinedTextField(
         enabled = enabled,
+        readOnly = readOnly,
         modifier = modifier.fillMaxWidth().then(modifier),
         value = value,
         label = { Paragraph(label) },
         supportingText = supportingText,
         onValueChange = onValueChange,
         singleLine = true,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = if (isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions.Default,
     )

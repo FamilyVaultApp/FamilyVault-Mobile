@@ -1,5 +1,6 @@
 package com.github.familyvault.ui.components.tasks
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,13 +16,17 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 
 @Composable
-fun TaskEntry(task: Task, onCompletedClick: (Task) -> Unit) {
+fun TaskEntry(
+    task: Task,
+    onCompletedClick: (Task) -> Unit,
+    onEditClick: (Task) -> Unit,
+    onAssignClick: (Task) -> Unit
+) {
     val textStyle = if (task.content.completed) {
         TextStyle(textDecoration = TextDecoration.LineThrough)
     } else {
         TextStyle.Default
     }
-
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -36,13 +41,17 @@ fun TaskEntry(task: Task, onCompletedClick: (Task) -> Unit) {
                 task.content.completed,
                 onCheckedChange = { onCompletedClick(task) },
             )
-            Column {
+            Column(
+                modifier = Modifier.clickable(onClick = {
+                    onEditClick(task)
+                })
+            ) {
                 Paragraph(task.content.title, textStyle = textStyle)
                 if (task.content.description.isNotEmpty()) {
                     ParagraphMuted(task.content.description, textStyle = textStyle)
                 }
             }
         }
-        AssignMemberToTaskButton {}
+        AssignMemberToTaskButton(task, onClick = { onAssignClick(task) })
     }
 }
