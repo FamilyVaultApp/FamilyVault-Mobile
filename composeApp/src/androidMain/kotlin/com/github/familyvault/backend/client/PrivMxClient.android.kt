@@ -92,6 +92,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         name: String,
         referenceStoreId: String?,
         threadIcon: ThreadIconType?
+        threadCreators: List<PrivMxUser>
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -100,9 +101,9 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             UserWithPubKey(userId, publicKey)
         }
         val threadId = threadApi?.createThread(
-            contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
+            contextId, userList, managerList,
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon, threadCreators.map { it.publicKey }))
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }
@@ -122,7 +123,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
 
         val storeId = storeApi?.createStore(
-            contextId, userList, managerList, // TODO: Poprawić ustawienie manager i user
+            contextId, userList, managerList,
             StoreMetaEncoder.encode(StorePublicMeta(type)),
             ByteArray(0)
         )
@@ -154,11 +155,11 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
 
         val decodedPrivateMeta = ThreadMetaDecoder.decodePrivateMeta(thread.privateMeta)
-
         val privateMeta = ThreadMetaEncoder.encode(
             decodedPrivateMeta.copy(
                 name = newName ?: decodedPrivateMeta.name,
-                threadIcon = threadIcon ?: decodedPrivateMeta.threadIcon
+                threadIcon = threadIcon ?: decodedPrivateMeta.threadIcon,
+                initialManagersPublicKeys = decodedPrivateMeta.initialManagersPublicKeys
             )
         )
 
@@ -167,7 +168,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             userList,
             managerList,
             thread.publicMeta,
-            privateMeta,
+            ThreadMetaEncoder.encode(privateMeta),
             thread.version,
             false
         )

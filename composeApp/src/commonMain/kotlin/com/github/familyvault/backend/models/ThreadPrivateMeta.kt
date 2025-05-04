@@ -4,4 +4,5 @@ import com.github.familyvault.models.enums.chat.ThreadIconType
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ThreadPrivateMeta(val name: String, val referenceStoreId: String?, val threadIcon: ThreadIconType? = null)
+data class ThreadPrivateMeta(val name: String, val referenceStoreId: String?, val threadIcon: ThreadIconType? = null, val initialManagersPublicKeys: List<String>)
+

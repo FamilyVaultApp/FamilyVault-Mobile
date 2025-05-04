@@ -27,6 +27,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
+import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
@@ -64,8 +65,13 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupCredentialsRepository = koinInject<IFamilyGroupCredentialsRepository>()
+        val chatService = koinInject<IChatService>()
 
-        var currentUserPermissionGroup by remember { mutableStateOf<FamilyGroupMemberPermissionGroup?>(null) }
+        var currentUserPermissionGroup by remember {
+            mutableStateOf<FamilyGroupMemberPermissionGroup?>(
+                null
+            )
+        }
         var isLoading by remember { mutableStateOf(true) }
         var isLastGuardian by remember { mutableStateOf(false) }
 
@@ -78,12 +84,12 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                 val myMemberData = familyGroupService.retrieveMyFamilyMemberData()
                 currentUserPermissionGroup = myMemberData.permissionGroup
 
-                val guardianCount = allFamilyMembers.count { 
-                    it.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian 
+                val guardianCount = allFamilyMembers.count {
+                    it.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian
                 }
-                isLastGuardian = guardianCount == 1 && 
-                                  familyMember.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian
-                
+                isLastGuardian = guardianCount == 1 &&
+                        familyMember.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian
+
                 isLoading = false
             }
         }
@@ -102,6 +108,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                 FamilyGroupMemberPermissionGroup.Guest
             )
         )
+
         var savingChanges by remember { mutableStateOf(false) }
         var showDialog by remember { mutableStateOf(false) }
         var selectedPermissionGroup by remember { mutableStateOf(familyMember.permissionGroup) }
@@ -129,17 +136,16 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .clickable(enabled = isGuardian && !optionDisabled) { 
-                                    if (isGuardian && !optionDisabled) 
-                                        selectedPermissionGroup = option.permissionGroup 
-                                }
-                                .fillMaxWidth()
+                                .clickable(enabled = isGuardian && !optionDisabled) {
+                                    if (isGuardian && !optionDisabled)
+                                        selectedPermissionGroup = option.permissionGroup
+                                }.fillMaxWidth()
                         ) {
                             RadioButton(
                                 selected = selectedPermissionGroup == option.permissionGroup,
                                 onClick = {
-                                    if (isGuardian && !optionDisabled) 
-                                        selectedPermissionGroup = option.permissionGroup
+                                    if (isGuardian && !optionDisabled) selectedPermissionGroup =
+                                        option.permissionGroup
                                 },
                                 enabled = isGuardian && !optionDisabled
                             )
@@ -154,7 +160,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                             )
                         }
                     }
-                    
+
                     if (!isGuardian) {
                         Paragraph(
                             stringResource(Res.string.user_modification_no_permission),
@@ -163,8 +169,9 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         )
                     }
 
-                    if (isLastGuardian && 
-                        familyMember.publicKey == familyGroupSessionService.getPublicKey()) {
+                    if (isLastGuardian &&
+                        familyMember.publicKey == familyGroupSessionService.getPublicKey()
+                    ) {
                         Paragraph(
                             stringResource(Res.string.user_modification_last_guardian_error),
                             modifier = Modifier.padding(top = AdditionalTheme.spacings.medium),
@@ -172,47 +179,55 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         )
                     }
                 }
-            }
 
-            Column(
-                modifier = Modifier.fillMaxHeight().padding(paddingValues)
-                    .padding(AdditionalTheme.spacings.screenPadding),
-                verticalArrangement = Arrangement.spacedBy(
-                    AdditionalTheme.spacings.medium,
-                    Alignment.Bottom
-                ),
-            ) {
-                if (isGuardian) {
-                    Button(
-                        text = stringResource(Res.string.user_modification_save_button),
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = !savingChanges && 
-                                 !(isLastGuardian && 
-                                   selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
-                        onClick = {
-                            coroutineScope.launch {
-                                savingChanges = true
-                                permissionGroupService.changeFamilyMemberPermissionGroup(
-                                    familyMember.fullname,
-                                    selectedPermissionGroup
-                                )
-                                savingChanges = false
-                                navigator.pop()
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(
+                        AdditionalTheme.spacings.medium,
+                        Alignment.Bottom
+                    ),
+                ) {
+                    if (isGuardian) {
+                        Button(
+                            text = stringResource(Res.string.user_modification_save_button),
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = !savingChanges &&
+                                    !(isLastGuardian &&
+                                            selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
+                            onClick = {
+                                coroutineScope.launch {
+                                    savingChanges = true
+                                    permissionGroupService.changeFamilyMemberPermissionGroup(
+                                        familyMember.fullname,
+                                        selectedPermissionGroup
+                                    )
+                                    val updatedUser =
+                                        familyGroupService.retrieveFamilyMemberDataByPublicKey(
+                                            familyMember.publicKey
+                                        )
+                                    if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
+                                        chatService.updateGroupChatThreadsAfterUserPermissionChange(
+                                            updatedUser,
+                                            familyGroupService.retrieveFamilyGroupMembersList()
+                                        )
+                                    }
+                                    savingChanges = false
+                                    navigator.pop()
+                                }
                             }
+                        )
+                    }
+                    Button(
+                        text = stringResource(Res.string.user_modification_remove_user_button_content),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !savingChanges && isGuardian &&
+                                !isLastGuardian,
+                        containerColor = MaterialTheme.colorScheme.error,
+                        onClick = {
+                            showDialog = true
                         }
                     )
                 }
-
-                Button(
-                    text = stringResource(Res.string.user_modification_remove_user_button_content),
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !savingChanges && isGuardian && 
-                              !isLastGuardian,
-                    containerColor = MaterialTheme.colorScheme.error,
-                    onClick = {
-                        showDialog = true
-                    }
-                )
             }
             if (showDialog) {
                 RemoveFamilyMemberDialog(onConfirm = {
