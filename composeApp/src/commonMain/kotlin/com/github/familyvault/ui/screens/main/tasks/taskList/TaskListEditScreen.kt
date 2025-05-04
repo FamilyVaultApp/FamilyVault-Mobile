@@ -33,7 +33,6 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.delete_button_content
 import familyvault.composeapp.generated.resources.edit_button_content
 import familyvault.composeapp.generated.resources.saving
-import familyvault.composeapp.generated.resources.task_add_new_list_description
 import familyvault.composeapp.generated.resources.task_edit_list_description
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

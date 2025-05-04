@@ -30,7 +30,6 @@ import familyvault.composeapp.generated.resources.create_button_content
 import familyvault.composeapp.generated.resources.loading
 import familyvault.composeapp.generated.resources.task_add_new_list
 import familyvault.composeapp.generated.resources.task_add_new_list_description
-import familyvault.composeapp.generated.resources.task_edit_list_description
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
