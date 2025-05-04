@@ -80,7 +80,7 @@ val sharedModules = module {
     single { TaskListenerService(get()) }.bind<ITaskListenerService>()
     single {
         FamilyMemberAdditionService(
-            get(), get(), get()
+            get(), get(), get(), get()
         )
     }.bind<IFamilyMemberAdditionService>()
     single {
@@ -95,7 +95,7 @@ val sharedModules = module {
         TaskService(get(), get(), get())
     }.bind<ITaskService>()
     single {
-        FileCabinetService(get(), get(), get())
+        FileCabinetService(get(), get(), get(), get())
     }.bind<IFileCabinetService>()
 
     // Backend client

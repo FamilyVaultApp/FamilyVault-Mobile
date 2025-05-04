@@ -17,7 +17,7 @@ import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.StoreType
-import com.github.familyvault.models.enums.chat.ChatThreadType
+import com.github.familyvault.models.enums.fileCabinet.FileCabinetThreadType
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.utils.FamilyMembersSplitter
 
@@ -78,7 +78,7 @@ class FamilyGroupService(
             users = users,
             managers = managers,
             tag = AppConfig.FILE_CABINET_THREAD_TAG,
-            type = ChatThreadType.GROUP.toString(),
+            type = FileCabinetThreadType.IMAGES.toString(),
             name = familyGroupName,
             referenceStoreId = storeId
         )

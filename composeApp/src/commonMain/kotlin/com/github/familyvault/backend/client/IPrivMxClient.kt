@@ -37,6 +37,12 @@ interface IPrivMxClient {
         newName: String? = null
     )
 
+    fun updateStore(
+        storeId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+    )
+
     fun retrieveThread(threadId: String): ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun retrieveAllThreadsWithTag(

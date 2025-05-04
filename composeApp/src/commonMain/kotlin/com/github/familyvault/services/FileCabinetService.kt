@@ -3,12 +3,16 @@ package com.github.familyvault.services
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.models.ThreadItem
+import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.utils.FamilyMembersSplitter
 
 class FileCabinetService(
     private val privMxClient: IPrivMxClient,
     private val imagePickerService: IImagePickerService,
-    private val familyGroupSessionService: IFamilyGroupSessionService
+    private val familyGroupSessionService: IFamilyGroupSessionService,
+    private val familyGroupService: IFamilyGroupService
 ) : IFileCabinetService {
+
     override fun retrieveFileCabinetThread(): ThreadItem {
         val contextId = familyGroupSessionService.getContextId()
         val fileCabinetThreadsId = privMxClient.retrieveAllThreadsWithTag(
@@ -17,6 +21,7 @@ class FileCabinetService(
             startIndex = 0,
             pageSize = 100
         )
+
         return fileCabinetThreadsId.first()
     }
 
@@ -44,5 +49,28 @@ class FileCabinetService(
         skip: Long
     ): List<ByteArray> {
         return privMxClient.getFilesAsByteArrayFromStore(storeId, limit, skip)
+    }
+
+    override suspend fun updateFamilyGroupFileCabinet() {
+        val threadId = retrieveFileCabinetThread().threadId
+        val storeId = retrieveFileCabinetStoreId()
+        val splitFamilyMembers = FamilyMembersSplitter.split(
+            familyGroupService.retrieveFamilyGroupMembersList()
+        )
+
+        val users = splitFamilyMembers.members.map { it.toPrivMxUser() }
+        val managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() }
+
+        privMxClient.updateThread(
+            threadId,
+            users,
+            managers
+        )
+
+        privMxClient.updateStore(
+            storeId,
+            users,
+            managers
+        )
     }
 }

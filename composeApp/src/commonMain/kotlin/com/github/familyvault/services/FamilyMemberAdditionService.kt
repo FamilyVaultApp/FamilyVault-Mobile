@@ -7,7 +7,8 @@ import com.github.familyvault.models.NewFamilyMemberData
 class FamilyMemberAdditionService(
     private val familyVaultBackendClient: IFamilyVaultBackendClient,
     private val sessionService: IFamilyGroupSessionService,
-    private val chatService: IChatService
+    private val chatService: IChatService,
+    private val fileCabinetService: IFileCabinetService
 ) : IFamilyMemberAdditionService {
     override suspend fun addMemberToFamilyGroup(
         contextId: String, newFamilyMember: NewFamilyMemberData
@@ -17,6 +18,8 @@ class FamilyMemberAdditionService(
                 contextId, newFamilyMember.fullname, newFamilyMember.keyPair.publicKey
             )
         )
+
+        fileCabinetService.updateFamilyGroupFileCabinet()
     }
 
     override suspend fun afterJoinedToFamilyMembersOperations() {

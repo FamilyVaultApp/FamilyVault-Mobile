@@ -169,6 +169,32 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         )
     }
 
+    override fun updateStore(
+        storeId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+    ) {
+        val store = requireNotNull(storeApi?.getStore(storeId)) { "Store is null" }
+
+        val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+        val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+
+        storeApi?.updateStore(
+            storeId,
+            userList,
+            managerList,
+            store.publicMeta,
+            store.privateMeta,
+            store.version,
+            true,
+            false
+        )
+    }
+
     override fun retrieveAllThreads(
         contextId: String, startIndex: Int, pageSize: Int
     ): List<ThreadItem> {
