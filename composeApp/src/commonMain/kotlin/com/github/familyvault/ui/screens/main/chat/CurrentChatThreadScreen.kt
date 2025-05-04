@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -23,7 +22,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatService
@@ -38,50 +36,53 @@ import com.github.familyvault.ui.components.overrides.TopAppBar
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
-    private lateinit var chatService: IChatService
+class CurrentChatThreadScreen : Screen {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        chatService = koinInject<IChatService>()
+        val chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
-        val chatState = koinInject<ICurrentChatState>()
+        val currentChatState = koinInject<ICurrentChatState>()
         val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
+        val chatThread = requireNotNull(currentChatState.chatThread)
+
         LaunchedEffect(chatThread) {
             mediaPicker.clearSelectedImages()
 
-            chatState.update(chatThread.id)
             chatService.populateDatabaseWithLastMessages(chatThread.id)
-            chatState.populateStateFromService()
+            currentChatState.populateStateFromService()
             chatThreadManagers.addAll(chatService.retrievePublicKeysOfChatThreadManagers(chatThread.id))
             chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                 coroutineScope.launch {
-                    scrollToLastMessage(listState, chatState)
+                    scrollToLastMessage(listState, currentChatState)
                 }
             }
             myUserData = familyGroupService.retrieveMyFamilyMemberData()
-            scrollToLastMessage(listState, chatState)
+            scrollToLastMessage(listState, currentChatState)
         }
         LaunchedEffect(isAtTop) {
-            if (isAtTop && chatState.messages.isNotEmpty()) {
-                val currentLookingMessage = chatState.messages[listState.firstVisibleItemIndex]
-                chatState.getNextPageFromService()
-                listState.scrollToItem(chatState.messages.indexOf(currentLookingMessage))
+            if (isAtTop && currentChatState.messages.isNotEmpty()) {
+                val currentLookingMessage =
+                    currentChatState.messages[listState.firstVisibleItemIndex]
+                currentChatState.getNextPageFromService()
+                listState.scrollToItem(currentChatState.messages.indexOf(currentLookingMessage))
             }
         }
 
         DisposableEffect(Unit) {
             onDispose {
                 chatMessageListenerService.unregisterAllListeners()
+                currentChatState.
             }
         }
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -92,7 +93,6 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                                     navigator.push(
                                         ChatThreadEditScreen(
                                             chatThread.type,
-                                            chatThread
                                         )
                                     )
                                 }
@@ -108,45 +108,40 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                     state = listState,
                 ) {
                     itemsIndexed(
-                        items = chatState.messages,
+                        items = currentChatState.messages,
                         key = { _, message -> message.id }) { index, message ->
                         ChatMessageEntry(
                             message,
-                            prevMessage = chatState.messages.getOrNull(index - 1),
-                            nextMessage = chatState.messages.getOrNull(index + 1)
+                            prevMessage = currentChatState.messages.getOrNull(index - 1),
+                            nextMessage = currentChatState.messages.getOrNull(index + 1)
                         )
                     }
                 }
                 ChatInputField(
-                    onTextMessageSend = { handleTextMessageSend(it) },
-                    onVoiceMessageSend = { handleVoiceMessageSend(it) },
-                    onImageMessageSend = { handleImageMessageSend(it) }
+                    onTextMessageSend = {
+                        if (it.isEmpty()) {
+                            return@ChatInputField
+                        }
+
+                        chatService.sendTextMessage(chatThread.id, it, respondToMessageId = "")
+                    },
+                    onVoiceMessageSend = {
+                        if (it.isEmpty()) {
+                            return@ChatInputField
+                        }
+                        chatService.sendVoiceMessage(chatThread.id, it)
+                    },
+                    onImageMessageSend = {
+                        if (it.isEmpty()) {
+                            return@ChatInputField
+                        }
+
+                        it.forEach { mediaByteArray ->
+                            chatService.sendImageMessage(chatThread.id, mediaByteArray)
+                        }
+                    }
                 )
             }
-        }
-    }
-
-    private fun handleTextMessageSend(message: String) {
-        if (message.isEmpty()) {
-            return
-        }
-        chatService.sendTextMessage(chatThread.id, message, respondToMessageId = "")
-    }
-
-    private fun handleVoiceMessageSend(audio: ByteArray) {
-        if (audio.isEmpty()) {
-            return
-        }
-        chatService.sendVoiceMessage(chatThread.id, audio)
-    }
-
-    private fun handleImageMessageSend(uriByteArrays: List<ByteArray>) {
-        if (uriByteArrays.isEmpty()) {
-            return
-        }
-
-        uriByteArrays.forEach { mediaByteArray ->
-            chatService.sendImageMessage(chatThread.id, mediaByteArray)
         }
     }
 

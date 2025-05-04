@@ -21,10 +21,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.GroupChatEditForm
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.Button
@@ -35,9 +35,9 @@ import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_group_button_content
-import familyvault.composeapp.generated.resources.chat_edit_group_button_content
 import familyvault.composeapp.generated.resources.chat_create_group_members
 import familyvault.composeapp.generated.resources.chat_create_new
+import familyvault.composeapp.generated.resources.chat_edit_group_button_content
 import familyvault.composeapp.generated.resources.chat_set_group_name
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -49,10 +49,13 @@ enum class GroupChatAction {
 }
 
 @Composable
-fun GroupChatEdit(chatThread: ChatThread? = null) {
+fun GroupChatEdit() {
     val navigator = LocalNavigator.currentOrThrow
     val familyGroupService = koinInject<IFamilyGroupService>()
+    val currentChatState = koinInject<ICurrentChatState>()
     val chatService = koinInject<IChatService>()
+
+    val chatThread = currentChatState.chatThread
     var isLoadingFamilyMembers by remember { mutableStateOf(true) }
     var myPublicKey by remember { mutableStateOf("") }
     var myUserData: FamilyMember? by remember { mutableStateOf(null) }
@@ -180,10 +183,16 @@ private fun FamilyMemberSwitchItem(
 
 
 @Composable
-private fun CreateGroupChatButton(enabled: Boolean, groupChatAction: GroupChatAction,onClick: () -> Unit) {
+private fun CreateGroupChatButton(
+    enabled: Boolean,
+    groupChatAction: GroupChatAction,
+    onClick: () -> Unit
+) {
     Button(
         modifier = Modifier.fillMaxWidth(),
-        text = if (groupChatAction == GroupChatAction.Create) stringResource(Res.string.chat_create_group_button_content) else stringResource(Res.string.chat_edit_group_button_content),
+        text = if (groupChatAction == GroupChatAction.Create) stringResource(Res.string.chat_create_group_button_content) else stringResource(
+            Res.string.chat_edit_group_button_content
+        ),
         enabled = enabled,
         onClick = onClick
     )

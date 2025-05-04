@@ -73,7 +73,6 @@ class MainScreen : Screen {
             navigator.parent?.push(
                 ChatThreadEditScreen(
                     ChatThreadType.GROUP,
-                    chatThread = null,
                 )
             )
         }) {
