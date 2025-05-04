@@ -26,6 +26,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.ui.components.ContentWithActionButton
 import com.github.familyvault.ui.components.FamilyMemberEntry
@@ -40,10 +41,22 @@ import familyvault.composeapp.generated.resources.family_group_add_new_member
 import familyvault.composeapp.generated.resources.setting_members_long
 import familyvault.composeapp.generated.resources.setting_members_title
 import familyvault.composeapp.generated.resources.user_modification_description
+import familyvault.composeapp.generated.resources.user_permission_group_guardian
+import familyvault.composeapp.generated.resources.user_permission_group_guest
+import familyvault.composeapp.generated.resources.user_permission_group_member
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class FamilyGroupSettingMembersScreen : Screen {
+
+    @Composable
+    private fun getPermissionGroupString(permissionGroup: FamilyGroupMemberPermissionGroup): String {
+        return when (permissionGroup) {
+            FamilyGroupMemberPermissionGroup.Guardian -> stringResource(Res.string.user_permission_group_guardian)
+            FamilyGroupMemberPermissionGroup.Member -> stringResource(Res.string.user_permission_group_member)
+            FamilyGroupMemberPermissionGroup.Guest -> stringResource(Res.string.user_permission_group_guest)
+        }
+    }
 
     @Composable
     override fun Content() {
@@ -84,10 +97,13 @@ class FamilyGroupSettingMembersScreen : Screen {
                                 CircularProgressIndicator()
                             }
                         } else {
-                            familyGroupMembers.forEach {
-                                FamilyMemberEntry(it) {
+                            familyGroupMembers.forEach { member ->
+                                FamilyMemberEntry(
+                                    familyMember = member,
+                                    additionalDescription = getPermissionGroupString(member.permissionGroup)
+                                ) {
                                     IconButton(onClick = {
-                                        navigator.push(ModifyFamilyMemberScreen(it))
+                                        navigator.push(ModifyFamilyMemberScreen(member))
                                     }) {
                                         Icon(
                                             Icons.Outlined.MoreHoriz,
