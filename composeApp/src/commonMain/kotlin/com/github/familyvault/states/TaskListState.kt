@@ -33,6 +33,11 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
         taskLists.addAll(tasksService.getTaskLists())
     }
 
+    override fun updateTaskList(taskList: TaskList) {
+        taskLists.removeAll {it.id.compareTo(taskList.id) == 0}
+        taskLists.add(taskList)
+    }
+
     private suspend fun populateTaskFormTaskListFromServices() {
         selectedTaskList?.let {
             tasks.clear()

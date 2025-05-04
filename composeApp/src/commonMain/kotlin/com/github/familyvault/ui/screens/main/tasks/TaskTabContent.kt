@@ -27,8 +27,12 @@ fun TaskTabContent() {
     LaunchedEffect(Unit) {
         isLoading = true
         tasksListState.populateTaskListFromServices()
-        taskListListenerService.startListeningForTaskListThread { newList ->
+        taskListListenerService.startListeningForTaskList { newList ->
             tasksListState.taskLists.add(newList)
+        }
+
+        taskListListenerService.startListeningForUpdatedTaskList { updatedList ->
+            tasksListState.updateTaskList(updatedList)
         }
         isLoading = false
     }

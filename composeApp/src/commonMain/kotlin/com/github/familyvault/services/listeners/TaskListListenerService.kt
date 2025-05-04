@@ -11,9 +11,9 @@ class TaskListListenerService(
         const val UPDATE_EVENT_NAME = "TASK_LIST_THREAD_UPDATE"
     }
 
-    override fun startListeningForTaskListThread(onNewTaskListThread: (TaskList) -> Unit) {
+    override fun startListeningForTaskList(onNewTaskList: (TaskList) -> Unit) {
         privMxClient.registerOnThreadCreated(CREATE_EVENT_NAME) {
-            onNewTaskListThread(
+            onNewTaskList(
                 TaskList(
                     id = it.threadId,
                     name = it.privateMeta.name
@@ -22,9 +22,9 @@ class TaskListListenerService(
         }
     }
 
-    override fun startListeningForUpdatedTaskListThread(onUpdatedTaskListThread: (TaskList) -> Unit) {
+    override fun startListeningForUpdatedTaskList(onUpdatedTaskList: (TaskList) -> Unit) {
         privMxClient.registerOnThreadUpdated(UPDATE_EVENT_NAME) {
-            onUpdatedTaskListThread(
+            onUpdatedTaskList(
                 TaskList(
                     id = it.threadId,
                     name = it.privateMeta.name

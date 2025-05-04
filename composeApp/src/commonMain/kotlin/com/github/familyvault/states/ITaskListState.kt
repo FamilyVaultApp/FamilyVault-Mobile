@@ -12,6 +12,7 @@ interface ITaskListState {
     fun updateTask(task: Task)
     fun isEmpty(): Boolean
     fun unselectTaskList()
+    fun updateTaskList(taskList: TaskList)
     suspend fun markTaskAsCompleted(taskId: String)
     suspend fun markTaskAsIncomplete(taskId: String)
     suspend fun populateTaskListFromServices()
