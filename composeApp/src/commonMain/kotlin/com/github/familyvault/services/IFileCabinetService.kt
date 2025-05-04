@@ -1,7 +1,6 @@
 package com.github.familyvault.services
 
 import com.github.familyvault.backend.models.ThreadItem
-import com.github.familyvault.models.FamilyMember
 
 interface IFileCabinetService {
     fun retrieveFileCabinetThread(): ThreadItem
