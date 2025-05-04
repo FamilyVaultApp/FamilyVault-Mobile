@@ -120,6 +120,7 @@
     <string name="chat_create_group_default_name">Grupa rodzinna</string>
     <string name="chat_create_group_members">Członkowie czatu grupowego</string>
     <string name="chat_create_group_button_content">Utwórz chat</string>
+    <string name="chat_edit_group_button_content">Zapisz zmiany</string>
     <string name="chat_send_message">Wyślij wiadomość</string>
     <string name="chat_type_individual">Indywidualny</string>
     <string name="chat_type_group">Grupowy</string>
