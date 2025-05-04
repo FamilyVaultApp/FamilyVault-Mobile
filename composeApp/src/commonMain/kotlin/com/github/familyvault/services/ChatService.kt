@@ -50,7 +50,7 @@ class ChatService(
             ChatThreadType.GROUP.toString(),
             name,
             storeId,
-            chatIcon
+            chatIcon,
             listOf(currentUser.toPrivMxUser())
         )
 
@@ -69,15 +69,16 @@ class ChatService(
         return familyGroupService.retrieveFamilyGroupMembersList().filter { initialManagersPublicKeys.contains(it.publicKey)}
     }
 
-    override suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, chatIcon: ThreadIconType, chatCreator: FamilyMember?) {
+    override suspend fun updateChatThread(thread: ChatThread, members: List<FamilyMember>, newName: String?, chatIcon: ThreadIconType?, chatCreator: FamilyMember?) {
         val initialManagers = retrieveThreadInitialManagers(thread).toMutableList()
         if (chatCreator != null) {
             initialManagers.add(chatCreator)
         }
+
         val splitFamilyGroupMembersList = FamilyMembersSplitter.splitWithProvidedMembersAsManagers(members, initialManagers)
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
-        privMxClient.updateThread(thread.id, users, managers, newName, chatIcon)
+        privMxClient.updateThread(thread.id, users, managers, newName, chatIcon ?: thread.iconType)
     }
 
     override fun retrieveAllChatThreads(): List<ChatThread> {
@@ -240,12 +241,12 @@ class ChatService(
         for (thread in threadsList) {
             if (updatedUser.id in thread.participantsIds) {
                 if (updatedUser.permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
-                    updateChatThread(thread, familyMembers, null, updatedUser)
+                    updateChatThread(thread, familyMembers, newName = null, chatIcon = null, updatedUser)
                 } else {
                     if (retrieveChatThreadInitialManagers(thread.id).contains(updatedUser.publicKey)) {
-                        updateChatThread(thread, familyMembers, null, updatedUser)
+                        updateChatThread(thread, familyMembers, newName = null, chatIcon = null, updatedUser)
                     } else {
-                        updateChatThread(thread, familyMembers, null, null)
+                        updateChatThread(thread, familyMembers, newName = null, chatIcon = null)
                     }
                 }
             }

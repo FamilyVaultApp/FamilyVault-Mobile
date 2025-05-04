@@ -43,7 +43,6 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 import com.github.familyvault.utils.TextShortener
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_group_button_content
-import familyvault.composeapp.generated.resources.chat_edit_group_button_content
 import familyvault.composeapp.generated.resources.chat_create_group_members
 import familyvault.composeapp.generated.resources.chat_create_group_user_is_member
 import familyvault.composeapp.generated.resources.chat_create_group_user_is_not_member
@@ -177,7 +176,7 @@ fun GroupChatEdit(chatThread: ChatThread? = null) {
                                 chatThread!!,
                                 form.familyMembers,
                                 form.groupName,
-                                selectedChatIconType
+                                selectedChatIconType,
                                 chatCreator = null
                             )
                             createGroupChatState = FormSubmitState.IDLE

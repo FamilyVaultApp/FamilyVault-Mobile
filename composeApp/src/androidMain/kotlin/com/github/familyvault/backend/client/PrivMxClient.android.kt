@@ -91,7 +91,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         type: String,
         name: String,
         referenceStoreId: String?,
-        threadIcon: ThreadIconType?
+        threadIcon: ThreadIconType?,
         threadCreators: List<PrivMxUser>
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
@@ -168,7 +168,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             userList,
             managerList,
             thread.publicMeta,
-            ThreadMetaEncoder.encode(privateMeta),
+            privateMeta,
             thread.version,
             false
         )

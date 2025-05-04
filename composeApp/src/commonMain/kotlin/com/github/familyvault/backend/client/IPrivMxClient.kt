@@ -22,7 +22,7 @@ interface IPrivMxClient {
         type: String,
         name: String,
         referenceStoreId: String?,
-        threadIcon: ThreadIconType? = null
+        threadIcon: ThreadIconType? = null,
         threadCreators: List<PrivMxUser>
     ): String
 

@@ -32,7 +32,8 @@ class TaskService(
             type = TaskThreadType.LIST.toString(),
             name = name,
             referenceStoreId = null,
-            splitFamilyMembers.guardians.map { it.toPrivMxUser() }
+            threadIcon = null,
+            splitFamilyMembers.guardians.map { it.toPrivMxUser() },
         )
     }
 
