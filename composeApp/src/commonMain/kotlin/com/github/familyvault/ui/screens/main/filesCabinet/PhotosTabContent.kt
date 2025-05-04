@@ -23,9 +23,11 @@ import androidx.compose.ui.layout.ContentScale
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.ui.components.FullScreenImage
+import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.file_cabinet_photo_card
+import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -56,7 +58,9 @@ fun PhotosTabContent() {
 
     if (isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+            LoaderWithText(
+                stringResource(Res.string.loading), modifier = Modifier.fillMaxSize()
+            )
         }
     } else {
         LazyVerticalGrid(
