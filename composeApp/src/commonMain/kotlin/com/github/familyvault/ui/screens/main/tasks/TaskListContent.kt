@@ -32,20 +32,11 @@ fun TaskListContent() {
     val localNavigator = LocalNavigator.currentOrThrow
     val taskListState = koinInject<ITaskListState>()
     val taskListenerService = koinInject<ITaskListenerService>()
-    val taskListListenerService = koinInject<ITaskListListenerService>()
 
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
     LaunchedEffect(taskListState.selectedTaskList) {
-
-        taskListState.populateTaskListFromServices()
-
-        taskListListenerService.startListeningForTaskListThread {
-            coroutineScope.launch {
-                taskListState.populateTaskListFromServices()
-            }
-        }
 
         taskListState.selectedTaskList?.let { selected ->
             taskListenerService.unregisterAllListeners()
