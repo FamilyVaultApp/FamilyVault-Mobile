@@ -1,16 +1,16 @@
 package com.github.familyvault.forms
 
+import com.github.familyvault.forms.models.FormDataStringEntry
 import com.github.familyvault.forms.validator.FormValidator
 import com.github.familyvault.forms.validator.FormValidatorError
-import com.github.familyvault.models.forms.FormDataStringEntry
 
-data class FamilyMemberNewMemberFormData(
+data class FamilyMemberFormData(
     val firstname: FormDataStringEntry = FormDataStringEntry(),
     val surname: FormDataStringEntry = FormDataStringEntry(),
 )
 
-class FamilyGroupNewMemberForm : BaseForm() {
-    var formData = FamilyMemberNewMemberFormData()
+class FamilyGroupMemberForm : BaseForm() {
+    var formData = FamilyMemberFormData()
         private set
 
     val firstname: String

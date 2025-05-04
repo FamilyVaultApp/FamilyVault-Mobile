@@ -20,7 +20,7 @@ import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.overrides.NavigationBar
 import com.github.familyvault.ui.screens.main.chat.ChatThreadEditScreen
-import com.github.familyvault.ui.screens.main.tasks.TaskNewScreen
+import com.github.familyvault.ui.screens.main.tasks.task.TaskNewScreen
 import com.github.familyvault.ui.theme.AppTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_new
@@ -87,19 +87,17 @@ class MainScreen : Screen {
     @Composable
     private fun FloatingTaskActionButton() {
         val taskListState = koinInject<ITaskListState>()
-        if (taskListState.selectedTaskList == null) {
-            return
-        }
         val navigator = LocalNavigator.currentOrThrow
 
-        FloatingActionButton(onClick = {
-            navigator.parent?.push(TaskNewScreen(requireNotNull(taskListState.selectedTaskList).id))
-
-        }) {
-            Icon(
-                Icons.Filled.AddTask,
-                stringResource(Res.string.task_new),
-            )
+        taskListState.selectedTaskList?.let {
+            FloatingActionButton(onClick = {
+                navigator.parent?.push(TaskNewScreen(requireNotNull(taskListState.selectedTaskList).id))
+            }) {
+                Icon(
+                    Icons.Filled.AddTask,
+                    stringResource(Res.string.task_new),
+                )
+            }
         }
     }
 }

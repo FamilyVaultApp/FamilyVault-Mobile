@@ -3,6 +3,7 @@
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">Ikona aplikacji Family Vault</string>
     <string name="loading">Ładowanie...</string>
+    <string name="saving">Zapisywanie...</string>
     <string name="you">Ty</string>
     <string name="is_actual">Aktualna</string>
     <string name="is_default">Domyślna</string>
@@ -10,6 +11,8 @@
     <string name="expand">Rozwiń</string>
     <string name="title">Tytuł</string>
     <string name="description">Opis</string>
+    <string name="nobody">Nikt</string>
+    <string name="assigned_person">Przypisana osoba</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -18,6 +21,8 @@
     <!-- Button contents -->
     <string name="next_button_content">Dalej</string>
     <string name="create_button_content">Stwórz</string>
+    <string name="edit_button_content">Edytuj</string>
+    <string name="delete_button_content">Usuń</string>
     <string name="cancel_button_content">Anuluj</string>
     <string name="confirm_button_content">Potwierdź</string>
     <string name="scan_qr_code_button_content">Zeskanuj kod QR</string>
@@ -115,6 +120,7 @@
     <string name="chat_create_group_default_name">Grupa rodzinna</string>
     <string name="chat_create_group_members">Członkowie czatu grupowego</string>
     <string name="chat_create_group_button_content">Utwórz chat</string>
+    <string name="chat_edit_group_button_content">Zapisz zmiany</string>
     <string name="chat_send_message">Wyślij wiadomość</string>
     <string name="chat_type_individual">Indywidualny</string>
     <string name="chat_type_group">Grupowy</string>
@@ -166,13 +172,15 @@
     <!-- Tasks -->
     <string name="task_add_new_list_short">Dodaj nową</string>
     <string name="task_add_new_list">Nowa lista zadań</string>
-    <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania w rodzinie i szybko przypisywać obowiązki.</string>
+    <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania w rodzinie i przypisywać obowiązki.</string>
+    <string name="task_edit_list_description">Na tym ekranie możesz edytować listę zadań, aby lepiej organizować obowiązki w rodzinie.</string>
     <string name="task_settings">Konfiguruj</string>
     <string name="task_completed">Ukończone</string>
-    <string name="task_assign">Przypisz członka rodziny do zadania</string>
+    <string name="task_assign">Przydziel zadanie</string>
     <string name="no_task_list_title">Brak listy zadań</string>
     <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając w przycisk poniżej.</string>
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
     <string name="task_new">Nowe zadanie</string>
     <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>
+    <string name="task_edit_description">Edytuj opis zadania i w razie potrzeby przypisz je ponownie wybranemu członkowi swojej grupy rodzinnej.</string>
 </resources>

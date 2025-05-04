@@ -9,19 +9,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
 fun UserAvatar(
     firstName: String,
     size: Dp? = null,
+    modifier: Modifier = Modifier
 ) {
     return Box(
         modifier = Modifier
-            .size(size ?: 40.dp)
-            .background(MaterialTheme.colorScheme.primary, CircleShape),
+            .clip(CircleShape)
+            .size(size ?: AdditionalTheme.sizing.userAvatarSize)
+            .background(MaterialTheme.colorScheme.primary)
+            .then(modifier),
         contentAlignment = Alignment.Center,
     ) {
         if (firstName.isNotEmpty()) {

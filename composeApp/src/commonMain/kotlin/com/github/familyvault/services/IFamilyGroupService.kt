@@ -35,5 +35,7 @@ interface IFamilyGroupService {
 
     suspend fun retrieveMyFamilyMemberData(): FamilyMember
 
+    suspend fun retrieveFamilyMemberDataByPublicKey(publicKey: String): FamilyMember
+
     suspend fun removeMemberFromCurrentFamilyGroup(userPubKey: String)
 }

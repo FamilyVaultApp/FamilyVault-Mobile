@@ -20,7 +20,8 @@ interface IPrivMxClient {
         tag: String,
         type: String,
         name: String,
-        referenceStoreId: String?
+        referenceStoreId: String?,
+        threadCreators: List<PrivMxUser>
     ): String
 
     fun createStore(
@@ -36,6 +37,8 @@ interface IPrivMxClient {
         managers: List<PrivMxUser>,
         newName: String? = null
     )
+
+    fun deleteThread(threadId: String)
 
     fun retrieveThread(threadId: String): ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
@@ -72,6 +75,7 @@ interface IPrivMxClient {
     ): List<ThreadMessageItem>
 
     fun retrieveLastMessageFromThread(threadId: String): ThreadMessageItem?
+    fun retrieveMessageById(messageId: String): ThreadMessageItem
 
     /* Listeners */
     fun unregisterAllEvents(eventName: String)

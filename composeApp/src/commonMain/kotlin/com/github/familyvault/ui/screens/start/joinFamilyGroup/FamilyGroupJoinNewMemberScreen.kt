@@ -13,10 +13,10 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.forms.FamilyGroupNewMemberForm
+import com.github.familyvault.forms.FamilyGroupMemberForm
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.HeaderWithIcon
-import com.github.familyvault.ui.components.formsContent.NewFamilyMemberFormContent
+import com.github.familyvault.ui.components.formsContent.FamilyMemberFormContent
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.join_family_group_title
@@ -29,7 +29,7 @@ class FamilyGroupJoinNewMemberScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val form by remember { mutableStateOf(FamilyGroupNewMemberForm()) }
+        val form by remember { mutableStateOf(FamilyGroupMemberForm()) }
 
         StartScreenScaffold {
             FamilyGroupJoinHeader()
@@ -37,7 +37,7 @@ class FamilyGroupJoinNewMemberScreen : Screen {
             Column(
                 modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Bottom
             ) {
-                NewFamilyMemberFormContent(form)
+                FamilyMemberFormContent(form)
                 BottomNextButton(
                     text = stringResource(Res.string.next_button_content),
                     enabled = form.isFormValid()

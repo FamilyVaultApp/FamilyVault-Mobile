@@ -7,21 +7,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.chat.ChatThread
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.states.ICurrentChatState
@@ -40,29 +46,29 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
+        val familyGroupService = koinInject<IFamilyGroupService>()
         val chatState = koinInject<ICurrentChatState>()
         val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
-
+        val chatThreadManagers = remember { mutableListOf<String>() }
+        var myUserData: FamilyMember? by remember { mutableStateOf(null) }
         LaunchedEffect(chatThread) {
             mediaPicker.clearSelectedImages()
 
             chatState.update(chatThread.id)
-
             chatService.populateDatabaseWithLastMessages(chatThread.id)
             chatState.populateStateFromService()
-
+            chatThreadManagers.addAll(chatService.retrievePublicKeysOfChatThreadManagers(chatThread.id))
             chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                 coroutineScope.launch {
                     scrollToLastMessage(listState, chatState)
                 }
             }
-
+            myUserData = familyGroupService.retrieveMyFamilyMemberData()
             scrollToLastMessage(listState, chatState)
         }
-
         LaunchedEffect(isAtTop) {
             if (isAtTop && chatState.messages.isNotEmpty()) {
                 val currentLookingMessage = chatState.messages[listState.firstVisibleItemIndex]
@@ -74,16 +80,23 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         DisposableEffect(Unit) {
             onDispose {
                 chatMessageListenerService.unregisterAllListeners()
+                chatState.clear()
             }
         }
-
         Scaffold(
             topBar = {
                 TopAppBar(
                     chatThread.name, actions = {
-                        if (chatThread.type === ChatThreadType.GROUP) {
-                            ChatThreadSettingsButton {
-                                navigator.push(ChatThreadEditScreen(chatThread.type, chatThread))
+                        if (myUserData != null) {
+                            if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers && myUserData?.permissionGroup != FamilyGroupMemberPermissionGroup.Guest) {
+                                ChatThreadSettingsButton {
+                                    navigator.push(
+                                        ChatThreadEditScreen(
+                                            chatThread.type,
+                                            chatThread
+                                        )
+                                    )
+                                }
                             }
                         }
                     })

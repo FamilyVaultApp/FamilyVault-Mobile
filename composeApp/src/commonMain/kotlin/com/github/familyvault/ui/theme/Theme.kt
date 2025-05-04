@@ -52,7 +52,9 @@ data class AdditionalColors(
     val onMutedColor: Color,
     val onPrimaryContainerSecondColor: Color,
     val otherChatBubbleColor: Color,
-    val otherChatBubbleContentColor: Color
+    val otherChatBubbleContentColor: Color,
+    val dangerButtonBackgroundColor: Color,
+    val dangerButtonContentColor: Color,
 )
 
 private val LocalCustomColorsLight = staticCompositionLocalOf {
@@ -66,7 +68,9 @@ private val LocalCustomColorsLight = staticCompositionLocalOf {
         onMutedColor = Color(0xff6D6D6D),
         onPrimaryContainerSecondColor = Color(0xff6D6D6D),
         otherChatBubbleColor = Color(0xfff3f3f3),
-        otherChatBubbleContentColor = Color(0xFF1C1B1F)
+        otherChatBubbleContentColor = Color(0xFF1C1B1F),
+        dangerButtonBackgroundColor = Color(0xFFFF4C4C),
+        dangerButtonContentColor = Color(0xFFFFFFFF)
     )
 }
 
@@ -81,7 +85,9 @@ private val LocalCustomColorsDark = staticCompositionLocalOf {
         onMutedColor = Color(0xffB3B3B3),
         onPrimaryContainerSecondColor = Color(0xffB3B3B3),
         otherChatBubbleColor = Color(0xfff3f3f3),
-        otherChatBubbleContentColor = Color(0xFF1C1B1F)
+        otherChatBubbleContentColor = Color(0xFF1C1B1F),
+        dangerButtonBackgroundColor = Color(0xFFB00020),
+        dangerButtonContentColor = Color(0xFFFFFFFF)
     )
 }
 
@@ -94,6 +100,7 @@ data class Sizing(
     val headerIconNormal: Dp,
     val entryMinSize: Dp,
     val taskListButtonHeight: Dp,
+    val userAvatarSize: Dp,
     val shadowSize: Dp
 )
 
@@ -116,6 +123,7 @@ private val LocalSizing = staticCompositionLocalOf {
         small = 20.dp,
         entryMinSize = 65.dp,
         taskListButtonHeight = 40.dp,
+        userAvatarSize = 40.dp,
         shadowSize = 4.dp
     )
 }
