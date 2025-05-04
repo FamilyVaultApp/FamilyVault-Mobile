@@ -8,7 +8,7 @@ import com.github.familyvault.ui.components.FamilyMemberPicker
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.TextField
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.assignee
+import familyvault.composeapp.generated.resources.assigned_person
 import familyvault.composeapp.generated.resources.description
 import familyvault.composeapp.generated.resources.title
 import org.jetbrains.compose.resources.stringResource
@@ -38,8 +38,11 @@ fun TaskFormContent(form: TaskForm) {
         )
 
         FamilyMemberPicker(
-            label = stringResource(Res.string.assignee),
+            label = stringResource(Res.string.assigned_person),
             familyMembers = familyMembersState.getAllFamilyMembers(),
+            supportingText = {
+                ValidationErrorMessage(form.pubKeyOfAssignedMemberValidationError)
+            },
             selectedPubKey = form.pubKeyOfAssignedMember,
             onPick = {
                 form.setPubKeyOfAssignedMember(it?.publicKey)

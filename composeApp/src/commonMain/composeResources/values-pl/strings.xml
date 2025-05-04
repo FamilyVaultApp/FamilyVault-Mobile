@@ -12,7 +12,7 @@
     <string name="title">Tytuł</string>
     <string name="description">Opis</string>
     <string name="nobody">Nikt</string>
-    <string name="assignee">Przypisana osoba</string>
+    <string name="assigned_person">Przypisana osoba</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>

@@ -14,7 +14,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.backend.client.IPrivMxClient
-import com.github.familyvault.forms.FamilyMemberMemberFormData
+import com.github.familyvault.forms.FamilyMemberFormData
 import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.models.NewFamilyMemberData
 import com.github.familyvault.models.enums.FormSubmitState
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberDraft: FamilyMemberMemberFormData) :
+class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberDraft: FamilyMemberFormData) :
     Screen {
     @Composable
     override fun Content() {

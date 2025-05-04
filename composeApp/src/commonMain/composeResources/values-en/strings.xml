@@ -12,7 +12,7 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="nobody">Nobody</string>
-    <string name="assignee">Assigned person</string>
+    <string name="assigned_person">Assigned person</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>

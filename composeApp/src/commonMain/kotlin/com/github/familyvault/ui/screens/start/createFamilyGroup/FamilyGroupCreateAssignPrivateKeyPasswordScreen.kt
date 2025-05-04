@@ -14,7 +14,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyGroupNameFormData
-import com.github.familyvault.forms.FamilyMemberMemberFormData
+import com.github.familyvault.forms.FamilyMemberFormData
 import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
@@ -33,7 +33,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
-    private val familyGroupDraft: FamilyMemberMemberFormData,
+    private val familyGroupDraft: FamilyMemberFormData,
     private val familyGroupNameDraft: FamilyGroupNameFormData
 ) : Screen {
     @Composable
