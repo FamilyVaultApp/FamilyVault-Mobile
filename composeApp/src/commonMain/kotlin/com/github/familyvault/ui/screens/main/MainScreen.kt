@@ -72,7 +72,7 @@ class MainScreen : Screen {
         FloatingActionButton(onClick = {
             navigator.parent?.push(
                 ChatThreadEditScreen(
-                    ChatThreadType.GROUP,
+                    ChatThreadType.GROUP
                 )
             )
         }) {

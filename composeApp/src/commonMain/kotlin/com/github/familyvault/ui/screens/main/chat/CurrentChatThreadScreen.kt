@@ -29,6 +29,7 @@ import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.states.ICurrentChatState
+import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
 import com.github.familyvault.ui.components.chat.messageEntry.ChatMessageEntry
@@ -45,6 +46,8 @@ class CurrentChatThreadScreen : Screen {
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
         val currentChatState = koinInject<ICurrentChatState>()
+        val currentEditChatState = koinInject<ICurrentEditChatState>()
+
         val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
@@ -59,7 +62,7 @@ class CurrentChatThreadScreen : Screen {
             chatService.populateDatabaseWithLastMessages(chatThread.id)
             currentChatState.populateStateFromService()
             chatThreadManagers.addAll(chatService.retrievePublicKeysOfChatThreadManagers(chatThread.id))
-            chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
+            chatMessageListenerService.startListeningForNewMessage(chatThread.id) {
                 coroutineScope.launch {
                     scrollToLastMessage(listState, currentChatState)
                 }
@@ -79,7 +82,6 @@ class CurrentChatThreadScreen : Screen {
         DisposableEffect(Unit) {
             onDispose {
                 chatMessageListenerService.unregisterAllListeners()
-                currentChatState.clear()
             }
         }
 
@@ -90,9 +92,14 @@ class CurrentChatThreadScreen : Screen {
                         if (myUserData != null) {
                             if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers && myUserData?.permissionGroup != FamilyGroupMemberPermissionGroup.Guest) {
                                 ChatThreadSettingsButton {
+                                    currentEditChatState.updateChatToEdit(
+                                        requireNotNull(
+                                            currentChatState.chatThread
+                                        )
+                                    )
                                     navigator.push(
                                         ChatThreadEditScreen(
-                                            chatThread.type,
+                                            chatThread.type
                                         )
                                     )
                                 }

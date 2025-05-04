@@ -26,6 +26,7 @@ class CurrentChatState(
     }
 
     override fun clear() {
+        chatThread = null
         currentPage = 0
         messages.clear()
     }

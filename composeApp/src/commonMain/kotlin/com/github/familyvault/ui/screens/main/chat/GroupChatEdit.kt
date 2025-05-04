@@ -9,6 +9,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -24,7 +25,7 @@ import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
-import com.github.familyvault.states.ICurrentChatState
+import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.Button
@@ -52,10 +53,10 @@ enum class GroupChatAction {
 fun GroupChatEdit() {
     val navigator = LocalNavigator.currentOrThrow
     val familyGroupService = koinInject<IFamilyGroupService>()
-    val currentChatState = koinInject<ICurrentChatState>()
     val chatService = koinInject<IChatService>()
+    val currentEditChatState = koinInject<ICurrentEditChatState>()
 
-    val chatThread = currentChatState.chatThread
+    val chatThread = currentEditChatState.currentChatToEdit
     var isLoadingFamilyMembers by remember { mutableStateOf(true) }
     var myPublicKey by remember { mutableStateOf("") }
     var myUserData: FamilyMember? by remember { mutableStateOf(null) }
@@ -145,7 +146,7 @@ fun GroupChatEdit() {
                             chatService.createGroupChat(form.groupName, form.familyMembers)
                         } else {
                             chatService.updateChatThread(
-                                chatThread!!,
+                                requireNotNull(chatThread),
                                 form.familyMembers,
                                 form.groupName,
                                 chatCreator = null
