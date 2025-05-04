@@ -26,6 +26,9 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_type_group
 import familyvault.composeapp.generated.resources.chat_type_individual
 import familyvault.composeapp.generated.resources.loading
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -42,25 +45,30 @@ fun SelectChatContent() {
     LaunchedEffect(Unit) {
         isLoading = true
 
-        currentChatThreadsState.clean()
+        withContext(Dispatchers.IO) {
+            currentChatThreadsState.clean()
 
-        currentChatThreadsState.addGroupChatThreads(chatService.retrieveAllGroupChatThreads())
-        currentChatThreadsState.addIndividualChatThreads(chatService.retrieveAllIndividualChatThreads())
+            val groupChats = chatService.retrieveAllGroupChatThreads()
+            val individualChats = chatService.retrieveAllIndividualChatThreads()
 
-        chatThreadListenerService.startListeningForNewChatThread {
-            currentChatThreadsState.addNewChatThread(it)
-            chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
-                currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+            currentChatThreadsState.addGroupChatThreads(groupChats)
+            currentChatThreadsState.addIndividualChatThreads(individualChats)
+
+            chatThreadListenerService.startListeningForNewChatThread {
+                currentChatThreadsState.addNewChatThread(it)
+                chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
+                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+                }
             }
-        }
 
-        chatThreadListenerService.startListeningForUpdatedChatThread {
-            currentChatThreadsState.editExistingChatThread(it)
-        }
+            chatThreadListenerService.startListeningForUpdatedChatThread {
+                currentChatThreadsState.editExistingChatThread(it)
+            }
 
-        for (chatThread in currentChatThreadsState.allChatThreads) {
-            chatMessagesListenerService.startListeningForNewMessage(chatThread.id) { newMessage ->
-                currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, chatThread)
+            for (chatThread in currentChatThreadsState.allChatThreads) {
+                chatMessagesListenerService.startListeningForNewMessage(chatThread.id) { newMessage ->
+                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, chatThread)
+                }
             }
         }
 
