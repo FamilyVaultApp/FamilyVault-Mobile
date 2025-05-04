@@ -13,6 +13,7 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+
 class QrCodeService(private val context: Context) : IQRCodeService {
     override suspend fun scanQRCode(): QrCodeScanResponse {
         return suspendCoroutine { continuation ->
@@ -25,7 +26,7 @@ class QrCodeService(private val context: Context) : IQRCodeService {
             }.addOnCanceledListener {
                 continuation.resume(QrCodeScanResponse.canceled())
             }.addOnFailureListener { e ->
-                continuation.resume(QrCodeScanResponse.error(e.message))
+                continuation.resume(QrCodeScanResponse.error(e))
             }
         }
     }
@@ -36,10 +37,14 @@ class QrCodeService(private val context: Context) : IQRCodeService {
         if (scannedResult.status == QrCodeScanResponseStatus.CANCELED) {
             throw QrCodeCancellationException()
         }
-        if (scannedResult.content == null || scannedResult.status == QrCodeScanResponseStatus.ERROR) {
-            throw QrCodeBadScanException()
+        if (scannedResult.status == QrCodeScanResponseStatus.ERROR || scannedResult.content == null) {
+            throw QrCodeBadScanException(scannedResult.error?.toString())
         }
 
-        return PayloadDecryptor.decrypt(scannedResult.content)
+        return try {
+            PayloadDecryptor.decrypt(scannedResult.content)
+        } catch (e: Exception) {
+            throw QrCodeBadScanException(e.toString())
+        }
     }
 }

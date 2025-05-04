@@ -3,11 +3,11 @@ package com.github.familyvault.models
 import com.github.familyvault.models.enums.QrCodeScanResponseStatus
 
 data class QrCodeScanResponse(
-    val content: String?, val error: String?, val status: QrCodeScanResponseStatus
+    val content: String?, val error: Throwable?, val status: QrCodeScanResponseStatus
 ) {
     companion object {
         fun error(
-            error: String?
+            error: Throwable?
         ): QrCodeScanResponse {
             return QrCodeScanResponse(null, error, QrCodeScanResponseStatus.ERROR)
         }
