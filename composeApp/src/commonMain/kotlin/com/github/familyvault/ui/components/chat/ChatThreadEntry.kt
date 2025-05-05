@@ -16,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
+import com.github.familyvault.models.enums.chat.icon
 import com.github.familyvault.services.IFamilyGroupSessionService
+import com.github.familyvault.ui.components.GroupChatIcon
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
@@ -56,7 +58,12 @@ fun ChatThreadEntry(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
     ) {
-        UserAvatar(chatThread.name)
+        if (chatThread.iconType == null) {
+            UserAvatar(chatThread.name)
+        } else {
+            GroupChatIcon(chatThread.iconType.icon)
+        }
+
         Column {
             Headline3(
                 TextShortener.shortenText(chatThread.name, 30)

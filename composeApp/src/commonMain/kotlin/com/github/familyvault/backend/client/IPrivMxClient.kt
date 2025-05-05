@@ -4,6 +4,7 @@ import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.enums.chat.ThreadIconType
 
 interface IPrivMxClient {
     fun generatePairOfPrivateAndPublicKey(password: String): PublicEncryptedPrivateKeyPair
@@ -21,6 +22,7 @@ interface IPrivMxClient {
         type: String,
         name: String,
         referenceStoreId: String?,
+        threadIcon: ThreadIconType? = null,
         threadInitialCreators: List<PrivMxUser>
     ): String
 
@@ -35,8 +37,11 @@ interface IPrivMxClient {
         threadId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        newName: String? = null
+        newName: String? = null,
+        threadIcon: ThreadIconType? = null
     )
+
+    fun deleteThread(threadId: String)
 
     fun updateStore(
         storeId: String,
@@ -80,6 +85,7 @@ interface IPrivMxClient {
     ): List<ThreadMessageItem>
 
     fun retrieveLastMessageFromThread(threadId: String): ThreadMessageItem?
+    fun retrieveMessageById(messageId: String): ThreadMessageItem
 
     /* Listeners */
     fun unregisterAllEvents(eventName: String)

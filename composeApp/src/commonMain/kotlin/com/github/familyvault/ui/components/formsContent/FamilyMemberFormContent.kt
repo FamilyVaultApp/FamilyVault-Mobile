@@ -2,7 +2,7 @@ package com.github.familyvault.ui.components.formsContent
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import com.github.familyvault.forms.FamilyGroupNewMemberForm
+import com.github.familyvault.forms.FamilyGroupMemberForm
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.TextField
 import familyvault.composeapp.generated.resources.Res
@@ -11,7 +11,7 @@ import familyvault.composeapp.generated.resources.text_field_surname_label
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun NewFamilyMemberFormContent(form: FamilyGroupNewMemberForm, enabled: Boolean = true) {
+fun FamilyMemberFormContent(form: FamilyGroupMemberForm, enabled: Boolean = true) {
     Column {
         TextField(
             value = form.firstname,

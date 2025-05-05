@@ -38,7 +38,7 @@ import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.overrides.Dialog
 import com.github.familyvault.ui.components.overrides.NavigationBar
 import com.github.familyvault.ui.screens.main.chat.ChatThreadEditScreen
-import com.github.familyvault.ui.screens.main.tasks.TaskNewScreen
+import com.github.familyvault.ui.screens.main.tasks.task.TaskNewScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import com.github.familyvault.ui.theme.AppTheme
 import familyvault.composeapp.generated.resources.Res
@@ -172,17 +172,15 @@ class MainScreen : Screen {
         val taskListState = koinInject<ITaskListState>()
         val navigator = LocalNavigator.currentOrThrow
 
-        FloatingActionButton(onClick = {
-            if (taskListState.selectedTaskList == null) {
-                return@FloatingActionButton
+        taskListState.selectedTaskList?.let {
+            FloatingActionButton(onClick = {
+                navigator.parent?.push(TaskNewScreen(requireNotNull(taskListState.selectedTaskList).id))
+            }) {
+                Icon(
+                    Icons.Filled.AddTask,
+                    stringResource(Res.string.task_new),
+                )
             }
-            navigator.parent?.push(TaskNewScreen(requireNotNull(taskListState.selectedTaskList).id))
-
-        }) {
-            Icon(
-                Icons.Filled.AddTask,
-                stringResource(Res.string.task_new),
-            )
         }
     }
 }

@@ -1,3 +1,10 @@
 package com.github.familyvault.models.tasks
 
-data class Task(val id: String, val content: TaskContent, val wasFetchedLater: Boolean = false)
+import kotlinx.datetime.LocalDateTime
+
+data class Task(
+    val id: String,
+    val content: TaskContent,
+    val createDate: LocalDateTime,
+    val wasFetchedLater: Boolean = false
+)

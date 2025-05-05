@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.forms.FamilyGroupMemberForm
 import com.github.familyvault.forms.FamilyGroupNameForm
-import com.github.familyvault.forms.FamilyGroupNewMemberForm
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.HeaderWithIcon
 import com.github.familyvault.ui.components.formsContent.FamilyGroupNameFormContent
-import com.github.familyvault.ui.components.formsContent.NewFamilyMemberFormContent
+import com.github.familyvault.ui.components.formsContent.FamilyMemberFormContent
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.create_new_family_group_title
@@ -31,7 +31,7 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val newFamilyMemberForm by remember { mutableStateOf(FamilyGroupNewMemberForm()) }
+        val newFamilyMemberForm by remember { mutableStateOf(FamilyGroupMemberForm()) }
         val familyGroupNameForm by remember { mutableStateOf(FamilyGroupNameForm()) }
 
         StartScreenScaffold {
@@ -67,12 +67,12 @@ class FamilyGroupCreateMemberAndNameScreen : Screen {
 
     @Composable
     private fun FamilyGroupCreateForm(
-        newFamilyMemberForm: FamilyGroupNewMemberForm,
+        newFamilyMemberForm: FamilyGroupMemberForm,
         familyGroupNameForm: FamilyGroupNameForm,
         isFormEnabled: Boolean = true,
     ) {
         Column {
-            NewFamilyMemberFormContent(newFamilyMemberForm, isFormEnabled)
+            FamilyMemberFormContent(newFamilyMemberForm, isFormEnabled)
             FamilyGroupNameFormContent(familyGroupNameForm, isFormEnabled)
         }
     }

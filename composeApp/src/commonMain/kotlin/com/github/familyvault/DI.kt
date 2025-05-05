@@ -29,13 +29,17 @@ import com.github.familyvault.services.listeners.ChatThreadListenerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.listeners.IChatThreadListenerService
 import com.github.familyvault.services.listeners.ITaskListenerService
+import com.github.familyvault.services.listeners.ITaskListListenerService
 import com.github.familyvault.services.listeners.TaskListenerService
+import com.github.familyvault.services.listeners.TaskListListenerService
 import com.github.familyvault.states.ChatImagesState
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.CurrentChatThreadsState
+import com.github.familyvault.states.FamilyMembersState
 import com.github.familyvault.states.IChatImagesState
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.ICurrentChatThreadsState
+import com.github.familyvault.states.IFamilyMembersState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.states.JoinFamilyGroupPayloadState
@@ -49,6 +53,7 @@ import org.koin.dsl.module
 expect fun getPlatformModules(): Module
 
 val sharedModules = module {
+
     // Repositories
     single { FamilyGroupCredentialsRepository(get()) }.bind<IFamilyGroupCredentialsRepository>()
     single { StoredChatMessageRepository(get()) }.bind<IStoredChatMessageRepository>()
@@ -77,6 +82,7 @@ val sharedModules = module {
         ChatMessagesListenerService(get(), get(), get(), get())
     }.bind<IChatMessagesListenerService>()
     single { ChatThreadListenerService(get()) }.bind<IChatThreadListenerService>()
+    single { TaskListListenerService(get()) }.bind<ITaskListListenerService>()
     single { TaskListenerService(get()) }.bind<ITaskListenerService>()
     single {
         FamilyMemberAdditionService(
@@ -107,7 +113,9 @@ val sharedModules = module {
     single { CurrentChatThreadsState(get()) }.bind<ICurrentChatThreadsState>()
     single { ChatImagesState() }.bind<IChatImagesState>()
     single { TaskListState(get()) }.bind<ITaskListState>()
+    single { FamilyMembersState(get()) }.bind<IFamilyMembersState>()
 }
+
 
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {

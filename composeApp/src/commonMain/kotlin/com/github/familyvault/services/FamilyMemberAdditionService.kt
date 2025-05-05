@@ -9,6 +9,7 @@ class FamilyMemberAdditionService(
     private val sessionService: IFamilyGroupSessionService,
     private val chatService: IChatService,
     private val fileCabinetService: IFileCabinetService
+    private val taskService: ITaskService
 ) : IFamilyMemberAdditionService {
     override suspend fun addMemberToFamilyGroup(
         contextId: String, newFamilyMember: NewFamilyMemberData
@@ -20,6 +21,7 @@ class FamilyMemberAdditionService(
         )
 
         fileCabinetService.updateFamilyGroupFileCabinet()
+        taskService.restoreTaskListsMembership()
     }
 
     override suspend fun afterJoinedToFamilyMembersOperations() {

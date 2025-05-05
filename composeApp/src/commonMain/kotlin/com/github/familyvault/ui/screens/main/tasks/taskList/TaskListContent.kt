@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main.tasks
+package com.github.familyvault.ui.screens.main.tasks.taskList
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.services.listeners.ITaskListenerService
+import com.github.familyvault.services.listeners.ITaskListListenerService
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.HorizontalScrollableRow
 import com.github.familyvault.ui.components.tasks.TaskGroupCompleted
@@ -36,6 +37,7 @@ fun TaskListContent() {
     val scrollState = rememberScrollState()
 
     LaunchedEffect(taskListState.selectedTaskList) {
+
         taskListState.selectedTaskList?.let { selected ->
             taskListenerService.unregisterAllListeners()
             taskListenerService.startListeningForNewTask(selected.id) {
@@ -56,7 +58,6 @@ fun TaskListContent() {
     DisposableEffect(Unit) {
         onDispose {
             taskListenerService.unregisterAllListeners()
-            taskListState.unselectTaskList()
         }
     }
 
@@ -91,10 +92,13 @@ fun TaskListContent() {
                 .padding(horizontal = AdditionalTheme.spacings.screenPadding)
                 .verticalScroll(scrollState)
         ) {
-            taskListState.selectedTaskList?.let { list ->
+            taskListState.selectedTaskList?.let { taskList ->
                 TaskGroupPending(
-                    categoryTitle = list.name,
-                    tasks = taskListState.tasks.filter { !it.content.completed }
+                    categoryTitle = taskList.name,
+                    tasks = taskListState.tasks.filter { !it.content.completed },
+                    onEditClick = {
+                        localNavigator.parent?.push(TaskListEditScreen(taskList))
+                    }
                 )
                 TaskGroupCompleted(
                     tasks = taskListState.tasks.filter { it.content.completed }
