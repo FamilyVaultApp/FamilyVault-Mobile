@@ -11,5 +11,5 @@ interface IFileCabinetService {
     )
 
     fun getImagesFromFamilyGroupStoreAsByteArray(storeId: String?, limit: Long, skip: Long) : List<ByteArray>
-    suspend fun updateFamilyGroupFileCabinet()
+    suspend fun restoreFileCabinetMembership()
 }

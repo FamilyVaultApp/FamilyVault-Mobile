@@ -70,7 +70,7 @@ class FamilyGroupService(
             contextId,
             users,
             managers,
-            StoreType.FILE_CABINET.toString()
+            StoreType.FILE_CABINET_IMAGES.toString()
         )
 
         privMxClient.createThread(

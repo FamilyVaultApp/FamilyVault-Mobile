@@ -92,7 +92,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         name: String,
         referenceStoreId: String?,
         threadIcon: ThreadIconType?,
-        threadCreators: List<PrivMxUser>
+        threadInitialCreators: List<PrivMxUser>
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -103,7 +103,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val threadId = threadApi?.createThread(
             contextId, userList, managerList,
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon, threadCreators.map { it.publicKey }))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon, threadInitialCreators.map { it.publicKey }))
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }

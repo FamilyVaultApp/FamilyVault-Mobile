@@ -20,7 +20,7 @@ class FamilyMemberAdditionService(
             )
         )
 
-        fileCabinetService.updateFamilyGroupFileCabinet()
+        fileCabinetService.restoreFileCabinetMembership()
         taskService.restoreTaskListsMembership()
     }
 

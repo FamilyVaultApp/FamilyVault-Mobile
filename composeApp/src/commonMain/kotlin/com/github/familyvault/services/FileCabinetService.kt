@@ -51,7 +51,7 @@ class FileCabinetService(
         return privMxClient.getFilesAsByteArrayFromStore(storeId, limit, skip)
     }
 
-    override suspend fun updateFamilyGroupFileCabinet() {
+    override suspend fun restoreFileCabinetMembership() {
         val threadId = retrieveFileCabinetThread().threadId
         val storeId = retrieveFileCabinetStoreId()
         val splitFamilyMembers = FamilyMembersSplitter.split(

@@ -35,6 +35,7 @@ import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.states.ITaskListState
+import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.overrides.Dialog
 import com.github.familyvault.ui.components.overrides.NavigationBar
 import com.github.familyvault.ui.screens.main.chat.ChatThreadEditScreen
@@ -147,23 +148,7 @@ class MainScreen : Screen {
         }
 
         if (isUploading) {
-            Dialog(onDismissRequest = {}) {
-                Surface(
-                    shape = MaterialTheme.shapes.medium,
-                    tonalElevation = AdditionalTheme.spacings.medium
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(AdditionalTheme.spacings.normalPadding)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CircularProgressIndicator()
-                        Spacer(modifier = Modifier.height(AdditionalTheme.sizing.small))
-                        Text(stringResource(Res.string.file_cabinet_sending_files))
-                    }
-                }
-            }
+            CircularProgressIndicatorDialog(stringResource(Res.string.file_cabinet_sending_files))
         }
     }
 
