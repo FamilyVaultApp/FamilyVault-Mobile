@@ -18,7 +18,7 @@ import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import com.github.familyvault.models.enums.chat.icon
 import com.github.familyvault.services.IFamilyGroupSessionService
-import com.github.familyvault.ui.components.MainScreenGroupChatIcon
+import com.github.familyvault.ui.components.GroupChatIcon
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
@@ -61,7 +61,7 @@ fun ChatThreadEntry(
         if (chatThread.iconType == null) {
             UserAvatar(chatThread.name)
         } else {
-            MainScreenGroupChatIcon(chatThread.iconType.icon)
+            GroupChatIcon(chatThread.iconType.icon)
         }
 
         Column {

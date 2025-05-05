@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun MainScreenGroupChatIcon(icon: ImageVector, size: Dp = 40.dp) {
+fun GroupChatIcon(icon: ImageVector, size: Dp = 40.dp) {
 
     Box(
         modifier = Modifier.size(size)
