@@ -25,7 +25,7 @@ fun ErrorDialog(
             textAlign = TextAlign.Center
         )
         Button(
-            text = "Ok", onClick = onDismiss
+            text = "OK", onClick = onDismiss
         )
     }
 }

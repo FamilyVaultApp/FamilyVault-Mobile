@@ -38,7 +38,7 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
         taskLists.add(taskList)
     }
 
-    private suspend fun populateTaskFormTaskListFromServices() {
+    override suspend fun populateTaskFormTaskListFromServices() {
         selectedTaskList?.let {
             tasks.clear()
             tasks.addAll(tasksService.getTasksFromList(it.id))
@@ -71,9 +71,8 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
         changeTaskCompleteStatus(taskId, completeStatus = false)
 
     private suspend fun changeTaskCompleteStatus(taskId: String, completeStatus: Boolean) {
-        var task = tasks.first { it.id == taskId }
-        task = task.copy(content = task.content.copy(completed = completeStatus))
+        val task = tasks.first { it.id == taskId }
 
-        tasksService.updateTask(task)
+        tasksService.updateTask(task.id, task.content.copy(completed = completeStatus))
     }
 }

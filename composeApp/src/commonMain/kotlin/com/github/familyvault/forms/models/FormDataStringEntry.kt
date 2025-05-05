@@ -1,10 +1,9 @@
-package com.github.familyvault.models.forms
+package com.github.familyvault.forms.models
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-class FormDataStringTouchedEntry : BaseFormDataEntry() {
-    override var touched: Boolean = true
+open class FormDataStringEntry : BaseFormDataEntry() {
     var value: String by mutableStateOf("")
 }

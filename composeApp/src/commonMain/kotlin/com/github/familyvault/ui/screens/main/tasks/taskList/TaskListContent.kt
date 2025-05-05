@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main.tasks
+package com.github.familyvault.ui.screens.main.tasks.taskList
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,7 +58,6 @@ fun TaskListContent() {
     DisposableEffect(Unit) {
         onDispose {
             taskListenerService.unregisterAllListeners()
-            taskListState.unselectTaskList()
         }
     }
 
@@ -93,10 +92,13 @@ fun TaskListContent() {
                 .padding(horizontal = AdditionalTheme.spacings.screenPadding)
                 .verticalScroll(scrollState)
         ) {
-            taskListState.selectedTaskList?.let { list ->
+            taskListState.selectedTaskList?.let { taskList ->
                 TaskGroupPending(
-                    categoryTitle = list.name,
-                    tasks = taskListState.tasks.filter { !it.content.completed }
+                    categoryTitle = taskList.name,
+                    tasks = taskListState.tasks.filter { !it.content.completed },
+                    onEditClick = {
+                        localNavigator.parent?.push(TaskListEditScreen(taskList))
+                    }
                 )
                 TaskGroupCompleted(
                     tasks = taskListState.tasks.filter { it.content.completed }
