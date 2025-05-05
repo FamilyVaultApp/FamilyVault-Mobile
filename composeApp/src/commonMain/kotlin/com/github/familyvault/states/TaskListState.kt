@@ -34,7 +34,7 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
     }
 
     override fun updateTaskList(taskList: TaskList) {
-        taskLists.removeAll {it.id.compareTo(taskList.id) == 0}
+        taskLists.removeAll { it.id == taskList.id }
         taskLists.add(taskList)
     }
 

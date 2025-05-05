@@ -2,6 +2,7 @@ package com.github.familyvault.services.listeners
 
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.models.tasks.TaskList
+import com.github.familyvault.utils.mappers.ThreadItemToTaskListMapper
 
 class TaskListListenerService(
     private val privMxClient: IPrivMxClient
@@ -11,13 +12,10 @@ class TaskListListenerService(
         const val UPDATE_EVENT_NAME = "TASK_LIST_THREAD_UPDATE"
     }
 
-    override fun startListeningForTaskList(onNewTaskList: (TaskList) -> Unit) {
+    override fun startListeningForNewTaskList(onNewTaskList: (TaskList) -> Unit) {
         privMxClient.registerOnThreadCreated(CREATE_EVENT_NAME) {
             onNewTaskList(
-                TaskList(
-                    id = it.threadId,
-                    name = it.privateMeta.name
-                )
+                ThreadItemToTaskListMapper.map(it)
             )
         }
     }
@@ -25,10 +23,7 @@ class TaskListListenerService(
     override fun startListeningForUpdatedTaskList(onUpdatedTaskList: (TaskList) -> Unit) {
         privMxClient.registerOnThreadUpdated(UPDATE_EVENT_NAME) {
             onUpdatedTaskList(
-                TaskList(
-                    id = it.threadId,
-                    name = it.privateMeta.name
-                )
+                ThreadItemToTaskListMapper.map(it)
             )
         }
     }

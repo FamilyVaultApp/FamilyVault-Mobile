@@ -33,14 +33,14 @@ fun TaskTabContent() {
         isLoading = true
         tasksCategoriesState.populateTaskListFromServices()
         familyMembersState.populateFamilyGroupMembersFromService()
-        tasksListState.populateTaskListFromServices()
-        taskListListenerService.startListeningForTaskList { newList ->
+
+        taskListListenerService.startListeningForNewTaskList { newList ->
             tasksListState.taskLists.add(newList)
         }
-
         taskListListenerService.startListeningForUpdatedTaskList { updatedList ->
             tasksListState.updateTaskList(updatedList)
         }
+
         isLoading = false
     }
 
