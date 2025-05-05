@@ -33,9 +33,13 @@ import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
 import com.github.familyvault.ui.components.chat.messageEntry.ChatMessageEntry
+import com.github.familyvault.ui.components.dialogs.ErrorDialog
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import familyvault.composeapp.generated.resources.chat_user_not_in_group
+import familyvault.composeapp.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
 
 class CurrentChatThreadScreen : Screen {
 
@@ -54,18 +58,26 @@ class CurrentChatThreadScreen : Screen {
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
+        var showErrorDialog by remember { mutableStateOf(false) }
         val chatThread = requireNotNull(currentChatState.chatThread)
 
         LaunchedEffect(chatThread) {
             mediaPicker.clearSelectedImages()
-
-            chatService.populateDatabaseWithLastMessages(chatThread.id)
-            currentChatState.populateStateFromService()
-            chatThreadManagers.addAll(chatService.retrievePublicKeysOfChatThreadManagers(chatThread.id))
-            chatMessageListenerService.startListeningForNewMessage(chatThread.id) {
-                coroutineScope.launch {
-                    scrollToLastMessage(listState, currentChatState)
+            try {
+                chatService.populateDatabaseWithLastMessages(chatThread.id)
+                currentChatState.populateStateFromService()
+                chatThreadManagers.addAll(
+                    chatService.retrievePublicKeysOfChatThreadManagers(
+                        chatThread.id
+                    )
+                )
+                chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
+                    coroutineScope.launch {
+                        scrollToLastMessage(listState, currentChatState)
+                    }
                 }
+            } catch (e: Exception) {
+                showErrorDialog = true
             }
             myUserData = familyGroupService.retrieveMyFamilyMemberData()
             scrollToLastMessage(listState, currentChatState)
@@ -110,44 +122,52 @@ class CurrentChatThreadScreen : Screen {
             Column(
                 modifier = Modifier.fillMaxSize().padding(paddingValues)
             ) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    state = listState,
-                ) {
-                    itemsIndexed(
-                        items = currentChatState.messages,
-                        key = { _, message -> message.id }) { index, message ->
-                        ChatMessageEntry(
-                            message,
-                            prevMessage = currentChatState.messages.getOrNull(index - 1),
-                            nextMessage = currentChatState.messages.getOrNull(index + 1)
-                        )
+                if (!showErrorDialog) {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        state = listState,
+                    ) {
+                        itemsIndexed(
+                            items = currentChatState.messages,
+                            key = { _, message -> message.id }) { index, message ->
+                            ChatMessageEntry(
+                                message,
+                                prevMessage = currentChatState.messages.getOrNull(index - 1),
+                                nextMessage = currentChatState.messages.getOrNull(index + 1)
+                            )
+                        }
                     }
+                    ChatInputField(
+                        onTextMessageSend = {
+                            if (it.isEmpty()) {
+                                return@ChatInputField
+                            }
+
+                            chatService.sendTextMessage(chatThread.id, it, respondToMessageId = "")
+                        },
+                        onVoiceMessageSend = {
+                            if (it.isEmpty()) {
+                                return@ChatInputField
+                            }
+                            chatService.sendVoiceMessage(chatThread.id, it)
+                        },
+                        onImageMessageSend = {
+                            if (it.isEmpty()) {
+                                return@ChatInputField
+                            }
+
+                            it.forEach { mediaByteArray ->
+                                chatService.sendImageMessage(chatThread.id, mediaByteArray)
+                            }
+                        }
+                    )
+
+                } else {
+                    ErrorDialog(
+                        stringResource(Res.string.chat_user_not_in_group)
+                    ) { navigator.pop() }
                 }
-                ChatInputField(
-                    onTextMessageSend = {
-                        if (it.isEmpty()) {
-                            return@ChatInputField
-                        }
 
-                        chatService.sendTextMessage(chatThread.id, it, respondToMessageId = "")
-                    },
-                    onVoiceMessageSend = {
-                        if (it.isEmpty()) {
-                            return@ChatInputField
-                        }
-                        chatService.sendVoiceMessage(chatThread.id, it)
-                    },
-                    onImageMessageSend = {
-                        if (it.isEmpty()) {
-                            return@ChatInputField
-                        }
-
-                        it.forEach { mediaByteArray ->
-                            chatService.sendImageMessage(chatThread.id, mediaByteArray)
-                        }
-                    }
-                )
             }
         }
     }

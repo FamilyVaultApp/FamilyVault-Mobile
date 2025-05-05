@@ -33,6 +33,7 @@ import com.github.familyvault.ui.components.FamilyMemberEntry
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.settings.DescriptionSection
+import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.AddMemberToFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.ModifyFamilyMemberScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
@@ -100,7 +101,7 @@ class FamilyGroupSettingMembersScreen : Screen {
                             familyGroupMembers.forEach { member ->
                                 FamilyMemberEntry(
                                     familyMember = member,
-                                    additionalDescription = getPermissionGroupString(member.permissionGroup)
+                                    additionalDescription = { Paragraph(getPermissionGroupString(member.permissionGroup)) }
                                 ) {
                                     IconButton(onClick = {
                                         navigator.push(ModifyFamilyMemberScreen(member))

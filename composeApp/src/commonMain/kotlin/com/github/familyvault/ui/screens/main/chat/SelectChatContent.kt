@@ -16,6 +16,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.services.IChatService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.listeners.IChatThreadListenerService
 import com.github.familyvault.states.ICurrentChatState
@@ -37,7 +38,7 @@ fun SelectChatContent() {
     val chatThreadListenerService = koinInject<IChatThreadListenerService>()
     val chatMessagesListenerService = koinInject<IChatMessagesListenerService>()
     val currentChatThreadsState = koinInject<ICurrentChatThreadsState>()
-
+    val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
@@ -56,8 +57,9 @@ fun SelectChatContent() {
         }
 
         chatThreadListenerService.startListeningForUpdatedChatThread {
-            currentChatThreadsState.editExistingChatThread(it)
+                currentChatThreadsState.editExistingChatThread(it)
         }
+
 
         for (chatThread in currentChatThreadsState.allChatThreads) {
             chatMessagesListenerService.startListeningForNewMessage(chatThread.id) { newMessage ->

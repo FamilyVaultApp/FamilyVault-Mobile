@@ -118,9 +118,13 @@
     <string name="chat_set_group_name">Group chat name</string>
     <string name="chat_settings">Chat settings</string>
     <string name="chat_create_group_default_name">Family group</string>
-    <string name="chat_create_group_members">Group chat members</string>
+    <string name="chat_create_group_members">Members</string>
+    <string name="chat_icon_icon_alt">Group chat icon</string>
+    <string name="chat_icon_icon_picker">Icon</string>
     <string name="chat_create_group_button_content">Create group chat</string>
-    <string name="chat_edit_group_button_content">Save changes</string>
+    <string name="chat_save_edited_group_button_content">Save changes</string>
+    <string name="chat_create_group_user_is_member">Currently a member</string>
+    <string name="chat_create_group_user_is_not_member">Currently not a member</string>
     <string name="chat_send_message">Send message</string>
     <string name="chat_type_individual">Individual</string>
     <string name="chat_type_group">Groups</string>
@@ -138,6 +142,7 @@
     <string name="chat_media_full_screen">Full screen</string>
     <string name="chat_remove_multimedia_description">Remove multimedia</string>
     <string name="chat_image_preview">Image preview</string>
+    <string name="chat_user_not_in_group">You have been removed from this group chat</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>
