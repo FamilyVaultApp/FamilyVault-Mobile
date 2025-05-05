@@ -3,10 +3,13 @@ package com.github.familyvault.services
 import android.content.Context
 import com.github.familyvault.exceptions.QrCodeBadScanException
 import com.github.familyvault.exceptions.QrCodeCancellationException
+import com.github.familyvault.exceptions.QrCodeScannerErrorException
+import com.github.familyvault.exceptions.QrCodeScannerNotInstalledException
 import com.github.familyvault.models.AddFamilyMemberDataPayload
 import com.github.familyvault.models.QrCodeScanResponse
 import com.github.familyvault.models.enums.QrCodeScanResponseStatus
 import com.github.familyvault.utils.PayloadDecryptor
+import com.google.mlkit.common.MlKitException
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
@@ -37,8 +40,15 @@ class QrCodeService(private val context: Context) : IQRCodeService {
         if (scannedResult.status == QrCodeScanResponseStatus.CANCELED) {
             throw QrCodeCancellationException()
         }
-        if (scannedResult.status == QrCodeScanResponseStatus.ERROR || scannedResult.content == null) {
-            throw QrCodeBadScanException(scannedResult.error?.toString())
+        if (scannedResult.status == QrCodeScanResponseStatus.ERROR) {
+            if (scannedResult.error is MlKitException && scannedResult.error.errorCode == MlKitException.CODE_SCANNER_UNAVAILABLE) {
+                throw QrCodeScannerNotInstalledException(scannedResult.error.toString())
+            } else {
+                throw QrCodeScannerErrorException(scannedResult.error?.toString())
+            }
+        }
+        if (scannedResult.content == null) {
+            throw QrCodeBadScanException("Scanned code is null")
         }
 
         return try {
