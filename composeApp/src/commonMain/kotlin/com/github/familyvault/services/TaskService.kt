@@ -37,6 +37,23 @@ class TaskService(
         )
     }
 
+    override suspend fun updateTaskList(taskListId: String, name: String) {
+        val splitFamilyMembers = FamilyMembersSplitter.split(
+            familyGroupService.retrieveFamilyGroupMembersList()
+        )
+
+        privMxClient.updateThread(
+            taskListId,
+            users = splitFamilyMembers.members.map { it.toPrivMxUser() },
+            managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() },
+            newName = name,
+        )
+    }
+
+    override suspend fun deleteTaskList(taskListId: String) {
+        privMxClient.deleteThread(taskListId)
+    }
+
     override suspend fun getTaskLists(): List<TaskList> {
         val contextId = familyGroupSessionService.getContextId()
         val tasksThreads =
@@ -45,15 +62,46 @@ class TaskService(
         return tasksThreads.map { ThreadItemToTaskListMapper.map(it) }
     }
 
-    override suspend fun createNewTask(taskListId: String, name: String, description: String) {
-        val serializedTaskContent = Json.encodeToString(
-            TaskContent(
-                name, description, completed = false, assignedMemberPubKey = null
-            )
+    override suspend fun createNewTask(
+        taskListId: String,
+        title: String,
+        description: String,
+        assignedMemberPubKey: String?
+    ) {
+        createNewTask(
+            taskListId,
+            TaskContent(title, description, completed = false, assignedMemberPubKey)
         )
+    }
+
+    override suspend fun createNewTask(taskListId: String, content: TaskContent) {
+        val serializedTaskContent = Json.encodeToString(content)
 
         privMxClient.sendMessage(
             taskListId, serializedTaskContent, TaskMessageContentType.TASK.toString()
+        )
+    }
+
+    override suspend fun updateTask(
+        taskId: String,
+        title: String?,
+        description: String?,
+        assignedMemberPubKey: String?
+    ) {
+        val taskContentString = privMxClient.retrieveMessageById(taskId).messageContent
+        val taskContent = Json.decodeFromString<TaskContent>(requireNotNull(taskContentString))
+        val modifiedTaskContent = taskContent.copy(
+            title = title ?: taskContent.title,
+            description = description ?: taskContent.description,
+            assignedMemberPubKey = assignedMemberPubKey ?: taskContent.assignedMemberPubKey
+        )
+
+        updateTask(taskId, modifiedTaskContent)
+    }
+
+    override suspend fun updateTask(taskId: String, content: TaskContent) {
+        privMxClient.updateMessageContent(
+            taskId, Json.encodeToString(content)
         )
     }
 
@@ -72,9 +120,18 @@ class TaskService(
         }
     }
 
-    override suspend fun updateTask(task: Task) {
-        privMxClient.updateMessageContent(
-            task.id, Json.encodeToString(task.content)
-        )
+    override suspend fun restoreTaskListsMembership() {
+        val taskLists = getTaskLists()
+        val splitFamilyMembers =
+            FamilyMembersSplitter.split(familyGroupService.retrieveFamilyGroupMembersList())
+
+        for (taskList in taskLists) {
+            privMxClient.updateThread(
+                taskList.id,
+                users = splitFamilyMembers.members.map { it.toPrivMxUser() },
+                managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() },
+            )
+        }
     }
+
 }

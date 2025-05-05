@@ -1,4 +1,4 @@
-package com.github.familyvault.models.forms
+package com.github.familyvault.forms.models
 
 import androidx.compose.runtime.mutableStateListOf
 

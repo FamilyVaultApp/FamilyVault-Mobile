@@ -2,7 +2,7 @@ package com.github.familyvault.ui.components.formsContent
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import com.github.familyvault.forms.PrivateKeyAssignPasswordForm
+import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.ui.components.ValidationErrorMessage
 import com.github.familyvault.ui.components.overrides.TextField
 import familyvault.composeapp.generated.resources.Res
@@ -11,8 +11,8 @@ import familyvault.composeapp.generated.resources.repeat_password_label
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AssignPrivateKeyFormContent(
-    form: PrivateKeyAssignPasswordForm,
+fun PrivateKeyFormContent(
+    form: PrivateKeyPasswordForm,
 ) {
     Column {
         TextField(

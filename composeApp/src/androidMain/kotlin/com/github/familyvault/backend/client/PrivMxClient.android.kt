@@ -174,6 +174,12 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         )
     }
 
+    override fun deleteThread(threadId: String) {
+        val threadApi = requireNotNull(threadApi)
+
+        threadApi.deleteThread(threadId)
+    }
+
     override fun retrieveAllThreads(
         contextId: String, startIndex: Int, pageSize: Int
     ): List<ThreadItem> {
@@ -294,13 +300,19 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val threadApi = requireNotNull(threadApi)
 
         val messages = threadApi.listMessages(threadId, 0, 1, SortOrder.DESC).readItems
-
         if (messages.isEmpty()) {
             return null
         }
-        val message = messages.first()
 
-        return PrivMxMessageToMessageItemMapper.map(message)
+        return PrivMxMessageToMessageItemMapper.map(messages.first())
+    }
+
+    override fun retrieveMessageById(
+        messageId: String
+    ): ThreadMessageItem {
+        val threadApi = requireNotNull(threadApi)
+
+        return PrivMxMessageToMessageItemMapper.map(threadApi.getMessage(messageId))
     }
 
     /* Listeners */

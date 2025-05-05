@@ -3,6 +3,7 @@
     <string name="app_name">Family Vault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
     <string name="loading">Loading...</string>
+    <string name="saving">Saving...</string>
     <string name="you">You</string>
     <string name="is_actual">Actual</string>
     <string name="is_default">Default</string>
@@ -10,6 +11,8 @@
     <string name="expand">Expand</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="nobody">Nobody</string>
+    <string name="assigned_person">Assigned person</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -18,6 +21,8 @@
     <!-- Button contents -->
     <string name="next_button_content">Next</string>
     <string name="create_button_content">Create</string>
+    <string name="edit_button_content">Edit</string>
+    <string name="delete_button_content">Delete</string>
     <string name="cancel_button_content">Cancel</string>
     <string name="confirm_button_content">Confirm</string>
     <string name="scan_qr_code_button_content">Scan QR code</string>
@@ -172,13 +177,15 @@
     <!-- Tasks -->
     <string name="task_add_new_list_short">Add new</string>
     <string name="task_add_new_list">New task list</string>
-    <string name="task_add_new_list_description">Here you can create a new list to better organize tasks for your family and quickly assign responsibilities.</string>
+    <string name="task_add_new_list_description">Here you can create a new list to better organize tasks for your family and assign responsibilities.</string>
+    <string name="task_edit_list_description">On this screen, you can edit a task list to better organize family duties.</string>
     <string name="task_settings">Configure</string>
     <string name="task_completed">Completed</string>
-    <string name="task_assign">Assign family member to task</string>
+    <string name="task_assign">Assign a task</string>
     <string name="no_task_list_title">No task list</string>
     <string name="no_task_list_description">Create your first task list by clicking the button below.</string>
     <string name="task_list_creating">Creating a new task list...</string>
     <string name="task_new">New task</string>
     <string name="task_new_description">Create a new task with a description that you can assign to a selected member of your family group.</string>
+    <string name="task_edit_description">Edit the task description and reassign it to a selected member of your family group if needed.</string>
 </resources>

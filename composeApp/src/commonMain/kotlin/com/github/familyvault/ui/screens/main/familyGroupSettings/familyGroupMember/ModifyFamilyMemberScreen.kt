@@ -31,6 +31,7 @@ import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
+import com.github.familyvault.ui.components.DangerButton
 import com.github.familyvault.ui.components.dialogs.RemoveFamilyMemberDialog
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -144,8 +145,8 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                             RadioButton(
                                 selected = selectedPermissionGroup == option.permissionGroup,
                                 onClick = {
-                                    if (isGuardian && !optionDisabled) selectedPermissionGroup =
-                                        option.permissionGroup
+                                    if (isGuardian && !optionDisabled)
+                                        selectedPermissionGroup = option.permissionGroup
                                 },
                                 enabled = isGuardian && !optionDisabled
                             )
@@ -180,76 +181,75 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                     }
                 }
 
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(
-                        AdditionalTheme.spacings.medium,
-                        Alignment.Bottom
-                    ),
-                ) {
-                    if (isGuardian) {
-                        Button(
-                            text = stringResource(Res.string.user_modification_save_button),
-                            modifier = Modifier.fillMaxWidth(),
-                            enabled = !savingChanges &&
-                                    !(isLastGuardian &&
-                                            selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
-                            onClick = {
-                                coroutineScope.launch {
-                                    savingChanges = true
-                                    permissionGroupService.changeFamilyMemberPermissionGroup(
-                                        familyMember.fullname,
-                                        selectedPermissionGroup
-                                    )
-                                    val updatedUser =
-                                        familyGroupService.retrieveFamilyMemberDataByPublicKey(
-                                            familyMember.publicKey
-                                        )
-                                    if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
-                                        chatService.updateGroupChatThreadsAfterUserPermissionChange(
-                                            updatedUser,
-                                            familyGroupService.retrieveFamilyGroupMembersList()
-                                        )
-                                    }
-                                    savingChanges = false
-                                    navigator.pop()
-                                }
-                            }
-                        )
-                    }
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(
+                    AdditionalTheme.spacings.medium,
+                    Alignment.Bottom
+                ),
+            ) {
+                if (isGuardian) {
                     Button(
-                        text = stringResource(Res.string.user_modification_remove_user_button_content),
+                        text = stringResource(Res.string.user_modification_save_button),
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !savingChanges && isGuardian &&
-                                !isLastGuardian,
-                        containerColor = MaterialTheme.colorScheme.error,
+                        enabled = !savingChanges &&
+                                !(isLastGuardian &&
+                                        selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
                         onClick = {
-                            showDialog = true
+                            coroutineScope.launch {
+                                savingChanges = true
+                                permissionGroupService.changeFamilyMemberPermissionGroup(
+                                    familyMember.fullname,
+                                    selectedPermissionGroup
+                                )
+                                val updatedUser =
+                                    familyGroupService.retrieveFamilyMemberDataByPublicKey(
+                                        familyMember.publicKey
+                                    )
+                                if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
+                                    chatService.updateGroupChatThreadsAfterUserPermissionChange(
+                                        updatedUser,
+                                        familyGroupService.retrieveFamilyGroupMembersList()
+                                    )
+                                }
+                                savingChanges = false
+                                navigator.pop()
+                            }
                         }
                     )
                 }
-            }
-            if (showDialog) {
-                RemoveFamilyMemberDialog(onConfirm = {
-                    coroutineScope.launch {
-                        familyGroupService.removeMemberFromCurrentFamilyGroup(
-                            familyMember.publicKey
-                        )
-                        if (familyMember.publicKey == familyGroupSessionService.getPublicKey()) {
-                            familyGroupCredentialsRepository.deleteCredential(
-                                familyGroupSessionService.getContextId()
-                            )
-                            familyGroupSessionService.disconnect()
-                            navigator.replaceAll(ChangeFamilyGroupScreen())
-                        } else {
-                            navigator.replace(MainScreen())
-                        }
+                DangerButton(
+                    text = stringResource(Res.string.user_modification_remove_user_button_content),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !savingChanges && isGuardian &&
+                            !isLastGuardian,
+                    onClick = {
+                        showDialog = true
                     }
-                    showDialog = false
-                }, onDismiss = {
-                    showDialog = false
-                })
+                )
             }
         }
+        if (showDialog) {
+            RemoveFamilyMemberDialog(onConfirm = {
+                coroutineScope.launch {
+                    familyGroupService.removeMemberFromCurrentFamilyGroup(
+                        familyMember.publicKey
+                    )
+                    if (familyMember.publicKey == familyGroupSessionService.getPublicKey()) {
+                        familyGroupCredentialsRepository.deleteCredential(
+                            familyGroupSessionService.getContextId()
+                        )
+                        familyGroupSessionService.disconnect()
+                        navigator.replaceAll(ChangeFamilyGroupScreen())
+                    } else {
+                        navigator.replace(MainScreen())
+                    }
+                }
+                showDialog = false
+            }, onDismiss = {
+                showDialog = false
+            })
+        }
     }
+}
 }

@@ -8,6 +8,7 @@ object ThreadMessageItemToTask {
     fun map(threadMessageItem: ThreadMessageItem, wasFetchedLater: Boolean = false): Task = Task(
         id = threadMessageItem.messageId,
         content = Json.decodeFromString(requireNotNull(threadMessageItem.messageContent)),
-        wasFetchedLater = wasFetchedLater
+        createDate = threadMessageItem.createDate,
+        wasFetchedLater = wasFetchedLater,
     )
 }

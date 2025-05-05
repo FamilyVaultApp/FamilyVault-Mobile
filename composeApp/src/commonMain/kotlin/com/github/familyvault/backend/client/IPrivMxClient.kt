@@ -41,6 +41,8 @@ interface IPrivMxClient {
         threadIcon: ThreadIconType? = null
     )
 
+    fun deleteThread(threadId: String)
+
     fun retrieveThread(threadId: String): ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
     fun retrieveAllThreadsWithTag(
@@ -76,6 +78,7 @@ interface IPrivMxClient {
     ): List<ThreadMessageItem>
 
     fun retrieveLastMessageFromThread(threadId: String): ThreadMessageItem?
+    fun retrieveMessageById(messageId: String): ThreadMessageItem
 
     /* Listeners */
     fun unregisterAllEvents(eventName: String)
