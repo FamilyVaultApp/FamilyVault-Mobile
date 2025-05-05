@@ -86,7 +86,7 @@ val sharedModules = module {
     single { TaskListenerService(get()) }.bind<ITaskListenerService>()
     single {
         FamilyMemberAdditionService(
-            get(), get(), get(), get()
+            get(), get(), get(), get(), get()
         )
     }.bind<IFamilyMemberAdditionService>()
     single {

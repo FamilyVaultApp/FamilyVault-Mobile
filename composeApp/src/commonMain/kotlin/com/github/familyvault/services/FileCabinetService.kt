@@ -21,7 +21,8 @@ class FileCabinetService(
             pageSize = 100
         )
 
-        return fileCabinetThreadsId.first()
+        return fileCabinetThreadsId.firstOrNull()
+            ?: throw IllegalStateException("No file cabinet thread found")
     }
 
     override fun retrieveFileCabinetStoreId(): String {
