@@ -29,7 +29,7 @@ class FamilyGroupJoinWaitingScreen : Screen {
         val joinTokenService = koinInject<IJoinStatusService>()
         val joinFamilyGroupPayloadState = koinInject<IJoinFamilyGroupPayloadState>()
         val payload = remember { joinFamilyGroupPayloadState.getPayload() }
-        val (firstname, surname, keyPair) = payload.newMemberData
+        val (identifier, keyPair) = payload.newMemberData
 
         LaunchedEffect(Unit) {
             val joinStatusInfo = joinTokenService.waitAndGetJoinStatusInfo(payload.joinStatusToken)

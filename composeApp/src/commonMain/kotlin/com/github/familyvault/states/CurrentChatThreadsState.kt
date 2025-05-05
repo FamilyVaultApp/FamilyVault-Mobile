@@ -6,7 +6,7 @@ import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IFamilyGroupSessionService
 
-class CurrentChatThreadsState(private val familyGroupSessionService: IFamilyGroupSessionService) :
+class CurrentChatThreadsState() :
     ICurrentChatThreadsState {
     override var groupChatThreads = mutableStateListOf<ChatThread>()
     override var individualChatThreads = mutableStateListOf<ChatThread>()
@@ -33,24 +33,15 @@ class CurrentChatThreadsState(private val familyGroupSessionService: IFamilyGrou
 
     override fun addNewChatThread(chatThread: ChatThread) {
         when (chatThread.type) {
-            ChatThreadType.INDIVIDUAL -> individualChatThreads.add(
-                chatThread.copy(
-                    name = chatThread.customNameIfIndividualOrDefault(
-                        familyGroupSessionService.getCurrentUser().id
-                    )
-                )
-            )
-
+            ChatThreadType.INDIVIDUAL -> individualChatThreads.add(chatThread)
             ChatThreadType.GROUP -> groupChatThreads.add(chatThread)
         }
     }
 
 
-
     override fun editExistingChatThreadLastMessage(
         newMessage: ChatMessage, chatThread: ChatThread
     ) {
-        val userId = familyGroupSessionService.getCurrentUser().id
         val chatThreadList = if (chatThread.type == ChatThreadType.INDIVIDUAL) {
             individualChatThreads
         } else {
@@ -60,7 +51,6 @@ class CurrentChatThreadsState(private val familyGroupSessionService: IFamilyGrou
         chatThreadList.removeAll { it.id.compareTo(chatThread.id) == 0 }
         chatThreadList.add(
             chatThread.copy(
-                name = chatThread.customNameIfIndividualOrDefault(userId),
                 lastMessage = newMessage,
             )
         )

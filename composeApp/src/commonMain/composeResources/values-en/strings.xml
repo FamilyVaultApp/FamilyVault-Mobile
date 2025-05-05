@@ -143,6 +143,7 @@
     <string name="chat_remove_multimedia_description">Remove multimedia</string>
     <string name="chat_image_preview">Image preview</string>
     <string name="chat_user_not_in_group">You have been removed from this group chat</string>
+    <string name="chat_private_notes">Private notes</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Are you sure to remove this user?</string>

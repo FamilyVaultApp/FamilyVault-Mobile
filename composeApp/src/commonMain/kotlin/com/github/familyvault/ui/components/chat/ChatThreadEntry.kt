@@ -18,7 +18,6 @@ import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import com.github.familyvault.models.enums.chat.icon
 import com.github.familyvault.services.IFamilyGroupSessionService
-import com.github.familyvault.ui.components.GroupChatIcon
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
@@ -59,20 +58,51 @@ fun ChatThreadEntry(
         horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
     ) {
         if (chatThread.iconType == null) {
-            UserAvatar(chatThread.name)
+            if (chatThread.isPrivateNote()) {
+                PrivateNoteChatIcon()
+            } else {
+                UserAvatar(chatThread.name)
+            }
         } else {
-            GroupChatIcon(chatThread.iconType.icon)
+            ChatIcon(chatThread.iconType.icon)
         }
 
         Column {
             Headline3(
-                TextShortener.shortenText(chatThread.name, 30)
+                TextShortener.shortenText(
+                    chatThread.customNameIfIndividualOrDefault(
+                        familyGroupSessionService.getCurrentUser().identifier
+                    ), 30
+                )
             )
             if (lastMessage != null) {
-                when(lastMessage.type) {
-                    ChatMessageContentType.VOICE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_audio)}", 30))
-                    ChatMessageContentType.IMAGE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_image)}", 30))
-                    ChatMessageContentType.TEXT -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${lastMessage.message}", 30))
+                when (lastMessage.type) {
+                    ChatMessageContentType.VOICE -> ParagraphMuted(
+                        TextShortener.shortenText(
+                            "${senderName}: ${
+                                stringResource(
+                                    Res.string.chat_message_type_audio
+                                )
+                            }", 30
+                        )
+                    )
+
+                    ChatMessageContentType.IMAGE -> ParagraphMuted(
+                        TextShortener.shortenText(
+                            "${senderName}: ${
+                                stringResource(
+                                    Res.string.chat_message_type_image
+                                )
+                            }", 30
+                        )
+                    )
+
+                    ChatMessageContentType.TEXT -> ParagraphMuted(
+                        TextShortener.shortenText(
+                            "${senderName}: ${lastMessage.message}",
+                            30
+                        )
+                    )
                 }
             }
         }

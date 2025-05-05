@@ -27,6 +27,7 @@ import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.states.ICurrentChatState
@@ -50,6 +51,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val chatState = koinInject<ICurrentChatState>()
         val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
@@ -58,6 +60,7 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
         var showErrorDialog by remember { mutableStateOf(false) }
+
         LaunchedEffect(chatThread) {
             mediaPicker.clearSelectedImages()
             try {
@@ -97,14 +100,14 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    chatThread.name, actions = {
+                    chatThread.customNameIfIndividualOrDefault(familyGroupSessionService.getCurrentUser().identifier),
+                    actions = {
                         if (myUserData != null) {
                             if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers && myUserData?.permissionGroup != FamilyGroupMemberPermissionGroup.Guest) {
                                 ChatThreadSettingsButton {
                                     navigator.push(
                                         ChatThreadEditScreen(
-                                            chatThread.type,
-                                            chatThread
+                                            chatThread.type, chatThread
                                         )
                                     )
                                 }
@@ -133,11 +136,11 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                     ChatInputField(
                         onTextMessageSend = { handleTextMessageSend(it) },
                         onVoiceMessageSend = { handleVoiceMessageSend(it) },
-                        onImageMessageSend = { handleImageMessageSend(it) }
-                    )
+                        onImageMessageSend = { handleImageMessageSend(it) })
 
                 } else {
-                    ErrorDialog(stringResource(Res.string.chat_user_not_in_group), { navigator.pop() })
+                    ErrorDialog(
+                        stringResource(Res.string.chat_user_not_in_group), { navigator.pop() })
                 }
 
             }

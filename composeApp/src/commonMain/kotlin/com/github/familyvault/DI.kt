@@ -105,7 +105,7 @@ val sharedModules = module {
     // States
     single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()
     single { CurrentChatState(get()) }.bind<ICurrentChatState>()
-    single { CurrentChatThreadsState(get()) }.bind<ICurrentChatThreadsState>()
+    single { CurrentChatThreadsState() }.bind<ICurrentChatThreadsState>()
     single { ChatImagesState() }.bind<IChatImagesState>()
     single { TaskListState(get()) }.bind<ITaskListState>()
     single { FamilyMembersState(get()) }.bind<IFamilyMembersState>()

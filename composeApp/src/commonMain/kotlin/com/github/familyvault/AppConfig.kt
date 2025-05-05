@@ -2,7 +2,7 @@ package com.github.familyvault
 
 object AppConfig {
     /* Backend */
-    const val BACKEND_URL: String = "http://10.7.5.1:8080"
+    const val BACKEND_URL: String = "http://192.168.8.112:5024"
     const val PRIVMX_BRIDGE_URL: String = "http://10.7.5.1:9111"
 
     const val SECRET: String = "q8v9P2z4J1lZxT6rMb0KdQ"

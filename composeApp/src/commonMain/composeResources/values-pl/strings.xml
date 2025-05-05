@@ -143,6 +143,7 @@
     <string name="chat_remove_multimedia_description">Usuń multimedia</string>
     <string name="chat_image_preview">Podgląd media</string>
     <string name="chat_user_not_in_group">Usunięto Cię z tego czatu.</string>
+    <string name="chat_private_notes">Prywatne notatki</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
