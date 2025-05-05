@@ -13,15 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun GroupChatIcon(icon: ImageVector, size: Dp = 40.dp) {
+fun GroupChatIcon(icon: ImageVector, size: Dp = AdditionalTheme.sizing.userAvatarSize) {
 
     Box(
         modifier = Modifier.size(size)
-            .background(MaterialTheme.colorScheme.primary, CircleShape),
+            .background(MaterialTheme.colorScheme.primary, CircleShape)
+            .padding(AdditionalTheme.spacings.small / 2),
         contentAlignment = Alignment.Center
     ) {
         Icon(

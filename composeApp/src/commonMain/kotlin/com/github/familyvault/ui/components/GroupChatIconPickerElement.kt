@@ -23,7 +23,10 @@ import familyvault.composeapp.generated.resources.chat_icon_icon_alt
 
 @Composable
 fun GroupChatIconPickerElement(
-    icon: ImageVector, size: Dp = 40.dp, isPicked: Boolean = false, onClick: () -> Unit
+    icon: ImageVector,
+    size: Dp = AdditionalTheme.sizing.userAvatarSize,
+    isPicked: Boolean = false,
+    onClick: () -> Unit
 ) {
     val backgroundColor =
         if (isPicked) MaterialTheme.colorScheme.primaryContainer else AdditionalTheme.colors.borderColor
@@ -36,7 +39,8 @@ fun GroupChatIconPickerElement(
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            rememberVectorPainter(icon), contentDescription = stringResource(Res.string.chat_icon_icon_alt),
+            rememberVectorPainter(icon),
+            contentDescription = stringResource(Res.string.chat_icon_icon_alt),
             modifier = Modifier
                 .size(size)
                 .padding(AdditionalTheme.spacings.medium),
