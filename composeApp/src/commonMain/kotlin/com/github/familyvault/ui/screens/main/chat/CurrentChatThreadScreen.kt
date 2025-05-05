@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -34,9 +33,13 @@ import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
 import com.github.familyvault.ui.components.chat.messageEntry.ChatMessageEntry
+import com.github.familyvault.ui.components.dialogs.ErrorDialog
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import familyvault.composeapp.generated.resources.chat_user_not_in_group
+import familyvault.composeapp.generated.resources.Res
+import org.jetbrains.compose.resources.stringResource
 
 class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
     private lateinit var chatService: IChatService
@@ -54,17 +57,25 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
+        var showErrorDialog by remember { mutableStateOf(false) }
         LaunchedEffect(chatThread) {
             mediaPicker.clearSelectedImages()
-
-            chatState.update(chatThread.id)
-            chatService.populateDatabaseWithLastMessages(chatThread.id)
-            chatState.populateStateFromService()
-            chatThreadManagers.addAll(chatService.retrievePublicKeysOfChatThreadManagers(chatThread.id))
-            chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
-                coroutineScope.launch {
-                    scrollToLastMessage(listState, chatState)
+            try {
+                chatState.update(chatThread.id)
+                chatService.populateDatabaseWithLastMessages(chatThread.id)
+                chatState.populateStateFromService()
+                chatThreadManagers.addAll(
+                    chatService.retrievePublicKeysOfChatThreadManagers(
+                        chatThread.id
+                    )
+                )
+                chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
+                    coroutineScope.launch {
+                        scrollToLastMessage(listState, chatState)
+                    }
                 }
+            } catch (e: Exception) {
+                showErrorDialog = true
             }
             myUserData = familyGroupService.retrieveMyFamilyMemberData()
             scrollToLastMessage(listState, chatState)
@@ -104,25 +115,31 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
             Column(
                 modifier = Modifier.fillMaxSize().padding(paddingValues)
             ) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    state = listState,
-                ) {
-                    itemsIndexed(
-                        items = chatState.messages,
-                        key = { _, message -> message.id }) { index, message ->
-                        ChatMessageEntry(
-                            message,
-                            prevMessage = chatState.messages.getOrNull(index - 1),
-                            nextMessage = chatState.messages.getOrNull(index + 1)
-                        )
+                if (!showErrorDialog) {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        state = listState,
+                    ) {
+                        itemsIndexed(
+                            items = chatState.messages,
+                            key = { _, message -> message.id }) { index, message ->
+                            ChatMessageEntry(
+                                message,
+                                prevMessage = chatState.messages.getOrNull(index - 1),
+                                nextMessage = chatState.messages.getOrNull(index + 1)
+                            )
+                        }
                     }
+                    ChatInputField(
+                        onTextMessageSend = { handleTextMessageSend(it) },
+                        onVoiceMessageSend = { handleVoiceMessageSend(it) },
+                        onImageMessageSend = { handleImageMessageSend(it) }
+                    )
+
+                } else {
+                    ErrorDialog(stringResource(Res.string.chat_user_not_in_group), { navigator.pop() })
                 }
-                ChatInputField(
-                    onTextMessageSend = { handleTextMessageSend(it) },
-                    onVoiceMessageSend = { handleVoiceMessageSend(it) },
-                    onImageMessageSend = { handleImageMessageSend(it) }
-                )
+
             }
         }
     }
