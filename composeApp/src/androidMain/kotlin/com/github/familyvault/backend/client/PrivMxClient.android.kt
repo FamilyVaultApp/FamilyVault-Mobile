@@ -14,6 +14,7 @@ import com.github.familyvault.backend.utils.ThreadMessageEncoder
 import com.github.familyvault.backend.utils.ThreadMetaDecoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.enums.chat.ThreadIconType
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
@@ -90,6 +91,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         type: String,
         name: String,
         referenceStoreId: String?,
+        threadIcon: ThreadIconType?,
         threadCreators: List<PrivMxUser>
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
@@ -101,7 +103,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val threadId = threadApi?.createThread(
             contextId, userList, managerList,
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadCreators.map { it.publicKey }))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon, threadCreators.map { it.publicKey }))
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }
@@ -141,7 +143,8 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         threadId: String,
         users: List<PrivMxUser>,
         managers: List<PrivMxUser>,
-        newName: String?
+        newName: String?,
+        threadIcon: ThreadIconType?
     ) {
         val thread = requireNotNull(threadApi?.getThread(threadId)) { "Thread is null" }
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
@@ -152,15 +155,20 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
 
         val decodedPrivateMeta = ThreadMetaDecoder.decodePrivateMeta(thread.privateMeta)
-        val privateMeta = decodedPrivateMeta.copy(name = newName ?: decodedPrivateMeta.name, referenceStoreId = decodedPrivateMeta.referenceStoreId, initialManagersPublicKeys = decodedPrivateMeta.initialManagersPublicKeys)
-
+        val privateMeta = ThreadMetaEncoder.encode(
+            decodedPrivateMeta.copy(
+                name = newName ?: decodedPrivateMeta.name,
+                threadIcon = threadIcon ?: decodedPrivateMeta.threadIcon,
+                initialManagersPublicKeys = decodedPrivateMeta.initialManagersPublicKeys
+            )
+        )
 
         threadApi?.updateThread(
             thread.threadId,
             userList,
             managerList,
             thread.publicMeta,
-            ThreadMetaEncoder.encode(privateMeta),
+            privateMeta,
             thread.version,
             false
         )

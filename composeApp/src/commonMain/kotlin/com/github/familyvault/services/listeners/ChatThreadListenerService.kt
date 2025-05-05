@@ -20,7 +20,8 @@ class ChatThreadListenerService(
                     name = it.privateMeta.name,
                     participantsIds = it.users,
                     lastMessage = null,
-                    type = ChatThreadType.valueOf(it.publicMeta.type)
+                    type = ChatThreadType.valueOf(it.publicMeta.type),
+                    iconType = it.privateMeta.threadIcon
                 )
             )
         }
@@ -34,7 +35,8 @@ class ChatThreadListenerService(
                     name = it.privateMeta.name,
                     participantsIds = it.users,
                     lastMessage = null,
-                    type = ChatThreadType.valueOf(it.publicMeta.type)
+                    type = ChatThreadType.valueOf(it.publicMeta.type),
+                    iconType = it.privateMeta.threadIcon
                 )
             )
         }
