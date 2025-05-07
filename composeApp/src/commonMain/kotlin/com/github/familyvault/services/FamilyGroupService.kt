@@ -58,31 +58,6 @@ class FamilyGroupService(
         familyGroupCredentialsRepository.addDefaultCredential(
             familyGroupName, solutionId, contextId, pairOfKeys, encryptedPassword
         )
-
-        val splitFamilyMembers = FamilyMembersSplitter.split(
-            retrieveFamilyGroupMembersList()
-        )
-
-        val users = splitFamilyMembers.members.map { it.toPrivMxUser() }
-        val managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() }
-
-        val storeId = privMxClient.createStore(
-            contextId,
-            users,
-            managers,
-            StoreType.FILE_CABINET_IMAGES.toString()
-        )
-
-        privMxClient.createThread(
-            contextId = contextId,
-            users = users,
-            managers = managers,
-            tag = AppConfig.FILE_CABINET_THREAD_TAG,
-            type = FileCabinetThreadType.IMAGES.toString(),
-            name = familyGroupName,
-            referenceStoreId = storeId,
-            threadInitialCreators = emptyList()
-        )
     }
 
     override suspend fun joinFamilyGroupAndAssign(
