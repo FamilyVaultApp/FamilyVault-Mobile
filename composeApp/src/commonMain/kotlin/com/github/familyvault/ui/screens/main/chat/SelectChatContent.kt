@@ -19,6 +19,7 @@ import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.listeners.IChatThreadListenerService
+import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.ICurrentChatThreadsState
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.ParagraphStickyHeader
@@ -114,8 +115,10 @@ fun SelectChatContent() {
 @Composable
 private fun SelectableChatThreadEntry(chatThread: ChatThread) {
     val navigator = LocalNavigator.currentOrThrow
+    val currentChatState = koinInject<ICurrentChatState>()
 
     ChatThreadEntry(chatThread, unreadMessages = false) {
-        navigator.parent?.push(CurrentChatThreadScreen(chatThread))
+        currentChatState.update(chatThread)
+        navigator.parent?.push(CurrentChatThreadScreen())
     }
 }

@@ -35,10 +35,12 @@ import com.github.familyvault.services.listeners.TaskListListenerService
 import com.github.familyvault.states.ChatImagesState
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.CurrentChatThreadsState
+import com.github.familyvault.states.CurrentEditChatState
 import com.github.familyvault.states.FamilyMembersState
 import com.github.familyvault.states.IChatImagesState
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.ICurrentChatThreadsState
+import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.states.IFamilyMembersState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.states.ITaskListState
@@ -114,6 +116,7 @@ val sharedModules = module {
     single { ChatImagesState() }.bind<IChatImagesState>()
     single { TaskListState(get()) }.bind<ITaskListState>()
     single { FamilyMembersState(get()) }.bind<IFamilyMembersState>()
+    single { CurrentEditChatState() }.bind<ICurrentEditChatState>()
 }
 
 
