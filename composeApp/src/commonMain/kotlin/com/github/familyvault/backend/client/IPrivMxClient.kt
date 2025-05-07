@@ -23,7 +23,7 @@ interface IPrivMxClient {
         name: String,
         referenceStoreId: String?,
         threadIcon: ThreadIconType? = null,
-        threadCreators: List<PrivMxUser>
+        threadInitialCreators: List<PrivMxUser>
     ): String
 
     fun createStore(
@@ -42,6 +42,12 @@ interface IPrivMxClient {
     )
 
     fun deleteThread(threadId: String)
+
+    fun updateStore(
+        storeId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+    )
 
     fun retrieveThread(threadId: String): ThreadItem
     fun retrieveAllThreads(contextId: String, startIndex: Int, pageSize: Int): List<ThreadItem>
@@ -72,6 +78,7 @@ interface IPrivMxClient {
     )
 
     fun getFileAsByteArrayFromStore(fileId: String): ByteArray
+    fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<ByteArray>
     fun sendByteArrayToStore(storeId: String, content: ByteArray): String
     fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int

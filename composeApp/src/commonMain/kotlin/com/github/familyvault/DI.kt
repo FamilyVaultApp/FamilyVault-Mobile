@@ -11,11 +11,13 @@ import com.github.familyvault.services.FamilyGroupService
 import com.github.familyvault.services.FamilyGroupSessionService
 import com.github.familyvault.services.FamilyMemberAdditionService
 import com.github.familyvault.services.FamilyMemberPermissionGroupService
+import com.github.familyvault.services.FileCabinetService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
+import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.ISavedFamilyGroupsService
 import com.github.familyvault.services.ITaskService
@@ -84,7 +86,7 @@ val sharedModules = module {
     single { TaskListenerService(get()) }.bind<ITaskListenerService>()
     single {
         FamilyMemberAdditionService(
-            get(), get(), get(), get()
+            get(), get(), get(), get(), get()
         )
     }.bind<IFamilyMemberAdditionService>()
     single {
@@ -98,6 +100,9 @@ val sharedModules = module {
     single {
         TaskService(get(), get(), get())
     }.bind<ITaskService>()
+    single {
+        FileCabinetService(get(), get(), get(), get())
+    }.bind<IFileCabinetService>()
 
     // Backend client
     single { FamilyVaultBackendClient() }.bind<IFamilyVaultBackendClient>()

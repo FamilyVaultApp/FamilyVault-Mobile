@@ -17,6 +17,7 @@ object AppConfig {
     val QR_CODE_SIZE: Pair<Int, Int> = 500 to 500
     const val CHAT_THREAD_TAG = "FV_CHAT"
     const val TASK_THREAD_TAG = "FV_TASK"
+    const val FILE_CABINET_THREAD_TAG = "FV_FILE_CABINET"
 
     /* Chat */
     const val CHAT_MESSAGES_PER_PAGE = 50

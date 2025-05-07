@@ -16,8 +16,12 @@ import androidx.core.net.toUri
 import com.github.familyvault.AppConfig
 import com.github.familyvault.models.ImageSize
 import java.io.ByteArrayOutputStream
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ImagePickerService : IImagePickerService {
+    private var continuation: Continuation<List<ByteArray>>? = null
     private lateinit var pickFileLauncher: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var context: Context
     private val selectedImageUrls = mutableStateListOf<String>()
@@ -29,11 +33,19 @@ class ImagePickerService : IImagePickerService {
         ) {
             clearSelectedImages()
             selectedImageUrls.addAll(it.map { u -> u.toString() })
+
+            continuation?.resume(getSelectedImageAsByteArrays())
+            continuation = null
         }
     }
 
     override fun openMediaPickerForSelectingImages() {
         pickFileLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    override suspend fun pickImagesAndReturnByteArrays(): List<ByteArray> = suspendCoroutine { cont ->
+        continuation = cont
+        openMediaPickerForSelectingImages()
     }
 
     override fun getBytesFromUri(uriString: String): ByteArray? {

@@ -207,7 +207,7 @@ class ChatService(
             type = ChatThreadType.INDIVIDUAL.toString(),
             name = Uuid.random().toString(),
             referenceStoreId = storeId,
-            threadCreators = listOf(firstMember.toPrivMxUser(), secondMember.toPrivMxUser())
+            threadInitialCreators = listOf(firstMember.toPrivMxUser(), secondMember.toPrivMxUser())
         )
     }
 
