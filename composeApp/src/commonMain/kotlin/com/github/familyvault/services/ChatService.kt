@@ -199,7 +199,7 @@ class ChatService(
             type = ChatThreadType.INDIVIDUAL.toString(),
             name = threadUsers.joinToString { it.userId },
             referenceStoreId = storeId,
-            threadCreators = listOf(firstMember.toPrivMxUser(), secondMember.toPrivMxUser())
+            threadInitialCreators = listOf(firstMember.toPrivMxUser(), secondMember.toPrivMxUser())
         )
     }
 

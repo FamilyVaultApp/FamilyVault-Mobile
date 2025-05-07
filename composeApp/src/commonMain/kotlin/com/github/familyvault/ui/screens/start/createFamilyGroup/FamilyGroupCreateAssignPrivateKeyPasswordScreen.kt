@@ -19,6 +19,7 @@ import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyMemberAdditionService
+import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
@@ -40,6 +41,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
     override fun Content() {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyMemberAdditionService = koinInject<IFamilyMemberAdditionService>()
+        val fileCabinetService = koinInject<IFileCabinetService>()
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyPasswordForm()) }
 
@@ -78,7 +80,9 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                                 familyGroupNameDraft.familyGroupName.value,
                                 "Description"
                             )
+
                             familyMemberAdditionService.afterJoinedToFamilyMembersOperations()
+                            fileCabinetService.createInitialStores()
 
                             navigator.replaceAll(MainScreen())
                             createFamilyGroupState = FormSubmitState.IDLE

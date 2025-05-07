@@ -92,7 +92,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         name: String,
         referenceStoreId: String?,
         threadIcon: ThreadIconType?,
-        threadCreators: List<PrivMxUser>
+        threadInitialCreators: List<PrivMxUser>
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -103,7 +103,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val threadId = threadApi?.createThread(
             contextId, userList, managerList,
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon, threadCreators.map { it.publicKey }))
+            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon, threadInitialCreators.map { it.publicKey }))
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }
@@ -170,6 +170,32 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             thread.publicMeta,
             privateMeta,
             thread.version,
+            false
+        )
+    }
+
+    override fun updateStore(
+        storeId: String,
+        users: List<PrivMxUser>,
+        managers: List<PrivMxUser>,
+    ) {
+        val store = requireNotNull(storeApi?.getStore(storeId)) { "Store is null" }
+
+        val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+        val managerList: List<UserWithPubKey> = managers.map { (userId, publicKey) ->
+            UserWithPubKey(userId, publicKey)
+        }
+
+        storeApi?.updateStore(
+            storeId,
+            userList,
+            managerList,
+            store.publicMeta,
+            store.privateMeta,
+            store.version,
+            true,
             false
         )
     }
@@ -264,6 +290,24 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return data
     }
 
+    override fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<ByteArray> {
+        val files = storeApi!!.listFiles(
+            storeId,
+            skip,
+            limit,
+            SortOrder.DESC
+        )
+
+        return files.readItems.mapNotNull { file ->
+            try {
+                getFileAsByteArrayFromStore(file.info.fileId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
     override fun sendByteArrayToStore(
         storeId: String, content: ByteArray
     ): String {
@@ -300,6 +344,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         val threadApi = requireNotNull(threadApi)
 
         val messages = threadApi.listMessages(threadId, 0, 1, SortOrder.DESC).readItems
+
         if (messages.isEmpty()) {
             return null
         }

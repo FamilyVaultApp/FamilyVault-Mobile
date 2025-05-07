@@ -188,4 +188,11 @@
     <string name="task_new">Nowe zadanie</string>
     <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>
     <string name="task_edit_description">Edytuj opis zadania i w razie potrzeby przypisz je ponownie wybranemu członkowi swojej grupy rodzinnej.</string>
+
+    <!-- File Cabinet -->
+    <string name="file_cabinet_photos">Zdjęcia</string>
+    <string name="file_cabinet_documents">Dokumenty</string>
+    <string name="file_cabinet_upload">Prześlij</string>
+    <string name="file_cabinet_photo_card">Karta zdjęcia</string>
+    <string name="file_cabinet_sending_files">Przesyłanie plików...</string>
 </resources>

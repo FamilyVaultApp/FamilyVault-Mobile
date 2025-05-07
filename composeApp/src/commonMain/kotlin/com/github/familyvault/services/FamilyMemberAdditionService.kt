@@ -8,6 +8,7 @@ class FamilyMemberAdditionService(
     private val familyVaultBackendClient: IFamilyVaultBackendClient,
     private val sessionService: IFamilyGroupSessionService,
     private val chatService: IChatService,
+    private val fileCabinetService: IFileCabinetService,
     private val taskService: ITaskService
 ) : IFamilyMemberAdditionService {
     override suspend fun addMemberToFamilyGroup(
@@ -18,6 +19,8 @@ class FamilyMemberAdditionService(
                 contextId, newFamilyMember.fullname, newFamilyMember.keyPair.publicKey
             )
         )
+
+        fileCabinetService.restoreFileCabinetMembership()
         taskService.restoreTaskListsMembership()
     }
 
