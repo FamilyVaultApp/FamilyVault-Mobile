@@ -57,7 +57,7 @@ fun TaskTabContent() {
             )
         } else {
             if (tasksListState.isEmpty()) {
-                TasksNoCategoriesContent()
+                TasksNoListsContent()
             } else {
                 TaskListContent()
             }

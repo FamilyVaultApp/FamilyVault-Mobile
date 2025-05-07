@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import com.github.familyvault.models.enums.chat.icon
@@ -40,10 +41,10 @@ fun ChatThreadEntry(
     val lastMessage = chatThread.lastMessage
     val currentUser = remember { familyGroupSessionService.getCurrentUser() }
 
-    val senderName = if (lastMessage?.senderId == currentUser.id) {
+    val senderName = if (lastMessage?.senderId?.id == currentUser.id) {
         stringResource(Res.string.you)
     } else {
-        lastMessage?.senderId
+        lastMessage?.senderId?.fullname
     }
 
     return Row(
@@ -61,7 +62,7 @@ fun ChatThreadEntry(
             if (chatThread.isPrivateNote()) {
                 PrivateNoteChatIcon()
             } else {
-                UserAvatar(chatThread.name)
+                UserAvatar(chatThread.customNameIfIndividualOrDefault(currentUser.identifier))
             }
         } else {
             ChatIcon(chatThread.iconType.icon)
@@ -73,7 +74,9 @@ fun ChatThreadEntry(
                     chatThread.customNameIfIndividualOrDefault(
                         familyGroupSessionService.getCurrentUser().identifier
                     ), 30
-                )
+                ),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
             if (lastMessage != null) {
                 when (lastMessage.type) {

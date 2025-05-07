@@ -1,12 +1,13 @@
 package com.github.familyvault.models.chat
 
+import com.github.familyvault.models.MemberIdentifier
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import kotlinx.datetime.LocalDateTime
 
 data class ChatMessage(
     val id: String,
     val message: String,
-    val senderId: String,
+    val senderId: MemberIdentifier,
     val senderPubKey: String,
     val sendDate: LocalDateTime,
     val isAuthor: Boolean,

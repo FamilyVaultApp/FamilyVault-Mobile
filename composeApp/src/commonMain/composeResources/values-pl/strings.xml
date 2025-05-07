@@ -185,6 +185,7 @@
     <string name="task_assign">Przydziel zadanie</string>
     <string name="no_task_list_title">Brak listy zadań</string>
     <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając w przycisk poniżej.</string>
+    <string name="no_task_list_description_without_permission">Tylko opiekun rodziny może utworzyć nową listę zadań.</string>
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
     <string name="task_new">Nowe zadanie</string>
     <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>

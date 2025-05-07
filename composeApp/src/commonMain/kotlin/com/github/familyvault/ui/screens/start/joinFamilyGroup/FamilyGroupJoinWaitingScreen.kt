@@ -39,8 +39,8 @@ class FamilyGroupJoinWaitingScreen : Screen {
             }
 
             familyGroupService.joinFamilyGroupAndAssign(
-                firstname,
-                surname,
+                identifier.firstname,
+                identifier.surname,
                 joinFamilyGroupPayloadState.getEncryptedPrivateKey(),
                 keyPair,
                 joinStatusInfo.contextId
