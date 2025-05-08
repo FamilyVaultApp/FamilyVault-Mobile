@@ -11,11 +11,13 @@ import com.github.familyvault.services.FamilyGroupService
 import com.github.familyvault.services.FamilyGroupSessionService
 import com.github.familyvault.services.FamilyMemberAdditionService
 import com.github.familyvault.services.FamilyMemberPermissionGroupService
+import com.github.familyvault.services.FileCabinetService
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
+import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.ISavedFamilyGroupsService
 import com.github.familyvault.services.ITaskService
@@ -33,10 +35,12 @@ import com.github.familyvault.services.listeners.TaskListListenerService
 import com.github.familyvault.states.ChatImagesState
 import com.github.familyvault.states.CurrentChatState
 import com.github.familyvault.states.CurrentChatThreadsState
+import com.github.familyvault.states.CurrentEditChatState
 import com.github.familyvault.states.FamilyMembersState
 import com.github.familyvault.states.IChatImagesState
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.ICurrentChatThreadsState
+import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.states.IFamilyMembersState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.states.ITaskListState
@@ -84,7 +88,7 @@ val sharedModules = module {
     single { TaskListenerService(get()) }.bind<ITaskListenerService>()
     single {
         FamilyMemberAdditionService(
-            get(), get(), get(), get()
+            get(), get(), get(), get(), get()
         )
     }.bind<IFamilyMemberAdditionService>()
     single {
@@ -98,6 +102,9 @@ val sharedModules = module {
     single {
         TaskService(get(), get(), get())
     }.bind<ITaskService>()
+    single {
+        FileCabinetService(get(), get(), get(), get())
+    }.bind<IFileCabinetService>()
 
     // Backend client
     single { FamilyVaultBackendClient() }.bind<IFamilyVaultBackendClient>()
@@ -105,10 +112,11 @@ val sharedModules = module {
     // States
     single { JoinFamilyGroupPayloadState() }.bind<IJoinFamilyGroupPayloadState>()
     single { CurrentChatState(get()) }.bind<ICurrentChatState>()
-    single { CurrentChatThreadsState(get()) }.bind<ICurrentChatThreadsState>()
+    single { CurrentChatThreadsState() }.bind<ICurrentChatThreadsState>()
     single { ChatImagesState() }.bind<IChatImagesState>()
     single { TaskListState(get()) }.bind<ITaskListState>()
     single { FamilyMembersState(get()) }.bind<IFamilyMembersState>()
+    single { CurrentEditChatState() }.bind<ICurrentEditChatState>()
 }
 
 

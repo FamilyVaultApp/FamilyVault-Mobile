@@ -1,13 +1,13 @@
 package com.github.familyvault.models
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 @Serializable
 data class NewFamilyMemberData(
-    val firstname: String,
-    val surname: String,
+    val memberIdentifier: MemberIdentifier,
     val keyPair: PublicEncryptedPrivateKeyPair
 ) {
-    val fullname: String
-        get() = "$firstname $surname"
+    val id: String
+        get() = Json.encodeToString(memberIdentifier)
 }

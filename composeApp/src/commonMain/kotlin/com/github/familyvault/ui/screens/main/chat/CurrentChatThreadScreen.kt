@@ -22,14 +22,15 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyMember
-import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.states.ICurrentChatState
+import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
 import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
 import com.github.familyvault.ui.components.chat.messageEntry.ChatMessageEntry
@@ -41,16 +42,17 @@ import familyvault.composeapp.generated.resources.chat_user_not_in_group
 import familyvault.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.stringResource
 
-class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
-    private lateinit var chatService: IChatService
+class CurrentChatThreadScreen : Screen {
 
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        chatService = koinInject<IChatService>()
+        val chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
-        val chatState = koinInject<ICurrentChatState>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+        val currentChatState = koinInject<ICurrentChatState>()
+        val currentEditChatState = koinInject<ICurrentEditChatState>()
         val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
@@ -58,12 +60,14 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
         var showErrorDialog by remember { mutableStateOf(false) }
+        val chatThread = requireNotNull(currentChatState.chatThread)
+
+
         LaunchedEffect(chatThread) {
             mediaPicker.clearSelectedImages()
             try {
-                chatState.update(chatThread.id)
                 chatService.populateDatabaseWithLastMessages(chatThread.id)
-                chatState.populateStateFromService()
+                currentChatState.populateStateFromService()
                 chatThreadManagers.addAll(
                     chatService.retrievePublicKeysOfChatThreadManagers(
                         chatThread.id
@@ -71,40 +75,46 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                 )
                 chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                     coroutineScope.launch {
-                        scrollToLastMessage(listState, chatState)
+                        scrollToLastMessage(listState, currentChatState)
                     }
                 }
             } catch (e: Exception) {
                 showErrorDialog = true
             }
             myUserData = familyGroupService.retrieveMyFamilyMemberData()
-            scrollToLastMessage(listState, chatState)
+            scrollToLastMessage(listState, currentChatState)
         }
         LaunchedEffect(isAtTop) {
-            if (isAtTop && chatState.messages.isNotEmpty()) {
-                val currentLookingMessage = chatState.messages[listState.firstVisibleItemIndex]
-                chatState.getNextPageFromService()
-                listState.scrollToItem(chatState.messages.indexOf(currentLookingMessage))
+            if (isAtTop && currentChatState.messages.isNotEmpty()) {
+                val currentLookingMessage =
+                    currentChatState.messages[listState.firstVisibleItemIndex]
+                currentChatState.getNextPageFromService()
+                listState.scrollToItem(currentChatState.messages.indexOf(currentLookingMessage))
             }
         }
 
         DisposableEffect(Unit) {
             onDispose {
                 chatMessageListenerService.unregisterAllListeners()
-                chatState.clear()
             }
         }
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    chatThread.name, actions = {
+                    chatThread.customNameIfIndividualOrDefault(familyGroupSessionService.getCurrentUser().identifier),
+                    actions = {
                         if (myUserData != null) {
                             if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers && myUserData?.permissionGroup != FamilyGroupMemberPermissionGroup.Guest) {
                                 ChatThreadSettingsButton {
+                                    currentEditChatState.updateChatToEdit(
+                                        requireNotNull(
+                                            currentChatState.chatThread
+                                        )
+                                    )
                                     navigator.push(
                                         ChatThreadEditScreen(
-                                            chatThread.type,
-                                            chatThread
+                                            chatThread.type
                                         )
                                     )
                                 }
@@ -121,50 +131,47 @@ class CurrentChatThreadScreen(private val chatThread: ChatThread) : Screen {
                         state = listState,
                     ) {
                         itemsIndexed(
-                            items = chatState.messages,
+                            items = currentChatState.messages,
                             key = { _, message -> message.id }) { index, message ->
                             ChatMessageEntry(
                                 message,
-                                prevMessage = chatState.messages.getOrNull(index - 1),
-                                nextMessage = chatState.messages.getOrNull(index + 1)
+                                prevMessage = currentChatState.messages.getOrNull(index - 1),
+                                nextMessage = currentChatState.messages.getOrNull(index + 1)
                             )
                         }
                     }
                     ChatInputField(
-                        onTextMessageSend = { handleTextMessageSend(it) },
-                        onVoiceMessageSend = { handleVoiceMessageSend(it) },
-                        onImageMessageSend = { handleImageMessageSend(it) }
+                        onTextMessageSend = {
+                            if (it.isEmpty()) {
+                                return@ChatInputField
+                            }
+
+                            chatService.sendTextMessage(chatThread.id, it, respondToMessageId = "")
+                        },
+                        onVoiceMessageSend = {
+                            if (it.isEmpty()) {
+                                return@ChatInputField
+                            }
+                            chatService.sendVoiceMessage(chatThread.id, it)
+                        },
+                        onImageMessageSend = {
+                            if (it.isEmpty()) {
+                                return@ChatInputField
+                            }
+
+                            it.forEach { mediaByteArray ->
+                                chatService.sendImageMessage(chatThread.id, mediaByteArray)
+                            }
+                        }
                     )
 
                 } else {
-                    ErrorDialog(stringResource(Res.string.chat_user_not_in_group), { navigator.pop() })
+                    ErrorDialog(
+                        stringResource(Res.string.chat_user_not_in_group)
+                    ) { navigator.pop() }
                 }
 
             }
-        }
-    }
-
-    private fun handleTextMessageSend(message: String) {
-        if (message.isEmpty()) {
-            return
-        }
-        chatService.sendTextMessage(chatThread.id, message, respondToMessageId = "")
-    }
-
-    private fun handleVoiceMessageSend(audio: ByteArray) {
-        if (audio.isEmpty()) {
-            return
-        }
-        chatService.sendVoiceMessage(chatThread.id, audio)
-    }
-
-    private fun handleImageMessageSend(uriByteArrays: List<ByteArray>) {
-        if (uriByteArrays.isEmpty()) {
-            return
-        }
-
-        uriByteArrays.forEach { mediaByteArray ->
-            chatService.sendImageMessage(chatThread.id, mediaByteArray)
         }
     }
 

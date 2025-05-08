@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.components
+package com.github.familyvault.ui.components.chat
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.Dp
 import com.github.familyvault.ui.theme.AdditionalTheme
 
 @Composable
-fun GroupChatIcon(icon: ImageVector, size: Dp = AdditionalTheme.sizing.userAvatarSize) {
+fun ChatIcon(icon: ImageVector, size: Dp = AdditionalTheme.sizing.userAvatarSize) {
 
     Box(
         modifier = Modifier.size(size)

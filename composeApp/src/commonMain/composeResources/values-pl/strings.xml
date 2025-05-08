@@ -144,6 +144,7 @@
     <string name="chat_remove_multimedia_description">Usuń multimedia</string>
     <string name="chat_image_preview">Podgląd media</string>
     <string name="chat_user_not_in_group">Usunięto Cię z tego czatu.</string>
+    <string name="chat_private_notes">Prywatne notatki</string>
 
     <!-- Remove users -->
     <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
@@ -185,8 +186,16 @@
     <string name="task_assign">Przydziel zadanie</string>
     <string name="no_task_list_title">Brak listy zadań</string>
     <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając w przycisk poniżej.</string>
+    <string name="no_task_list_description_without_permission">Tylko opiekun rodziny może utworzyć nową listę zadań.</string>
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
     <string name="task_new">Nowe zadanie</string>
     <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>
     <string name="task_edit_description">Edytuj opis zadania i w razie potrzeby przypisz je ponownie wybranemu członkowi swojej grupy rodzinnej.</string>
+
+    <!-- File Cabinet -->
+    <string name="file_cabinet_photos">Zdjęcia</string>
+    <string name="file_cabinet_documents">Dokumenty</string>
+    <string name="file_cabinet_upload">Prześlij</string>
+    <string name="file_cabinet_photo_card">Karta zdjęcia</string>
+    <string name="file_cabinet_sending_files">Przesyłanie plików...</string>
 </resources>

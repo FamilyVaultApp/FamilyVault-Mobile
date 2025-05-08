@@ -5,6 +5,7 @@ import com.github.familyvault.models.ImageSize
 
 interface IImagePickerService {
     fun openMediaPickerForSelectingImages()
+    suspend fun pickImagesAndReturnByteArrays(): List<ByteArray>
     fun getBytesFromUri(uriString: String): ByteArray?
     fun getBitmapFromBytes(imageBytes: ByteArray): ImageBitmap
     fun getSelectedImageAsByteArrays(): List<ByteArray>

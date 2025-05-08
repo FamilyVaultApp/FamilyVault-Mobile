@@ -1,12 +1,9 @@
 package com.github.familyvault.backend.utils
 
 import com.github.familyvault.backend.models.ThreadMessagePrivateMeta
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.protobuf.ProtoBuf
+import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalSerializationApi::class)
 object ThreadMessageMetaDecoder : IThreadMessageMetaDecoder {
     override fun decodePrivateMeta(input: ByteArray): ThreadMessagePrivateMeta =
-        ProtoBuf.decodeFromByteArray<ThreadMessagePrivateMeta>(input)
+        Json.decodeFromString<ThreadMessagePrivateMeta>(input.decodeToString())
 }

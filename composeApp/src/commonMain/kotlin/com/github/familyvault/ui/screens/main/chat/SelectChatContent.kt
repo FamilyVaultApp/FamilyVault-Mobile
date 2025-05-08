@@ -19,6 +19,7 @@ import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.listeners.IChatThreadListenerService
+import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.ICurrentChatThreadsState
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.ParagraphStickyHeader
@@ -27,6 +28,9 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_type_group
 import familyvault.composeapp.generated.resources.chat_type_individual
 import familyvault.composeapp.generated.resources.loading
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -38,31 +42,36 @@ fun SelectChatContent() {
     val chatMessagesListenerService = koinInject<IChatMessagesListenerService>()
     val currentChatThreadsState = koinInject<ICurrentChatThreadsState>()
     val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
+
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         isLoading = true
 
-        currentChatThreadsState.clean()
+        withContext(Dispatchers.IO) {
+            currentChatThreadsState.clean()
 
-        currentChatThreadsState.addGroupChatThreads(chatService.retrieveAllGroupChatThreads())
-        currentChatThreadsState.addIndividualChatThreads(chatService.retrieveAllIndividualChatThreads())
+            val groupChats = chatService.retrieveAllGroupChatThreads()
+            val individualChats = chatService.retrieveAllIndividualChatThreads()
 
-        chatThreadListenerService.startListeningForNewChatThread {
-            currentChatThreadsState.addNewChatThread(it)
-            chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
-                currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+            currentChatThreadsState.addGroupChatThreads(groupChats)
+            currentChatThreadsState.addIndividualChatThreads(individualChats)
+
+            chatThreadListenerService.startListeningForNewChatThread {
+                currentChatThreadsState.addNewChatThread(it)
+                chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
+                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+                }
             }
-        }
 
-        chatThreadListenerService.startListeningForUpdatedChatThread {
+            chatThreadListenerService.startListeningForUpdatedChatThread {
                 currentChatThreadsState.editExistingChatThread(it)
-        }
+            }
 
-
-        for (chatThread in currentChatThreadsState.allChatThreads) {
-            chatMessagesListenerService.startListeningForNewMessage(chatThread.id) { newMessage ->
-                currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, chatThread)
+            for (chatThread in currentChatThreadsState.allChatThreads) {
+                chatMessagesListenerService.startListeningForNewMessage(chatThread.id) { newMessage ->
+                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, chatThread)
+                }
             }
         }
 
@@ -106,8 +115,10 @@ fun SelectChatContent() {
 @Composable
 private fun SelectableChatThreadEntry(chatThread: ChatThread) {
     val navigator = LocalNavigator.currentOrThrow
+    val currentChatState = koinInject<ICurrentChatState>()
 
     ChatThreadEntry(chatThread, unreadMessages = false) {
-        navigator.parent?.push(CurrentChatThreadScreen(chatThread))
+        currentChatState.update(chatThread)
+        navigator.parent?.push(CurrentChatThreadScreen())
     }
 }
