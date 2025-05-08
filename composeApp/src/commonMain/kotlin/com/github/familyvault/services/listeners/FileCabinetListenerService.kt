@@ -2,7 +2,7 @@ package com.github.familyvault.services.listeners
 
 import com.github.familyvault.backend.client.IPrivMxClient
 
-class FileCabinetListenerSevice(
+class FileCabinetListenerService(
     private val privMxClient: IPrivMxClient
 ): IFileCabinetListenerService {
     companion object {

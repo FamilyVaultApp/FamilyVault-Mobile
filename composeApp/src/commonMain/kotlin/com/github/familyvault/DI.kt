@@ -26,7 +26,7 @@ import com.github.familyvault.services.SavedFamilyGroupsService
 import com.github.familyvault.services.TaskService
 import com.github.familyvault.services.listeners.ChatMessagesListenerService
 import com.github.familyvault.services.listeners.ChatThreadListenerService
-import com.github.familyvault.services.listeners.FileCabinetListenerSevice
+import com.github.familyvault.services.listeners.FileCabinetListenerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.services.listeners.IChatThreadListenerService
 import com.github.familyvault.services.listeners.IFileCabinetListenerService
@@ -108,7 +108,7 @@ val sharedModules = module {
         FileCabinetService(get(), get(), get(), get())
     }.bind<IFileCabinetService>()
     single {
-        FileCabinetListenerSevice(get())
+        FileCabinetListenerService(get())
     }.bind<IFileCabinetListenerService>()
 
     // Backend client
