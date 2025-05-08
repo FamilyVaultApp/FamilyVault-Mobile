@@ -88,7 +88,8 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                             createFamilyGroupState = FormSubmitState.IDLE
                         } catch (e: Exception) {
                             createFamilyGroupState = FormSubmitState.ERROR
-                            println(e)
+//                            println(e)
+                            throw e
                         }
                     }
                 }

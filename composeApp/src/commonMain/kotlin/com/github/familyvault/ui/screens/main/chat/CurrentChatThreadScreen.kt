@@ -26,6 +26,7 @@ import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
+import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
 import com.github.familyvault.states.ICurrentChatState
@@ -49,9 +50,9 @@ class CurrentChatThreadScreen : Screen {
         val chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
+        val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val currentChatState = koinInject<ICurrentChatState>()
         val currentEditChatState = koinInject<ICurrentEditChatState>()
-
         val mediaPicker = koinInject<IImagePickerService>()
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
@@ -60,6 +61,7 @@ class CurrentChatThreadScreen : Screen {
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
         var showErrorDialog by remember { mutableStateOf(false) }
         val chatThread = requireNotNull(currentChatState.chatThread)
+
 
         LaunchedEffect(chatThread) {
             mediaPicker.clearSelectedImages()
@@ -100,7 +102,8 @@ class CurrentChatThreadScreen : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    chatThread.name, actions = {
+                    chatThread.customNameIfIndividualOrDefault(familyGroupSessionService.getCurrentUser().identifier),
+                    actions = {
                         if (myUserData != null) {
                             if (chatThread.type === ChatThreadType.GROUP && myUserData?.id in chatThreadManagers && myUserData?.permissionGroup != FamilyGroupMemberPermissionGroup.Guest) {
                                 ChatThreadSettingsButton {

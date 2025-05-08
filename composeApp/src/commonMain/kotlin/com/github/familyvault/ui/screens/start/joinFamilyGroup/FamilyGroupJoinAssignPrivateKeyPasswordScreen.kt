@@ -16,6 +16,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.forms.FamilyMemberFormData
 import com.github.familyvault.forms.PrivateKeyPasswordForm
+import com.github.familyvault.models.MemberIdentifier
 import com.github.familyvault.models.NewFamilyMemberData
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IJoinStatusService
@@ -31,9 +32,12 @@ import familyvault.composeapp.generated.resources.preparing_to_join_family_group
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberDraft: FamilyMemberFormData) :
     Screen {
+    @OptIn(ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
         val joinFamilyGroupPayloadState = koinInject<IJoinFamilyGroupPayloadState>()
@@ -77,8 +81,11 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                             val joinStatus = joinStatusService.generateJoinStatus()
 
                             val newFamilyMemberData = NewFamilyMemberData(
-                                firstname = newFamilyMemberDraft.firstname.value,
-                                surname = newFamilyMemberDraft.surname.value,
+                                memberIdentifier = MemberIdentifier(
+                                    Uuid.random().toString(),
+                                    newFamilyMemberDraft.firstname.value,
+                                    newFamilyMemberDraft.surname.value
+                                ),
                                 keyPair = keyPair
                             )
                             joinFamilyGroupPayloadState.update(

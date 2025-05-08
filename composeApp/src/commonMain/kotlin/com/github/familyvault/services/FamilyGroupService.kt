@@ -13,13 +13,14 @@ import com.github.familyvault.backend.requests.RemoveMemberFromFamilyGroupReques
 import com.github.familyvault.backend.requests.RenameFamilyGroupRequest
 import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.models.FamilyMember
+import com.github.familyvault.models.MemberIdentifier
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
-import com.github.familyvault.models.enums.StoreType
-import com.github.familyvault.models.enums.fileCabinet.FileCabinetThreadType
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
-import com.github.familyvault.utils.FamilyMembersSplitter
+import kotlinx.serialization.json.Json
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class FamilyGroupService(
     private val familyGroupCredentialsRepository: IFamilyGroupCredentialsRepository,
@@ -28,6 +29,7 @@ class FamilyGroupService(
     private val privMxClient: IPrivMxClient,
 ) : IFamilyGroupService {
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun createFamilyGroupAndAssign(
         firstname: String,
         surname: String,
@@ -38,14 +40,17 @@ class FamilyGroupService(
         val solutionId = familyVaultBackendClient.getSolutionId().solutionId
         val pairOfKeys = privMxClient.generatePairOfPrivateAndPublicKey(password)
         val encryptedPassword = privMxClient.encryptPrivateKeyPassword(password)
-        val username = "$firstname $surname"
+        val memberIdentifier = MemberIdentifier(Uuid.random().toString(), firstname, surname)
 
         val contextId = familyVaultBackendClient.createFamilyGroup(
             CreateFamilyGroupRequest(familyGroupName, familyGroupDescription ?: "Test description")
         ).contextId
         familyVaultBackendClient.addMemberToFamilyGroup(
             AddMemberToFamilyGroupRequest(
-                contextId, username, pairOfKeys.publicKey, FamilyGroupMemberPermissionGroup.Guardian
+                contextId,
+                Json.encodeToString(memberIdentifier),
+                pairOfKeys.publicKey,
+                FamilyGroupMemberPermissionGroup.Guardian
             )
         )
         if (familyGroupSessionService.isSessionAssigned()) {

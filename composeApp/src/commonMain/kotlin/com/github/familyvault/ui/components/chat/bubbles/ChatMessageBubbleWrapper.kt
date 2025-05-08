@@ -39,7 +39,7 @@ fun ChatMessageBubbleWrapper(
     ) {
         if (!isAuthor && additionalInfo.shouldRenderSenderName()) {
             Box(modifier = Modifier.padding(top = AdditionalTheme.spacings.medium)) {
-                UserAvatar(firstName = sender, size = AdditionalTheme.spacings.large)
+                UserAvatar(firstName = sender.firstname, size = AdditionalTheme.spacings.large)
             }
         } else {
             Spacer(modifier = Modifier.width(AdditionalTheme.spacings.large))
@@ -50,7 +50,7 @@ fun ChatMessageBubbleWrapper(
             horizontalAlignment = if (message.isAuthor) Alignment.End else Alignment.Start
         ) {
             if (!isAuthor && additionalInfo.shouldRenderSenderName()) {
-                Paragraph(message.senderId, color = AdditionalTheme.colors.mutedColor)
+                Paragraph(message.senderId.fullname, color = AdditionalTheme.colors.mutedColor)
             }
             Row(
                 modifier = Modifier

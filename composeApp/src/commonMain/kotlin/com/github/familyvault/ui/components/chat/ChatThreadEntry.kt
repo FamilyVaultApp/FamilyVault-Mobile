@@ -14,11 +14,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import com.github.familyvault.models.chat.ChatThread
 import com.github.familyvault.models.enums.chat.ChatMessageContentType
 import com.github.familyvault.models.enums.chat.icon
 import com.github.familyvault.services.IFamilyGroupSessionService
-import com.github.familyvault.ui.components.GroupChatIcon
 import com.github.familyvault.ui.components.UserAvatar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
@@ -41,10 +41,10 @@ fun ChatThreadEntry(
     val lastMessage = chatThread.lastMessage
     val currentUser = remember { familyGroupSessionService.getCurrentUser() }
 
-    val senderName = if (lastMessage?.senderId == currentUser.id) {
+    val senderName = if (lastMessage?.senderId?.id == currentUser.id) {
         stringResource(Res.string.you)
     } else {
-        lastMessage?.senderId
+        lastMessage?.senderId?.fullname
     }
 
     return Row(
@@ -59,20 +59,53 @@ fun ChatThreadEntry(
         horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
     ) {
         if (chatThread.iconType == null) {
-            UserAvatar(chatThread.name)
+            if (chatThread.isPrivateNote()) {
+                PrivateNoteChatIcon()
+            } else {
+                UserAvatar(chatThread.customNameIfIndividualOrDefault(currentUser.identifier))
+            }
         } else {
-            GroupChatIcon(chatThread.iconType.icon)
+            ChatIcon(chatThread.iconType.icon)
         }
 
         Column {
             Headline3(
-                TextShortener.shortenText(chatThread.name, 30)
+                TextShortener.shortenText(
+                    chatThread.customNameIfIndividualOrDefault(
+                        familyGroupSessionService.getCurrentUser().identifier
+                    ), 30
+                ),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
             if (lastMessage != null) {
-                when(lastMessage.type) {
-                    ChatMessageContentType.VOICE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_audio)}", 30))
-                    ChatMessageContentType.IMAGE -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${stringResource(Res.string.chat_message_type_image)}", 30))
-                    ChatMessageContentType.TEXT -> ParagraphMuted(TextShortener.shortenText("${senderName}: ${lastMessage.message}", 30))
+                when (lastMessage.type) {
+                    ChatMessageContentType.VOICE -> ParagraphMuted(
+                        TextShortener.shortenText(
+                            "${senderName}: ${
+                                stringResource(
+                                    Res.string.chat_message_type_audio
+                                )
+                            }", 30
+                        )
+                    )
+
+                    ChatMessageContentType.IMAGE -> ParagraphMuted(
+                        TextShortener.shortenText(
+                            "${senderName}: ${
+                                stringResource(
+                                    Res.string.chat_message_type_image
+                                )
+                            }", 30
+                        )
+                    )
+
+                    ChatMessageContentType.TEXT -> ParagraphMuted(
+                        TextShortener.shortenText(
+                            "${senderName}: ${lastMessage.message}",
+                            30
+                        )
+                    )
                 }
             }
         }

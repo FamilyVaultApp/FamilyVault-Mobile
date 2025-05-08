@@ -2,7 +2,9 @@ package com.github.familyvault.ui.components.tasks
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -53,6 +55,7 @@ fun AssignMemberToTaskBottomSheet(task: Task, onDismissRequest: () -> Unit) {
                     selectedPubKey = it?.publicKey
                 }
             )
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.edit_button_content),

@@ -16,7 +16,7 @@ class FamilyMemberAdditionService(
     ) {
         familyVaultBackendClient.addMemberToFamilyGroup(
             AddMemberToFamilyGroupRequest(
-                contextId, newFamilyMember.fullname, newFamilyMember.keyPair.publicKey
+                contextId, newFamilyMember.id, newFamilyMember.keyPair.publicKey
             )
         )
 
