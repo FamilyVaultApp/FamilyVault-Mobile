@@ -6,8 +6,10 @@ import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.createAppDatabase
 import com.github.familyvault.services.AudioPlayerService
 import com.github.familyvault.services.AudioRecorderService
+import com.github.familyvault.services.DocumentPickerService
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IAudioRecorderService
+import com.github.familyvault.services.IDocumentPickerService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.services.INotificationService
@@ -43,4 +45,5 @@ actual fun getPlatformModules() = module {
     factory { AudioRecorderService(get()) }.bind<IAudioRecorderService>()
 
     single { ImagePickerService() }.bind<IImagePickerService>()
+    single { DocumentPickerService() }.bind<IDocumentPickerService>()
 }
