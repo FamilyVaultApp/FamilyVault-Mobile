@@ -17,6 +17,7 @@ class DocumentPickerService : IDocumentPickerService {
     private lateinit var pickDocumentLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var context: Context
     private val selectedDocumentUrls = mutableStateListOf<String>()
+    private var isInitialized = false
 
     fun initializeWithActivity(activity: ComponentActivity) {
         context = activity
@@ -29,9 +30,14 @@ class DocumentPickerService : IDocumentPickerService {
             continuation?.resume(getSelectedDocumentAsByteArrays())
             continuation = null
         }
+        isInitialized = true
     }
 
     override fun openDocumentPicker() {
+        if (!isInitialized) {
+            throw IllegalStateException("DocumentPickerService not initialized. Call initializeWithActivity first.")
+        }
+        
         pickDocumentLauncher.launch(arrayOf(
             "application/pdf", 
             "text/plain", 
@@ -42,7 +48,11 @@ class DocumentPickerService : IDocumentPickerService {
 
     override suspend fun pickDocumentsAndReturnByteArrays(): List<ByteArray> = suspendCoroutine { cont ->
         continuation = cont
-        openDocumentPicker()
+        try {
+            openDocumentPicker()
+        } catch (e: Exception) {
+            cont.resume(emptyList())
+        }
     }
 
     override fun getBytesFromUri(uriString: String): ByteArray? {

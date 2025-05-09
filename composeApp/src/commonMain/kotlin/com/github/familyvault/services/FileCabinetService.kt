@@ -81,6 +81,27 @@ class FileCabinetService(
         return privMxClient.getFilesAsByteArrayFromStore(storeId, limit, skip)
     }
 
+    override fun sendDocumentToFamilyGroupStore(
+        documentByteArray: ByteArray,
+        documentName: String,
+        documentMimeType: String
+    ) {
+        val threadId = retrieveFileCabinetThread().threadId
+
+        val storeId =
+            requireNotNull(privMxClient.retrieveThread(threadId).privateMeta.referenceStoreId)
+
+        privMxClient.sendByteArrayToStore(storeId, documentByteArray)
+    }
+
+    override fun getDocumentsFromFamilyGroupStore(
+        storeId: String?,
+        limit: Long,
+        skip: Long
+    ): List<ByteArray> {
+        return privMxClient.getFilesAsByteArrayFromStore(storeId, limit, skip)
+    }
+
     override suspend fun restoreFileCabinetMembership() {
         val threadId = retrieveFileCabinetThread().threadId
         val storeId = retrieveFileCabinetStoreId()

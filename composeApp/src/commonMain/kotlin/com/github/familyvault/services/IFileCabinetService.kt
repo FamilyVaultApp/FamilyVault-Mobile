@@ -7,10 +7,17 @@ interface IFileCabinetService {
     fun retrieveFileCabinetThread(): ThreadItem
     fun retrieveFileCabinetStoreId(): String
 
-    fun sendImageToFamilyGroupStore (
+    fun sendImageToFamilyGroupStore(
         imageByteArray: ByteArray
     )
 
-    fun getImagesFromFamilyGroupStoreAsByteArray(storeId: String?, limit: Long, skip: Long) : List<ByteArray>
+    fun sendDocumentToFamilyGroupStore(
+        documentByteArray: ByteArray,
+        documentName: String,
+        documentMimeType: String
+    )
+
+    fun getImagesFromFamilyGroupStoreAsByteArray(storeId: String?, limit: Long, skip: Long): List<ByteArray>
+    fun getDocumentsFromFamilyGroupStore(storeId: String?, limit: Long, skip: Long): List<ByteArray>
     suspend fun restoreFileCabinetMembership()
 }

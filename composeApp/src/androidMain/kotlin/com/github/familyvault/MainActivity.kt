@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.familyvault.services.ImagePickerService
+import com.github.familyvault.services.DocumentPickerService
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 
@@ -22,7 +23,11 @@ class MainActivity : ComponentActivity() {
             androidContext(this@MainActivity)
         }
 
-        get<ImagePickerService>().initializeWithActivity(this@MainActivity)
+        val imagePickerService = get<ImagePickerService>()
+        imagePickerService.initializeWithActivity(this@MainActivity)
+        
+        val documentPickerService = get<DocumentPickerService>()
+        documentPickerService.initializeWithActivity(this@MainActivity)
 
         setContent {
             SystemBarColorChanger()

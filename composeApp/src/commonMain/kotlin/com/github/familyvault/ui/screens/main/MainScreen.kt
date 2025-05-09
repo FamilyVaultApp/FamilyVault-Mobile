@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
 import androidx.compose.material.icons.filled.GroupAdd
 import androidx.compose.material.icons.filled.UploadFile
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,6 +34,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.github.familyvault.models.enums.chat.ChatThreadType
+import com.github.familyvault.services.IDocumentPickerService
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.states.ITaskListState
@@ -112,42 +115,113 @@ class MainScreen : Screen {
     @Composable
     private fun FloatingFileCabinetActionButton() {
         val imagePicker = koinInject<IImagePickerService>()
+        val documentPicker = koinInject<IDocumentPickerService>()
         val fileCabinetService = koinInject<IFileCabinetService>()
+        val currentTabIndex = FilesCabinetTab.selectedTabIndex
 
-        var startPicker by remember { mutableStateOf(false) }
+        var startImagePicker by remember { mutableStateOf(false) }
+        var startDocumentPicker by remember { mutableStateOf(false) }
         var isUploading by remember { mutableStateOf(false) }
+        var errorMessage by remember { mutableStateOf<String?>(null) }
 
-        FloatingActionButton(onClick = {
-            startPicker = true
-        }) {
-            Icon(
-                Icons.Filled.UploadFile,
-                stringResource(Res.string.file_cabinet_upload),
-            )
-        }
-
-        if (startPicker) {
-            LaunchedEffect(Unit) {
-                val images = imagePicker.pickImagesAndReturnByteArrays()
-
-                if (images.isNotEmpty()) {
-                    isUploading = true
-
-                    withContext(Dispatchers.IO) {
-                        images.forEach { mediaByteArray ->
-                            fileCabinetService.sendImageToFamilyGroupStore(mediaByteArray)
-                        }
-                    }
-
-                    isUploading = false
+        when (currentTabIndex) {
+            0 -> { // Photos tab
+                FloatingActionButton(onClick = {
+                    startImagePicker = true
+                }) {
+                    Icon(
+                        Icons.Filled.UploadFile,
+                        stringResource(Res.string.file_cabinet_upload),
+                    )
                 }
 
-                startPicker = false
+                if (startImagePicker) {
+                    LaunchedEffect(Unit) {
+                        val images = imagePicker.pickImagesAndReturnByteArrays()
+
+                        if (images.isNotEmpty()) {
+                            isUploading = true
+
+                            withContext(Dispatchers.IO) {
+                                images.forEach { mediaByteArray ->
+                                    fileCabinetService.sendImageToFamilyGroupStore(mediaByteArray)
+                                }
+                            }
+
+                            isUploading = false
+                        }
+
+                        startImagePicker = false
+                    }
+                }
+            }
+            1 -> { // Documents tab
+                FloatingActionButton(onClick = {
+                    startDocumentPicker = true
+                }) {
+                    Icon(
+                        Icons.Filled.AddTask, // Should use a more appropriate document upload icon
+                        stringResource(Res.string.file_cabinet_upload),
+                    )
+                }
+
+                if (startDocumentPicker) {
+                    LaunchedEffect(Unit) {
+                        try {
+                            val documents = documentPicker.pickDocumentsAndReturnByteArrays()
+
+                            if (documents.isNotEmpty()) {
+                                isUploading = true
+                                
+                                withContext(Dispatchers.IO) {
+                                    // Get the list of selected document URLs
+                                    val documentUrls = documentPicker.getSelectedDocumentUrls()
+                                    
+                                    // Process each document with its metadata
+                                    documentUrls.forEachIndexed { index, uri ->
+                                        val documentName = documentPicker.getDocumentNameFromUri(uri) ?: "document_$index.pdf"
+                                        val documentMimeType = documentPicker.getDocumentMimeTypeFromUri(uri) ?: "application/pdf"
+                                        
+                                        // Send the document to the storage
+                                        documents.getOrNull(index)?.let { docBytes ->
+                                            fileCabinetService.sendDocumentToFamilyGroupStore(
+                                                docBytes,
+                                                documentName,
+                                                documentMimeType
+                                            )
+                                        }
+                                    }
+                                }
+                                
+                                isUploading = false
+                            }
+                        } catch (e: Exception) {
+                            errorMessage = e.message ?: "Error starting document picker"
+                        } finally {
+                            startDocumentPicker = false
+                        }
+                    }
+                }
             }
         }
 
         if (isUploading) {
             CircularProgressIndicatorDialog(stringResource(Res.string.file_cabinet_sending_files))
+        }
+        
+        errorMessage?.let { error ->
+            AlertDialog(
+                onDismissRequest = { errorMessage = null },
+                title = { Text("Error") },
+                text = { Text(error) },
+                confirmButton = {
+                    TextButton(
+                        onClick = { errorMessage = null }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 
