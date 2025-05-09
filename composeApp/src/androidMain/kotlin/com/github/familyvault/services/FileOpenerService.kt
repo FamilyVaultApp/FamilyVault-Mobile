@@ -129,6 +129,35 @@ class FileOpenerService(private val context: Context) : IFileOpenerService {
                 Toast.LENGTH_LONG
             ).show()
             
+            // Open the file explorer to the Downloads folder
+            try {
+                // First try: open Downloads directory
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(Uri.parse("content://downloads/all_downloads"), "resource/folder")
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                Log.d(TAG, "Opened Downloads folder")
+            } catch (e: Exception) {
+                Log.e(TAG, "Could not open Downloads folder: ${e.message}", e)
+                
+                // Second try: open the specific file
+                try {
+                    val fileUri = FileProvider.getUriForFile(
+                        context, 
+                        "${context.packageName}.fileprovider",
+                        file
+                    )
+                    val openIntent = Intent(Intent.ACTION_VIEW)
+                    openIntent.setDataAndType(fileUri, "application/pdf")
+                    openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    openIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(openIntent)
+                    Log.d(TAG, "Opened specific file: $fileUri")
+                } catch (e2: Exception) {
+                    Log.e(TAG, "Could not open file directly: ${e2.message}", e2)
+                }
+            }
+            
             Log.d(TAG, "File downloaded to: ${file.absolutePath}")
             return file.absolutePath
         } catch (e: Exception) {
