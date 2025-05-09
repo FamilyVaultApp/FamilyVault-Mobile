@@ -22,7 +22,6 @@ import familyvault.composeapp.generated.resources.file_cabinet_tab
 import org.jetbrains.compose.resources.stringResource
 
 object FilesCabinetTab : Tab {
-    // State to keep track of selected tab index, accessible from MainScreen
     var selectedTabIndex by mutableStateOf(0)
     
     @Composable

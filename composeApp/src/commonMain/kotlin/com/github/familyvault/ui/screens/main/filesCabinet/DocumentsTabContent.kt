@@ -28,7 +28,12 @@ import com.github.familyvault.ui.components.filesCabinet.PhotoCard
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
-import familyvault.composeapp.generated.resources.file_cabinet_documents
+import familyvault.composeapp.generated.resources.file_cabinet_retry
+import familyvault.composeapp.generated.resources.file_cabinet_no_documents
+import familyvault.composeapp.generated.resources.file_cabinet_download_pdf_title
+import familyvault.composeapp.generated.resources.file_cabinet_download_pdf_message
+import familyvault.composeapp.generated.resources.file_cabinet_download
+import familyvault.composeapp.generated.resources.cancel_button_content
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -36,7 +41,6 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 
@@ -69,7 +73,7 @@ fun DocumentsTabContent() {
                     storeId = storeId,
                     limit = 50,
                     skip = 0
-                ).filterNotNull()
+                )
             }
             
             documentByteArrays = documents.map { it.content }
@@ -108,7 +112,7 @@ fun DocumentsTabContent() {
                         storeId = storeId,
                         limit = 50,
                         skip = 0
-                    ).filterNotNull()
+                    )
                     
                     documentByteArrays = documents.map { it.content }
                     
@@ -173,7 +177,7 @@ fun DocumentsTabContent() {
                         loadDocuments()
                     }
                 }) {
-                    Text("Retry")
+                    Text(stringResource(Res.string.file_cabinet_retry))
                 }
             }
         }
@@ -183,7 +187,7 @@ fun DocumentsTabContent() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("No documents found. Upload documents using the button below.")
+                Text(stringResource(Res.string.file_cabinet_no_documents))
             }
         }
     } else {
@@ -235,8 +239,8 @@ fun DocumentsTabContent() {
                 showDownloadConfirmation = false 
                 pdfToDownload = null
             },
-            title = { Text("Download PDF") },
-            text = { Text("Do you want to download this PDF to your device?") },
+            title = { Text(stringResource(Res.string.file_cabinet_download_pdf_title)) },
+            text = { Text(stringResource(Res.string.file_cabinet_download_pdf_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     pdfToDownload?.let { (bytes, name) ->
@@ -245,7 +249,7 @@ fun DocumentsTabContent() {
                     showDownloadConfirmation = false
                     pdfToDownload = null
                 }) {
-                    Text("Download")
+                    Text(stringResource(Res.string.file_cabinet_download))
                 }
             },
             dismissButton = {
@@ -253,7 +257,7 @@ fun DocumentsTabContent() {
                     showDownloadConfirmation = false
                     pdfToDownload = null
                 }) {
-                    Text("Cancel")
+                    Text(stringResource(Res.string.cancel_button_content))
                 }
             }
         )
@@ -266,5 +270,3 @@ fun DocumentsTabContent() {
         )
     }
 }
-
-private fun min(a: Int, b: Int): Int = if (a < b) a else b

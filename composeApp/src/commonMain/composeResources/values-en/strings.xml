@@ -197,4 +197,10 @@
     <string name="file_cabinet_upload">Upload</string>
     <string name="file_cabinet_photo_card">Photo card</string>
     <string name="file_cabinet_sending_files">Uploading files...</string>
+    <string name="file_cabinet_no_images">No images found. Upload some photos using the button below.</string>
+    <string name="file_cabinet_retry">Retry</string>
+    <string name="file_cabinet_no_documents">No documents found. Upload documents using the button below.</string>
+    <string name="file_cabinet_download_pdf_title">Download PDF</string>
+    <string name="file_cabinet_download_pdf_message">Do you want to download this PDF to your device?</string>
+    <string name="file_cabinet_download">Download</string>
 </resources>

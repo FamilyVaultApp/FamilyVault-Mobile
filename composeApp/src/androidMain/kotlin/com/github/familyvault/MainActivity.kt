@@ -17,7 +17,6 @@ import com.github.familyvault.services.DocumentPickerService
 import com.github.familyvault.services.IFileOpenerService
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

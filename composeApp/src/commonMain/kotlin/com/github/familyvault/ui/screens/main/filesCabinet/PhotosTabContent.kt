@@ -26,8 +26,9 @@ import com.github.familyvault.ui.components.filesCabinet.LoadingCard
 import com.github.familyvault.ui.components.filesCabinet.PhotoCard
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.file_cabinet_no_images
+import familyvault.composeapp.generated.resources.file_cabinet_retry
 import familyvault.composeapp.generated.resources.loading
-import familyvault.composeapp.generated.resources.file_cabinet_photos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -58,7 +59,7 @@ fun PhotosTabContent() {
                     storeId = storeId,
                     limit = 30,
                     skip = 0
-                ).filterNotNull()
+                )
             }
         } catch (e: Exception) {
             errorMessage = "Error loading images: ${e.message}"
@@ -90,13 +91,13 @@ fun PhotosTabContent() {
                         loadImages()
                     }
                 }) {
-                    Text("Retry")
+                    Text(stringResource(Res.string.file_cabinet_retry))
                 }
             }
         }
     } else if (imageByteArrays.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No images found. Upload some photos using the button below.")
+            Text(stringResource(Res.string.file_cabinet_no_images))
         }
     } else {
         LazyVerticalGrid(

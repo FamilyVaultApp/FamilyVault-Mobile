@@ -57,7 +57,7 @@ class DocumentPickerService : IDocumentPickerService {
         
         Log.d(TAG, "Opening document picker with mime types: PDF, text, Word")
         pickDocumentLauncher.launch(arrayOf(
-            "*/*" // Allow all file types for better compatibility
+            "*/*"
         ))
     }
 

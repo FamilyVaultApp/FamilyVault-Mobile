@@ -18,11 +18,14 @@ import java.util.Locale
 class FileOpenerService(private val context: Context) : IFileOpenerService {
     private val TAG = "FileOpenerService"
     
-    override fun openFileWithExternalViewer(fileBytes: ByteArray, mimeType: String, fileName: String): Boolean {
+    override fun openFileWithExternalViewer(
+        fileBytes: ByteArray,
+        mimeType: String,
+        fileName: String
+    ): Boolean {
         return try {
             val tempFile = createTempFile(fileBytes, fileName)
-            Log.d(TAG, "Created temp file for $fileName (${fileBytes.size} bytes), mime: $mimeType")
-            
+
             val authority = "${context.packageName}.fileprovider"
             val contentUri = FileProvider.getUriForFile(context, authority, tempFile)
             Log.d(TAG, "ContentUri: $contentUri")
@@ -54,9 +57,7 @@ class FileOpenerService(private val context: Context) : IFileOpenerService {
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
             }
-            
-            Log.d(TAG, "Available PDF viewers: ${resInfoList.map { it.activityInfo.packageName }}")
-            
+
             if (resInfoList.isNotEmpty()) {
                 val chooserIntent = Intent.createChooser(intent, "Open PDF with")
                 chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -86,16 +87,20 @@ class FileOpenerService(private val context: Context) : IFileOpenerService {
     
     override fun downloadFile(fileBytes: ByteArray, fileName: String): String? {
         return try {
-            val finalFileName = if (isPdfFile(fileBytes) && !fileName.endsWith(".pdf", ignoreCase = true)) {
+            val finalFileName = if (isPdfFile(fileBytes) &&
+                !fileName.endsWith(".pdf", ignoreCase = true)) {
                 "$fileName.pdf"
             } else {
                 fileName
             }
             
-            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss",
+                Locale.getDefault()).format(Date())
             val uniqueFileName = "${timeStamp}_$finalFileName"
             
-            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS
+            )
             val file = File(downloadsDir, uniqueFileName)
             
             FileOutputStream(file).use { it.write(fileBytes) }
@@ -115,7 +120,9 @@ class FileOpenerService(private val context: Context) : IFileOpenerService {
             
             try {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.setDataAndType(Uri.parse("content://downloads/all_downloads"), "resource/folder")
+                intent.setDataAndType(Uri.parse(
+                    "content://downloads/all_downloads"),
+                    "resource/folder")
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
                 Log.d(TAG, "Opened Downloads folder")
@@ -159,12 +166,12 @@ class FileOpenerService(private val context: Context) : IFileOpenerService {
                fileBytes[2].toInt() == 0x44 && 
                fileBytes[3].toInt() == 0x46    
                
-        Log.d(TAG, "PDF detection result: $isPdf (${fileBytes.size} bytes, first bytes: ${fileBytes.take(4).joinToString("") { String.format("%02X", it) }})")
         return isPdf
     }
     
     private fun createTempFile(fileBytes: ByteArray, fileName: String): File {
-        val finalFileName = if (isPdfFile(fileBytes) && !fileName.endsWith(".pdf", ignoreCase = true)) {
+        val finalFileName = if (isPdfFile(fileBytes)
+            && !fileName.endsWith(".pdf", ignoreCase = true)) {
             "$fileName.pdf"
         } else {
             fileName
