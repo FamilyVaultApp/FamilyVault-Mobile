@@ -189,63 +189,35 @@ class FileCabinetService(
         documentName: String,
         documentMimeType: String
     ) {
-        try {
-            val storeId = retrieveFileCabinetDocumentsStoreId()
-            // Create metadata JSON to embed before the actual file content
-            val metadata = """{"name":"$documentName","mime":"$documentMimeType","timestamp":${System.currentTimeMillis()}}"""
-            
-            // Prefix the document bytes with the metadata
-            val metadataBytes = metadata.encodeToByteArray()
-            val metadataLength = metadataBytes.size
-            
-            // Create a new byte array with: [metadataLength(4 bytes)][metadata bytes][document bytes]
-            val combinedBytes = ByteArray(4 + metadataLength + documentByteArray.size)
-            
-            // Store metadata length as 4 bytes
-            combinedBytes[0] = (metadataLength shr 24 and 0xFF).toByte()
-            combinedBytes[1] = (metadataLength shr 16 and 0xFF).toByte() 
-            combinedBytes[2] = (metadataLength shr 8 and 0xFF).toByte()
-            combinedBytes[3] = (metadataLength and 0xFF).toByte()
-            
-            // Copy metadata bytes
-            metadataBytes.copyInto(combinedBytes, 4)
-            
-            // Copy document bytes
-            documentByteArray.copyInto(combinedBytes, 4 + metadataLength)
-            
-            privMxClient.sendByteArrayToStore(storeId, combinedBytes)
-        } catch (e: Exception) {
-            val contextId = familyGroupSessionService.getContextId()
-            val familyGroupName = familyGroupSessionService.getFamilyGroupName()
-            val splitFamilyMembers = FamilyMembersSplitter.split(
-                familyGroupService.retrieveFamilyGroupMembersList()
-            )
-
-            val users = splitFamilyMembers.members.map { it.toPrivMxUser() }
-            val managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() }
-            
-            // Create documents store and thread
-            val documentsStoreId = privMxClient.createStore(
-                contextId,
-                users,
-                managers,
-                StoreType.FILE_CABINET_DOCUMENTS.toString()
-            )
-            
-            privMxClient.createThread(
-                contextId = contextId,
-                users = users,
-                managers = managers,
-                tag = AppConfig.FILE_CABINET_THREAD_TAG,
-                type = FileCabinetThreadType.DOCUMENTS.toString(),
-                name = "$familyGroupName$DOCUMENTS_SUFFIX",
-                referenceStoreId = documentsStoreId,
-                threadInitialCreators = emptyList()
-            )
-            
-            // Now send to the newly created store
-            privMxClient.sendByteArrayToStore(documentsStoreId, documentByteArray)
-        }
+        // First ensure the documents store exists
+        ensureDocumentsStoreExists()
+        
+        // Get store ID and create document with metadata
+        val storeId = retrieveFileCabinetDocumentsStoreId()
+        
+        // Create metadata JSON to embed before the actual file content
+        val metadata = """{"name":"$documentName","mime":"$documentMimeType","timestamp":${System.currentTimeMillis()}}"""
+        
+        // Prefix the document bytes with the metadata
+        val metadataBytes = metadata.encodeToByteArray()
+        val metadataLength = metadataBytes.size
+        
+        // Create a new byte array with: [metadataLength(4 bytes)][metadata bytes][document bytes]
+        val combinedBytes = ByteArray(4 + metadataLength + documentByteArray.size)
+        
+        // Store metadata length as 4 bytes
+        combinedBytes[0] = (metadataLength shr 24 and 0xFF).toByte()
+        combinedBytes[1] = (metadataLength shr 16 and 0xFF).toByte() 
+        combinedBytes[2] = (metadataLength shr 8 and 0xFF).toByte()
+        combinedBytes[3] = (metadataLength and 0xFF).toByte()
+        
+        // Copy metadata bytes
+        metadataBytes.copyInto(combinedBytes, 4)
+        
+        // Copy document bytes
+        documentByteArray.copyInto(combinedBytes, 4 + metadataLength)
+        
+        privMxClient.sendByteArrayToStore(storeId, combinedBytes)
     }
 
     override fun getDocumentsFromFamilyGroupStore(
