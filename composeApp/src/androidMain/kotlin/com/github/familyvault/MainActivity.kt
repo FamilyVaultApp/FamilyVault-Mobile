@@ -11,16 +11,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.familyvault.services.FileOpenerService
 import com.github.familyvault.services.ImagePickerService
 import com.github.familyvault.services.DocumentPickerService
+import com.github.familyvault.services.IFileOpenerService
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        val androidSpecificModule = module {
+            single { FileOpenerService(androidContext()) } bind IFileOpenerService::class
+        }
+        
         initKoin {
             androidContext(this@MainActivity)
+            modules(androidSpecificModule)
         }
 
         val imagePickerService = get<ImagePickerService>()

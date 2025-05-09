@@ -1,18 +1,23 @@
 package com.github.familyvault.ui.screens.main.filesCabinet
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.Button
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.unit.dp
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.ui.components.FullScreenImage
@@ -22,8 +27,10 @@ import com.github.familyvault.ui.components.filesCabinet.PhotoCard
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
+import familyvault.composeapp.generated.resources.file_cabinet_photos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -32,22 +39,37 @@ import org.koin.compose.koinInject
 fun PhotosTabContent() {
     val fileCabinetService = koinInject<IFileCabinetService>()
     val imagePicker = koinInject<IImagePickerService>()
-    val storeId = fileCabinetService.retrieveFileCabinetStoreId()
-
+    val coroutineScope = rememberCoroutineScope()
+    
     var imageByteArrays by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    
+    suspend fun loadImages() {
+        isLoading = true
+        errorMessage = null
+        
+        try {
+            val storeId = fileCabinetService.retrieveFileCabinetImagesStoreId()
+            
+            imageByteArrays = withContext(Dispatchers.IO) {
+                fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
+                    storeId = storeId,
+                    limit = 30,
+                    skip = 0
+                ).filterNotNull()
+            }
+        } catch (e: Exception) {
+            errorMessage = "Error loading images: ${e.message}"
+            imageByteArrays = emptyList()
+        } finally {
+            isLoading = false
+        }
+    }
 
     LaunchedEffect(Unit) {
-        isLoading = true
-        imageByteArrays = withContext(Dispatchers.IO) {
-            fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
-                storeId = storeId,
-                limit = 30,
-                skip = 0
-            ).filterNotNull()
-        }
-        isLoading = false
+        loadImages()
     }
 
     if (isLoading) {
@@ -55,6 +77,26 @@ fun PhotosTabContent() {
             LoaderWithText(
                 stringResource(Res.string.loading), modifier = Modifier.fillMaxSize()
             )
+        }
+    } else if (errorMessage != null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, 
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(errorMessage!!)
+                Button(onClick = { 
+                    coroutineScope.launch {
+                        loadImages()
+                    }
+                }) {
+                    Text("Retry")
+                }
+            }
+        }
+    } else if (imageByteArrays.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("No images found. Upload some photos using the button below.")
         }
     } else {
         LazyVerticalGrid(

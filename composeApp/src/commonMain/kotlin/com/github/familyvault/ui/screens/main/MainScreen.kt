@@ -1,5 +1,6 @@
 package com.github.familyvault.ui.screens.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -118,6 +119,7 @@ class MainScreen : Screen {
         val documentPicker = koinInject<IDocumentPickerService>()
         val fileCabinetService = koinInject<IFileCabinetService>()
         val currentTabIndex = FilesCabinetTab.selectedTabIndex
+        val TAG = "FileCabinetUpload"
 
         var startImagePicker by remember { mutableStateOf(false) }
         var startDocumentPicker by remember { mutableStateOf(false) }
@@ -125,7 +127,7 @@ class MainScreen : Screen {
         var errorMessage by remember { mutableStateOf<String?>(null) }
 
         when (currentTabIndex) {
-            0 -> { // Photos tab
+            0 -> { // Photos tab - only images, goes to Images store
                 FloatingActionButton(onClick = {
                     startImagePicker = true
                 }) {
@@ -155,12 +157,12 @@ class MainScreen : Screen {
                     }
                 }
             }
-            1 -> { // Documents tab
+            1 -> { // Documents tab - supports both documents and images, goes to Documents store
                 FloatingActionButton(onClick = {
                     startDocumentPicker = true
                 }) {
                     Icon(
-                        Icons.Filled.AddTask, // Should use a more appropriate document upload icon
+                        Icons.Filled.UploadFile, 
                         stringResource(Res.string.file_cabinet_upload),
                     )
                 }
@@ -168,7 +170,9 @@ class MainScreen : Screen {
                 if (startDocumentPicker) {
                     LaunchedEffect(Unit) {
                         try {
+                            Log.d(TAG, "Starting document picker")
                             val documents = documentPicker.pickDocumentsAndReturnByteArrays()
+                            Log.d(TAG, "Document picker returned ${documents.size} documents")
 
                             if (documents.isNotEmpty()) {
                                 isUploading = true
@@ -176,27 +180,34 @@ class MainScreen : Screen {
                                 withContext(Dispatchers.IO) {
                                     // Get the list of selected document URLs
                                     val documentUrls = documentPicker.getSelectedDocumentUrls()
+                                    Log.d(TAG, "Selected document URLs: ${documentUrls.size}")
                                     
                                     // Process each document with its metadata
                                     documentUrls.forEachIndexed { index, uri ->
                                         val documentName = documentPicker.getDocumentNameFromUri(uri) ?: "document_$index.pdf"
                                         val documentMimeType = documentPicker.getDocumentMimeTypeFromUri(uri) ?: "application/pdf"
+                                        Log.d(TAG, "Processing document: $documentName ($documentMimeType)")
                                         
-                                        // Send the document to the storage
+                                        // Send the document to the documents storage
                                         documents.getOrNull(index)?.let { docBytes ->
+                                            Log.d(TAG, "Sending document to store: $documentName (${docBytes.size} bytes)")
                                             fileCabinetService.sendDocumentToFamilyGroupStore(
                                                 docBytes,
                                                 documentName,
                                                 documentMimeType
                                             )
+                                            Log.d(TAG, "Successfully sent $documentName to store")
                                         }
                                     }
                                 }
                                 
                                 isUploading = false
+                            } else {
+                                Log.d(TAG, "No documents selected")
                             }
                         } catch (e: Exception) {
-                            errorMessage = e.message ?: "Error starting document picker"
+                            Log.e(TAG, "Error in document upload", e)
+                            errorMessage = "Error: ${e.message}"
                         } finally {
                             startDocumentPicker = false
                         }

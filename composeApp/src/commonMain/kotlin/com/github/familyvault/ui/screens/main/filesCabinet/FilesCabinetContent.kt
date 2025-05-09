@@ -1,10 +1,14 @@
 package com.github.familyvault.ui.screens.main.filesCabinet
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.file_cabinet_documents
 import familyvault.composeapp.generated.resources.file_cabinet_photos
@@ -26,7 +30,12 @@ fun FilesCabinetContent(
                 Tab(
                     selected = selectedTabIndex == index,
                     onClick = { onTabIndexChanged(index) },
-                    text = { Text(title) }
+                    text = { 
+                        Text(
+                            text = title,
+                            fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Normal
+                        ) 
+                    }
                 )
             }
         }
