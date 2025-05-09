@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -37,21 +38,22 @@ fun PhotosTabContent() {
     val imagePicker = koinInject<IImagePickerService>()
     val storeId = fileCabinetService.retrieveFileCabinetStoreId()
 
-    var imageByteArrays by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
+    val imageByteArrays = remember { mutableStateListOf<ByteArray>() }
     var isLoading by remember { mutableStateOf(true) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
 
     LaunchedEffect(Unit) {
         isLoading = true
-        imageByteArrays = withContext(Dispatchers.IO) {
-            fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
+        imageByteArrays.clear()
+        withContext(Dispatchers.IO) {
+            imageByteArrays.addAll(fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
                 storeId = storeId,
                 limit = 30,
                 skip = 0
-            ).filterNotNull()
+            ))
         }
         fileCabinetListenerService.startListeningForNewFiles(storeId) {
-            imageByteArrays = imageByteArrays + it
+            imageByteArrays.add(it)
         }
         isLoading = false
     }
