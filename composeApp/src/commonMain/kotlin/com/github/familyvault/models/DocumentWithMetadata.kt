@@ -1,8 +1,5 @@
 package com.github.familyvault.models
 
-/**
- * Represents a document with its metadata
- */
 data class DocumentWithMetadata(
     val content: ByteArray,
     val fileName: String? = null,

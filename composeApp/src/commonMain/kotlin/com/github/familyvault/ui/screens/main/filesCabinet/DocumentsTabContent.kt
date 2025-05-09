@@ -54,18 +54,15 @@ fun DocumentsTabContent() {
     var isInitializing by remember { mutableStateOf(false) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    var debugInfo by remember { mutableStateOf<String?>(null) }
     var showDownloadConfirmation by remember { mutableStateOf(false) }
     var pdfToDownload by remember { mutableStateOf<Pair<ByteArray, String>?>(null) }
     
     suspend fun loadDocuments() {
         isLoading = true
         errorMessage = null
-        debugInfo = null
         
         try {
             val storeId = fileCabinetService.retrieveFileCabinetDocumentsStoreId()
-            debugInfo = "Using documents store ID: $storeId"
             
             val documents = withContext(Dispatchers.IO) {
                 fileCabinetService.getDocumentsWithMetadataFromStore(
@@ -77,23 +74,17 @@ fun DocumentsTabContent() {
             
             documentByteArrays = documents.map { it.content }
             
-            debugInfo += "\nFound ${documentByteArrays.size} files in store"
-            
-            // Get real document names from metadata
             documentNames = documents.mapIndexed { index, doc ->
                 val fileName = doc.fileName
                 val isPdf = fileOpener.isPdfFile(doc.content)
                 
                 when {
-                    // Use stored filename if available
                     !fileName.isNullOrBlank() -> fileName
-                    // Generate default name based on content type
                     isPdf -> "Document_${index}.pdf" 
                     else -> "File_${index}.jpg"
                 }
             }
             
-            // Get real mime types from metadata
             documentMimeTypes = documents.mapIndexed { index, doc ->
                 val mimeType = doc.mimeType
                 val isPdf = fileOpener.isPdfFile(doc.content)
@@ -105,25 +96,13 @@ fun DocumentsTabContent() {
                 }
             }
             
-            val pdfCount = documentByteArrays.count { fileOpener.isPdfFile(it) }
-            debugInfo += "\nDetected $pdfCount PDF files"
-            
-            documentByteArrays.forEachIndexed { index, bytes ->
-                val bytePreview = bytes.take(min(10, bytes.size)).joinToString(" ") { 
-                    String.format("%02X", it) 
-                }
-                debugInfo += "\nFile $index: ${bytes.size} bytes, name: ${documentNames[index]}, first bytes: $bytePreview"
-            }
-            
         } catch (e: IllegalStateException) {
             isInitializing = true
-            debugInfo = "Creating documents store: ${e.message}"
             
             withContext(Dispatchers.IO) {
                 try {
                     fileCabinetService.ensureDocumentsStoreExists()
                     val storeId = fileCabinetService.retrieveFileCabinetDocumentsStoreId()
-                    debugInfo += "\nCreated store with ID: $storeId"
                     
                     val documents = fileCabinetService.getDocumentsWithMetadataFromStore(
                         storeId = storeId,
@@ -158,7 +137,6 @@ fun DocumentsTabContent() {
                 } catch (e: Exception) {
                     errorMessage = "Could not initialize documents storage: ${e.message}"
                     documentByteArrays = emptyList()
-                    debugInfo += "\nError: ${e.message}"
                 }
             }
             
@@ -166,7 +144,6 @@ fun DocumentsTabContent() {
         } catch (e: Exception) {
             errorMessage = "Error loading documents: ${e.message}"
             documentByteArrays = emptyList()
-            debugInfo += "\nGeneral error: ${e.message}"
         } finally {
             isLoading = false
         }
@@ -207,65 +184,45 @@ fun DocumentsTabContent() {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text("No documents found. Upload documents using the button below.")
-                
-                Text(
-                    "Debug info:",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-                Text(
-                    debugInfo ?: "No debug info available",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
         }
     } else {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Text(
-                "Debug: ${documentByteArrays.size} files, ${documentByteArrays.count { bytes -> fileOpener.isPdfFile(bytes) }} PDFs",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-            )
-            
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(AdditionalTheme.spacings.small)
-            ) {
-                items(documentByteArrays.size) { index ->
-                    val documentBytes = documentByteArrays[index]
-                    val documentName = documentNames.getOrNull(index) ?: "Document_$index"
-                    
-                    if (fileOpener.isPdfFile(documentBytes)) {
-                        PdfCard(
-                            documentName = documentName,
-                            onClick = {
-                                pdfToDownload = Pair(documentBytes, documentName)
-                                showDownloadConfirmation = true
-                            }
-                        )
-                    } else {
-                        val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, documentBytes) {
-                            withContext(Dispatchers.IO) {
-                                try {
-                                    value = imagePicker.getBitmapFromBytes(documentBytes)
-                                } catch (e: Exception) {
-                                    value = null
-                                }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(AdditionalTheme.spacings.small)
+        ) {
+            items(documentByteArrays.size) { index ->
+                val documentBytes = documentByteArrays[index]
+                val documentName = documentNames.getOrNull(index) ?: "Document_$index"
+                
+                if (fileOpener.isPdfFile(documentBytes)) {
+                    PdfCard(
+                        documentName = documentName,
+                        onClick = {
+                            pdfToDownload = Pair(documentBytes, documentName)
+                            showDownloadConfirmation = true
+                        }
+                    )
+                } else {
+                    val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, documentBytes) {
+                        withContext(Dispatchers.IO) {
+                            try {
+                                value = imagePicker.getBitmapFromBytes(documentBytes)
+                            } catch (e: Exception) {
+                                value = null
                             }
                         }
+                    }
 
-                        val bitmap = imageBitmapState.value
-                        if (bitmap == null) {
-                            LoadingCard()
-                        } else {
-                            PhotoCard(
-                                imageBitmap = bitmap,
-                                onClick = { fullScreenImage = bitmap }
-                            )
-                        }
+                    val bitmap = imageBitmapState.value
+                    if (bitmap == null) {
+                        LoadingCard()
+                    } else {
+                        PhotoCard(
+                            imageBitmap = bitmap,
+                            onClick = { fullScreenImage = bitmap }
+                        )
                     }
                 }
             }
