@@ -26,6 +26,7 @@ import com.github.familyvault.ui.components.filesCabinet.LoadingCard
 import com.github.familyvault.ui.components.filesCabinet.PdfCard
 import com.github.familyvault.ui.components.filesCabinet.PhotoCard
 import com.github.familyvault.ui.theme.AdditionalTheme
+import com.github.familyvault.utils.mappers.DocumentMetadataMapper
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
 import familyvault.composeapp.generated.resources.file_cabinet_retry
@@ -77,28 +78,8 @@ fun DocumentsTabContent() {
             }
             
             documentByteArrays = documents.map { it.content }
-            
-            documentNames = documents.mapIndexed { index, doc ->
-                val fileName = doc.fileName
-                val isPdf = fileOpener.isPdfFile(doc.content)
-                
-                when {
-                    !fileName.isNullOrBlank() -> fileName
-                    isPdf -> "Document_${index}.pdf" 
-                    else -> "File_${index}.jpg"
-                }
-            }
-            
-            documentMimeTypes = documents.mapIndexed { index, doc ->
-                val mimeType = doc.mimeType
-                val isPdf = fileOpener.isPdfFile(doc.content)
-                
-                when {
-                    !mimeType.isNullOrBlank() -> mimeType
-                    isPdf -> "application/pdf"
-                    else -> "image/jpeg"
-                }
-            }
+            documentNames = DocumentMetadataMapper.mapDocumentNames(documents, fileOpener)
+            documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents, fileOpener)
             
         } catch (e: IllegalStateException) {
             isInitializing = true
@@ -115,28 +96,8 @@ fun DocumentsTabContent() {
                     )
                     
                     documentByteArrays = documents.map { it.content }
-                    
-                    documentNames = documents.mapIndexed { index, doc ->
-                        val fileName = doc.fileName
-                        val isPdf = fileOpener.isPdfFile(doc.content)
-                        
-                        when {
-                            !fileName.isNullOrBlank() -> fileName
-                            isPdf -> "Document_${index}.pdf" 
-                            else -> "File_${index}.jpg"
-                        }
-                    }
-                    
-                    documentMimeTypes = documents.map { doc ->
-                        val mimeType = doc.mimeType
-                        val isPdf = fileOpener.isPdfFile(doc.content)
-                        
-                        when {
-                            !mimeType.isNullOrBlank() -> mimeType
-                            isPdf -> "application/pdf"
-                            else -> "image/jpeg"
-                        }
-                    }
+                    documentNames = DocumentMetadataMapper.mapDocumentNames(documents, fileOpener)
+                    documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents, fileOpener)
                     
                 } catch (e: Exception) {
                     errorMessage = "Could not initialize documents storage: ${e.message}"
@@ -243,7 +204,7 @@ fun DocumentsTabContent() {
             text = { Text(stringResource(Res.string.file_cabinet_download_pdf_message)) },
             confirmButton = {
                 TextButton(onClick = {
-                    pdfToDownload?.let { (bytes, name) ->
+                    pdfToDownload?.let { (bytes, name) -> 
                         fileOpener.downloadFile(bytes, name)
                     }
                     showDownloadConfirmation = false
