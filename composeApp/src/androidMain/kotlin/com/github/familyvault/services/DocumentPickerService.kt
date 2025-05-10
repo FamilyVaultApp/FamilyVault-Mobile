@@ -19,7 +19,9 @@ class DocumentPickerService : IDocumentPickerService {
     private lateinit var context: Context
     private val selectedDocumentUrls = mutableStateListOf<String>()
     private var isInitialized = false
-    private val TAG = "DocumentPickerService"
+    companion object {
+        private const val TAG = "DocumentPickerService"
+    }
 
     fun initializeWithActivity(activity: ComponentActivity) {
         context = activity
@@ -55,9 +57,11 @@ class DocumentPickerService : IDocumentPickerService {
             throw IllegalStateException("DocumentPickerService not initialized. Call initializeWithActivity first.")
         }
         
-        Log.d(TAG, "Opening document picker with mime types: PDF, text, Word")
+        Log.d(TAG, "Opening document picker with mime types: PDF, JPEG, PNG")
         pickDocumentLauncher.launch(arrayOf(
-            "*/*"
+            "application/pdf",
+            "image/jpeg",
+            "image/png"
         ))
     }
 

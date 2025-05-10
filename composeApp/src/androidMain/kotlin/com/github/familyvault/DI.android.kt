@@ -7,9 +7,11 @@ import com.github.familyvault.database.createAppDatabase
 import com.github.familyvault.services.AudioPlayerService
 import com.github.familyvault.services.AudioRecorderService
 import com.github.familyvault.services.DocumentPickerService
+import com.github.familyvault.services.FileOpenerService
 import com.github.familyvault.services.IAudioPlayerService
 import com.github.familyvault.services.IAudioRecorderService
 import com.github.familyvault.services.IDocumentPickerService
+import com.github.familyvault.services.IFileOpenerService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.services.INotificationService
@@ -39,6 +41,9 @@ actual fun getPlatformModules() = module {
 
     /* NFC */
     factory { NfcService(get()) }.bind<INfcService>()
+
+    /* File operations */
+    factory { FileOpenerService(get()) }.bind<IFileOpenerService>()
 
     /* Audio service */
     factory { AudioPlayerService() }.bind<IAudioPlayerService>()
