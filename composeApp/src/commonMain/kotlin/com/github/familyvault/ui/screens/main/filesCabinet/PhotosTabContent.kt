@@ -5,8 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -15,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
+import com.github.familyvault.services.listeners.IFileCabinetListenerService
 import com.github.familyvault.ui.components.FullScreenImage
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.filesCabinet.LoadingCard
@@ -31,23 +34,34 @@ import org.koin.compose.koinInject
 @Composable
 fun PhotosTabContent() {
     val fileCabinetService = koinInject<IFileCabinetService>()
+    val fileCabinetListenerService = koinInject<IFileCabinetListenerService>()
     val imagePicker = koinInject<IImagePickerService>()
     val storeId = fileCabinetService.retrieveFileCabinetStoreId()
 
-    var imageByteArrays by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
+    val imageByteArrays = remember { mutableStateListOf<ByteArray>() }
     var isLoading by remember { mutableStateOf(true) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
 
     LaunchedEffect(Unit) {
         isLoading = true
-        imageByteArrays = withContext(Dispatchers.IO) {
-            fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
+        imageByteArrays.clear()
+        withContext(Dispatchers.IO) {
+            imageByteArrays.addAll(fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
                 storeId = storeId,
                 limit = 30,
                 skip = 0
-            ).filterNotNull()
+            ))
+        }
+        fileCabinetListenerService.startListeningForNewFiles(storeId) {
+            imageByteArrays.add(it)
         }
         isLoading = false
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            fileCabinetListenerService.unregisterAllListeners()
+        }
     }
 
     if (isLoading) {
