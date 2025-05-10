@@ -64,7 +64,7 @@ class MainScreen : Screen {
                 Scaffold(
                     bottomBar = {
                         NavigationBar(
-                            ChatTab, FilesCabinetTab, TaskTab
+                            ChatTab, TaskTab, FilesCabinetTab
                         )
                     },
                     floatingActionButton = {
