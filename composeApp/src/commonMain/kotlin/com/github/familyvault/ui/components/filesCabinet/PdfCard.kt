@@ -22,6 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.ui.theme.AdditionalTheme
+import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.file_cabinet_pdf_document
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PdfCard(
@@ -44,7 +47,7 @@ fun PdfCard(
         ) {
             Icon(
                 imageVector = Icons.Default.PictureAsPdf,
-                contentDescription = "PDF Document",
+                contentDescription = stringResource(Res.string.file_cabinet_pdf_document),
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f).padding(12.dp)
             )

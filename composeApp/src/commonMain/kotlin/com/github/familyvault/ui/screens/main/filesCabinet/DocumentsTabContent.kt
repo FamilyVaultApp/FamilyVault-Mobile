@@ -86,7 +86,7 @@ fun DocumentsTabContent() {
             
             withContext(Dispatchers.IO) {
                 try {
-                    fileCabinetService.ensureDocumentsStoreExists()
+                    fileCabinetService.createDocumentsStoreIfNotExists()
                     val storeId = fileCabinetService.retrieveFileCabinetDocumentsStoreId()
                     
                     val documents = fileCabinetService.getDocumentsWithMetadataFromStore(

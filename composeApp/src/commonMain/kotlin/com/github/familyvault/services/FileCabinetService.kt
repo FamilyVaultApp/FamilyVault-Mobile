@@ -19,13 +19,12 @@ class FileCabinetService(
 ) : IFileCabinetService {
     
     companion object {
-        private const val IMAGES_SUFFIX = " - Images"
-        private const val DOCUMENTS_SUFFIX = " - Documents"
+        private const val IMAGES_THREAD_NAME = "FILE_CABINET_IMAGES"
+        private const val DOCUMENTS_THREAD_NAME = "FILE_CABINET_DOCUMENTS" 
     }
     
     override suspend fun createInitialStores() {
         val contextId = familyGroupSessionService.getContextId()
-        val familyGroupName = familyGroupSessionService.getFamilyGroupName()
         val splitFamilyMembers = FamilyMembersSplitter.split(
             familyGroupService.retrieveFamilyGroupMembersList()
         )
@@ -46,7 +45,7 @@ class FileCabinetService(
             managers = managers,
             tag = AppConfig.FILE_CABINET_THREAD_TAG,
             type = FileCabinetThreadType.IMAGES.toString(),
-            name = "$familyGroupName$IMAGES_SUFFIX",
+            name = IMAGES_THREAD_NAME,
             referenceStoreId = imagesStoreId,
             threadInitialCreators = emptyList()
         )
@@ -64,14 +63,10 @@ class FileCabinetService(
             managers = managers,
             tag = AppConfig.FILE_CABINET_THREAD_TAG,
             type = FileCabinetThreadType.DOCUMENTS.toString(),
-            name = "$familyGroupName$DOCUMENTS_SUFFIX",
+            name = DOCUMENTS_THREAD_NAME,
             referenceStoreId = documentsStoreId,
             threadInitialCreators = emptyList()
         )
-    }
-
-    override fun retrieveFileCabinetThread(): ThreadItem {
-        return retrieveFileCabinetImagesThread()
     }
 
     override fun retrieveFileCabinetImagesThread(): ThreadItem {
@@ -83,12 +78,8 @@ class FileCabinetService(
             pageSize = 100
         )
 
-        val imagesThread = fileCabinetThreads.firstOrNull { 
-            it.privateMeta.name.endsWith(IMAGES_SUFFIX)
-        }
-
-        return imagesThread ?: fileCabinetThreads.firstOrNull { thread ->
-            !thread.privateMeta.name.endsWith(DOCUMENTS_SUFFIX)
+        return fileCabinetThreads.firstOrNull { 
+            it.privateMeta.name == IMAGES_THREAD_NAME
         } ?: throw IllegalStateException("No file cabinet images thread found")
     }
     
@@ -102,12 +93,8 @@ class FileCabinetService(
         )
 
         return fileCabinetThreads.firstOrNull { 
-            it.privateMeta.name.endsWith(DOCUMENTS_SUFFIX)
+            it.privateMeta.name == DOCUMENTS_THREAD_NAME
         } ?: throw IllegalStateException("No file cabinet documents thread found")
-    }
-
-    override fun retrieveFileCabinetStoreId(): String {
-        return retrieveFileCabinetImagesStoreId()
     }
     
     override fun retrieveFileCabinetImagesStoreId(): String {
@@ -118,12 +105,11 @@ class FileCabinetService(
         return requireNotNull(retrieveFileCabinetDocumentsThread().privateMeta.referenceStoreId)
     }
 
-    override suspend fun ensureDocumentsStoreExists(): Unit = withContext(Dispatchers.IO) {
+    override suspend fun createDocumentsStoreIfNotExists(): Unit = withContext(Dispatchers.IO) {
         try {
             retrieveFileCabinetDocumentsThread()
         } catch (e: IllegalStateException) {
             val contextId = familyGroupSessionService.getContextId()
-            val familyGroupName = familyGroupSessionService.getFamilyGroupName()
             val splitFamilyMembers = FamilyMembersSplitter.split(
                 familyGroupService.retrieveFamilyGroupMembersList()
             )
@@ -144,7 +130,7 @@ class FileCabinetService(
                 managers = managers,
                 tag = AppConfig.FILE_CABINET_THREAD_TAG,
                 type = FileCabinetThreadType.DOCUMENTS.toString(),
-                name = "$familyGroupName$DOCUMENTS_SUFFIX",
+                name = DOCUMENTS_THREAD_NAME,
                 referenceStoreId = documentsStoreId,
                 threadInitialCreators = emptyList()
             )
@@ -173,7 +159,7 @@ class FileCabinetService(
         documentName: String,
         documentMimeType: String
     ) {
-        ensureDocumentsStoreExists()
+        createDocumentsStoreIfNotExists()
 
         val storeId = retrieveFileCabinetDocumentsStoreId()
 

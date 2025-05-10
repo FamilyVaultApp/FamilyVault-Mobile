@@ -6,16 +6,13 @@ import com.github.familyvault.models.DocumentWithMetadata
 interface IFileCabinetService {
     suspend fun createInitialStores()
 
-    fun retrieveFileCabinetThread(): ThreadItem
-    fun retrieveFileCabinetStoreId(): String
-
     fun retrieveFileCabinetImagesThread(): ThreadItem
     fun retrieveFileCabinetDocumentsThread(): ThreadItem
     
     fun retrieveFileCabinetImagesStoreId(): String
     fun retrieveFileCabinetDocumentsStoreId(): String
 
-    suspend fun ensureDocumentsStoreExists()
+    suspend fun createDocumentsStoreIfNotExists()
     
     fun sendImageToFamilyGroupStore(imageByteArray: ByteArray)
     suspend fun sendDocumentToFamilyGroupStore(
