@@ -25,6 +25,7 @@ import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.backend.responses.GetJoinStatusResponse
 import com.github.familyvault.backend.responses.GetMemberFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.ListMembersFromFamilyGroupResponse
+import com.github.familyvault.backend.responses.PrivMxBridgeUrlResponse
 import com.github.familyvault.backend.responses.PrivMxSolutionIdResponse
 import com.github.familyvault.backend.responses.RemoveMemberFromFamilyGroupResponse
 import com.github.familyvault.backend.responses.RenameFamilyGroupResponse
@@ -51,8 +52,25 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
         }
     }
 
+    private var customBackendUrl: String? = null
+
+    override fun setCustomBackendUrl(backendUrl: String) {
+        customBackendUrl = backendUrl
+    }
+
+    override fun clearCustomBackendUrl() {
+        customBackendUrl = null
+    }
+
+    override fun getCustomBackendUrl(): String? {
+        return customBackendUrl
+    }
     override suspend fun getSolutionId(): PrivMxSolutionIdResponse {
         return getRequest("/ApplicationConfig/GetSolutionId")
+    }
+
+    override suspend fun getBridgeUrl(): PrivMxBridgeUrlResponse {
+        return getRequest("/ApplicationConfig/GetBridgeUrl")
     }
 
     override suspend fun createFamilyGroup(req: CreateFamilyGroupRequest): CreateFamilyGroupResponse {
@@ -114,7 +132,7 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     }
 
     private fun getEndpointUrl(endpoint: String): String {
-        return "${AppConfig.BACKEND_URL}$endpoint"
+        return "${customBackendUrl ?: AppConfig.BACKEND_URL}$endpoint"
     }
 
     private suspend inline fun <reified TResponse : FamilyVaultBackendResponse> postRequest(endpoint: String): TResponse {

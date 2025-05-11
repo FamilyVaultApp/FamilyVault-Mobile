@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.outlined.GroupAdd
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.backend.client.IFamilyVaultBackendClient
+import com.github.familyvault.models.SelfHostedConnectionInfo
 import com.github.familyvault.ui.components.AppIconAndName
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.OptionButton
@@ -29,8 +32,9 @@ import familyvault.composeapp.generated.resources.create_new_family_group_title
 import familyvault.composeapp.generated.resources.join_existing_family_group_content
 import familyvault.composeapp.generated.resources.join_existing_family_group_title
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
-class FamilyGroupCreateOrJoinScreen : Screen {
+class FamilyGroupCreateOrJoinScreen() : Screen {
     private enum class FamilyGroupAction {
         Join,
         Create
@@ -40,6 +44,11 @@ class FamilyGroupCreateOrJoinScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         var selectedAction by remember { mutableStateOf<FamilyGroupAction?>(null) }
+        val familyVaultBackendClient = koinInject<IFamilyVaultBackendClient>()
+
+        LaunchedEffect(Unit) {
+            println(familyVaultBackendClient.getCustomBackendUrl())
+        }
 
         StartScreenScaffold {
             AppIconAndName()

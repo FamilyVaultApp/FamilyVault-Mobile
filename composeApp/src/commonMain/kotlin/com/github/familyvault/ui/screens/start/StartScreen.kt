@@ -55,7 +55,11 @@ class StartScreen : Screen {
                 BottomNextButton(
                     enabled = selectedConnectionMode != null,
                     onClick = {
-                        navigator.push(FamilyGroupCreateOrJoinScreen())
+                        if (selectedConnectionMode == ConnectionMode.Cloud) {
+                            navigator.push(FamilyGroupCreateOrJoinScreen())
+                        } else {
+                            navigator.push(SelfHostedDataFormScreen())
+                        }
                     }
                 )
             }

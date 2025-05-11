@@ -1,8 +1,10 @@
 package com.github.familyvault.repositories
 
+import com.github.familyvault.AppConfig
 import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.familyGroupCredential.FamilyGroupCredential
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.SelfHostedConnectionInfo
 
 class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
     IFamilyGroupCredentialsRepository {
@@ -12,11 +14,14 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         contextId: String,
         keyPairs: PublicEncryptedPrivateKeyPair,
         encryptedPrivateKeyPassword: String,
+        connectionInfo: SelfHostedConnectionInfo?
     ) {
         val credentialDao = appDatabase.credentialDao()
         credentialDao.insertDefaultCredentialAndUnsetOthers(
             FamilyGroupCredential(
                 familyGroupName = name,
+                backendUrl = connectionInfo?.backendUrl ?: AppConfig.BACKEND_URL,
+                bridgeUrl = connectionInfo?.bridgeUrl ?:AppConfig.PRIVMX_BRIDGE_URL,
                 solutionId = solutionId,
                 contextId = contextId,
                 encryptedPrivateKey = keyPairs.encryptedPrivateKey,

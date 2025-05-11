@@ -15,6 +15,7 @@ import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.MemberIdentifier
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
+import com.github.familyvault.models.SelfHostedConnectionInfo
 import com.github.familyvault.models.enums.ConnectionStatus
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
@@ -35,8 +36,13 @@ class FamilyGroupService(
         surname: String,
         password: String,
         familyGroupName: String,
-        familyGroupDescription: String?
+        familyGroupDescription: String?,
+        connectionInfo: SelfHostedConnectionInfo?
     ) {
+        if (connectionInfo != null)
+        {
+            familyVaultBackendClient.setCustomBackendUrl(connectionInfo.backendUrl)
+        }
         val solutionId = familyVaultBackendClient.getSolutionId().solutionId
         val pairOfKeys = privMxClient.generatePairOfPrivateAndPublicKey(password)
         val encryptedPassword = privMxClient.encryptPrivateKeyPassword(password)
@@ -57,11 +63,11 @@ class FamilyGroupService(
             familyGroupSessionService.disconnect()
         }
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL, familyGroupName, solutionId, contextId, pairOfKeys
+            connectionInfo?.bridgeUrl ?: AppConfig.PRIVMX_BRIDGE_URL, familyGroupName, solutionId, contextId, pairOfKeys
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
-            familyGroupName, solutionId, contextId, pairOfKeys, encryptedPassword
+            familyGroupName, solutionId, contextId, pairOfKeys, encryptedPassword, connectionInfo
         )
     }
 
@@ -70,8 +76,13 @@ class FamilyGroupService(
         surname: String,
         encryptedPassword: String,
         keyPair: PublicEncryptedPrivateKeyPair,
-        contextId: String
+        contextId: String,
+        connectionInfo: SelfHostedConnectionInfo?
     ) {
+        if (connectionInfo != null)
+        {
+            familyVaultBackendClient.setCustomBackendUrl(connectionInfo.backendUrl)
+        }
         val solutionId = familyVaultBackendClient.getSolutionId().solutionId
         val familyGroupInformation =
             familyVaultBackendClient.getFamilyGroupName(GetFamilyGroupNameRequest(contextId))
@@ -81,7 +92,7 @@ class FamilyGroupService(
         }
 
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL,
+            connectionInfo?.bridgeUrl ?: AppConfig.PRIVMX_BRIDGE_URL,
             familyGroupInformation.familyGroupName,
             solutionId,
             contextId,
@@ -93,13 +104,19 @@ class FamilyGroupService(
             solutionId,
             contextId,
             keyPair,
-            encryptedPassword
+            encryptedPassword,
+            connectionInfo
         )
     }
 
     override suspend fun assignDefaultStoredFamilyGroup(): ConnectionStatus {
         val credential = familyGroupCredentialsRepository.getDefaultCredential()
             ?: return ConnectionStatus.NoCredentials
+        if (credential.backendUrl != null) {
+            familyVaultBackendClient.setCustomBackendUrl(credential.backendUrl)
+        } else {
+            familyVaultBackendClient.clearCustomBackendUrl()
+        }
 
         val familyGroupInformation: GetFamilyGroupNameResponse
 
@@ -111,7 +128,7 @@ class FamilyGroupService(
         }
 
         familyGroupSessionService.assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL,
+            credential.bridgeUrl ?: AppConfig.PRIVMX_BRIDGE_URL,
             familyGroupInformation.familyGroupName,
             credential.solutionId,
             credential.contextId,

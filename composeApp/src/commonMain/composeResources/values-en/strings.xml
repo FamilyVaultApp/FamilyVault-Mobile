@@ -28,6 +28,13 @@
     <string name="scan_qr_code_button_content">Scan QR code</string>
     <string name="show_qr_code_button_content">Show QR code</string>
     <string name="change_name_content">Change name</string>
+    <string name="connection_test_content">Test connection</string>
+
+    <!-- Self host backend configuration-->
+    <string name="self_host_title">Configuring PrivMX Bridge</string>
+    <string name="self_host_server_connection_error_dialog_content">Couldn't connect to the server. Check if provided address is correct and try again.</string>
+    <string name="self_host_infobox_title">About server address</string>
+    <string name="self_host_infobox_content">Enter the address of the server your family uses. It can be something like "home.myserver.com" or an IP address if you're connecting locally.</string>
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Connection modes</string>
@@ -75,6 +82,8 @@
 
     <string name="password_label">Password</string>
     <string name="repeat_password_label">Repeat password</string>
+
+    <string name="backend_url">Server address</string>
 
     <string name="error_occurred_label">Error occurred</string>
 

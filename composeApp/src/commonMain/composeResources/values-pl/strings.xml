@@ -28,6 +28,13 @@
     <string name="scan_qr_code_button_content">Zeskanuj kod QR</string>
     <string name="show_qr_code_button_content">Pokaż kod QR</string>
     <string name="change_name_content">Zmień nazwę</string>
+    <string name="connection_test_content">Przetestuj połączenie</string>
+
+    <!-- Self host backend configuration-->
+    <string name="self_host_title">Konfiguracja PrivMX Bridge</string>
+    <string name="self_host_server_connection_error_dialog_content">Nie można połączyć się z wybranym serwerem. Sprawdź czy wpisano poprawny adres i spróbuj ponownie.</string>
+    <string name="self_host_infobox_title">O adresie serwera</string>
+    <string name="self_host_infobox_content">Podaj adres serwera, z którego korzysta Twoja rodzina. To może być np. „dom.mojaserwerowa.pl” albo numer IP, jeśli łączysz się lokalnie.</string>
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Tryby połączenia</string>
@@ -75,6 +82,8 @@
 
     <string name="password_label">Hasło</string>
     <string name="repeat_password_label">Powtórz hasło</string>
+
+    <string name="backend_url">Adres serwera</string>
 
     <string name="error_occurred_label">Wystąpił błąd</string>
 
