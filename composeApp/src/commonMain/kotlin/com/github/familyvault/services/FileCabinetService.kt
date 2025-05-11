@@ -41,12 +41,15 @@ class FileCabinetService(
     }
 
     override suspend fun sendDocumentToFileCabinetDocuments(
-        content: ByteArray, name: String, mimeType: String
+        content: ByteArray,
+        name: String,
+        mimeType: String,
+        contentPreview: ByteArray?
     ) {
         val store = retrieveFileCabinetDocumentsStore()
 
         val document = FileCabinetDocument(
-            name, mimeType, content
+            name, mimeType, content, contentPreview
         )
         val serializedDocument = Json.encodeToString(document)
 

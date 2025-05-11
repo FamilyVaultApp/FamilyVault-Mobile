@@ -6,9 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.Button
@@ -17,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -31,14 +29,11 @@ import com.github.familyvault.models.fileCabinet.isImage
 import com.github.familyvault.models.fileCabinet.isPdf
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IFileOpenerService
-import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.ui.components.FullScreenImage
 import com.github.familyvault.ui.components.HeaderIcon
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
-import com.github.familyvault.ui.components.filesCabinet.LoadingCard
-import com.github.familyvault.ui.components.filesCabinet.PdfCard
-import com.github.familyvault.ui.components.filesCabinet.PhotoCard
+import com.github.familyvault.ui.components.filesCabinet.DocumentCard
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -53,13 +48,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun DocumentsTabContent() {
     val fileCabinetService = koinInject<IFileCabinetService>()
-    val imagePicker = koinInject<IImagePickerService>()
     val fileOpener = koinInject<IFileOpenerService>()
     val coroutineScope = rememberCoroutineScope()
 
@@ -148,41 +145,20 @@ fun DocumentsTabContent() {
         return
     }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(AdditionalTheme.spacings.small)
+        contentPadding = PaddingValues(AdditionalTheme.spacings.screenPadding),
+        verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.screenPadding)
     ) {
         items(documents) {
-            if (it.isPdf()) {
-                PdfCard(
-                    documentName = it.name,
-                    onClick = {
-                        pdfToDownload = Pair(it.content, it.name)
-                        showDownloadConfirmation = true
-                    }
-                )
-            }
-            if (it.isImage()) {
-                val imageBitmapState =
-                    produceState<ImageBitmap?>(initialValue = null, it.content) {
-                        withContext(Dispatchers.IO) {
-                            value = try {
-                                imagePicker.getBitmapFromBytes(it.content)
-                            } catch (e: Exception) {
-                                null
-                            }
-                        }
-                    }
+            DocumentCard(it) {
+                if (it.isPdf()) {
+                    pdfToDownload = Pair(it.content, it.name)
+                    showDownloadConfirmation = true
+                }
 
-                val bitmap = imageBitmapState.value
-                if (bitmap == null) {
-                    LoadingCard()
-                } else {
-                    PhotoCard(
-                        imageBitmap = bitmap,
-                        onClick = { fullScreenImage = bitmap }
-                    )
+                if (it.isImage()) {
+                    fullScreenImage = it.content.decodeToImageBitmap()
                 }
             }
         }

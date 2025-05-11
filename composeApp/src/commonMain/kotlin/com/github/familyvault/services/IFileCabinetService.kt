@@ -9,7 +9,8 @@ interface IFileCabinetService {
     suspend fun sendDocumentToFileCabinetDocuments(
         content: ByteArray,
         name: String,
-        mimeType: String
+        mimeType: String,
+        contentPreview: ByteArray? = null
     )
 
     fun getImagesFromFileCabinetGallery(): List<ByteArray>

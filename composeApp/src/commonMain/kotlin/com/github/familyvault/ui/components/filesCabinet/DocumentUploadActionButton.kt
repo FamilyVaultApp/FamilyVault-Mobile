@@ -60,13 +60,18 @@ fun DocumentUploadActionButton() {
                                 documentPicker.getDocumentNameFromUri(uri) ?: "document_$index.pdf"
                             val documentMimeType =
                                 documentPicker.getDocumentMimeTypeFromUri(uri) ?: "application/pdf"
-                            val documentPreviewPage = documentPicker
+                            val documentPreviewPage = if (documentMimeType == "application/pdf") {
+                                documentPicker.getDocumentPreviewPageFromUri(uri)
+                            } else {
+                                null
+                            }
 
                             documents.getOrNull(index)?.let { docBytes ->
                                 fileCabinetService.sendDocumentToFileCabinetDocuments(
                                     docBytes,
                                     documentName,
-                                    documentMimeType
+                                    documentMimeType,
+                                    documentPreviewPage
                                 )
                             }
                         }
