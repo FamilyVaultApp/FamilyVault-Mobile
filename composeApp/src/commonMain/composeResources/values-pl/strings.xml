@@ -205,4 +205,6 @@
     <string name="file_cabinet_download">Pobierz</string>
     <string name="file_cabinet_pdf_document">Dokument PDF</string>
     <string name="file_cabinet_initializing_documents">Inicjalizacja przechowywania dokumentów...</string>
+    <string name="file_cabinet_error_initialize">Nie można zainicjować przechowywania dokumentów</string>
+    <string name="file_cabinet_error_loading">Błąd podczas ładowania dokumentów</string>
 </resources>

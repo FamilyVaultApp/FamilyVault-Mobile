@@ -205,4 +205,6 @@
     <string name="file_cabinet_download">Download</string>
     <string name="file_cabinet_pdf_document">PDF Document</string>
     <string name="file_cabinet_initializing_documents">Initializing documents storage...</string>
+    <string name="file_cabinet_error_initialize">Could not initialize documents storage</string>
+    <string name="file_cabinet_error_loading">Error loading documents</string>
 </resources>

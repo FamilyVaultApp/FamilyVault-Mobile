@@ -32,6 +32,8 @@ import familyvault.composeapp.generated.resources.loading
 import familyvault.composeapp.generated.resources.file_cabinet_retry
 import familyvault.composeapp.generated.resources.file_cabinet_no_documents
 import familyvault.composeapp.generated.resources.file_cabinet_initializing_documents
+import familyvault.composeapp.generated.resources.file_cabinet_error_initialize
+import familyvault.composeapp.generated.resources.file_cabinet_error_loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -40,6 +42,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import androidx.compose.foundation.layout.Arrangement
 import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
+import familyvault.composeapp.generated.resources.error_occurred_label
 
 @Composable
 fun DocumentsTabContent() {
@@ -54,13 +57,13 @@ fun DocumentsTabContent() {
     var isLoading by remember { mutableStateOf(true) }
     var isInitializing by remember { mutableStateOf(false) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var errorMessageKey by remember { mutableStateOf<String?>(null) }
     var showDownloadConfirmation by remember { mutableStateOf(false) }
     var pdfToDownload by remember { mutableStateOf<Pair<ByteArray, String>?>(null) }
     
     suspend fun loadDocuments() {
         isLoading = true
-        errorMessage = null
+        errorMessageKey = null
         
         try {
             val storeId = fileCabinetService.retrieveFileCabinetDocumentsStoreId()
@@ -96,14 +99,14 @@ fun DocumentsTabContent() {
                     documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents, fileOpener)
                     
                 } catch (e: Exception) {
-                    errorMessage = "Could not initialize documents storage: ${e.message}"
+                    errorMessageKey = "file_cabinet_error_initialize"
                     documentByteArrays = emptyList()
                 }
             }
             
             isInitializing = false
         } catch (e: Exception) {
-            errorMessage = "Error loading documents: ${e.message}"
+            errorMessageKey = "file_cabinet_error_loading"
             documentByteArrays = emptyList()
         } finally {
             isLoading = false
@@ -122,13 +125,19 @@ fun DocumentsTabContent() {
                 modifier = Modifier.fillMaxSize()
             )
         }
-    } else if (errorMessage != null) {
+    } else if (errorMessageKey != null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally, 
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(errorMessage!!)
+                Text(
+                    when (errorMessageKey) {
+                        "file_cabinet_error_initialize" -> stringResource(Res.string.file_cabinet_error_initialize)
+                        "file_cabinet_error_loading" -> stringResource(Res.string.file_cabinet_error_loading)
+                        else -> stringResource(Res.string.error_occurred_label)
+                    }
+                )
                 Button(onClick = { 
                     coroutineScope.launch {
                         loadDocuments()
