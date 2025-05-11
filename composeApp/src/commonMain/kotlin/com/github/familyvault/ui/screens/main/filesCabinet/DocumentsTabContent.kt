@@ -31,10 +31,7 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
 import familyvault.composeapp.generated.resources.file_cabinet_retry
 import familyvault.composeapp.generated.resources.file_cabinet_no_documents
-import familyvault.composeapp.generated.resources.file_cabinet_download_pdf_title
-import familyvault.composeapp.generated.resources.file_cabinet_download_pdf_message
-import familyvault.composeapp.generated.resources.file_cabinet_download
-import familyvault.composeapp.generated.resources.cancel_button_content
+import familyvault.composeapp.generated.resources.file_cabinet_initializing_documents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -42,8 +39,7 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TextButton
+import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
 
 @Composable
 fun DocumentsTabContent() {
@@ -121,7 +117,7 @@ fun DocumentsTabContent() {
     if (isLoading || isInitializing) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             LoaderWithText(
-                if (isInitializing) "Initializing documents storage..." 
+                if (isInitializing) stringResource(Res.string.file_cabinet_initializing_documents) 
                 else stringResource(Res.string.loading), 
                 modifier = Modifier.fillMaxSize()
             )
@@ -195,32 +191,19 @@ fun DocumentsTabContent() {
     }
 
     if (showDownloadConfirmation && pdfToDownload != null) {
-        AlertDialog(
-            onDismissRequest = { 
-                showDownloadConfirmation = false 
+        PdfDownloadConfirmationDialog(
+            onDismiss = {
+                showDownloadConfirmation = false
                 pdfToDownload = null
             },
-            title = { Text(stringResource(Res.string.file_cabinet_download_pdf_title)) },
-            text = { Text(stringResource(Res.string.file_cabinet_download_pdf_message)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    pdfToDownload?.let { (bytes, name) -> 
-                        fileOpener.downloadFile(bytes, name)
-                    }
-                    showDownloadConfirmation = false
-                    pdfToDownload = null
-                }) {
-                    Text(stringResource(Res.string.file_cabinet_download))
+            onConfirm = {
+                pdfToDownload?.let { (bytes, name) -> 
+                    fileOpener.downloadFile(bytes, name)
                 }
+                showDownloadConfirmation = false
+                pdfToDownload = null
             },
-            dismissButton = {
-                TextButton(onClick = {
-                    showDownloadConfirmation = false
-                    pdfToDownload = null
-                }) {
-                    Text(stringResource(Res.string.cancel_button_content))
-                }
-            }
+            fileName = pdfToDownload?.second
         )
     }
 

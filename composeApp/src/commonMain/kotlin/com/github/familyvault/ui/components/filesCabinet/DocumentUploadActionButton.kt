@@ -17,6 +17,7 @@ import com.github.familyvault.services.IDocumentPickerService
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.error_occurred_label
 import familyvault.composeapp.generated.resources.file_cabinet_sending_files
 import familyvault.composeapp.generated.resources.file_cabinet_upload
 import kotlinx.coroutines.Dispatchers
@@ -85,7 +86,7 @@ fun DocumentUploadActionButton() {
     errorMessage?.let { error ->
         AlertDialog(
             onDismissRequest = { errorMessage = null },
-            title = { Text("Error") },
+            title = { Text(stringResource(Res.string.error_occurred_label)) },
             text = { Text(error) },
             confirmButton = {
                 TextButton(

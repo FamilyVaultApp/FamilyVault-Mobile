@@ -204,4 +204,5 @@
     <string name="file_cabinet_download_pdf_message">Czy chcesz pobrać ten plik PDF na swoje urządzenie?</string>
     <string name="file_cabinet_download">Pobierz</string>
     <string name="file_cabinet_pdf_document">Dokument PDF</string>
+    <string name="file_cabinet_initializing_documents">Inicjalizacja przechowywania dokumentów...</string>
 </resources>
