@@ -7,8 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
+import com.github.familyvault.services.listeners.IFileCabinetListenerService
 import com.github.familyvault.ui.components.FullScreenImage
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.filesCabinet.LoadingCard
@@ -39,10 +42,11 @@ import org.koin.compose.koinInject
 @Composable
 fun PhotosTabContent() {
     val fileCabinetService = koinInject<IFileCabinetService>()
+    val fileCabinetListenerService = koinInject<IFileCabinetListenerService>()
     val imagePicker = koinInject<IImagePickerService>()
     val coroutineScope = rememberCoroutineScope()
-    
-    var imageByteArrays by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
+
+    val imageByteArrays = remember { mutableStateListOf<ByteArray>() }
     var isLoading by remember { mutableStateOf(true) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -53,17 +57,21 @@ fun PhotosTabContent() {
         
         try {
             val storeId = fileCabinetService.retrieveFileCabinetImagesStoreId()
-            
-            imageByteArrays = withContext(Dispatchers.IO) {
-                fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
+
+            imageByteArrays.clear()
+            withContext(Dispatchers.IO) {
+                imageByteArrays.addAll(fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
                     storeId = storeId,
                     limit = 30,
                     skip = 0
-                )
+                ))
+            }
+            fileCabinetListenerService.startListeningForNewFiles(storeId) {
+                imageByteArrays.add(it)
             }
         } catch (e: Exception) {
             errorMessage = "Error loading images: ${e.message}"
-            imageByteArrays = emptyList()
+            imageByteArrays.clear()
         } finally {
             isLoading = false
         }
@@ -71,6 +79,12 @@ fun PhotosTabContent() {
 
     LaunchedEffect(Unit) {
         loadImages()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            fileCabinetListenerService.unregisterAllListeners()
+        }
     }
 
     if (isLoading) {
