@@ -43,6 +43,7 @@ import org.koin.compose.koinInject
 import androidx.compose.foundation.layout.Arrangement
 import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
 import familyvault.composeapp.generated.resources.error_occurred_label
+import com.github.familyvault.utils.FileTypeUtils
 
 @Composable
 fun DocumentsTabContent() {
@@ -77,8 +78,8 @@ fun DocumentsTabContent() {
             }
             
             documentByteArrays = documents.map { it.content }
-            documentNames = DocumentMetadataMapper.mapDocumentNames(documents, fileOpener)
-            documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents, fileOpener)
+            documentNames = DocumentMetadataMapper.mapDocumentNames(documents)
+            documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents)
             
         } catch (e: IllegalStateException) {
             isInitializing = true
@@ -95,8 +96,8 @@ fun DocumentsTabContent() {
                     )
                     
                     documentByteArrays = documents.map { it.content }
-                    documentNames = DocumentMetadataMapper.mapDocumentNames(documents, fileOpener)
-                    documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents, fileOpener)
+                    documentNames = DocumentMetadataMapper.mapDocumentNames(documents)
+                    documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents)
                     
                 } catch (e: Exception) {
                     errorMessageKey = "file_cabinet_error_initialize"
@@ -166,7 +167,7 @@ fun DocumentsTabContent() {
                 val documentBytes = documentByteArrays[index]
                 val documentName = documentNames.getOrNull(index) ?: "Document_$index"
                 
-                if (fileOpener.isPdfFile(documentBytes)) {
+                if (FileTypeUtils.isPdfFile(documentBytes)) {
                     PdfCard(
                         documentName = documentName,
                         onClick = {

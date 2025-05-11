@@ -1,16 +1,15 @@
 package com.github.familyvault.utils.mappers
 
 import com.github.familyvault.models.DocumentWithMetadata
-import com.github.familyvault.services.IFileOpenerService
+import com.github.familyvault.utils.FileTypeUtils
 
 object DocumentMetadataMapper {
     fun mapDocumentNames(
-        documents: List<DocumentWithMetadata>, 
-        fileOpener: IFileOpenerService
+        documents: List<DocumentWithMetadata>
     ): List<String> {
         return documents.mapIndexed { index, doc ->
             val fileName = doc.fileName
-            val isPdf = fileOpener.isPdfFile(doc.content)
+            val isPdf = FileTypeUtils.isPdfFile(doc.content)
             
             when {
                 !fileName.isNullOrBlank() -> fileName
@@ -21,12 +20,11 @@ object DocumentMetadataMapper {
     }
     
     fun mapDocumentMimeTypes(
-        documents: List<DocumentWithMetadata>, 
-        fileOpener: IFileOpenerService
+        documents: List<DocumentWithMetadata>
     ): List<String> {
-        return documents.mapIndexed { index, doc ->
+        return documents.mapIndexed { _, doc ->
             val mimeType = doc.mimeType
-            val isPdf = fileOpener.isPdfFile(doc.content)
+            val isPdf = FileTypeUtils.isPdfFile(doc.content)
             
             when {
                 !mimeType.isNullOrBlank() -> mimeType

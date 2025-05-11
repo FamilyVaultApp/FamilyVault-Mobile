@@ -9,6 +9,7 @@ import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.github.familyvault.utils.FileTypeUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -87,7 +88,7 @@ class FileOpenerService(private val context: Context) : IFileOpenerService {
     
     override fun downloadFile(fileBytes: ByteArray, fileName: String): String? {
         return try {
-            val finalFileName = if (isPdfFile(fileBytes) &&
+            val finalFileName = if (FileTypeUtils.isPdfFile(fileBytes) &&
                 !fileName.endsWith(".pdf", ignoreCase = true)) {
                 "$fileName.pdf"
             } else {
@@ -159,18 +160,8 @@ class FileOpenerService(private val context: Context) : IFileOpenerService {
         }
     }
     
-    override fun isPdfFile(fileBytes: ByteArray): Boolean {
-        val isPdf = fileBytes.size >= 4 && 
-               fileBytes[0].toInt() == 0x25 && 
-               fileBytes[1].toInt() == 0x50 && 
-               fileBytes[2].toInt() == 0x44 && 
-               fileBytes[3].toInt() == 0x46    
-               
-        return isPdf
-    }
-    
     private fun createTempFile(fileBytes: ByteArray, fileName: String): File {
-        val finalFileName = if (isPdfFile(fileBytes)
+        val finalFileName = if (FileTypeUtils.isPdfFile(fileBytes)
             && !fileName.endsWith(".pdf", ignoreCase = true)) {
             "$fileName.pdf"
         } else {

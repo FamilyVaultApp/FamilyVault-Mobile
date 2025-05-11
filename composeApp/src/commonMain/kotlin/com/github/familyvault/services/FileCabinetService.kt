@@ -8,6 +8,7 @@ import com.github.familyvault.models.DocumentWithMetadata
 import com.github.familyvault.models.enums.StoreType
 import com.github.familyvault.models.enums.fileCabinet.FileCabinetThreadType
 import com.github.familyvault.utils.FamilyMembersSplitter
+import com.github.familyvault.utils.FileTypeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
@@ -246,7 +247,7 @@ class FileCabinetService(
                     }
                 }
 
-                val isPdf = isPdfFile(byteArray)
+                val isPdf = FileTypeUtils.isPdfFile(byteArray)
                 val fileName = if (isPdf) "Document_${index}.pdf" else "File_${index}.jpg"
                 val mimeType = if (isPdf) "application/pdf" else "image/jpeg"
                 
@@ -257,7 +258,7 @@ class FileCabinetService(
                     uploadDate = System.currentTimeMillis() - (index * 1000)
                 )
             } catch (e: Exception) {
-                val isPdf = isPdfFile(byteArray)
+                val isPdf = FileTypeUtils.isPdfFile(byteArray)
                 DocumentWithMetadata(
                     content = byteArray,
                     fileName = if (isPdf) "Document_${index}.pdf" else "File_${index}.jpg",
@@ -266,14 +267,6 @@ class FileCabinetService(
                 )
             }
         }
-    }
-
-    private fun isPdfFile(bytes: ByteArray): Boolean {
-        return bytes.size >= 4 && 
-               bytes[0].toInt() == 0x25 &&
-               bytes[1].toInt() == 0x50 &&
-               bytes[2].toInt() == 0x44 &&
-               bytes[3].toInt() == 0x46
     }
 
     override suspend fun restoreFileCabinetMembership() {
