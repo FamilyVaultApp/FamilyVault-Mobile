@@ -30,16 +30,16 @@ import org.koin.compose.koinInject
 fun DocumentUploadActionButton() {
     val documentPicker = koinInject<IDocumentPickerService>()
     val fileCabinetService = koinInject<IFileCabinetService>()
-    
+
     var startDocumentPicker by remember { mutableStateOf(false) }
     var isUploading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    
+
     FloatingActionButton(onClick = {
         startDocumentPicker = true
     }) {
         Icon(
-            Icons.Filled.UploadFile, 
+            Icons.Filled.UploadFile,
             stringResource(Res.string.file_cabinet_upload),
         )
     }
@@ -51,16 +51,19 @@ fun DocumentUploadActionButton() {
 
                 if (documents.isNotEmpty()) {
                     isUploading = true
-                    
+
                     withContext(Dispatchers.IO) {
                         val documentUrls = documentPicker.getSelectedDocumentUrls()
 
                         documentUrls.forEachIndexed { index, uri ->
-                            val documentName = documentPicker.getDocumentNameFromUri(uri) ?: "document_$index.pdf"
-                            val documentMimeType = documentPicker.getDocumentMimeTypeFromUri(uri) ?: "application/pdf"
+                            val documentName =
+                                documentPicker.getDocumentNameFromUri(uri) ?: "document_$index.pdf"
+                            val documentMimeType =
+                                documentPicker.getDocumentMimeTypeFromUri(uri) ?: "application/pdf"
+                            val documentPreviewPage = documentPicker
 
                             documents.getOrNull(index)?.let { docBytes ->
-                                fileCabinetService.sendDocumentToFamilyGroupStore(
+                                fileCabinetService.sendDocumentToFileCabinetDocuments(
                                     docBytes,
                                     documentName,
                                     documentMimeType
@@ -68,7 +71,7 @@ fun DocumentUploadActionButton() {
                             }
                         }
                     }
-                    
+
                     isUploading = false
                 }
             } catch (e: Exception) {
@@ -78,11 +81,11 @@ fun DocumentUploadActionButton() {
             }
         }
     }
-    
+
     if (isUploading) {
         CircularProgressIndicatorDialog(stringResource(Res.string.file_cabinet_sending_files))
     }
-    
+
     errorMessage?.let { error ->
         AlertDialog(
             onDismissRequest = { errorMessage = null },

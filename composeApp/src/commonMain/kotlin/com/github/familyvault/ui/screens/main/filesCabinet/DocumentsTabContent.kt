@@ -1,12 +1,19 @@
 package com.github.familyvault.ui.screens.main.filesCabinet
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,35 +22,39 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.github.familyvault.models.fileCabinet.FileCabinetDocument
+import com.github.familyvault.models.fileCabinet.isImage
+import com.github.familyvault.models.fileCabinet.isPdf
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IFileOpenerService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.ui.components.FullScreenImage
+import com.github.familyvault.ui.components.HeaderIcon
 import com.github.familyvault.ui.components.LoaderWithText
+import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
 import com.github.familyvault.ui.components.filesCabinet.LoadingCard
 import com.github.familyvault.ui.components.filesCabinet.PdfCard
 import com.github.familyvault.ui.components.filesCabinet.PhotoCard
+import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
-import com.github.familyvault.utils.mappers.DocumentMetadataMapper
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.loading
-import familyvault.composeapp.generated.resources.file_cabinet_retry
-import familyvault.composeapp.generated.resources.file_cabinet_no_documents
-import familyvault.composeapp.generated.resources.file_cabinet_initializing_documents
+import familyvault.composeapp.generated.resources.error_occurred_label
 import familyvault.composeapp.generated.resources.file_cabinet_error_initialize
 import familyvault.composeapp.generated.resources.file_cabinet_error_loading
+import familyvault.composeapp.generated.resources.file_cabinet_initializing_documents
+import familyvault.composeapp.generated.resources.file_cabinet_no_documents
+import familyvault.composeapp.generated.resources.file_cabinet_retry
+import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import androidx.compose.foundation.layout.Arrangement
-import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
-import familyvault.composeapp.generated.resources.error_occurred_label
-import com.github.familyvault.utils.FileTypeUtils
 
 @Composable
 fun DocumentsTabContent() {
@@ -51,64 +62,27 @@ fun DocumentsTabContent() {
     val imagePicker = koinInject<IImagePickerService>()
     val fileOpener = koinInject<IFileOpenerService>()
     val coroutineScope = rememberCoroutineScope()
-    
-    var documentByteArrays by remember { mutableStateOf<List<ByteArray>>(emptyList()) }
-    var documentNames by remember { mutableStateOf<List<String>>(emptyList()) }
-    var documentMimeTypes by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    val documents = remember { mutableListOf<FileCabinetDocument>() }
     var isLoading by remember { mutableStateOf(true) }
     var isInitializing by remember { mutableStateOf(false) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
     var errorMessageKey by remember { mutableStateOf<String?>(null) }
     var showDownloadConfirmation by remember { mutableStateOf(false) }
     var pdfToDownload by remember { mutableStateOf<Pair<ByteArray, String>?>(null) }
-    
+
     suspend fun loadDocuments() {
         isLoading = true
         errorMessageKey = null
-        
         try {
-            val storeId = fileCabinetService.retrieveFileCabinetDocumentsStoreId()
-            
-            val documents = withContext(Dispatchers.IO) {
-                fileCabinetService.getDocumentsWithMetadataFromStore(
-                    storeId = storeId,
-                    limit = 50,
-                    skip = 0
-                )
-            }
-            
-            documentByteArrays = documents.map { it.content }
-            documentNames = DocumentMetadataMapper.mapDocumentNames(documents)
-            documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents)
-            
-        } catch (e: IllegalStateException) {
-            isInitializing = true
-            
             withContext(Dispatchers.IO) {
-                try {
-                    fileCabinetService.createDocumentsStoreIfNotExists()
-                    val storeId = fileCabinetService.retrieveFileCabinetDocumentsStoreId()
-                    
-                    val documents = fileCabinetService.getDocumentsWithMetadataFromStore(
-                        storeId = storeId,
-                        limit = 50,
-                        skip = 0
-                    )
-                    
-                    documentByteArrays = documents.map { it.content }
-                    documentNames = DocumentMetadataMapper.mapDocumentNames(documents)
-                    documentMimeTypes = DocumentMetadataMapper.mapDocumentMimeTypes(documents)
-                    
-                } catch (e: Exception) {
-                    errorMessageKey = "file_cabinet_error_initialize"
-                    documentByteArrays = emptyList()
-                }
+                documents.clear()
+                documents.addAll(fileCabinetService.getDocumentsFromFileCabinetDocuments())
             }
-            
             isInitializing = false
         } catch (e: Exception) {
             errorMessageKey = "file_cabinet_error_loading"
-            documentByteArrays = emptyList()
+            documents.clear()
         } finally {
             isLoading = false
         }
@@ -121,15 +95,18 @@ fun DocumentsTabContent() {
     if (isLoading || isInitializing) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             LoaderWithText(
-                if (isInitializing) stringResource(Res.string.file_cabinet_initializing_documents) 
-                else stringResource(Res.string.loading), 
+                if (isInitializing) stringResource(Res.string.file_cabinet_initializing_documents)
+                else stringResource(Res.string.loading),
                 modifier = Modifier.fillMaxSize()
             )
         }
-    } else if (errorMessageKey != null) {
+        return
+    }
+
+    if (errorMessageKey != null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally, 
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
@@ -139,7 +116,7 @@ fun DocumentsTabContent() {
                         else -> stringResource(Res.string.error_occurred_label)
                     }
                 )
-                Button(onClick = { 
+                Button(onClick = {
                     coroutineScope.launch {
                         loadDocuments()
                     }
@@ -148,53 +125,64 @@ fun DocumentsTabContent() {
                 }
             }
         }
-    } else if (documentByteArrays.isEmpty()) {
+        return
+    }
+
+    if (documents.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
             ) {
-                Text(stringResource(Res.string.file_cabinet_no_documents))
+                HeaderIcon(
+                    Icons.Outlined.Folder,
+                    size = AdditionalTheme.sizing.headerIconNormal
+                )
+                ParagraphMuted(
+                    stringResource(Res.string.file_cabinet_no_documents),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.width(250.dp)
+                )
             }
         }
-    } else {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(AdditionalTheme.spacings.small)
-        ) {
-            items(documentByteArrays.size) { index ->
-                val documentBytes = documentByteArrays[index]
-                val documentName = documentNames.getOrNull(index) ?: "Document_$index"
-                
-                if (FileTypeUtils.isPdfFile(documentBytes)) {
-                    PdfCard(
-                        documentName = documentName,
-                        onClick = {
-                            pdfToDownload = Pair(documentBytes, documentName)
-                            showDownloadConfirmation = true
-                        }
-                    )
-                } else {
-                    val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, documentBytes) {
+        return
+    }
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(AdditionalTheme.spacings.small)
+    ) {
+        items(documents) {
+            if (it.isPdf()) {
+                PdfCard(
+                    documentName = it.name,
+                    onClick = {
+                        pdfToDownload = Pair(it.content, it.name)
+                        showDownloadConfirmation = true
+                    }
+                )
+            }
+            if (it.isImage()) {
+                val imageBitmapState =
+                    produceState<ImageBitmap?>(initialValue = null, it.content) {
                         withContext(Dispatchers.IO) {
-                            try {
-                                value = imagePicker.getBitmapFromBytes(documentBytes)
+                            value = try {
+                                imagePicker.getBitmapFromBytes(it.content)
                             } catch (e: Exception) {
-                                value = null
+                                null
                             }
                         }
                     }
 
-                    val bitmap = imageBitmapState.value
-                    if (bitmap == null) {
-                        LoadingCard()
-                    } else {
-                        PhotoCard(
-                            imageBitmap = bitmap,
-                            onClick = { fullScreenImage = bitmap }
-                        )
-                    }
+                val bitmap = imageBitmapState.value
+                if (bitmap == null) {
+                    LoadingCard()
+                } else {
+                    PhotoCard(
+                        imageBitmap = bitmap,
+                        onClick = { fullScreenImage = bitmap }
+                    )
                 }
             }
         }
@@ -207,7 +195,7 @@ fun DocumentsTabContent() {
                 pdfToDownload = null
             },
             onConfirm = {
-                pdfToDownload?.let { (bytes, name) -> 
+                pdfToDownload?.let { (bytes, name) ->
                     fileOpener.downloadFile(bytes, name)
                 }
                 showDownloadConfirmation = false

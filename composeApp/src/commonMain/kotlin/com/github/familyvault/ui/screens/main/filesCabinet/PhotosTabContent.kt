@@ -19,14 +19,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PhotoLibrary
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.listeners.IFileCabinetListenerService
 import com.github.familyvault.ui.components.FullScreenImage
+import com.github.familyvault.ui.components.HeaderIcon
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.filesCabinet.LoadingCard
 import com.github.familyvault.ui.components.filesCabinet.PhotoCard
+import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.file_cabinet_no_images
@@ -50,21 +55,18 @@ fun PhotosTabContent() {
     var isLoading by remember { mutableStateOf(true) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    
+
     suspend fun loadImages() {
         isLoading = true
         errorMessage = null
-        
-        try {
-            val storeId = fileCabinetService.retrieveFileCabinetImagesStoreId()
 
+        try {
+            val storeId = fileCabinetService.getGalleryStoreId()
             imageByteArrays.clear()
             withContext(Dispatchers.IO) {
-                imageByteArrays.addAll(fileCabinetService.getImagesFromFamilyGroupStoreAsByteArray(
-                    storeId = storeId,
-                    limit = 30,
-                    skip = 0
-                ))
+                imageByteArrays.addAll(
+                    fileCabinetService.getImagesFromFileCabinetGallery()
+                )
             }
             fileCabinetListenerService.startListeningForNewFiles(storeId) {
                 imageByteArrays.add(it)
@@ -96,11 +98,11 @@ fun PhotosTabContent() {
     } else if (errorMessage != null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally, 
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(errorMessage!!)
-                Button(onClick = { 
+                Button(onClick = {
                     coroutineScope.launch {
                         loadImages()
                     }
@@ -111,7 +113,20 @@ fun PhotosTabContent() {
         }
     } else if (imageByteArrays.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(stringResource(Res.string.file_cabinet_no_images))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
+            ) {
+                HeaderIcon(
+                    Icons.Outlined.PhotoLibrary,
+                    size = AdditionalTheme.sizing.headerIconNormal
+                )
+                ParagraphMuted(
+                    stringResource(Res.string.file_cabinet_no_images),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.width(250.dp)
+                )
+            }
         }
     } else {
         LazyVerticalGrid(

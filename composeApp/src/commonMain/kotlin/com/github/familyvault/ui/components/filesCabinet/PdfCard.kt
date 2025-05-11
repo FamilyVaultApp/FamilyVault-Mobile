@@ -51,7 +51,7 @@ fun PdfCard(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.weight(1f).padding(AdditionalTheme.spacings.normalPadding)
             )
-            
+
             Text(
                 text = documentName,
                 style = MaterialTheme.typography.bodySmall,
