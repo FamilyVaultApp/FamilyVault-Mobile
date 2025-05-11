@@ -3,6 +3,7 @@ package com.github.familyvault.services
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.models.ThreadItem
+import com.github.familyvault.models.DocumentMetadata
 import com.github.familyvault.models.DocumentWithMetadata
 import com.github.familyvault.models.enums.StoreType
 import com.github.familyvault.models.enums.fileCabinet.FileCabinetThreadType
@@ -10,6 +11,7 @@ import com.github.familyvault.utils.FamilyMembersSplitter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 
 class FileCabinetService(
     private val privMxClient: IPrivMxClient,
@@ -163,9 +165,13 @@ class FileCabinetService(
 
         val storeId = retrieveFileCabinetDocumentsStoreId()
 
-        val metadata = """{"name":"$documentName","mime":"$documentMimeType","timestamp":${System.currentTimeMillis()}}"""
-
-        val metadataBytes = metadata.encodeToByteArray()
+        val documentMetadata = DocumentMetadata(
+            name = documentName,
+            mime = documentMimeType
+        )
+        
+        val metadataJson = Json.encodeToString(DocumentMetadata.serializer(), documentMetadata)
+        val metadataBytes = metadataJson.encodeToByteArray()
         val metadataLength = metadataBytes.size
 
         val combinedBytes = ByteArray(4 + metadataLength + documentByteArray.size)
@@ -210,23 +216,33 @@ class FileCabinetService(
                     if (metadataLength > 0 && metadataLength < byteArray.size - 4) {
                         val metadataBytes = byteArray.copyOfRange(4, 4 + metadataLength)
                         val metadataJson = metadataBytes.decodeToString()
-
                         val contentBytes = byteArray.copyOfRange(4 + metadataLength, byteArray.size)
 
-                        val nameMatch = Regex(""""name":"([^"]+)"""").find(metadataJson)
-                        val mimeMatch = Regex(""""mime":"([^"]+)"""").find(metadataJson)
-                        val timestampMatch = Regex(""""timestamp":(\d+)""").find(metadataJson)
-                        
-                        val fileName = nameMatch?.groupValues?.get(1)
-                        val mimeType = mimeMatch?.groupValues?.get(1) 
-                        val timestamp = timestampMatch?.groupValues?.get(1)?.toLongOrNull()
-                        
-                        return@mapIndexed DocumentWithMetadata(
-                            content = contentBytes,
-                            fileName = fileName,
-                            mimeType = mimeType,
-                            uploadDate = timestamp
-                        )
+                        try {
+                            val metadata = Json.decodeFromString<DocumentMetadata>(metadataJson)
+                            return@mapIndexed DocumentWithMetadata(
+                                content = contentBytes,
+                                fileName = metadata.name,
+                                mimeType = metadata.mime,
+                                uploadDate = metadata.timestamp
+                            )
+                        } catch (e: Exception) {
+                            // Fallback to the previous regex approach if JSON parsing fails
+                            val nameMatch = Regex(""""name":"([^"]+)"""").find(metadataJson)
+                            val mimeMatch = Regex(""""mime":"([^"]+)"""").find(metadataJson)
+                            val timestampMatch = Regex(""""timestamp":(\d+)""").find(metadataJson)
+                            
+                            val fileName = nameMatch?.groupValues?.get(1)
+                            val mimeType = mimeMatch?.groupValues?.get(1) 
+                            val timestamp = timestampMatch?.groupValues?.get(1)?.toLongOrNull()
+                            
+                            DocumentWithMetadata(
+                                content = contentBytes,
+                                fileName = fileName,
+                                mimeType = mimeType,
+                                uploadDate = timestamp
+                            )
+                        }
                     }
                 }
 

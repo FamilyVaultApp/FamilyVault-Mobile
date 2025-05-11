@@ -49,7 +49,7 @@ fun PdfCard(
                 imageVector = Icons.Default.PictureAsPdf,
                 contentDescription = stringResource(Res.string.file_cabinet_pdf_document),
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.weight(1f).padding(12.dp)
+                modifier = Modifier.weight(1f).padding(AdditionalTheme.spacings.normalPadding)
             )
             
             Text(
