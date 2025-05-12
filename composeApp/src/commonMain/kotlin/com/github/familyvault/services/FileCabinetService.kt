@@ -77,7 +77,7 @@ class FileCabinetService(
         storeId: String?,
         limit: Long,
         skip: Long
-    ): List<ByteArray> {
+    ): List<Pair<ByteArray, Long>> {
         return privMxClient.getFilesAsByteArrayFromStore(storeId, limit, skip)
     }
 
