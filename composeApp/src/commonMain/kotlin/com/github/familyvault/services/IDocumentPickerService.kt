@@ -10,4 +10,5 @@ interface IDocumentPickerService {
     fun removeSelectedDocument(uri: String)
     fun getDocumentNameFromUri(uriString: String): String?
     fun getDocumentMimeTypeFromUri(uriString: String): String?
+    fun getDocumentPreviewPageFromUri(uriString: String): ByteArray
 }

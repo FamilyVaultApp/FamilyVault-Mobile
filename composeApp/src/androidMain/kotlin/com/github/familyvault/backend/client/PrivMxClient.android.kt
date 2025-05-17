@@ -3,6 +3,7 @@ package com.github.familyvault.backend.client
 import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.backend.models.PrivMxUser
+import com.github.familyvault.backend.models.StoreItem
 import com.github.familyvault.backend.models.StorePublicMeta
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessageItem
@@ -17,6 +18,7 @@ import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.chat.ThreadIconType
 import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
+import com.github.familyvault.utils.mappers.PrivMxStoreToStoreItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.java.privmx_endpoint.model.UserWithPubKey
 import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
@@ -101,19 +103,21 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             UserWithPubKey(userId, publicKey)
         }
         val threadId = threadApi?.createThread(
-            contextId, userList, managerList,
+            contextId,
+            userList,
+            managerList,
             ThreadMetaEncoder.encode(ThreadPublicMeta(tag, type)),
-            ThreadMetaEncoder.encode(ThreadPrivateMeta(name, referenceStoreId, threadIcon, threadInitialCreators.map { it.publicKey }))
+            ThreadMetaEncoder.encode(
+                ThreadPrivateMeta(
+                    name, referenceStoreId, threadIcon, threadInitialCreators.map { it.publicKey })
+            )
         )
 
         return requireNotNull(threadId) { "Received empty threadsPagingList" }
     }
 
     override fun createStore(
-        contextId: String,
-        users: List<PrivMxUser>,
-        managers: List<PrivMxUser>,
-        type: String
+        contextId: String, users: List<PrivMxUser>, managers: List<PrivMxUser>, type: String
     ): String {
         val userList: List<UserWithPubKey> = users.map { (userId, publicKey) ->
             UserWithPubKey(userId, publicKey)
@@ -123,7 +127,9 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
 
         val storeId = storeApi?.createStore(
-            contextId, userList, managerList,
+            contextId,
+            userList,
+            managerList,
             StoreMetaEncoder.encode(StorePublicMeta(type)),
             ByteArray(0)
         )
@@ -225,30 +231,38 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun retrieveAllThreadsWithTag(
-        contextId: String,
-        tag: String,
-        startIndex: Int,
-        pageSize: Int
+        contextId: String, tag: String, startIndex: Int, pageSize: Int
     ): List<ThreadItem> {
         val threads = retrieveAllThreads(contextId, startIndex, pageSize)
 
         return threads.filter { it.publicMeta.tag == tag }
     }
 
+    override fun retrieveAllStores(contextId: String, skip: Int, limit: Int): List<StoreItem> {
+        val stores = requireNotNull(storeApi).listStores(
+            contextId, skip.toLong(), limit.toLong(), SortOrder.DESC
+        ).readItems
+
+        return stores.map {
+            PrivMxStoreToStoreItemMapper.map(it)
+        }
+    }
+
+    override fun retrieveAllStoresWithType(
+        contextId: String, type: String, skip: Int, limit: Int
+    ): List<StoreItem> {
+        val stores = retrieveAllStores(contextId, skip, limit)
+        return stores.filter { it.publicMeta.type == type }
+    }
+
     override fun sendMessage(
-        threadId: String,
-        content: String,
-        type: String,
-        referenceMessageId: String
+        threadId: String, content: String, type: String, referenceMessageId: String
     ) {
         sendMessage(threadId, content.encodeToByteArray(), type, referenceMessageId)
     }
 
     override fun sendMessage(
-        threadId: String,
-        content: ByteArray,
-        type: String,
-        referenceMessageId: String
+        threadId: String, content: ByteArray, type: String, referenceMessageId: String
     ) {
         val threadApi = requireNotNull(threadApi)
         val publicMeta = ByteArray(0)
@@ -267,10 +281,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
 
         val message = threadApi.getMessage(messageId)
         threadApi.updateMessage(
-            messageId,
-            message.publicMeta,
-            message.privateMeta,
-            content.encodeToByteArray()
+            messageId, message.publicMeta, message.privateMeta, content.encodeToByteArray()
         )
     }
 
@@ -290,12 +301,11 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return data
     }
 
-    override fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<ByteArray> {
+    override fun getFilesAsByteArrayFromStore(
+        storeId: String?, limit: Long, skip: Long
+    ): List<ByteArray> {
         val files = storeApi!!.listFiles(
-            storeId,
-            skip,
-            limit,
-            SortOrder.DESC
+            storeId, skip, limit, SortOrder.DESC
         )
 
         return files.readItems.mapNotNull { file ->
@@ -366,9 +376,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun registerOnMessageCreated(
-        eventName: String,
-        threadId: String,
-        callback: (ThreadMessageItem) -> Unit
+        eventName: String, threadId: String, callback: (ThreadMessageItem) -> Unit
     ) {
         requireNotNull(connection).registerCallback(
             eventName, EventType.ThreadNewMessageEvent(threadId)
@@ -378,9 +386,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun registerOnMessageUpdate(
-        eventName: String,
-        threadId: String,
-        callback: (ThreadMessageItem) -> Unit
+        eventName: String, threadId: String, callback: (ThreadMessageItem) -> Unit
     ) {
         requireNotNull(connection).registerCallback(
             eventName, EventType.ThreadMessageUpdatedEvent(threadId)
@@ -406,13 +412,10 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun registerOnStoreFileCreated(
-        eventName: String,
-        storeId: String,
-        callback: (ByteArray) -> Unit
+        eventName: String, storeId: String, callback: (ByteArray) -> Unit
     ) {
         requireNotNull(connection).registerCallback(
-            eventName,
-            EventType.StoreFileCreatedEvent(storeId)
+            eventName, EventType.StoreFileCreatedEvent(storeId)
         ) { newFile ->
             callback(getFileAsByteArrayFromStore(newFile.info.fileId))
         }
