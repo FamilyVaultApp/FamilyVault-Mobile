@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import com.github.familyvault.models.tasks.Task
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.components.typography.ParagraphMuted
@@ -55,7 +56,11 @@ fun TaskEntry(
             ) {
                 Paragraph(task.content.title, textStyle = textStyle)
                 if (task.content.description.isNotEmpty()) {
-                    ParagraphMuted(task.content.description, textStyle = textStyle)
+                    ParagraphMuted(
+                        task.content.description,
+                        textStyle = textStyle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis)
                 }
             }
         }

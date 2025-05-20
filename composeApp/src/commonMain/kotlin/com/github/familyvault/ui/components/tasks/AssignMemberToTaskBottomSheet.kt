@@ -21,12 +21,12 @@ import com.github.familyvault.services.ITaskService
 import com.github.familyvault.states.IFamilyMembersState
 import com.github.familyvault.ui.components.FamilyMemberPicker
 import com.github.familyvault.ui.components.overrides.Button
-import com.github.familyvault.ui.components.typography.Headline1
 import com.github.familyvault.ui.components.typography.Headline3
+import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.assigned_person
 import familyvault.composeapp.generated.resources.edit_button_content
-import familyvault.composeapp.generated.resources.task_assign
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -48,9 +48,9 @@ fun AssignMemberToTaskBottomSheet(task: Task, onDismissRequest: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
             Headline3(task.content.title)
-            Headline3(stringResource(Res.string.task_assign))
+            ParagraphMuted(task.content.description)
             FamilyMemberPicker(
-                "",
+                label = stringResource(Res.string.assigned_person),
                 selectedPubKey = selectedPubKey,
                 familyMembers = familyMembersState.getAllFamilyMembers(),
                 onPick = {

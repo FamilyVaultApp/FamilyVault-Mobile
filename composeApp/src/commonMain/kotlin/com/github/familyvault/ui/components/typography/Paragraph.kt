@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun Paragraph(
@@ -17,6 +18,8 @@ fun Paragraph(
     fontStyle: FontStyle = FontStyle.Normal,
     textStyle: TextStyle = TextStyle.Default,
     modifier: Modifier = Modifier,
+    maxLines: Int = Int.MAX_VALUE,
+    overflow: TextOverflow = TextOverflow.Clip
 ) {
     Text(
         text,
@@ -25,5 +28,7 @@ fun Paragraph(
         textAlign = textAlign,
         fontStyle = fontStyle,
         modifier = modifier,
+        maxLines = maxLines,
+        overflow = overflow
     )
 }
