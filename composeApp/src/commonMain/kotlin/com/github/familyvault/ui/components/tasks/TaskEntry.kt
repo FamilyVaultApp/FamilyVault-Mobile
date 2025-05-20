@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,8 +39,14 @@ fun TaskEntry(
             modifier = Modifier.weight(1f)
         ) {
             Checkbox(
-                task.content.completed,
+                checked = task.content.completed,
                 onCheckedChange = { onCompletedClick(task) },
+                colors = CheckboxDefaults.colors().copy(
+                    checkedBoxColor = CheckboxDefaults.colors().disabledCheckedBoxColor,
+                    checkedBorderColor = CheckboxDefaults.colors().disabledBorderColor,
+                    uncheckedBorderColor = CheckboxDefaults.colors().checkedBorderColor,
+                    checkedCheckmarkColor = CheckboxDefaults.colors().checkedCheckmarkColor
+                )
             )
             Column(
                 modifier = Modifier.clickable(onClick = {
