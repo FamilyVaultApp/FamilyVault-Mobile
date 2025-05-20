@@ -27,7 +27,6 @@ import com.github.familyvault.ui.components.settings.DescriptionSection
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.create_button_content
-import familyvault.composeapp.generated.resources.task_new
 import familyvault.composeapp.generated.resources.task_new_description
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -47,10 +46,12 @@ class TaskNewScreen(private val taskListId: String) : Screen {
 
         Scaffold(
             topBar = {
-                TopAppBar(
-                    stringResource(Res.string.task_new),
-                    icon = Icons.Outlined.Task,
-                )
+                taskListState.selectedTaskList?.name?.let {
+                    TopAppBar(
+                        it,
+                        icon = Icons.Outlined.Task,
+                    )
+                }
             }) { paddingValues ->
             ContentWithActionButton(
                 modifier = Modifier.padding(paddingValues)
