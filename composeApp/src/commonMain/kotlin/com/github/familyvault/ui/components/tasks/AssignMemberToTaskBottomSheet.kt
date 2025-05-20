@@ -21,6 +21,7 @@ import com.github.familyvault.services.ITaskService
 import com.github.familyvault.states.IFamilyMembersState
 import com.github.familyvault.ui.components.FamilyMemberPicker
 import com.github.familyvault.ui.components.overrides.Button
+import com.github.familyvault.ui.components.typography.Headline1
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -46,6 +47,7 @@ fun AssignMemberToTaskBottomSheet(task: Task, onDismissRequest: () -> Unit) {
             modifier = Modifier.padding(horizontal = AdditionalTheme.spacings.screenPadding),
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
+            Headline3(task.content.title)
             Headline3(stringResource(Res.string.task_assign))
             FamilyMemberPicker(
                 "",
