@@ -407,6 +407,19 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         }
     }
 
+    override fun registerOnStoreFileCreated(
+        eventName: String,
+        storeId: String,
+        callback: (ByteArray) -> Unit
+    ) {
+        requireNotNull(connection).registerCallback(
+            eventName,
+            EventType.StoreFileCreatedEvent(storeId)
+        ) { newFile ->
+            callback(getFileAsByteArrayFromStore(newFile.info.fileId))
+        }
+    }
+
     override fun close() {
         requireNotNull(connection).unregisterAll()
         requireNotNull(connection).close()

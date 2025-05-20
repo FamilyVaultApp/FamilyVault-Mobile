@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -19,6 +22,8 @@ import familyvault.composeapp.generated.resources.file_cabinet_tab
 import org.jetbrains.compose.resources.stringResource
 
 object FilesCabinetTab : Tab {
+    var selectedTabIndex by mutableStateOf(0)
+    
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
@@ -32,7 +37,10 @@ object FilesCabinetTab : Tab {
                     }
                 },
             )
-            FilesCabinetContent()
+            FilesCabinetContent(
+                selectedTabIndex = selectedTabIndex,
+                onTabIndexChanged = { selectedTabIndex = it }
+            )
         }
     }
 

@@ -112,6 +112,7 @@
     <string name="qr_code_scanning">Uruchamianie skanera</string>
     <string name="qr_code_generation_screen_content">Niech opiekun Twojej grupy zeskanuje ten kod, aby Cię do niej dodać.</string>
     <string name="invalid_qr_code_label">Nieprawidłowy kod QR</string>
+    <string name="qr_code_scanner_not_installed">Skaner kodów QR nadal się instaluje. Spróbuj ponownie za chwilę.</string>
 
     <!-- Chat -->
     <string name="chat_create_new">Stwórz nowy chat</string>
@@ -197,4 +198,14 @@
     <string name="file_cabinet_upload">Prześlij</string>
     <string name="file_cabinet_photo_card">Karta zdjęcia</string>
     <string name="file_cabinet_sending_files">Przesyłanie plików...</string>
+    <string name="file_cabinet_no_images">Nie znaleziono zdjęć. Prześlij zdjęcia używając przycisku poniżej.</string>
+    <string name="file_cabinet_retry">Ponów</string>
+    <string name="file_cabinet_no_documents">Nie znaleziono dokumentów. Prześlij dokumenty używając przycisku poniżej.</string>
+    <string name="file_cabinet_download_pdf_title">Pobierz PDF</string>
+    <string name="file_cabinet_download_pdf_message">Czy chcesz pobrać ten plik PDF na swoje urządzenie?</string>
+    <string name="file_cabinet_download">Pobierz</string>
+    <string name="file_cabinet_pdf_document">Dokument PDF</string>
+    <string name="file_cabinet_initializing_documents">Inicjalizacja przechowywania dokumentów...</string>
+    <string name="file_cabinet_error_initialize">Nie można zainicjować przechowywania dokumentów</string>
+    <string name="file_cabinet_error_loading">Błąd podczas ładowania dokumentów</string>
 </resources>
