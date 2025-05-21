@@ -5,6 +5,8 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+data class DateParts(val day: Int, val month: Int, val year: Int)
+
 object TimeFormatter {
     fun formatTime(time: LocalDateTime): String =
         "${time.hour}:${addZeroToMinuteIfNeeded(time.minute)}"
@@ -19,12 +21,10 @@ object TimeFormatter {
         return minuteString
     }
 
-    fun formatDate(timestamp: Long): String {
+    fun formatDateParts(timestamp: Long): DateParts {
         val fileDateTime = Instant.fromEpochMilliseconds(timestamp)
             .toLocalDateTime(TimeZone.currentSystemDefault())
         val fileDate = fileDateTime.date
-
-        val monthName = fileDate.month.name.lowercase().replaceFirstChar { it.uppercase() }
-        return "${fileDate.dayOfMonth} $monthName ${fileDate.year}"
+        return DateParts(day = fileDate.dayOfMonth, month = fileDate.month.value, year = fileDate.year)
     }
 }

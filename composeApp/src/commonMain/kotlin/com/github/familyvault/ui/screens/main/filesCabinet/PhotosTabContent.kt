@@ -36,15 +36,31 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.file_cabinet_no_images
 import familyvault.composeapp.generated.resources.file_cabinet_retry
 import familyvault.composeapp.generated.resources.loading
+import familyvault.composeapp.generated.resources.month_april
+import familyvault.composeapp.generated.resources.month_august
+import familyvault.composeapp.generated.resources.month_december
+import familyvault.composeapp.generated.resources.month_february
+import familyvault.composeapp.generated.resources.month_january
+import familyvault.composeapp.generated.resources.month_july
+import familyvault.composeapp.generated.resources.month_june
+import familyvault.composeapp.generated.resources.month_march
+import familyvault.composeapp.generated.resources.month_may
+import familyvault.composeapp.generated.resources.month_november
+import familyvault.composeapp.generated.resources.month_october
+import familyvault.composeapp.generated.resources.month_september
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+
+private val monthStringResources = arrayOf(
+    Res.string.month_january, Res.string.month_february, Res.string.month_march,
+    Res.string.month_april, Res.string.month_may, Res.string.month_june,
+    Res.string.month_july, Res.string.month_august, Res.string.month_september,
+    Res.string.month_october, Res.string.month_november, Res.string.month_december
+)
 
 @Composable
 fun PhotosTabContent() {
@@ -75,7 +91,6 @@ fun PhotosTabContent() {
                 imageData.addAll(images)
             }
             fileCabinetListenerService.startListeningForNewFiles(storeId) { newImageBytes ->
-                // Add with current timestamp
                 imageData.add(Pair(newImageBytes, System.currentTimeMillis()))
             }
         } catch (e: Exception) {
@@ -127,7 +142,7 @@ fun PhotosTabContent() {
         val groupedByDate = remember(imageData) {
             imageData
                 .sortedByDescending { it.second }
-                .groupBy { (_, timestamp) -> TimeFormatter.formatDate(timestamp) }
+                .groupBy { (_, timestamp) -> TimeFormatter.formatDateParts(timestamp) }
         }
 
         LazyVerticalGrid(
@@ -137,10 +152,12 @@ fun PhotosTabContent() {
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small),
             contentPadding = PaddingValues(AdditionalTheme.spacings.small)
         ) {
-            groupedByDate.forEach { (date, images) ->
+            groupedByDate.forEach { (dateParts, images) ->
                 item(span = { GridItemSpan(maxLineSpan) }) {
+                    val monthName = stringResource(monthStringResources[dateParts.month - 1])
+                    val dateText = "${dateParts.day} $monthName ${dateParts.year}"
                     Text(
-                        text = date,
+                        text = dateText,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier
                             .fillMaxWidth()
