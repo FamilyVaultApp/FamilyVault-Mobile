@@ -26,7 +26,7 @@ import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.assigned_person
-import familyvault.composeapp.generated.resources.edit_button_content
+import familyvault.composeapp.generated.resources.user_modification_save_button
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -41,6 +41,9 @@ fun AssignMemberToTaskBottomSheet(task: Task, onDismissRequest: () -> Unit) {
     var selectedPubKey by remember { mutableStateOf(task.content.assignedMemberPubKey) }
     var isAssigning by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    
+    val initialPubKey = remember { task.content.assignedMemberPubKey }
+    val hasChanged = selectedPubKey != initialPubKey
 
     ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
         Column(
@@ -60,8 +63,8 @@ fun AssignMemberToTaskBottomSheet(task: Task, onDismissRequest: () -> Unit) {
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                text = stringResource(Res.string.edit_button_content),
-                enabled = !isAssigning,
+                text = stringResource(Res.string.user_modification_save_button),
+                enabled = !isAssigning && hasChanged,
                 onClick = {
                     coroutineScope.launch {
                         isAssigning = true
