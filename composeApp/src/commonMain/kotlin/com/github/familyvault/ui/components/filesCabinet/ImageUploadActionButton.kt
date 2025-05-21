@@ -53,7 +53,7 @@ fun ImageUploadActionButton() {
 
                 withContext(Dispatchers.IO) {
                     images.forEach { mediaByteArray ->
-                        fileCabinetService.sendImageToFamilyGroupStore(mediaByteArray)
+                        fileCabinetService.sendImageToFileCabinetGallery(mediaByteArray)
                     }
                 }
 

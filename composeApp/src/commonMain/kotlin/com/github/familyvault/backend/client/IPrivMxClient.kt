@@ -1,6 +1,7 @@
 package com.github.familyvault.backend.client
 
 import com.github.familyvault.backend.models.PrivMxUser
+import com.github.familyvault.backend.models.StoreItem
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
@@ -58,6 +59,15 @@ interface IPrivMxClient {
         pageSize: Int
     ): List<ThreadItem>
 
+    fun retrieveAllStores(contextId: String, skip: Int, limit: Int): List<StoreItem>
+
+    fun retrieveAllStoresWithType(
+        contextId: String,
+        type: String,
+        skip: Int,
+        limit: Int
+    ): List<StoreItem>
+
     fun sendMessage(
         threadId: String,
         content: String,
@@ -104,5 +114,9 @@ interface IPrivMxClient {
     fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
     fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit)
 
-    fun registerOnStoreFileCreated(eventName: String, storeId: String, callback: (ByteArray) -> Unit)
+    fun registerOnStoreFileCreated(
+        eventName: String,
+        storeId: String,
+        callback: (ByteArray) -> Unit
+    )
 }
