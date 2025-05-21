@@ -48,7 +48,8 @@ class TaskNewScreen(private val taskListId: String) : Screen {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    stringResource(Res.string.task_new),
+                    title = taskListState.selectedTaskList?.name
+                        ?: stringResource(Res.string.task_new),
                     icon = Icons.Outlined.Task,
                 )
             }) { paddingValues ->

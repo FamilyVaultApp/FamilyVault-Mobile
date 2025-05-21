@@ -27,8 +27,8 @@ import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.settings.DescriptionSection
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.edit_button_content
 import familyvault.composeapp.generated.resources.task_edit_description
+import familyvault.composeapp.generated.resources.user_modification_save_button
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -69,7 +69,7 @@ class TaskEditScreen(private val task: Task) : Screen {
                 },
                 actionButton = {
                     Button(
-                        stringResource(Res.string.edit_button_content),
+                        stringResource(Res.string.user_modification_save_button),
                         modifier = Modifier.fillMaxWidth(),
                         enabled = form.isFormValid() && !isEditing,
                         onClick = {
