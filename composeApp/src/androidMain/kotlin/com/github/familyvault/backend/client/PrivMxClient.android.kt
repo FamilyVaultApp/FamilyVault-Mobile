@@ -290,7 +290,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         return data
     }
 
-    override fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<ByteArray> {
+    override fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<Pair<ByteArray, Long>> {
         val files = storeApi!!.listFiles(
             storeId,
             skip,
@@ -300,7 +300,9 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
 
         return files.readItems.mapNotNull { file ->
             try {
-                getFileAsByteArrayFromStore(file.info.fileId)
+                val byteArray = getFileAsByteArrayFromStore(file.info.fileId)
+                val creationTimestamp = file.info.createDate
+                Pair(byteArray, creationTimestamp)
             } catch (e: Exception) {
                 e.printStackTrace()
                 null

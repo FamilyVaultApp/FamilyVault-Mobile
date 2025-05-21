@@ -21,10 +21,10 @@ interface IFileCabinetService {
         documentMimeType: String
     )
     
-    fun getImagesFromFamilyGroupStoreAsByteArray(storeId: String?, limit: Long, skip: Long): List<ByteArray>
-    fun getDocumentsFromFamilyGroupStore(storeId: String?, limit: Long, skip: Long): List<ByteArray>
+    fun getDocumentsFromFamilyGroupStore(storeId: String?, limit: Long, skip: Long): List<Pair<ByteArray, Long>>
 
+    fun getImagesFromFamilyGroupStoreAsByteArray(storeId: String?, limit: Long, skip: Long) : List<Pair<ByteArray, Long>>
     fun getDocumentsWithMetadataFromStore(storeId: String?, limit: Long, skip: Long): List<DocumentWithMetadata>
-    
+
     suspend fun restoreFileCabinetMembership()
 }

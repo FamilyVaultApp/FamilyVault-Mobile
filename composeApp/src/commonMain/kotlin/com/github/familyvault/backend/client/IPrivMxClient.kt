@@ -78,7 +78,7 @@ interface IPrivMxClient {
     )
 
     fun getFileAsByteArrayFromStore(fileId: String): ByteArray
-    fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<ByteArray>
+    fun getFilesAsByteArrayFromStore(storeId: String?, limit: Long, skip: Long): List<Pair<ByteArray, Long>>
     fun sendByteArrayToStore(storeId: String, content: ByteArray): String
     fun retrieveMessagesFromThread(
         threadId: String, startIndex: Int, pageSize: Int

@@ -152,7 +152,7 @@ class FileCabinetService(
         storeId: String?,
         limit: Long,
         skip: Long
-    ): List<ByteArray> {
+    ): List<Pair<ByteArray, Long>> {
         val actualStoreId = storeId ?: retrieveFileCabinetImagesStoreId()
         return privMxClient.getFilesAsByteArrayFromStore(actualStoreId, limit, skip)
     }
@@ -193,7 +193,7 @@ class FileCabinetService(
         storeId: String?,
         limit: Long,
         skip: Long
-    ): List<ByteArray> {
+    ): List<Pair<ByteArray, Long>> {
         val actualStoreId = storeId ?: retrieveFileCabinetDocumentsStoreId()
         return privMxClient.getFilesAsByteArrayFromStore(actualStoreId, limit, skip)
     }
@@ -206,7 +206,7 @@ class FileCabinetService(
         val actualStoreId = storeId ?: retrieveFileCabinetDocumentsStoreId()
         val rawBytes = privMxClient.getFilesAsByteArrayFromStore(actualStoreId, limit, skip)
 
-        return rawBytes.mapIndexed { index, byteArray ->
+        return rawBytes.mapIndexed { index, (byteArray, timestamp) ->
             try {
                 if (byteArray.size >= 4) {
                     val metadataLength = (byteArray[0].toInt() and 0xFF shl 24) or
@@ -225,7 +225,7 @@ class FileCabinetService(
                                 content = contentBytes,
                                 fileName = metadata.name,
                                 mimeType = metadata.mime,
-                                uploadDate = metadata.timestamp
+                                uploadDate = metadata.timestamp ?: timestamp
                             )
                         } catch (e: Exception) {
                             // Fallback to the previous regex approach if JSON parsing fails
@@ -235,13 +235,13 @@ class FileCabinetService(
                             
                             val fileName = nameMatch?.groupValues?.get(1)
                             val mimeType = mimeMatch?.groupValues?.get(1) 
-                            val timestamp = timestampMatch?.groupValues?.get(1)?.toLongOrNull()
+                            val parsedTimestamp = timestampMatch?.groupValues?.get(1)?.toLongOrNull()
                             
                             DocumentWithMetadata(
                                 content = contentBytes,
                                 fileName = fileName,
                                 mimeType = mimeType,
-                                uploadDate = timestamp
+                                uploadDate = parsedTimestamp ?: timestamp
                             )
                         }
                     }
@@ -255,7 +255,7 @@ class FileCabinetService(
                     content = byteArray,
                     fileName = fileName,
                     mimeType = mimeType,
-                    uploadDate = System.currentTimeMillis() - (index * 1000)
+                    uploadDate = timestamp
                 )
             } catch (e: Exception) {
                 val isPdf = FileTypeUtils.isPdfFile(byteArray)
@@ -263,7 +263,7 @@ class FileCabinetService(
                     content = byteArray,
                     fileName = if (isPdf) "Document_${index}.pdf" else "File_${index}.jpg",
                     mimeType = if (isPdf) "application/pdf" else "image/jpeg",
-                    uploadDate = System.currentTimeMillis() - (index * 1000)
+                    uploadDate = timestamp
                 )
             }
         }
