@@ -15,7 +15,7 @@ fun ParagraphMuted(
     fontStyle: FontStyle = FontStyle.Normal,
     textStyle: TextStyle = TextStyle.Default,
     textAlign: TextAlign = TextAlign.Start,
-    maxLines: Int = 64,
+    maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Ellipsis
 ) {
     return Paragraph(
