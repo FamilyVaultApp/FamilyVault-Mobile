@@ -27,6 +27,7 @@ import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.family_group_as_user
 import familyvault.composeapp.generated.resources.family_group_default
 import familyvault.composeapp.generated.resources.family_group_no_default
 import familyvault.composeapp.generated.resources.is_actual
@@ -38,7 +39,8 @@ fun FamilyGroupEntry(
     familyGroup: FamilyGroup,
     isCurrentFamilyGroup: Boolean,
     onSelect: () -> Unit,
-    onSetDefault: () -> Unit
+    onSetDefault: () -> Unit,
+    username: String? = null
 ) {
     val familyGroupInfo = listOfNotNull(
         if (isCurrentFamilyGroup) stringResource(Res.string.is_actual) else null,
@@ -79,7 +81,10 @@ fun FamilyGroupEntry(
                 }
             )
             Column {
-                Paragraph(familyGroup.name)
+                Paragraph(text =
+                if (username != null) stringResource(Res.string.family_group_as_user, familyGroup.name, username)
+                else familyGroup.name
+                )
                 if (familyGroupInfo.isNotEmpty()) {
                     ParagraphMuted(familyGroupInfo.joinToString(), fontStyle = FontStyle.Italic)
                 }
