@@ -115,6 +115,7 @@
     <string name="qr_code_scanner_not_installed">QR code scanner is still installing. Please try again shortly.</string>
 
     <!-- Chat -->
+    <string name="chat_top_bar_greeting">Hi, %1$s!</string>
     <string name="chat_create_new">Create new chat</string>
     <string name="chat_set_group_name">Group chat name</string>
     <string name="chat_settings">Chat settings</string>
