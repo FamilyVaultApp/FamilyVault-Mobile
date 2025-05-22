@@ -5,11 +5,11 @@
 
 FamilyVault to prosty, bezpieczny i prywatny komunikator zaprojektowany z myślą o rodzinach.
 
-W przeciwieństwie do otwartych platform społecznościowych, FamilyVault działa w zamkniętej grupie rodzinnej. Tylko zaproszeni członkowie Twojej rodziny mają dostęp do treści – nikt z zewnątrz ich nie zobaczy. To przestrzeń stworzona do prywatnej komunikacji, współdzielenia zdjęć, dokumentów i codziennych spraw w zaufanym gronie. Wszystko, co udostępniasz, pozostaje między Tobą a Twoją grupą rodzinną – bez reklam, bez śledzenia, bez algorytmów. Wysyłaj wiadomości, dziel się zdjęciami i dokumentami, zarządzaj codziennymi zadaniami i korzystaj z funkcji zaprojektowanych z myślą o prywatności.
+W przeciwieństwie do otwartych platform społecznościowych, FamilyVault działa w **zamkniętej grupie rodzinnej**. Tylko zaproszeni członkowie Twojej rodziny mają dostęp do treści – nikt z zewnątrz ich nie zobaczy. To przestrzeń stworzona do **prywatnej komunikacji**, współdzielenia zdjęć, dokumentów i codziennych spraw w zaufanym gronie. Wszystko, co udostępniasz, pozostaje między Tobą a Twoją grupą rodzinną – bez reklam, bez śledzenia, bez algorytmów. Wysyłaj wiadomości, dziel się zdjęciami i dokumentami, zarządzaj codziennymi zadaniami i korzystaj z funkcji zaprojektowanych z myślą o prywatności.
 
 # Funkcje aplikacji
 
-FamilyVault to zamknięty, prywatny komunikator zaprojektowany z myślą o bezpieczeństwie i prostocie w codziennej komunikacji rodzinnej. Aplikacja oferuje tylko niezbędne funkcje, bez reklam, śledzenia i rozpraszaczy:
+FamilyVault to zamknięty, prywatny komunikator zaprojektowany z myślą o bezpieczeństwie i prostocie w codziennej komunikacji rodzinnej. Aplikacja oferuje tylko niezbędne funkcje, bez rozpraszaczy:
 
 ### Szyfrowanie end-to-end
 Wszystkie wiadomości, zdjęcia, dokumenty i zadania są szyfrowane zaawansowaną technologią E2E – tylko członkowie danej grupy rodzinnej mają dostęp do danych.
