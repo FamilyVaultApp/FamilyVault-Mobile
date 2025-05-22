@@ -35,7 +35,6 @@ fun PhotoCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(AdditionalTheme.sizing.fileCabinetNormal)
-                .padding(AdditionalTheme.spacings.small)
                 .clip(RoundedCornerShape(AdditionalTheme.roundness.normalPercent)),
             contentScale = ContentScale.Crop
         )

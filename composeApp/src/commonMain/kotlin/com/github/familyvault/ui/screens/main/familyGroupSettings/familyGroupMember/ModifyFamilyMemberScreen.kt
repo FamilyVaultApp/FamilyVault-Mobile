@@ -199,7 +199,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                             coroutineScope.launch {
                                 savingChanges = true
                                 permissionGroupService.changeFamilyMemberPermissionGroup(
-                                    familyMember.fullname,
+                                    familyMember.id,
                                     selectedPermissionGroup
                                 )
                                 val updatedUser =

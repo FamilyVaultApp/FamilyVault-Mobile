@@ -1,30 +1,23 @@
 package com.github.familyvault.services
 
-import com.github.familyvault.backend.models.ThreadItem
-import com.github.familyvault.models.DocumentWithMetadata
+import com.github.familyvault.models.fileCabinet.FileCabinetDocument
 
 interface IFileCabinetService {
     suspend fun createInitialStores()
 
-    fun retrieveFileCabinetImagesThread(): ThreadItem
-    fun retrieveFileCabinetDocumentsThread(): ThreadItem
-    
-    fun retrieveFileCabinetImagesStoreId(): String
-    fun retrieveFileCabinetDocumentsStoreId(): String
-
-    suspend fun createDocumentsStoreIfNotExists()
-    
-    fun sendImageToFamilyGroupStore(imageByteArray: ByteArray)
-    suspend fun sendDocumentToFamilyGroupStore(
-        documentByteArray: ByteArray,
-        documentName: String,
-        documentMimeType: String
+    fun sendImageToFileCabinetGallery(image: ByteArray)
+    suspend fun sendDocumentToFileCabinetDocuments(
+        content: ByteArray,
+        name: String,
+        mimeType: String,
+        contentPreview: ByteArray? = null
     )
-    
-    fun getImagesFromFamilyGroupStoreAsByteArray(storeId: String?, limit: Long, skip: Long): List<ByteArray>
-    fun getDocumentsFromFamilyGroupStore(storeId: String?, limit: Long, skip: Long): List<ByteArray>
 
-    fun getDocumentsWithMetadataFromStore(storeId: String?, limit: Long, skip: Long): List<DocumentWithMetadata>
-    
+    fun getImagesFromFileCabinetGallery(): List<ByteArray>
+
+    fun getDocumentsFromFileCabinetDocuments(): List<FileCabinetDocument>
+
     suspend fun restoreFileCabinetMembership()
+
+    fun getGalleryStoreId(): String
 }
