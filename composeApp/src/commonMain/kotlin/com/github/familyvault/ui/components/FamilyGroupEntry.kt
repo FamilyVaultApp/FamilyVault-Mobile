@@ -22,12 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextOverflow
 import com.github.familyvault.models.FamilyGroup
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
-import familyvault.composeapp.generated.resources.family_group_as_user
+import familyvault.composeapp.generated.resources.as_with_spaces
 import familyvault.composeapp.generated.resources.family_group_default
 import familyvault.composeapp.generated.resources.family_group_no_default
 import familyvault.composeapp.generated.resources.is_actual
@@ -81,10 +82,22 @@ fun FamilyGroupEntry(
                 }
             )
             Column {
-                Paragraph(text =
-                if (username != null) stringResource(Res.string.family_group_as_user, familyGroup.name, username)
-                else familyGroup.name
-                )
+                if (username != null) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Paragraph(
+                            text = familyGroup.name,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        ParagraphMuted(
+                            text = stringResource(Res.string.as_with_spaces) + username,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                } else {
+                    Paragraph(text = familyGroup.name)
+                }
                 if (familyGroupInfo.isNotEmpty()) {
                     ParagraphMuted(familyGroupInfo.joinToString(), fontStyle = FontStyle.Italic)
                 }
