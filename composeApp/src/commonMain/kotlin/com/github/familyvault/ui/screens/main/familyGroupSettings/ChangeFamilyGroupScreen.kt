@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main
+package com.github.familyvault.ui.screens.main.familyGroupSettings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +26,7 @@ import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDia
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.settings.DescriptionSection
+import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
