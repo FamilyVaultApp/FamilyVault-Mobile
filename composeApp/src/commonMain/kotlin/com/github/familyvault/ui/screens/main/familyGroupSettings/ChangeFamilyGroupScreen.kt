@@ -44,6 +44,7 @@ import org.koin.compose.koinInject
 
 class ChangeFamilyGroupScreen : Screen {
     private val usernameByContextId = mutableStateMapOf<String, String>()
+    private val familyGroups = mutableStateListOf<FamilyGroup>()
     
     @Composable
     override fun Content() {
@@ -54,13 +55,13 @@ class ChangeFamilyGroupScreen : Screen {
 
         var isLoading by mutableStateOf(false)
         var isChangingFamilyGroup by mutableStateOf(false)
-        val familyGroups = mutableStateListOf<FamilyGroup>()
         val currentContextId =
             familyGroupSessionService.takeIf { it.isSessionAssigned() }?.getContextId()
         val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
             isLoading = true
+            familyGroups.clear()
             familyGroups.addAll(savedFamilyGroupsService.getAllSavedFamilyGroups())
 
             for (familyGroup in familyGroups) {
