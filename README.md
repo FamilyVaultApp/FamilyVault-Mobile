@@ -32,8 +32,22 @@ Przypisuj obowiązki konkretnym członkom rodziny. Każde zadanie można opisać
 ### Szuflada
 Prywatne miejsce na zdjęcia i dokumenty (PDF), dostępne tylko dla członków grupy rodzinnej. Idealna do przechowywania ważnych wspomnień i informacji, takich jak skany legitymacji, plan lekcji czy rysunki dzieci.
 
+# Technologie
+
+Aplikacja została zbudowana przy użyciu nowoczesnych technologii cross-platformowych, co pozwala na współdzielenie kodu między platformami Android i iOS. Główne technologie wykorzystane w projekcie to:
+
+*   **Kotlin Multiplatform:** Umożliwia pisanie współdzielonej logiki biznesowej oraz UI.
+*   **Jetpack Compose (Compose Multiplatform):** Do budowy deklaratywnego interfejsu użytkownika.
+*   **Koin:** Lekki framework do wstrzykiwania zależności.
+*   **Voyager:** Biblioteka do nawigacji w aplikacjach Compose Multiplatform.
+*   **Ktor:** Framework do obsługi żądań sieciowych (HTTP client).
+*   **Room:** Biblioteka do zarządzania lokalną bazą danych SQLite (z wykorzystaniem sterownika SQLDelight dla KMP).
+*   **Kotlinx Serialization:** Do serializacji i deserializacji danych (np. JSON).
+*   **Kotlin Coroutines:** Do zarządzania operacjami asynchronicznymi.
+
 
 # Zgłaszanie błędów i sugestii
+
 Używamy GitHub Issues do śledzenia błędów, pomysłów i sugestii. Zanim zgłosisz nowy problem lub zaproponujesz funkcję, sprawdź proszę, czy ktoś już nie poruszył tego tematu. Jeśli nie – śmiało utwórz nowe zgłoszenie:
 
 https://github.com/FamilyVaultApp/FamilyVault-Mobile/issues
