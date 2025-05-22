@@ -65,6 +65,7 @@ fun FamilyGroupEntry(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
+            modifier = Modifier.weight(1f, fill = true),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
@@ -96,10 +97,19 @@ fun FamilyGroupEntry(
                         )
                     }
                 } else {
-                    Paragraph(text = familyGroup.name)
+                    Paragraph(
+                        text = familyGroup.name,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
                 if (familyGroupInfo.isNotEmpty()) {
-                    ParagraphMuted(familyGroupInfo.joinToString(), fontStyle = FontStyle.Italic)
+                    ParagraphMuted(
+                        text = familyGroupInfo.joinToString(),
+                        fontStyle = FontStyle.Italic,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }
