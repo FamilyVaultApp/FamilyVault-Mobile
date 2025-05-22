@@ -11,10 +11,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.listeners.ITaskListenerService
 import com.github.familyvault.services.listeners.ITaskListListenerService
 import com.github.familyvault.states.ITaskListState
@@ -32,9 +38,16 @@ fun TaskListContent() {
     val localNavigator = LocalNavigator.currentOrThrow
     val taskListState = koinInject<ITaskListState>()
     val taskListenerService = koinInject<ITaskListenerService>()
+    val familyGroupService = koinInject<IFamilyGroupService>()
+
+    var currentUserPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest) }
 
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(Unit) {
+        currentUserPermissionGroup = familyGroupService.retrieveMyFamilyMemberData().permissionGroup
+    }
 
     LaunchedEffect(taskListState.selectedTaskList) {
 
@@ -98,7 +111,8 @@ fun TaskListContent() {
                     tasks = taskListState.tasks.filter { !it.content.completed },
                     onEditClick = {
                         localNavigator.parent?.push(TaskListEditScreen(taskList))
-                    }
+                    },
+                    permissionGroup = currentUserPermissionGroup
                 )
                 TaskGroupCompleted(
                     tasks = taskListState.tasks.filter { it.content.completed }

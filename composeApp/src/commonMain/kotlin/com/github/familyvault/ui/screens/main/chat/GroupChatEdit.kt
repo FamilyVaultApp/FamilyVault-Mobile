@@ -90,7 +90,7 @@ fun GroupChatEdit() {
 
         if (groupChatAction == GroupChatAction.Edit) {
             form.setGroupName(chatThread!!.name)
-            val filteredMembers = familyMembers.filter { it.fullname in chatThread.participantsIds }
+            val filteredMembers = familyMembers.filter { it.id in chatThread.participantsIds }
             form.addAllMembersFromListToGroupChat(filteredMembers)
             selectedChatIconType = chatThread.iconType?: ThreadIconType.GROUP
         }

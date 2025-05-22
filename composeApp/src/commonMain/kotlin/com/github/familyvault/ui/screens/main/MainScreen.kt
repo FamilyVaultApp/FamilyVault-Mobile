@@ -1,6 +1,7 @@
 package com.github.familyvault.ui.screens.main
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddTask
@@ -9,6 +10,12 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -16,8 +23,11 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.states.ITaskListState
+import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.filesCabinet.DocumentUploadActionButton
 import com.github.familyvault.ui.components.filesCabinet.ImageUploadActionButton
 import com.github.familyvault.ui.components.overrides.NavigationBar
@@ -26,6 +36,7 @@ import com.github.familyvault.ui.screens.main.tasks.task.TaskNewScreen
 import com.github.familyvault.ui.theme.AppTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_create_new
+import familyvault.composeapp.generated.resources.loading
 import familyvault.composeapp.generated.resources.task_new
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -33,25 +44,45 @@ import org.koin.compose.koinInject
 class MainScreen : Screen {
     @Composable
     override fun Content() {
-        TabNavigator(ChatTab) {
-            // Workaround błędu w Jetpack Compose powodujący to, że ekran nie dostostoswuje się
-            // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
-            // TODO: usunąć po naprawieniu blędu w compose.
-            AppTheme {
-                Scaffold(
-                    bottomBar = {
-                        NavigationBar(
-                            ChatTab, TaskTab, FilesCabinetTab
-                        )
-                    },
-                    floatingActionButton = {
-                        FloatingCurrentTabActionButton()
-                    }
-                ) { paddingValues ->
-                    Box(
-                        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
-                    ) {
-                        CurrentTab()
+
+        val familyGroupService = koinInject<IFamilyGroupService>()
+        var currentUserPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest)}
+        var isLoadingCurrentUserInformation by remember { mutableStateOf(true) }
+
+        LaunchedEffect(Unit) {
+            isLoadingCurrentUserInformation = true
+            currentUserPermissionGroup = familyGroupService.retrieveMyFamilyMemberData().permissionGroup
+            isLoadingCurrentUserInformation = false
+        }
+        if (isLoadingCurrentUserInformation) {
+            LoaderWithText(stringResource(Res.string.loading), modifier = Modifier.fillMaxSize())
+        } else {
+            TabNavigator(ChatTab) {
+                // Workaround błędu w Jetpack Compose powodujący to, że ekran nie dostostoswuje się
+                // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
+                // TODO: usunąć po naprawieniu blędu w compose.
+                AppTheme {
+                    Scaffold(
+                        bottomBar = {
+                            if (currentUserPermissionGroup == FamilyGroupMemberPermissionGroup.Guest) {
+                                NavigationBar(
+                                    ChatTab, TaskTab
+                                )
+                            } else {
+                                NavigationBar(
+                                    ChatTab, TaskTab, FilesCabinetTab
+                                )
+                            }
+                        },
+                        floatingActionButton = {
+                            FloatingCurrentTabActionButton(currentUserPermissionGroup)
+                        }
+                    ) { paddingValues ->
+                        Box(
+                            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
+                        ) {
+                            CurrentTab()
+                        }
                     }
                 }
             }
@@ -59,13 +90,20 @@ class MainScreen : Screen {
     }
 
     @Composable
-    private fun FloatingCurrentTabActionButton() {
+    private fun FloatingCurrentTabActionButton(permissionGroup: FamilyGroupMemberPermissionGroup) {
         val tabNavigator = LocalTabNavigator.current
-
-        when (tabNavigator.current) {
-            is ChatTab -> FloatingChatActionButton()
-            is FilesCabinetTab -> FloatingFileCabinetActionButton()
-            is TaskTab -> FloatingTaskActionButton()
+        if (permissionGroup == FamilyGroupMemberPermissionGroup.Guest)
+        {
+            when (tabNavigator.current) {
+                is FilesCabinetTab -> FloatingFileCabinetActionButton()
+                is TaskTab -> FloatingTaskActionButton()
+            }
+        } else {
+            when (tabNavigator.current) {
+                is ChatTab -> FloatingChatActionButton()
+                is FilesCabinetTab -> FloatingFileCabinetActionButton()
+                is TaskTab -> FloatingTaskActionButton()
+            }
         }
     }
 
