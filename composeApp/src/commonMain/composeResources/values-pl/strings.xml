@@ -103,6 +103,7 @@
     <string name="family_group_members">Członkowie grupy rodzinnej</string>
     <string name="family_group_add_new_member">Dodaj nowego członka</string>
     <string name="family_group_delete_member">Usuń członka</string>
+    <string name="setting_no_permission">Nie masz uprawnień, aby tutaj wejść.</string>
 
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Dodaj nowego członka</string>
