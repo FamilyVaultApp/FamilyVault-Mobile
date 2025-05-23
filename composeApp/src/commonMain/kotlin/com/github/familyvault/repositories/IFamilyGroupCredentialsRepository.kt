@@ -9,7 +9,9 @@ interface IFamilyGroupCredentialsRepository {
         solutionId: String,
         contextId: String,
         keyPairs: PublicEncryptedPrivateKeyPair,
-        encryptedPrivateKeyPassword: String
+        encryptedPrivateKeyPassword: String,
+        firstname: String,
+        lastname: String
     )
 
     suspend fun setDefaultCredentialByContextId(contextId: String)

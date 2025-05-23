@@ -61,7 +61,7 @@ class FamilyGroupService(
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
-            familyGroupName, solutionId, contextId, pairOfKeys, encryptedPassword
+            familyGroupName, solutionId, contextId, pairOfKeys, encryptedPassword, firstname, surname
         )
     }
 
@@ -93,7 +93,9 @@ class FamilyGroupService(
             solutionId,
             contextId,
             keyPair,
-            encryptedPassword
+            encryptedPassword,
+            firstname,
+            surname
         )
     }
 
