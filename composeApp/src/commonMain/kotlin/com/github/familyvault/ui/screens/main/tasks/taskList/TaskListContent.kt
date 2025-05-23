@@ -57,6 +57,7 @@ fun TaskListContent() {
                 taskListState.updateTask(it)
             }
         }
+        currentUserPermissionGroup = familyGroupService.retrieveMyFamilyMemberData().permissionGroup
     }
 
     LaunchedEffect(taskListState.taskLists) {
