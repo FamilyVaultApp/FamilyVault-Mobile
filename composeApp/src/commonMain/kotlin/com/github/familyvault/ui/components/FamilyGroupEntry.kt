@@ -83,16 +83,16 @@ fun FamilyGroupEntry(
                 }
             )
             Column {
-Row(verticalAlignment = Alignment.CenterVertically) {
-    Paragraph(text = familyGroup.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
-    username?.let {
-        ParagraphMuted(
-            text = stringResource(Res.string.as_with_spaces) + username,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Paragraph(text = familyGroup.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    username?.let {
+                        ParagraphMuted(
+                            text = stringResource(Res.string.as_with_spaces) + username,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
 
                 if (familyGroupInfo.isNotEmpty()) {
                     ParagraphMuted(

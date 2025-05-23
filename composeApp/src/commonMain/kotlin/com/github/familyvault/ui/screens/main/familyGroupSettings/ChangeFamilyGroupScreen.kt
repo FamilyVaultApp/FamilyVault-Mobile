@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -22,7 +21,6 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.FamilyGroup
 import com.github.familyvault.services.IFamilyGroupSessionService
-import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.ISavedFamilyGroupsService
 import com.github.familyvault.ui.components.ContentWithActionButton
 import com.github.familyvault.ui.components.FamilyGroupEntry
@@ -43,14 +41,12 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class ChangeFamilyGroupScreen : Screen {
-    private val usernameByContextId = mutableStateMapOf<String, String>()
     private val familyGroups = mutableStateListOf<FamilyGroup>()
     
     @Composable
     override fun Content() {
         val savedFamilyGroupsService = koinInject<ISavedFamilyGroupsService>()
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
-        val familyGroupService = koinInject<IFamilyGroupService>()
         val navigator = LocalNavigator.currentOrThrow
 
         var isLoading by mutableStateOf(false)
@@ -63,25 +59,6 @@ class ChangeFamilyGroupScreen : Screen {
             isLoading = true
             familyGroups.clear()
             familyGroups.addAll(savedFamilyGroupsService.getAllSavedFamilyGroups())
-
-            for (familyGroup in familyGroups) {
-                try {
-
-                    familyGroupSessionService.disconnect()
-                    familyGroupSessionService.assignSession(
-                        familyGroupCredential = savedFamilyGroupsService.getSavedFamilyGroupCredentialByContextId(
-                            familyGroup.contextId
-                        )
-                    )
-                    familyGroupSessionService.connect()
-
-                    val myData = familyGroupService.retrieveMyFamilyMemberData()
-                    usernameByContextId[familyGroup.contextId] = myData.firstname
-                } catch (e: Exception) {
-                    continue
-                }
-            }
-
             isLoading = false
         }
 
@@ -155,7 +132,7 @@ class ChangeFamilyGroupScreen : Screen {
                                             isLoading = false
                                         }
                                     },
-                                    username = usernameByContextId[it.contextId]
+                                    username = it.firstname
                                 )
                             }
                         }
