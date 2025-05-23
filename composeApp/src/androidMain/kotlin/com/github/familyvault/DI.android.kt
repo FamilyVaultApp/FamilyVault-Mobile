@@ -4,6 +4,8 @@ import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.client.PrivMxClient
 import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.createAppDatabase
+import com.github.familyvault.models.AndroidCompilationFlags
+import com.github.familyvault.models.ICompilationFlags
 import com.github.familyvault.services.AudioPlayerService
 import com.github.familyvault.services.AudioRecorderService
 import com.github.familyvault.services.DocumentPickerService
@@ -51,4 +53,7 @@ actual fun getPlatformModules() = module {
 
     single { ImagePickerService() }.bind<IImagePickerService>()
     single { DocumentPickerService() }.bind<IDocumentPickerService>()
+
+    /* Compilation flags */
+    single { AndroidCompilationFlags() }.bind<ICompilationFlags>()
 }

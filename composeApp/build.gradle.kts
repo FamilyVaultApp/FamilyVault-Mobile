@@ -91,7 +91,82 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("Boolean", "CHAT_ENABLED", "true")
+        buildConfigField("Boolean", "TASKS_ENABLED", "true")
+        buildConfigField("Boolean", "FILES_ENABLED", "true")
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+
+    flavorDimensions += "features"
+
+    productFlavors {
+        create("chatOnly") {
+            dimension = "features"
+            buildConfigField("Boolean", "CHAT_ENABLED", "true")
+            buildConfigField("Boolean", "TASKS_ENABLED", "false")
+            buildConfigField("Boolean", "FILES_ENABLED", "false")
+        }
+        create("tasksOnly") {
+            dimension = "features"
+            buildConfigField("Boolean", "CHAT_ENABLED", "false")
+            buildConfigField("Boolean", "TASKS_ENABLED", "true")
+            buildConfigField("Boolean", "FILES_ENABLED", "false")
+        }
+        create("filesOnly") {
+            dimension = "features"
+            buildConfigField("Boolean", "CHAT_ENABLED", "false")
+            buildConfigField("Boolean", "TASKS_ENABLED", "false")
+            buildConfigField("Boolean", "FILES_ENABLED", "true")
+        }
+        create("chatAndTasks") {
+            dimension = "features"
+            buildConfigField("Boolean", "CHAT_ENABLED", "true")
+            buildConfigField("Boolean", "TASKS_ENABLED", "true")
+            buildConfigField("Boolean", "FILES_ENABLED", "false")
+        }
+        create("chatAndFiles") {
+            dimension = "features"
+            buildConfigField("Boolean", "CHAT_ENABLED", "true")
+            buildConfigField("Boolean", "TASKS_ENABLED", "false")
+            buildConfigField("Boolean", "FILES_ENABLED", "true")
+        }
+        create("tasksAndFiles") {
+            dimension = "features"
+            buildConfigField("Boolean", "CHAT_ENABLED", "false")
+            buildConfigField("Boolean", "TASKS_ENABLED", "true")
+            buildConfigField("Boolean", "FILES_ENABLED", "true")
+        }
+        create("allFeatures") {
+            dimension = "features"
+            buildConfigField("Boolean", "CHAT_ENABLED", "true")
+            buildConfigField("Boolean", "TASKS_ENABLED", "true")
+            buildConfigField("Boolean", "FILES_ENABLED", "true")
+        }
+
+        val allFlavors = listOf(
+            "chatOnly" to listOf(true, false, false),
+            "tasksOnly" to listOf(false, true, false),
+            "filesOnly" to listOf(false, false, true),
+            "chatAndTasks" to listOf(true, true, false),
+            "chatAndFiles" to listOf(true, false, true),
+            "tasksAndFiles" to listOf(false, true, true),
+            "allFeatures" to listOf(true, true, true)
+        )
+
+        allFlavors.forEach { (name, flags) ->
+            val enabledCount = flags.count { it }
+            if (enabledCount == 0) {
+                throw GradleException("At least one feature must be enabled.")
+            }
+        }
+
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -100,12 +175,14 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 }
 
 room {

@@ -16,6 +16,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.github.familyvault.models.ICompilationFlags
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.filesCabinet.DocumentUploadActionButton
@@ -33,6 +34,16 @@ import org.koin.compose.koinInject
 class MainScreen : Screen {
     @Composable
     override fun Content() {
+
+        val compilationFlags = koinInject<ICompilationFlags>()
+
+        val tabs = listOfNotNull(
+            if (compilationFlags.chatEnabled) ChatTab else null,
+            if (compilationFlags.tasksEnabled) TaskTab else null,
+            if (compilationFlags.filesEnabled) FilesCabinetTab else null
+        )
+
+
         TabNavigator(ChatTab) {
             // Workaround błędu w Jetpack Compose powodujący to, że ekran nie dostostoswuje się
             // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
@@ -41,7 +52,7 @@ class MainScreen : Screen {
                 Scaffold(
                     bottomBar = {
                         NavigationBar(
-                            ChatTab, TaskTab, FilesCabinetTab
+                            *tabs.toTypedArray()
                         )
                     },
                     floatingActionButton = {
