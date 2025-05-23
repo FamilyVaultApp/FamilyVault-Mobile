@@ -148,23 +148,6 @@ android {
             buildConfigField("Boolean", "FILES_ENABLED", "true")
         }
 
-        val allFlavors = listOf(
-            "chatOnly" to listOf(true, false, false),
-            "tasksOnly" to listOf(false, true, false),
-            "filesOnly" to listOf(false, false, true),
-            "chatAndTasks" to listOf(true, true, false),
-            "chatAndFiles" to listOf(true, false, true),
-            "tasksAndFiles" to listOf(false, true, true),
-            "allFeatures" to listOf(true, true, true)
-        )
-
-        allFlavors.forEach { (name, flags) ->
-            val enabledCount = flags.count { it }
-            if (enabledCount == 0) {
-                throw GradleException("At least one feature must be enabled.")
-            }
-        }
-
     }
 
     packaging {
