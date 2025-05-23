@@ -11,12 +11,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
+import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.listeners.ITaskListenerService
-import com.github.familyvault.services.listeners.ITaskListListenerService
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.components.HorizontalScrollableRow
 import com.github.familyvault.ui.components.tasks.TaskGroupCompleted
@@ -30,9 +35,10 @@ import org.koin.compose.koinInject
 @Composable
 fun TaskListContent() {
     val localNavigator = LocalNavigator.currentOrThrow
+    val familyGroupService = koinInject<IFamilyGroupService>()
     val taskListState = koinInject<ITaskListState>()
     val taskListenerService = koinInject<ITaskListenerService>()
-
+    var currentUserPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest)}
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
@@ -47,6 +53,7 @@ fun TaskListContent() {
                 taskListState.updateTask(it)
             }
         }
+        currentUserPermissionGroup = familyGroupService.retrieveMyFamilyMemberData().permissionGroup
     }
 
     LaunchedEffect(taskListState.taskLists) {
@@ -79,8 +86,10 @@ fun TaskListContent() {
                     }
                 }
             }
-            TaskNewListButton {
-                localNavigator.parent?.push(TaskNewListScreen())
+            if (currentUserPermissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
+                TaskNewListButton {
+                    localNavigator.parent?.push(TaskNewListScreen())
+                }
             }
         }
 
