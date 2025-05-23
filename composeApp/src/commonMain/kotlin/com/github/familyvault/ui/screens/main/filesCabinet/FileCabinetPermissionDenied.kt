@@ -44,5 +44,4 @@ fun FileCabinetPermissionDenied() {
             )
         }
     }
-    return
 }
