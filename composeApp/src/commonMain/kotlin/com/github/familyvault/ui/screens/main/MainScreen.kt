@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -64,15 +63,9 @@ class MainScreen : Screen {
                 AppTheme {
                     Scaffold(
                         bottomBar = {
-                            if (currentUserPermissionGroup == FamilyGroupMemberPermissionGroup.Guest) {
-                                NavigationBar(
-                                    ChatTab, TaskTab
-                                )
-                            } else {
                                 NavigationBar(
                                     ChatTab, TaskTab, FilesCabinetTab
                                 )
-                            }
                         },
                         floatingActionButton = {
                             FloatingCurrentTabActionButton(currentUserPermissionGroup)
@@ -95,7 +88,6 @@ class MainScreen : Screen {
         if (permissionGroup == FamilyGroupMemberPermissionGroup.Guest)
         {
             when (tabNavigator.current) {
-                is FilesCabinetTab -> FloatingFileCabinetActionButton()
                 is TaskTab -> FloatingTaskActionButton()
             }
         } else {

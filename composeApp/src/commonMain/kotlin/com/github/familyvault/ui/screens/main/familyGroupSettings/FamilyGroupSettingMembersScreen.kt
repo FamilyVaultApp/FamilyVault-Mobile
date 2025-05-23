@@ -64,12 +64,13 @@ class FamilyGroupSettingMembersScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupMembers = remember { mutableStateListOf<FamilyMember>() }
-
+        var currentFamilyGroupMemberPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest)}
         var isLoadingMembers by remember { mutableStateOf(true) }
 
         LaunchedEffect(Unit) {
             isLoadingMembers = true
             familyGroupMembers.addAll(familyGroupService.retrieveFamilyGroupMembersList())
+            currentFamilyGroupMemberPermissionGroup = familyGroupService.retrieveMyFamilyMemberData().permissionGroup
             isLoadingMembers = false
         }
 
@@ -117,20 +118,21 @@ class FamilyGroupSettingMembersScreen : Screen {
                     }
                 },
                 actionButton = {
-                    AddFamilyMemberButton()
+                    AddFamilyMemberButton(currentFamilyGroupMemberPermissionGroup)
                 }
             )
         }
     }
 
     @Composable
-    private fun AddFamilyMemberButton() {
+    private fun AddFamilyMemberButton(currentUserPermissionGroup: FamilyGroupMemberPermissionGroup) {
         val navigator = LocalNavigator.currentOrThrow
 
         Button(
             text = stringResource(Res.string.family_group_add_new_member),
             icon = Icons.Filled.Add,
             modifier = Modifier.fillMaxWidth(),
+            enabled = currentUserPermissionGroup == FamilyGroupMemberPermissionGroup.Guardian,
             onClick = {
                 navigator.push(AddMemberToFamilyGroupScreen())
             })

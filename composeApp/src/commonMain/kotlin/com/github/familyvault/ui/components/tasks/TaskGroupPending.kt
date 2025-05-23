@@ -17,7 +17,11 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-fun TaskGroupPending(categoryTitle: String, tasks: List<Task>, onEditClick: () -> Unit, permissionGroup: FamilyGroupMemberPermissionGroup = FamilyGroupMemberPermissionGroup.Guest) {
+fun TaskGroupPending(
+    categoryTitle: String,
+    tasks: List<Task>, onEditClick: () -> Unit,
+    permissionGroup: FamilyGroupMemberPermissionGroup = FamilyGroupMemberPermissionGroup.Guest
+) {
     val localNavigator = LocalNavigator.currentOrThrow
     val taskListState = koinInject<ITaskListState>()
 
