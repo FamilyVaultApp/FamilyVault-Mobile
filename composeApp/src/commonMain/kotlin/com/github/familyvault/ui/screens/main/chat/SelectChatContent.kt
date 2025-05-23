@@ -41,7 +41,6 @@ fun SelectChatContent() {
     val chatThreadListenerService = koinInject<IChatThreadListenerService>()
     val chatMessagesListenerService = koinInject<IChatMessagesListenerService>()
     val currentChatThreadsState = koinInject<ICurrentChatThreadsState>()
-    val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
 
     var isLoading by remember { mutableStateOf(true) }
 
