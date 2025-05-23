@@ -42,6 +42,10 @@ fun TaskListContent() {
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
+    LaunchedEffect(Unit) {
+        currentUserPermissionGroup = familyGroupService.retrieveMyFamilyMemberData().permissionGroup
+    }
+
     LaunchedEffect(taskListState.selectedTaskList) {
 
         taskListState.selectedTaskList?.let { selected ->
@@ -107,7 +111,8 @@ fun TaskListContent() {
                     tasks = taskListState.tasks.filter { !it.content.completed },
                     onEditClick = {
                         localNavigator.parent?.push(TaskListEditScreen(taskList))
-                    }
+                    },
+                    permissionGroup = currentUserPermissionGroup
                 )
                 TaskGroupCompleted(
                     tasks = taskListState.tasks.filter { it.content.completed }

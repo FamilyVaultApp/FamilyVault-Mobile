@@ -6,6 +6,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.file_cabinet_documents
 import familyvault.composeapp.generated.resources.file_cabinet_photos
@@ -14,7 +15,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun FilesCabinetContent(
     selectedTabIndex: Int = 0,
-    onTabIndexChanged: (Int) -> Unit = {}
+    onTabIndexChanged: (Int) -> Unit = {},
+    currentUserPermissionGroup: FamilyGroupMemberPermissionGroup
 ) {
     val tabTitles = listOf(
         stringResource(Res.string.file_cabinet_photos),
@@ -36,14 +38,21 @@ fun FilesCabinetContent(
                 )
             }
         }
-
         when (selectedTabIndex) {
             0 -> {
-                PhotosTabContent()
+                if (currentUserPermissionGroup == FamilyGroupMemberPermissionGroup.Guest) {
+                    FileCabinetPermissionDenied()
+                } else {
+                    PhotosTabContent()
+                }
             }
 
             1 -> {
-                DocumentsTabContent()
+                if (currentUserPermissionGroup == FamilyGroupMemberPermissionGroup.Guest) {
+                    FileCabinetPermissionDenied()
+                } else {
+                    DocumentsTabContent()
+                }
             }
         }
     }

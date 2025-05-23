@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.tasks.Task
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.ui.screens.main.tasks.task.TaskEditScreen
@@ -16,7 +17,11 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
-fun TaskGroupPending(categoryTitle: String, tasks: List<Task>, onEditClick: () -> Unit) {
+fun TaskGroupPending(
+    categoryTitle: String,
+    tasks: List<Task>, onEditClick: () -> Unit,
+    permissionGroup: FamilyGroupMemberPermissionGroup = FamilyGroupMemberPermissionGroup.Guest
+) {
     val localNavigator = LocalNavigator.currentOrThrow
     val taskListState = koinInject<ITaskListState>()
 
@@ -48,9 +53,11 @@ fun TaskGroupPending(categoryTitle: String, tasks: List<Task>, onEditClick: () -
             }
         },
         actionButton = {
-            TaskGroupConfigurationButton(
-                onClick = onEditClick
-            )
+            if (permissionGroup == FamilyGroupMemberPermissionGroup.Guardian) {
+                TaskGroupConfigurationButton(
+                    onClick = onEditClick
+                )
+            }
         }
     )
 
