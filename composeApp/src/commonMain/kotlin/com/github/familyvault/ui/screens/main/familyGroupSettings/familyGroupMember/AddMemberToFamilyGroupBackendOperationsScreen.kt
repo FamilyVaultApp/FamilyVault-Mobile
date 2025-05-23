@@ -1,8 +1,10 @@
 package com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -48,7 +50,9 @@ class AddMemberToFamilyGroupBackendOperationsScreen(private val payload: AddFami
         }
 
         StartScreenScaffold {
-            LoaderWithText(stringResource(Res.string.loading))
+            LoaderWithText(
+                stringResource(Res.string.loading), modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
