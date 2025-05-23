@@ -41,7 +41,6 @@ fun FamilyGroupEntry(
     isCurrentFamilyGroup: Boolean,
     onSelect: () -> Unit,
     onSetDefault: () -> Unit,
-    username: String? = null
 ) {
     val familyGroupInfo = listOfNotNull(
         if (isCurrentFamilyGroup) stringResource(Res.string.is_actual) else null,
@@ -84,14 +83,16 @@ fun FamilyGroupEntry(
             )
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Paragraph(text = familyGroup.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    username?.let {
-                        ParagraphMuted(
-                            text = stringResource(Res.string.as_with_spaces) + username,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                    Paragraph(
+                        text = familyGroup.name,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    ParagraphMuted(
+                        text = stringResource(Res.string.as_with_spaces) + familyGroup.firstname,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
 
                 if (familyGroupInfo.isNotEmpty()) {

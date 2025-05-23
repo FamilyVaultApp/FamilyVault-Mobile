@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.ui.components.SettingsCategory
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.settings.SettingItem
+import com.github.familyvault.ui.screens.main.ChangeFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMember.AddMemberToFamilyGroupScreen
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme

@@ -37,7 +37,7 @@ import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.Paragraph
-import com.github.familyvault.ui.screens.main.familyGroupSettings.ChangeFamilyGroupScreen
+import com.github.familyvault.ui.screens.main.ChangeFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res

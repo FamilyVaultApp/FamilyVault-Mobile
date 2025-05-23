@@ -1,4 +1,4 @@
-package com.github.familyvault.ui.screens.main.familyGroupSettings
+package com.github.familyvault.ui.screens.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +28,6 @@ import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDia
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
 import com.github.familyvault.ui.components.settings.DescriptionSection
-import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -41,14 +40,14 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 class ChangeFamilyGroupScreen : Screen {
-    private val familyGroups = mutableStateListOf<FamilyGroup>()
-    
+
     @Composable
     override fun Content() {
         val savedFamilyGroupsService = koinInject<ISavedFamilyGroupsService>()
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val navigator = LocalNavigator.currentOrThrow
 
+        val familyGroups = mutableStateListOf<FamilyGroup>()
         var isLoading by mutableStateOf(false)
         var isChangingFamilyGroup by mutableStateOf(false)
         val currentContextId =
@@ -82,7 +81,7 @@ class ChangeFamilyGroupScreen : Screen {
                         description = stringResource(Res.string.select_family_group_description),
                         modifier = Modifier.padding(horizontal = AdditionalTheme.spacings.screenPadding)
                     )
-                    
+
                     if (isLoading) {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -97,8 +96,8 @@ class ChangeFamilyGroupScreen : Screen {
                                 val isCurrentFamilyGroup = it.contextId == currentContextId
 
                                 FamilyGroupEntry(
-                                    it, 
-                                    isCurrentFamilyGroup, 
+                                    it,
+                                    isCurrentFamilyGroup,
                                     onSelect = {
                                         if (isCurrentFamilyGroup) {
                                             return@FamilyGroupEntry
@@ -132,7 +131,6 @@ class ChangeFamilyGroupScreen : Screen {
                                             isLoading = false
                                         }
                                     },
-                                    username = it.firstname
                                 )
                             }
                         }
