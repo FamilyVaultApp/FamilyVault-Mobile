@@ -85,7 +85,7 @@
     <string name="settings_category_management">Management</string>
 
     <string name="setting_change_name_title">Change name</string>
-    <string name="setting_change_name_description_short">Change the name of the current family group</string>
+    <string name="setting_change_name_description_short">Rename the current family group</string>
     <string name="setting_change_name_description_long">Use the form to give your family group a new name. Keep in mind that the change might not be visible to all users immediately.</string>
 
     <string name="setting_members_title">Members</string>
@@ -102,23 +102,23 @@
     <string name="setting_join_or_create_family_group_short">Go to the screen for joining or creating a new family group</string>
 
     <string name="family_group_members">Family group members</string>
-    <string name="family_group_add_new_member">Add new member</string>
-    <string name="family_group_delete_member">Remove member</string>
+    <string name="family_group_add_new_member">Add a new member</string>
+    <string name="family_group_delete_member">Remove a member</string>
     <string name="setting_no_permission">You don't have permission to do that.</string>
 
     <!-- Add member to family group-->
-    <string name="add_member_to_family_group_header">Add new member</string>
+    <string name="add_member_to_family_group_header">Add a new member</string>
     <string name="add_member_to_family_group_content">Tap your phone to new member's phone to add them to family group.</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>
-    <string name="qr_code_generation_screen_content">Have your family group guardian scan this code to let you join.</string>
+    <string name="qr_code_generation_screen_content">Have the guardian of the family group you want to join scan this code to add you to it.</string>
     <string name="invalid_qr_code_label">Invalid QR code</string>
     <string name="qr_code_scanner_not_installed">QR code scanner is still installing. Please try again shortly.</string>
 
     <!-- Chat -->
-    <string name="chat_top_bar_greeting">Hi, %1$s!</string>
-    <string name="chat_create_new">Create new chat</string>
+    <string name="chat_top_bar_greeting">Hello, %1$s!</string>
+    <string name="chat_create_new">Create a new chat</string>
     <string name="chat_set_group_name">Group chat name</string>
     <string name="chat_settings">Chat settings</string>
     <string name="chat_create_group_default_name">Family group</string>
@@ -127,12 +127,12 @@
     <string name="chat_icon_icon_picker">Icon</string>
     <string name="chat_create_group_button_content">Create group chat</string>
     <string name="chat_save_edited_group_button_content">Save changes</string>
-    <string name="chat_create_group_user_is_member">Currently a member</string>
-    <string name="chat_create_group_user_is_not_member">Currently not a member</string>
+    <string name="chat_create_group_user_is_member">Currently a chat member</string>
+    <string name="chat_create_group_user_is_not_member">Currently not a chat member</string>
     <string name="chat_send_message">Send message</string>
-    <string name="chat_type_individual">Individual</string>
-    <string name="chat_type_group">Groups</string>
-    <string name="chat_recording_icon">Record voice message</string>
+    <string name="chat_type_personal">Personal</string>
+    <string name="chat_type_group">Group</string>
+    <string name="chat_recording_icon">Record a voice message</string>
     <string name="chat_attach_photo">Attach photo</string>
     <string name="chat_creating">Creating chat...</string>
     <string name="chat_message_type_audio">Voice message</string>
@@ -146,7 +146,7 @@
     <string name="chat_media_full_screen">Full screen</string>
     <string name="chat_remove_multimedia_description">Remove multimedia</string>
     <string name="chat_image_preview">Image preview</string>
-    <string name="chat_user_not_in_group">You have been removed from this group chat</string>
+    <string name="chat_user_not_in_group">You have been removed from this chat room.</string>
     <string name="chat_private_notes">Private notes</string>
 
     <!-- Remove users -->

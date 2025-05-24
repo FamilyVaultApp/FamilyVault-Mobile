@@ -26,7 +26,7 @@ import com.github.familyvault.ui.components.ParagraphStickyHeader
 import com.github.familyvault.ui.components.chat.ChatThreadEntry
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_type_group
-import familyvault.composeapp.generated.resources.chat_type_individual
+import familyvault.composeapp.generated.resources.chat_type_personal
 import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -91,7 +91,7 @@ fun SelectChatContent() {
     LazyColumn {
         stickyHeader {
             ParagraphStickyHeader(
-                stringResource(Res.string.chat_type_individual)
+                stringResource(Res.string.chat_type_personal)
             )
         }
 
