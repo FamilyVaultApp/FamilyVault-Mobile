@@ -5,7 +5,14 @@ import com.github.familyvault.models.FamilyGroup
 
 interface ISavedFamilyGroupsService {
     suspend fun getAllSavedFamilyGroups(): List<FamilyGroup>
-    suspend fun getSavedFamilyGroupCredentialByContextId(contextId: String): FamilyGroupCredential
-    suspend fun changeDefaultFamilyGroupCredential(contextId: String)
-    suspend fun changeFamilyGroupName(contextId: String, familyName: String)
+    suspend fun getSavedFamilyGroupCredential(
+        contextId: String,
+        memberPublicKey: String
+    ): FamilyGroupCredential
+
+    suspend fun changeDefaultFamilyGroupCredential(contextId: String, memberPublicKey: String)
+    suspend fun changeFamilyGroupName(
+        contextId: String,
+        familyName: String
+    )
 }

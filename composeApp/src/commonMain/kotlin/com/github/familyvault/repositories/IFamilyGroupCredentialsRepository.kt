@@ -14,15 +14,20 @@ interface IFamilyGroupCredentialsRepository {
         lastname: String
     )
 
-    suspend fun setDefaultCredentialByContextId(contextId: String)
+    suspend fun setDefaultCredential(contextId: String, memberPublicKey: String)
 
     suspend fun getDefaultCredential(): FamilyGroupCredential?
 
-    suspend fun updateCredentialFamilyGroupName(contextId: String, name: String)
+    suspend fun updateCredentialFamilyGroupName(
+        contextId: String, name: String
+    )
 
-    suspend fun deleteCredential(contextId: String)
+    suspend fun deleteCredential(contextId: String, memberPublicKey: String)
 
     suspend fun getAllCredentials(): List<FamilyGroupCredential>
 
-    suspend fun getCredentialByContextId(contextId: String): FamilyGroupCredential
+    suspend fun getCredential(
+        contextId: String,
+        memberPublicKey: String,
+    ): FamilyGroupCredential
 }

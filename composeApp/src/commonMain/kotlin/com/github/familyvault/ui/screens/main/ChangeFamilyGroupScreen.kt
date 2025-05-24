@@ -52,6 +52,8 @@ class ChangeFamilyGroupScreen : Screen {
         var isChangingFamilyGroup by mutableStateOf(false)
         val currentContextId =
             familyGroupSessionService.takeIf { it.isSessionAssigned() }?.getContextId()
+        val currentMemberPublicKey =
+            familyGroupSessionService.takeIf { it.isSessionAssigned() }?.getPublicKey()
         val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(Unit) {
@@ -93,7 +95,8 @@ class ChangeFamilyGroupScreen : Screen {
                     } else {
                         Column {
                             familyGroups.map {
-                                val isCurrentFamilyGroup = it.contextId == currentContextId
+                                val isCurrentFamilyGroup =
+                                it.contextId == currentContextId && it.memberPublicKey == currentMemberPublicKey
 
                                 FamilyGroupEntry(
                                     it,
@@ -107,8 +110,9 @@ class ChangeFamilyGroupScreen : Screen {
                                             isChangingFamilyGroup = true
                                             familyGroupSessionService.disconnect()
                                             familyGroupSessionService.assignSession(
-                                                familyGroupCredential = savedFamilyGroupsService.getSavedFamilyGroupCredentialByContextId(
-                                                    it.contextId
+                                                familyGroupCredential = savedFamilyGroupsService.getSavedFamilyGroupCredential(
+                                                    it.contextId,
+                                                    it.memberPublicKey
                                                 )
                                             )
                                             familyGroupSessionService.connect()
@@ -124,7 +128,7 @@ class ChangeFamilyGroupScreen : Screen {
                                         coroutineScope.launch {
                                             isLoading = true
                                             savedFamilyGroupsService.changeDefaultFamilyGroupCredential(
-                                                it.contextId
+                                                it.contextId, it.memberPublicKey
                                             )
                                             familyGroups.clear()
                                             familyGroups.addAll(savedFamilyGroupsService.getAllSavedFamilyGroups())
