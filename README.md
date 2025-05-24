@@ -1,5 +1,5 @@
 
-<img width="148" alt="app-icon" src="https://github.com/user-attachments/assets/8a79bd3a-0461-4a84-9573-43490ab8443d" />
+<img alt="app-banner" src="https://github.com/user-attachments/assets/f0c6ab6e-3062-46b8-8812-95202a01ebfe" />
 
 # FamilyVault
 
