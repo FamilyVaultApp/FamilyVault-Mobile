@@ -15,7 +15,7 @@ interface IFamilyGroupService {
 
     suspend fun joinFamilyGroupAndAssign(
         firstname: String,
-        surname: String,
+        surname: String?,
         encryptedPassword: String,
         keyPair: PublicEncryptedPrivateKeyPair,
         contextId: String

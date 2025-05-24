@@ -33,7 +33,7 @@ object ChatTab : Tab {
         var currentUserName by remember { mutableStateOf<String?>(null) }
 
         LaunchedEffect(Unit) {
-            currentUserName = familyGroupSessionService.getCurrentUser().fullname
+            currentUserName = familyGroupSessionService.getCurrentUser().firstname
         }
         Column {
             TopAppBar(

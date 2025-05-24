@@ -13,7 +13,7 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         keyPairs: PublicEncryptedPrivateKeyPair,
         encryptedPrivateKeyPassword: String,
         firstname: String,
-        lastname: String
+        lastname: String?
     ) {
         val credentialDao = appDatabase.credentialDao()
         credentialDao.insertDefaultCredentialAndUnsetOthers(

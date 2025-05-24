@@ -75,7 +75,7 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                         try {
                             familyGroupService.createFamilyGroupAndAssign(
                                 familyGroupDraft.firstname.value,
-                                familyGroupDraft.surname.value,
+                                familyGroupDraft.surname.value.ifEmpty { "" },
                                 form.password,
                                 familyGroupNameDraft.familyGroupName.value,
                                 "Description"

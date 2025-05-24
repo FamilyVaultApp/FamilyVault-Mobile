@@ -25,6 +25,16 @@ class FormValidator {
             return null
         }
 
+        fun validateOptionalTooLong(
+            value: String,
+            maxLength: Int = FormValidatorConfig.DEFAULT_MAX_LENGTH
+        ): FormValidatorError? {
+            if (value.isNotEmpty() && value.length > maxLength) {
+                return FormValidatorError.TOO_LONG
+            }
+            return null
+        }
+
         fun validateEmpty(value: String): FormValidatorError? {
             if (value.isEmpty()) {
                 return FormValidatorError.IS_EMPTY
