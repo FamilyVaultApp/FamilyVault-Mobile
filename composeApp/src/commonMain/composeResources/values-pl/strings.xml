@@ -150,7 +150,7 @@
     <string name="chat_private_notes">Prywatne notatki</string>
 
     <!-- Remove users -->
-    <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego użytkownika?</string>
+    <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego członka?</string>
 
     <!-- Connection error screen -->
     <string name="connection_error_title">Błąd połączenia</string>
@@ -167,7 +167,7 @@
     <string name="user_permission_group_member">Członek</string>
     <string name="user_permission_group_guest">Gość</string>
     <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
-    <string name="user_modification_remove_user_button_content">Usuń tego użytkownika</string>
+    <string name="user_modification_remove_user_button_content">Usuń tego członka</string>
     <string name="user_modification_save_button">Zapisz zmiany</string>
     <string name="user_modification_no_permission">Tylko opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
     <string name="user_modification_last_guardian_error">Jesteś ostatnim Opiekunem w grupie. W grupie musi pozostać co najmniej jeden Opiekun.</string>
@@ -182,8 +182,8 @@
     <!-- Tasks -->
     <string name="task_add_new_list_short">Dodaj nową</string>
     <string name="task_add_new_list">Nowa lista zadań</string>
-    <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania w rodzinie i przypisywać obowiązki.</string>
-    <string name="task_edit_list_description">Na tym ekranie możesz edytować listę zadań, aby lepiej organizować obowiązki w rodzinie.</string>
+    <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania i przypisywać obowiązki.</string>
+    <string name="task_edit_list_description">Na tym ekranie możesz edytować listę zadań, aby lepiej organizować obowiązki.</string>
     <string name="task_settings">Konfiguruj</string>
     <string name="task_completed">Ukończone</string>
     <string name="task_assign">Przydziel zadanie</string>
@@ -202,8 +202,8 @@
     <string name="file_cabinet_photo_card">Karta zdjęcia</string>
     <string name="file_cabinet_sending_files">Przesyłanie plików...</string>
     <string name="file_cabinet_no_images">Nie znaleziono zdjęć. Prześlij zdjęcia używając przycisku poniżej.</string>
-    <string name="file_cabinet_retry">Ponów</string>
-    <string name="file_cabinet_no_documents">Nie znaleziono dokumentów. Prześlij dokumenty używając przycisku poniżej.</string>
+    <string name="file_cabinet_retry">Ponów próbę</string>
+    <string name="file_cabinet_no_documents">Nie ma jeszcze żadnych dokumentów. Prześlij dokumenty używając przycisku poniżej.</string>
     <string name="file_cabinet_download_pdf_title">Pobierz PDF</string>
     <string name="file_cabinet_download_pdf_message">Czy chcesz pobrać ten plik PDF na swoje urządzenie?</string>
     <string name="file_cabinet_download">Pobierz</string>
@@ -211,6 +211,6 @@
     <string name="file_cabinet_initializing_documents">Inicjalizacja przechowywania dokumentów...</string>
     <string name="file_cabinet_error_initialize">Nie można zainicjować przechowywania dokumentów</string>
     <string name="file_cabinet_error_loading">Błąd podczas ładowania dokumentów</string>
-    <string name="file_cabinet_permission_denied">Nie masz dostępu do Szuflady jako gość</string>
+    <string name="file_cabinet_permission_denied">Nie masz dostępu do Szuflady jako Gość.</string>
     <string name="file_cabinet_permission_denied_header">Brak dostępu</string>
 </resources>
