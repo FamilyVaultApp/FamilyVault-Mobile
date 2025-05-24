@@ -5,7 +5,7 @@
     <string name="loading">Ładowanie...</string>
     <string name="saving">Zapisywanie...</string>
     <string name="you">Ty</string>
-    <string name="is_actual">Aktualna</string>
+    <string name="is_current">Aktualna</string>
     <string name="is_default">Domyślna</string>
     <string name="collapse">Zwiń</string>
     <string name="expand">Rozwiń</string>
