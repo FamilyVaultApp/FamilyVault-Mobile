@@ -54,7 +54,7 @@
 
     <!-- Joining family group-->
     <string name="join_family_group_title">Join the family group</string>
-    <string name="join_family_group_content">Tap your phone to your parent's phone to join the family group.</string>
+    <string name="join_family_group_content">Tap your phone to your guardian's phone to join the family group.</string>
     <string name="preparing_to_join_family_group_label">Preparing to join family group</string>
 
     <!-- Form validation errors-->
@@ -112,7 +112,7 @@
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>
-    <string name="qr_code_generation_screen_content">Have the guardian of the family group you want to join scan this code to add you to it.</string>
+    <string name="qr_code_generation_screen_content">Let the guardian of the family group you want to join scan this code to add you to it.</string>
     <string name="invalid_qr_code_label">Invalid QR code</string>
     <string name="qr_code_scanner_not_installed">QR code scanner is still installing. Please try again shortly.</string>
 
@@ -174,7 +174,7 @@
 
     <!-- Select family group -->
     <string name="select_family_group_description">Select a family group to join, or create a new one using the button at the bottom of the screen.</string>
-    <string name="select_family_group_join_or_create_button">Join or create a family group</string>
+    <string name="select_family_group_join_or_create_button">Join or create a new family group</string>
     <string name="select_family_group_changing">Changing the family group...</string>
     <string name="family_group_default">Default family group</string>
     <string name="family_group_no_default">Not the default family group</string>
@@ -182,14 +182,14 @@
     <!-- Tasks -->
     <string name="task_add_new_list_short">Add a new</string>
     <string name="task_add_new_list">New task list</string>
-    <string name="task_add_new_list_description">Here you can create a new list to better organize tasks and assign responsibilities.</string>
-    <string name="task_edit_list_description">On this screen, you can edit a task list to better organize responsibilities.</string>
+    <string name="task_add_new_list_description">On this screen you can create a new list to better organize tasks and assign responsibilities.</string>
+    <string name="task_edit_list_description">On this screen, you can edit the task list to better organize responsibilities.</string>
     <string name="task_settings">Configure</string>
     <string name="task_completed">Completed</string>
     <string name="task_assign">Assign a task</string>
     <string name="no_task_list_title">No task list</string>
     <string name="no_task_list_description">Create your first task list by clicking the button below.</string>
-    <string name="no_task_list_description_without_permission">A new task list can only be created by the family guardian.</string>
+    <string name="no_task_list_description_without_permission">Only the family guardian can create a new task list.</string>
     <string name="task_list_creating">Creating a new task list...</string>
     <string name="task_new">New task</string>
     <string name="task_new_description">Create a new task with a description that you can assign to a selected member of your family group.</string>

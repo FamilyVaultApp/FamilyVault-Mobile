@@ -32,7 +32,7 @@
 
     <!-- Connection modes -->
     <string name="connection_modes_title">Tryby połączenia</string>
-    <string name="connection_modes_content">Ta aplikacja udostępnia dwa tryby połączenia. Kliknij w to powiadomienie, aby dowiedzieć się więcej o konfiguracji PrivMX Bridge.</string>
+    <string name="connection_modes_content">Ta aplikacja udostępnia dwa tryby połączenia. Dotknij w to powiadomienie, aby dowiedzieć się więcej o konfiguracji PrivMX Bridge.</string>
 
     <string name="cloud_connection_mode_title">Chmura</string>
     <string name="cloud_connection_mode_content">Wykorzystaj nasze rozwiązanie chmurowe. Nie wymaga żadnej konfiguracji.</string>
@@ -54,7 +54,7 @@
 
     <!-- Joining family group-->
     <string name="join_family_group_title">Dołącz do grupy rodzinnej</string>
-    <string name="join_family_group_content">Zetknij swój telefon z telefonem rodzica, aby dołączyć do grupy rodzinnej.</string>
+    <string name="join_family_group_content">Przyłóż swój telefon do telefonu opiekuna, aby dołączyć do grupy rodzinnej.</string>
     <string name="preparing_to_join_family_group_label">Przygotowanie do dołączenia do grupy rodzinnej</string>
 
     <!-- Form validation errors-->
@@ -108,11 +108,11 @@
 
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Dodaj nowego członka</string>
-    <string name="add_member_to_family_group_content">Zetknij swój telefon z telefonem nowego członka, aby dodać go do grupy rodzinnej.</string>
+    <string name="add_member_to_family_group_content">Przyłóż swój telefon do telefonu nowego członka, aby dodać go do grupy rodzinnej.</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera QR</string>
-    <string name="qr_code_generation_screen_content">Niech opiekun grupy rodzinnej, do której chcsz dołączyć zeskanuje ten kod, aby Cię do niej dodać.</string>
+    <string name="qr_code_generation_screen_content">Niech opiekun grupy rodzinnej, do której chcesz dołączyć zeskanuje ten kod, aby Cię do niej dodać.</string>
     <string name="invalid_qr_code_label">Nieprawidłowy kod QR</string>
     <string name="qr_code_scanner_not_installed">Skaner kodów QR nadal się instaluje. Spróbuj ponownie za chwilę.</string>
 
@@ -158,7 +158,7 @@
     <string name="connection_error_button_content">Ponów połączenie</string>
 
     <string name="user_not_found_title">Nie znaleziono użytkownika</string>
-    <string name="user_not_found_content">Nie udało się znaleźć Ciebie w tej grupie rodzinnej. Możliwe, że Twoje konto zostało z niej usunięte. Możesz usunąć dane tej grupy rodzinnej z urządzenia, korzystając z poniższego przycisku.</string>
+    <string name="user_not_found_content">Nie znaleziono Cię w tej grupie rodzinnej. Możliwe, że Twoje konto zostało z niej usunięte. Możesz usunąć dane tej grupy rodzinnej z urządzenia, korzystając z poniższego przycisku.</string>
     <string name="user_not_found_button_content">Usuń dane grupy rodzinnej</string>
 
     <!-- User modification -->
@@ -174,7 +174,7 @@
 
     <!-- Select family group -->
     <string name="select_family_group_description">Wybierz grupę rodzinną, do której chcesz dołączyć. Możesz też utworzyć nową, korzystając z przycisku na dole ekranu.</string>
-    <string name="select_family_group_join_or_create_button">Dołącz lub utwórz grupę rodzinną</string>
+    <string name="select_family_group_join_or_create_button">Dołącz lub utwórz nową grupę rodzinną</string>
     <string name="select_family_group_changing">Trwa zmiana grupy rodzinnej...</string>
     <string name="family_group_default">Domyślna grupa rodzinna</string>
     <string name="family_group_no_default">Niedomyślna grupa rodzinna</string>
