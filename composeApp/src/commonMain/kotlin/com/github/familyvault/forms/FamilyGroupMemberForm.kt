@@ -41,15 +41,12 @@ class FamilyGroupMemberForm : BaseForm() {
             FormValidator.validateTooLong(firstname, maxLength = 25),
         )
 
-        formData.surname.validationError = FormValidator.multipleValidators(
-            FormValidator.validateEmpty(surname),
-            FormValidator.validateTooLong(surname, maxLength = 25),
-        )
+        formData.surname.validationError = FormValidator.validateOptionalTooLong(surname, maxLength = 25)
     }
 
     override fun isFormValid(): Boolean {
         return formData.firstname.isValid() &&
-                formData.surname.isValid()
+                (formData.surname.isValid() || (!formData.surname.touched && formData.surname.validationError == null))
     }
 }
 
