@@ -17,13 +17,16 @@ interface FamilyGroupCredentialDao {
     @Query("SELECT * FROM FamilyGroupCredential WHERE isDefault = 1 LIMIT 1")
     suspend fun getDefault(): FamilyGroupCredential?
 
-    @Query("SELECT * FROM FamilyGroupCredential WHERE contextId = :contextId")
-    suspend fun getByContextId(contextId: String): FamilyGroupCredential?
+    @Query("SELECT * FROM FamilyGroupCredential WHERE contextId = :contextId AND publicKey = :memberPublicKey")
+    suspend fun getByContextIdAndMemberPublicKey(
+        contextId: String,
+        memberPublicKey: String
+    ): FamilyGroupCredential?
 
     @Transaction
-    suspend fun setCredentialAsDefaultByContextIdAndUnsetOthers(contextId: String) {
+    suspend fun setCredentialAsDefaultAndUnsetOthers(contextId: String, memberPublicKey: String) {
         unsetDefaultForAllCredentials()
-        setCredentialAsDefaultByContextID(contextId)
+        setCredentialAsDefault(contextId, memberPublicKey)
     }
 
     @Transaction
@@ -36,15 +39,18 @@ interface FamilyGroupCredentialDao {
     @Query("UPDATE FamilyGroupCredential SET isDefault = 0")
     suspend fun unsetDefaultForAllCredentials()
 
-    @Query("UPDATE FamilyGroupCredential SET isDefault = 1 WHERE contextId = :contextId")
-    suspend fun setCredentialAsDefaultByContextID(contextId: String)
+    @Query("UPDATE FamilyGroupCredential SET isDefault = 1 WHERE contextId = :contextId AND publicKey = :memberPublicKey")
+    suspend fun setCredentialAsDefault(contextId: String, memberPublicKey: String)
 
     @Upsert
     suspend fun upsert(data: FamilyGroupCredential)
 
     @Query("UPDATE FamilyGroupCredential SET familyGroupName = :familyGroupName WHERE contextId = :contextId")
-    suspend fun updateCredentialFamilyGroupName(contextId: String, familyGroupName: String)
+    suspend fun updateCredentialFamilyGroupName(
+        contextId: String,
+        familyGroupName: String
+    )
 
-    @Query("DELETE FROM FamilyGroupCredential WHERE contextId = :contextId")
-    suspend fun deleteCredential(contextId: String)
+    @Query("DELETE FROM FamilyGroupCredential WHERE contextId = :contextId AND publicKey = :memberPublicKey")
+    suspend fun deleteCredential(contextId: String, memberPublicKey: String)
 }

@@ -237,7 +237,8 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                     )
                     if (familyMember.publicKey == familyGroupSessionService.getPublicKey()) {
                         familyGroupCredentialsRepository.deleteCredential(
-                            familyGroupSessionService.getContextId()
+                            familyGroupSessionService.getContextId(),
+                            familyGroupSessionService.getPublicKey()
                         )
                         familyGroupSessionService.disconnect()
                         navigator.replaceAll(ChangeFamilyGroupScreen())

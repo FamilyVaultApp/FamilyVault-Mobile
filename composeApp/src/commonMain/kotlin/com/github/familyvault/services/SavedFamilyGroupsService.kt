@@ -13,15 +13,30 @@ class SavedFamilyGroupsService(
         return credentials.map { FamilyGroupCredentialToFamilyGroupMapper.map(it) }
     }
 
-    override suspend fun getSavedFamilyGroupCredentialByContextId(contextId: String): FamilyGroupCredential {
-        return familyGroupCredentialsRepository.getCredentialByContextId(contextId)
+    override suspend fun getSavedFamilyGroupCredential(
+        contextId: String,
+        memberPublicKey: String
+    ): FamilyGroupCredential {
+        return familyGroupCredentialsRepository.getCredential(
+            contextId,
+            memberPublicKey
+        )
     }
 
-    override suspend fun changeDefaultFamilyGroupCredential(contextId: String) {
-        familyGroupCredentialsRepository.setDefaultCredentialByContextId(contextId)
+    override suspend fun changeDefaultFamilyGroupCredential(
+        contextId: String,
+        memberPublicKey: String
+    ) {
+        familyGroupCredentialsRepository.setDefaultCredential(contextId, memberPublicKey)
     }
 
-    override suspend fun changeFamilyGroupName(contextId: String, familyName: String) {
-        familyGroupCredentialsRepository.updateCredentialFamilyGroupName(contextId, familyName)
+    override suspend fun changeFamilyGroupName(
+        contextId: String,
+        familyName: String
+    ) {
+        familyGroupCredentialsRepository.updateCredentialFamilyGroupName(
+            contextId,
+            familyName
+        )
     }
 }

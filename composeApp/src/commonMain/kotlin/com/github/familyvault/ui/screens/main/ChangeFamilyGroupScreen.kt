@@ -110,8 +110,9 @@ class ChangeFamilyGroupScreen : Screen {
                                             isChangingFamilyGroup = true
                                             familyGroupSessionService.disconnect()
                                             familyGroupSessionService.assignSession(
-                                                familyGroupCredential = savedFamilyGroupsService.getSavedFamilyGroupCredentialByContextId(
-                                                    it.contextId
+                                                familyGroupCredential = savedFamilyGroupsService.getSavedFamilyGroupCredential(
+                                                    it.contextId,
+                                                    it.memberPublicKey
                                                 )
                                             )
                                             familyGroupSessionService.connect()
@@ -127,7 +128,7 @@ class ChangeFamilyGroupScreen : Screen {
                                         coroutineScope.launch {
                                             isLoading = true
                                             savedFamilyGroupsService.changeDefaultFamilyGroupCredential(
-                                                it.contextId
+                                                it.contextId, it.memberPublicKey
                                             )
                                             familyGroups.clear()
                                             familyGroups.addAll(savedFamilyGroupsService.getAllSavedFamilyGroups())
