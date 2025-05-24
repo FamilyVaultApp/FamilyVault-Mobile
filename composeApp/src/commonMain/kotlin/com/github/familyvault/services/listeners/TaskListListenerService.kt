@@ -1,6 +1,7 @@
 package com.github.familyvault.services.listeners
 
 import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.models.tasks.TaskList
 import com.github.familyvault.utils.mappers.ThreadItemToTaskListMapper
 
@@ -10,6 +11,7 @@ class TaskListListenerService(
     companion object {
         const val CREATE_EVENT_NAME = "TASK_LIST_THREAD_CREATE"
         const val UPDATE_EVENT_NAME = "TASK_LIST_THREAD_UPDATE"
+        const val DELETE_EVENT_NAME = "TASK_LIST_THREAD_DELETE"
     }
 
     override fun startListeningForNewTaskList(onNewTaskList: (TaskList) -> Unit) {
@@ -27,6 +29,15 @@ class TaskListListenerService(
             )
         }
     }
+
+    override fun startListeningForDeletedTaskList(onDeletedTaskList: (ThreadId) -> Unit) {
+        privMxClient.registerOnThreadDeleted(DELETE_EVENT_NAME) {
+            onDeletedTaskList(
+                it
+            )
+        }
+    }
+
 
     override fun unregisterAllListeners() {
         privMxClient.unregisterAllEvents(CREATE_EVENT_NAME)
