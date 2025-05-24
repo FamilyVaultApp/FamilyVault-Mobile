@@ -8,6 +8,7 @@ object FamilyGroupCredentialToFamilyGroupMapper {
         contextId = familyGroupCredential.contextId,
         name = familyGroupCredential.familyGroupName,
         memberPublicKey = familyGroupCredential.publicKey,
-        isDefault = familyGroupCredential.isDefault
+        isDefault = familyGroupCredential.isDefault,
+        firstname = familyGroupCredential.firstname
     )
 }

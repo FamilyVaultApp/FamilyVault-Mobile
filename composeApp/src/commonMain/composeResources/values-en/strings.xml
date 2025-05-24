@@ -13,6 +13,7 @@
     <string name="description">Description</string>
     <string name="everyone">Everyone</string>
     <string name="assigned_person">Assigned person</string>
+    <string name="as_with_spaces"> as </string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
