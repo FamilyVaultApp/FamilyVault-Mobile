@@ -49,6 +49,8 @@ class ChangeFamilyGroupScreen : Screen {
         val familyGroups = mutableStateListOf<FamilyGroup>()
         val currentContextId =
             familyGroupSessionService.takeIf { it.isSessionAssigned() }?.getContextId()
+        val currentMemberPublicKey =
+            familyGroupSessionService.takeIf { it.isSessionAssigned() }?.getPublicKey()
         val coroutineScope = rememberCoroutineScope()
 
 
@@ -80,7 +82,8 @@ class ChangeFamilyGroupScreen : Screen {
                     )
                     Column {
                         familyGroups.map {
-                            val isCurrentFamilyGroup = it.contextId == currentContextId
+                            val isCurrentFamilyGroup =
+                                it.contextId == currentContextId && it.memberPublicKey == currentMemberPublicKey
 
                             FamilyGroupEntry(
                                 it, isCurrentFamilyGroup, onSelect = {
