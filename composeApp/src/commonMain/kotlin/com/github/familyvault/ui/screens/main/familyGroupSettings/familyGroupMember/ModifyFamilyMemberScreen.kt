@@ -31,6 +31,8 @@ import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
+import com.github.familyvault.services.IFileCabinetService
+import com.github.familyvault.services.ITaskService
 import com.github.familyvault.ui.components.DangerButton
 import com.github.familyvault.ui.components.dialogs.RemoveFamilyMemberDialog
 import com.github.familyvault.ui.components.overrides.Button
@@ -67,6 +69,8 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupCredentialsRepository = koinInject<IFamilyGroupCredentialsRepository>()
         val chatService = koinInject<IChatService>()
+        val fileCabinetService = koinInject<IFileCabinetService>()
+        val tasksService = koinInject<ITaskService>()
 
         var currentUserPermissionGroup by remember {
             mutableStateOf<FamilyGroupMemberPermissionGroup?>(
@@ -181,75 +185,77 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                     }
                 }
 
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.spacedBy(
-                    AdditionalTheme.spacings.medium,
-                    Alignment.Bottom
-                ),
-            ) {
-                if (isGuardian) {
-                    Button(
-                        text = stringResource(Res.string.user_modification_save_button),
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = !savingChanges &&
-                                !(isLastGuardian &&
-                                        selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
-                        onClick = {
-                            coroutineScope.launch {
-                                savingChanges = true
-                                permissionGroupService.changeFamilyMemberPermissionGroup(
-                                    familyMember.id,
-                                    selectedPermissionGroup
-                                )
-                                val updatedUser =
-                                    familyGroupService.retrieveFamilyMemberDataByPublicKey(
-                                        familyMember.publicKey
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(
+                        AdditionalTheme.spacings.medium,
+                        Alignment.Bottom
+                    ),
+                ) {
+                    if (isGuardian) {
+                        Button(
+                            text = stringResource(Res.string.user_modification_save_button),
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = !savingChanges &&
+                                    !(isLastGuardian &&
+                                            selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
+                            onClick = {
+                                coroutineScope.launch {
+                                    savingChanges = true
+                                    permissionGroupService.changeFamilyMemberPermissionGroup(
+                                        familyMember.id,
+                                        selectedPermissionGroup
                                     )
-                                if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
-                                    chatService.updateGroupChatThreadsAfterUserPermissionChange(
-                                        updatedUser,
-                                        familyGroupService.retrieveFamilyGroupMembersList()
-                                    )
+                                    val updatedUser =
+                                        familyGroupService.retrieveFamilyMemberDataByPublicKey(
+                                            familyMember.publicKey
+                                        )
+                                    if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
+                                        chatService.updateGroupChatThreadsAfterUserPermissionChange(
+                                            updatedUser,
+                                            familyGroupService.retrieveFamilyGroupMembersList()
+                                        )
+                                        fileCabinetService.restoreFileCabinetMembership()
+                                        tasksService.restoreTaskListsMembership()
+                                    }
+                                    savingChanges = false
+                                    navigator.pop()
                                 }
-                                savingChanges = false
-                                navigator.pop()
                             }
+                        )
+                    }
+                    DangerButton(
+                        text = stringResource(Res.string.user_modification_remove_user_button_content),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !savingChanges && isGuardian &&
+                                !isLastGuardian,
+                        onClick = {
+                            showDialog = true
                         }
                     )
                 }
-                DangerButton(
-                    text = stringResource(Res.string.user_modification_remove_user_button_content),
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !savingChanges && isGuardian &&
-                            !isLastGuardian,
-                    onClick = {
-                        showDialog = true
+            }
+            if (showDialog) {
+                RemoveFamilyMemberDialog(onConfirm = {
+                    coroutineScope.launch {
+                        familyGroupService.removeMemberFromCurrentFamilyGroup(
+                            familyMember.publicKey
+                        )
+                        if (familyMember.publicKey == familyGroupSessionService.getPublicKey()) {
+                            familyGroupCredentialsRepository.deleteCredential(
+                                familyGroupSessionService.getContextId()
+                            )
+                            familyGroupSessionService.disconnect()
+                            navigator.replaceAll(ChangeFamilyGroupScreen())
+                        } else {
+                            navigator.replace(MainScreen())
+                        }
                     }
-                )
+                    showDialog = false
+                }, onDismiss = {
+                    showDialog = false
+                })
             }
         }
-        if (showDialog) {
-            RemoveFamilyMemberDialog(onConfirm = {
-                coroutineScope.launch {
-                    familyGroupService.removeMemberFromCurrentFamilyGroup(
-                        familyMember.publicKey
-                    )
-                    if (familyMember.publicKey == familyGroupSessionService.getPublicKey()) {
-                        familyGroupCredentialsRepository.deleteCredential(
-                            familyGroupSessionService.getContextId()
-                        )
-                        familyGroupSessionService.disconnect()
-                        navigator.replaceAll(ChangeFamilyGroupScreen())
-                    } else {
-                        navigator.replace(MainScreen())
-                    }
-                }
-                showDialog = false
-            }, onDismiss = {
-                showDialog = false
-            })
-        }
     }
-}
 }
