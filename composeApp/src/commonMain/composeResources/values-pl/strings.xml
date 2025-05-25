@@ -201,8 +201,10 @@
     <string name="file_cabinet_upload">Prześlij</string>
     <string name="file_cabinet_photo_card">Karta zdjęcia</string>
     <string name="file_cabinet_sending_files">Przesyłanie plików...</string>
+    <string name="file_cabinet_no_images_title">Brak zdjęć</string>
     <string name="file_cabinet_no_images">Nie znaleziono zdjęć. Prześlij zdjęcia używając przycisku poniżej.</string>
     <string name="file_cabinet_retry">Ponów</string>
+    <string name="file_cabinet_no_documents_title">Brak dokumentów</string>
     <string name="file_cabinet_no_documents">Nie znaleziono dokumentów. Prześlij dokumenty używając przycisku poniżej.</string>
     <string name="file_cabinet_download_pdf_title">Pobierz PDF</string>
     <string name="file_cabinet_download_pdf_message">Czy chcesz pobrać ten plik PDF na swoje urządzenie?</string>
