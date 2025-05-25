@@ -39,8 +39,12 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
         taskLists.add(taskList)
     }
 
-    override fun removeTaskList(taskListId: ThreadId) {
-        taskLists.removeAll { it.id == taskListId.threadId }
+    override suspend fun removeTaskList(taskListId: String) {
+        taskLists.removeAll { it.id == taskListId }
+
+        if (selectedTaskList?.id == taskListId) {
+            selectFirstTaskList()
+        }
     }
 
     override suspend fun populateTaskFormTaskListFromServices() {
@@ -60,8 +64,10 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
     }
 
     override suspend fun selectFirstTaskList() {
-        selectedTaskList = taskLists.first()
-        populateTaskFormTaskListFromServices()
+        selectedTaskList = taskLists.firstOrNull()
+        selectedTaskList?.let {
+            populateTaskFormTaskListFromServices()
+        }
     }
 
     override fun unselectTaskList() {
