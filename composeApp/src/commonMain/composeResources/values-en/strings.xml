@@ -14,6 +14,7 @@
     <string name="everyone">Everyone</string>
     <string name="assigned_person">Assigned person</string>
     <string name="as_with_spaces"> as </string>
+    <string name="documentation">Documentation</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -109,6 +110,8 @@
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Add new member</string>
     <string name="add_member_to_family_group_content">Tap your phone to new member's phone to add them to family group.</string>
+    <string name="join_infobutton_content">Click here to learn more about joining a family group.</string>
+    <string name="add_member_infobutton_content">Click here to learn more about adding new members to a family group.</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>
@@ -203,8 +206,10 @@
     <string name="file_cabinet_upload">Upload</string>
     <string name="file_cabinet_photo_card">Photo card</string>
     <string name="file_cabinet_sending_files">Uploading files...</string>
+    <string name="file_cabinet_no_images_title">No images</string>
     <string name="file_cabinet_no_images">No images found. Upload some photos using the button below.</string>
     <string name="file_cabinet_retry">Retry</string>
+    <string name="file_cabinet_no_documents_title">No documents</string>
     <string name="file_cabinet_no_documents">No documents found. Upload documents using the button below.</string>
     <string name="file_cabinet_download_pdf_title">Download PDF</string>
     <string name="file_cabinet_download_pdf_message">Do you want to download this PDF to your device?</string>

@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.models.fileCabinet.FileCabinetDocument
@@ -34,6 +35,7 @@ import com.github.familyvault.ui.components.HeaderIcon
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
 import com.github.familyvault.ui.components.filesCabinet.DocumentCard
+import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -42,6 +44,7 @@ import familyvault.composeapp.generated.resources.file_cabinet_error_initialize
 import familyvault.composeapp.generated.resources.file_cabinet_error_loading
 import familyvault.composeapp.generated.resources.file_cabinet_initializing_documents
 import familyvault.composeapp.generated.resources.file_cabinet_no_documents
+import familyvault.composeapp.generated.resources.file_cabinet_no_documents_title
 import familyvault.composeapp.generated.resources.file_cabinet_retry
 import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.Dispatchers
@@ -134,6 +137,10 @@ fun DocumentsTabContent() {
                 HeaderIcon(
                     Icons.Outlined.Folder,
                     size = AdditionalTheme.sizing.headerIconNormal
+                )
+                Headline3(
+                    stringResource(Res.string.file_cabinet_no_documents_title),
+                    fontWeight = FontWeight.SemiBold
                 )
                 ParagraphMuted(
                     stringResource(Res.string.file_cabinet_no_documents),

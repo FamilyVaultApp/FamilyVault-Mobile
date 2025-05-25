@@ -2,6 +2,7 @@ package com.github.familyvault.backend.client
 
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.StoreItem
+import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
@@ -113,6 +114,7 @@ interface IPrivMxClient {
 
     fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit)
     fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit)
+    fun registerOnThreadDeleted(eventName: String, callback: (ThreadId) -> Unit)
 
     fun registerOnStoreFileCreated(
         eventName: String,

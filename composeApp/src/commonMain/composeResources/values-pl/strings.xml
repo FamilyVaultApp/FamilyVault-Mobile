@@ -14,6 +14,7 @@
     <string name="everyone">Wszyscy</string>
     <string name="assigned_person">Przypisana osoba</string>
     <string name="as_with_spaces"> jako </string>
+    <string name="documentation">Dokumentacja</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -109,6 +110,9 @@
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Dodaj nowego członka</string>
     <string name="add_member_to_family_group_content">Zetknij swój telefon z telefonem drugiej osoby, aby dołączyć ją do grupy.</string>
+    <string name="join_infobutton_content">Kliknij tutaj, aby dowiedzieć się więcej o dołączaniu do grupy rodzinnej.</string>
+    <string name="add_member_infobutton_content">Kliknij tutaj, aby dowiedzieć się więcej o dodawaniu nowych członków do grupy rodzinnej.</string>
+
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera</string>
@@ -203,8 +207,10 @@
     <string name="file_cabinet_upload">Prześlij</string>
     <string name="file_cabinet_photo_card">Karta zdjęcia</string>
     <string name="file_cabinet_sending_files">Przesyłanie plików...</string>
+    <string name="file_cabinet_no_images_title">Brak zdjęć</string>
     <string name="file_cabinet_no_images">Nie znaleziono zdjęć. Prześlij zdjęcia używając przycisku poniżej.</string>
     <string name="file_cabinet_retry">Ponów</string>
+    <string name="file_cabinet_no_documents_title">Brak dokumentów</string>
     <string name="file_cabinet_no_documents">Nie znaleziono dokumentów. Prześlij dokumenty używając przycisku poniżej.</string>
     <string name="file_cabinet_download_pdf_title">Pobierz PDF</string>
     <string name="file_cabinet_download_pdf_message">Czy chcesz pobrać ten plik PDF na swoje urządzenie?</string>
