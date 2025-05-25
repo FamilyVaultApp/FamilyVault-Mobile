@@ -3,7 +3,6 @@ package com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMe
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,12 +22,15 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.DangerButton
+import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
+import familyvault.composeapp.generated.resources.NFC_infobox_content
+import familyvault.composeapp.generated.resources.NFC_infobox_title
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.add_member_to_family_group_content
 import familyvault.composeapp.generated.resources.add_member_to_family_group_header
@@ -92,6 +94,11 @@ class AddMemberToFamilyGroupScreen : Screen {
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(AdditionalTheme.spacings.normalPadding)
+            )
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
+            InfoBox(
+                title = stringResource(Res.string.NFC_infobox_title),
+                content = stringResource(Res.string.NFC_infobox_content)
             )
             AddMemberToFamilyGroupContentButtons()
         }

@@ -109,6 +109,8 @@
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Add new member</string>
     <string name="add_member_to_family_group_content">Tap your phone to new member's phone to add them to family group.</string>
+    <string name="NFC_infobox_title">About NFC technology</string>
+    <string name="NFC_infobox_content">This adding method uses NFC. It is the recommended option for adding members in our app. Tap to learn more about this technology and why we use it, or choose the QR code scanning method below.</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Initiate QR scanner</string>

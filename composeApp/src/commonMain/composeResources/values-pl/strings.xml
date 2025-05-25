@@ -109,6 +109,9 @@
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Dodaj nowego członka</string>
     <string name="add_member_to_family_group_content">Zetknij swój telefon z telefonem drugiej osoby, aby dołączyć ją do grupy.</string>
+    <string name="NFC_infobox_title">O technologii NFC</string>
+    <string name="NFC_infobox_content">Ta metoda dodawania używa NFC. Jest to zalecana opcja dodawania w naszej aplikacji. Dotknij, aby dowiedzieć się więcej o tej technologii i o tym, dlaczego jej używamy, lub wybierz metodę skanowania kodu QR poniżej.</string>
+
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera</string>

@@ -3,7 +3,6 @@ package com.github.familyvault.ui.screens.start.joinFamilyGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -27,12 +25,15 @@ import com.github.familyvault.services.INfcService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.DangerButton
+import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
+import familyvault.composeapp.generated.resources.NFC_infobox_content
+import familyvault.composeapp.generated.resources.NFC_infobox_title
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.join_family_group_content
@@ -96,6 +97,11 @@ class FamilyGroupJoinNfc() : Screen {
                 MaterialTheme.colorScheme.onBackground,
                 TextAlign.Center,
                 Modifier.padding(AdditionalTheme.spacings.normalPadding)
+            )
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
+            InfoBox(
+                title = stringResource(Res.string.NFC_infobox_title),
+                content = stringResource(Res.string.NFC_infobox_content)
             )
             JoinFamilyGroupContentButtons()
         }
