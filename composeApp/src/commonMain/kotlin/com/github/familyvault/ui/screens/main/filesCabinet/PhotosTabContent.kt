@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PhotoLibrary
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.services.IFileCabinetService
@@ -31,10 +32,12 @@ import com.github.familyvault.ui.components.HeaderIcon
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.filesCabinet.LoadingCard
 import com.github.familyvault.ui.components.filesCabinet.PhotoCard
+import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.file_cabinet_no_images
+import familyvault.composeapp.generated.resources.file_cabinet_no_images_title
 import familyvault.composeapp.generated.resources.file_cabinet_retry
 import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.Dispatchers
@@ -120,6 +123,10 @@ fun PhotosTabContent() {
                 HeaderIcon(
                     Icons.Outlined.PhotoLibrary,
                     size = AdditionalTheme.sizing.headerIconNormal
+                )
+                Headline3(
+                    stringResource(Res.string.file_cabinet_no_images_title),
+                    fontWeight = FontWeight.SemiBold
                 )
                 ParagraphMuted(
                     stringResource(Res.string.file_cabinet_no_images),

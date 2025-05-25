@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.AnimatedNfcBeam
+import com.github.familyvault.ui.components.DangerButton
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
@@ -110,21 +112,20 @@ class FamilyGroupJoinNfc() : Screen {
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small),
             ) {
                 Button(
-                    stringResource(Res.string.cancel_button_content),
-                    onClick = { navigator.replaceAll(StartScreen()) },
-                    modifier = Modifier.weight(1f)
-                )
-                Button(
                     stringResource(Res.string.show_qr_code_button_content),
+                    modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         navigator.push(DisplayFamilyMemberDataQrCodeScreen())
                     },
-                    modifier = Modifier.weight(1f)
+                )
+                DangerButton(
+                    stringResource(Res.string.cancel_button_content),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { navigator.replaceAll(StartScreen()) },
                 )
             }
         }
