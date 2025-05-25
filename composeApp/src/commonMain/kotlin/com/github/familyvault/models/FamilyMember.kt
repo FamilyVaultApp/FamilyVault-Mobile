@@ -14,7 +14,7 @@ data class FamilyMember(
     val firstname: String
         get() = identifier.firstname
 
-    val surname: String
+    val surname: String?
         get() = identifier.surname
 
     val fullname: String

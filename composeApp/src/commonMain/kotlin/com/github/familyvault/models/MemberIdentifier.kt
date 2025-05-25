@@ -3,7 +3,7 @@ package com.github.familyvault.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MemberIdentifier(val id: String, val firstname: String, val surname: String) {
+data class MemberIdentifier(val id: String, val firstname: String, val surname: String?) {
     val fullname: String
-        get() = "$firstname $surname"
+        get() = if (surname.isNullOrEmpty())  firstname else "$firstname $surname"
 }
