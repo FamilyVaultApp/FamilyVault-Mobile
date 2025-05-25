@@ -42,7 +42,7 @@ fun TaskTabContent() {
         }
 
         taskListListenerService.startListeningForDeletedTaskList { deletedListId ->
-            tasksListState.taskLists.remove(tasksListState.taskLists.filter { it.id == deletedListId.threadId}.single())
+            tasksListState.taskLists.find { it.id == deletedListId.threadId }?.let { tasksListState.taskLists.remove(it) }
         }
 
         isLoading = false
