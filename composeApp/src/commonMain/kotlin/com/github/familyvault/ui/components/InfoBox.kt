@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
+import com.github.familyvault.models.enums.InfoBoxType
+import com.github.familyvault.models.enums.getIcon
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -26,12 +27,14 @@ import familyvault.composeapp.generated.resources.info_icon_alt
 import familyvault.composeapp.generated.resources.open_link_alt
 import org.jetbrains.compose.resources.stringResource
 
+
 @Composable
 fun InfoBox(
     title: String,
     content: String,
     modifier: Modifier = Modifier,
-    link: String? = null
+    link: String? = null,
+    type: InfoBoxType = InfoBoxType.INFORMATION
 ) {
     val uriHandler = LocalUriHandler.current
     val clickableModifier = Modifier.clickable {
@@ -55,7 +58,7 @@ fun InfoBox(
         ) {
             Column {
                 Icon(
-                    imageVector = Icons.Outlined.Info,
+                    imageVector = type.getIcon(),
                     contentDescription = stringResource(Res.string.info_icon_alt),
                     tint = MaterialTheme.colorScheme.primary
                 )
