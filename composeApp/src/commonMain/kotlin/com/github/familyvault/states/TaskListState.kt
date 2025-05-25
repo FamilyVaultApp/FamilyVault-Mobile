@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.models.tasks.Task
 import com.github.familyvault.models.tasks.TaskList
 import com.github.familyvault.services.ITaskService
@@ -36,6 +37,10 @@ class TaskListState(private val tasksService: ITaskService) : ITaskListState {
     override fun updateTaskList(taskList: TaskList) {
         taskLists.removeAll { it.id == taskList.id }
         taskLists.add(taskList)
+    }
+
+    override fun removeTaskList(taskListId: ThreadId) {
+        taskLists.removeAll { it.id == taskListId.threadId }
     }
 
     override suspend fun populateTaskFormTaskListFromServices() {
