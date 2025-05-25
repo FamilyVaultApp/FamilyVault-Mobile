@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.enums.InfoBoxType
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
@@ -32,12 +33,12 @@ import com.github.familyvault.ui.components.typography.Headline1
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
-import familyvault.composeapp.generated.resources.NFC_infobutton_content
-import familyvault.composeapp.generated.resources.NFC_infobutton_title
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cancel_button_content
+import familyvault.composeapp.generated.resources.documentation
 import familyvault.composeapp.generated.resources.join_family_group_content
 import familyvault.composeapp.generated.resources.join_family_group_title
+import familyvault.composeapp.generated.resources.join_infobutton_content
 import familyvault.composeapp.generated.resources.show_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -98,11 +99,13 @@ class FamilyGroupJoinNfc() : Screen {
                 TextAlign.Center,
                 Modifier.padding(AdditionalTheme.spacings.normalPadding)
             )
-            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
             InfoBox(
-                title = stringResource(Res.string.NFC_infobutton_title),
-                content = stringResource(Res.string.NFC_infobutton_content)
+                title = stringResource(Res.string.documentation),
+                content = stringResource(Res.string.join_infobutton_content),
+                type = InfoBoxType.DOCUMENTATION,
+                link = "https://familyvault.pl" // TODO: Zmiana url
             )
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
             JoinFamilyGroupContentButtons()
         }
     }
