@@ -1,5 +1,6 @@
 package com.github.familyvault.states
 
+import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.models.tasks.Task
 import com.github.familyvault.models.tasks.TaskList
 
@@ -13,6 +14,7 @@ interface ITaskListState {
     fun isEmpty(): Boolean
     fun unselectTaskList()
     fun updateTaskList(taskList: TaskList)
+    fun removeTaskList(taskListId: ThreadId)
     suspend fun markTaskAsCompleted(taskId: String)
     suspend fun markTaskAsIncomplete(taskId: String)
     suspend fun populateTaskListFromServices()
