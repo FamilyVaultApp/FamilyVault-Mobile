@@ -32,8 +32,8 @@ import com.github.familyvault.ui.components.typography.Headline1
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.screens.start.StartScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
-import familyvault.composeapp.generated.resources.NFC_infobox_content
-import familyvault.composeapp.generated.resources.NFC_infobox_title
+import familyvault.composeapp.generated.resources.NFC_infobutton_content
+import familyvault.composeapp.generated.resources.NFC_infobutton_title
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.cancel_button_content
 import familyvault.composeapp.generated.resources.join_family_group_content
@@ -100,8 +100,8 @@ class FamilyGroupJoinNfc() : Screen {
             )
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
             InfoBox(
-                title = stringResource(Res.string.NFC_infobox_title),
-                content = stringResource(Res.string.NFC_infobox_content)
+                title = stringResource(Res.string.NFC_infobutton_title),
+                content = stringResource(Res.string.NFC_infobutton_content)
             )
             JoinFamilyGroupContentButtons()
         }
