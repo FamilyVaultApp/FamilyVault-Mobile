@@ -128,7 +128,7 @@
     <string name="chat_create_group_button_content">Utwórz chat</string>
     <string name="chat_save_edited_group_button_content">Zapisz zmiany</string>
     <string name="chat_create_group_user_is_member">Jest członkiem chatu</string>
-    <string name="chat_create_group_user_is_not_member">Nie jest członkiem czatu</string>
+    <string name="chat_create_group_user_is_not_member">Nie jest członkiem chatu</string>
     <string name="chat_send_message">Wyślij wiadomość</string>
     <string name="chat_type_personal">Osobiste</string>
     <string name="chat_type_group">Grupowe</string>
@@ -146,7 +146,7 @@
     <string name="chat_media_full_screen">Pełny obraz</string>
     <string name="chat_remove_multimedia_description">Usuń multimedia</string>
     <string name="chat_image_preview">Podgląd zdjęcia</string>
-    <string name="chat_user_not_in_group">Usunięto Cię z tego czatu.</string>
+    <string name="chat_user_not_in_group">Usunięto Cię z tego chatu.</string>
     <string name="chat_private_notes">Prywatne notatki</string>
 
     <!-- Remove users -->
