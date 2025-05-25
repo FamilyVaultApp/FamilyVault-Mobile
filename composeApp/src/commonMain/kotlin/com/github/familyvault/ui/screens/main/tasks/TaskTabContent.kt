@@ -47,14 +47,10 @@ fun TaskTabContent() {
         }
 
         taskListListenerService.startListeningForDeletedTaskList { deletedListId ->
-            tasksListState.removeTaskList(deletedListId)
-            if (tasksListState.selectedTaskList?.id == deletedListId.threadId)
-            {
-                coroutineScope.launch {
-                    isLoading = true
-                    tasksListState.selectFirstTaskList()
-                    isLoading = false
-                }
+            coroutineScope.launch {
+                isLoading = true
+                tasksListState.removeTaskList(deletedListId.threadId)
+                isLoading = false
             }
         }
 
