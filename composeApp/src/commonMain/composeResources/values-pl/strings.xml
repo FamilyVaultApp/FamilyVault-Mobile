@@ -166,11 +166,13 @@
     <string name="user_permission_group_guardian">Opiekun</string>
     <string name="user_permission_group_member">Członek</string>
     <string name="user_permission_group_guest">Gość</string>
-    <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
-    <string name="user_modification_remove_user_button_content">Usuń tego użytkownika</string>
+    <string name="user_modification_choose_permission_content">Wybierz grupę uprawnień tego członka.</string>
+    <string name="user_modification_remove_user_button_content">Usuń tego członka</string>
     <string name="user_modification_save_button">Zapisz zmiany</string>
-    <string name="user_modification_no_permission">Tylko opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
+    <string name="user_modification_no_permission">Tylko Opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
     <string name="user_modification_last_guardian_error">Jesteś ostatnim Opiekunem w grupie. W grupie musi pozostać co najmniej jeden Opiekun.</string>
+    <string name="permission_group_title">O grupach uprawnień</string>
+    <string name="permission_group_content">Grupy uprawnień określają dostęp do funkcji aplikacji. Aby dowiedzieć się więcej o różnicach między nimi, dotknij tego przycisku.</string>
 
     <!-- Select family group -->
     <string name="select_family_group_description">Wybierz grupę rodzinną, do której chcesz dołączyć. Możesz też utworzyć nową, korzystając z przycisku na dole ekranu.</string>

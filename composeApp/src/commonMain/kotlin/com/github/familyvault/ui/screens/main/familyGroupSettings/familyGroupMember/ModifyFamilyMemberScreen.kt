@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +33,7 @@ import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
 import com.github.familyvault.ui.components.DangerButton
+import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.dialogs.RemoveFamilyMemberDialog
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.overrides.TopAppBar
@@ -41,6 +43,8 @@ import com.github.familyvault.ui.screens.main.ChangeFamilyGroupScreen
 import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.permission_group_content
+import familyvault.composeapp.generated.resources.permission_group_title
 import familyvault.composeapp.generated.resources.user_modification_choose_permission_content
 import familyvault.composeapp.generated.resources.user_modification_last_guardian_error
 import familyvault.composeapp.generated.resources.user_modification_no_permission
@@ -188,36 +192,40 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                     Alignment.Bottom
                 ),
             ) {
-                if (isGuardian) {
-                    Button(
-                        text = stringResource(Res.string.user_modification_save_button),
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = !savingChanges &&
-                                !(isLastGuardian &&
-                                        selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
-                        onClick = {
-                            coroutineScope.launch {
-                                savingChanges = true
-                                permissionGroupService.changeFamilyMemberPermissionGroup(
-                                    familyMember.id,
-                                    selectedPermissionGroup
+                InfoBox(
+                    title = stringResource(Res.string.permission_group_title),
+                    content = stringResource(Res.string.permission_group_content)
+                )
+                Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
+                Button(
+                    text = stringResource(Res.string.user_modification_save_button),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = isGuardian &&
+                            !savingChanges &&
+                            !(isLastGuardian &&
+                            selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
+                    onClick = {
+                        coroutineScope.launch {
+                            savingChanges = true
+                            permissionGroupService.changeFamilyMemberPermissionGroup(
+                                familyMember.id,
+                                selectedPermissionGroup
+                            )
+                            val updatedUser =
+                                familyGroupService.retrieveFamilyMemberDataByPublicKey(
+                                    familyMember.publicKey
                                 )
-                                val updatedUser =
-                                    familyGroupService.retrieveFamilyMemberDataByPublicKey(
-                                        familyMember.publicKey
-                                    )
-                                if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
-                                    chatService.updateGroupChatThreadsAfterUserPermissionChange(
-                                        updatedUser,
-                                        familyGroupService.retrieveFamilyGroupMembersList()
-                                    )
-                                }
-                                savingChanges = false
-                                navigator.pop()
+                            if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
+                                chatService.updateGroupChatThreadsAfterUserPermissionChange(
+                                    updatedUser,
+                                    familyGroupService.retrieveFamilyGroupMembersList()
+                                )
                             }
+                            savingChanges = false
+                            navigator.pop()
                         }
-                    )
-                }
+                    }
+                )
                 DangerButton(
                     text = stringResource(Res.string.user_modification_remove_user_button_content),
                     modifier = Modifier.fillMaxWidth(),
