@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MemberIdentifier(val id: String, val firstname: String, val surname: String?) {
     val fullname: String
-        get() = if (surname != "") "$firstname $surname" else firstname
+        get() = if (surname.isNullOrEmpty())  firstname else "$firstname $surname"
 }
