@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +22,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
+import com.github.familyvault.ui.components.DangerButton
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
@@ -46,7 +48,7 @@ class AddMemberToFamilyGroupScreen : Screen {
             nfcService.registerApp()
             nfcService.setReadMode()
             nfcService.tags.collect { payload ->
-                if (payload.newMemberData.memberIdentifier.surname.isNotEmpty()) {
+                if (payload.newMemberData.memberIdentifier.id.isNotEmpty()) {
                     navigator.replace(AddMemberToFamilyGroupBackendOperationsScreen(payload))
                 } else {
                     println("Error reading data from tag")
@@ -106,17 +108,18 @@ class AddMemberToFamilyGroupScreen : Screen {
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.large),
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.small),
             ) {
                 Button(
-                    stringResource(Res.string.cancel_button_content),
-                    onClick = { navigator.replaceAll(MainScreen()) },
-                )
-                Button(
                     stringResource(Res.string.scan_qr_code_button_content),
-                    onClick = { navigator.push(AddMemberToFamilyGroupQrCodeScanScreen()) }
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { navigator.push(AddMemberToFamilyGroupQrCodeScanScreen()) },
+                )
+                DangerButton(
+                    stringResource(Res.string.cancel_button_content),
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { navigator.replaceAll(MainScreen()) },
                 )
             }
         }

@@ -5,6 +5,7 @@ import com.github.familyvault.backend.exceptions.FamilyVaultPrivMxException
 import com.github.familyvault.backend.models.PrivMxUser
 import com.github.familyvault.backend.models.StoreItem
 import com.github.familyvault.backend.models.StorePublicMeta
+import com.github.familyvault.backend.models.ThreadId
 import com.github.familyvault.backend.models.ThreadItem
 import com.github.familyvault.backend.models.ThreadMessageItem
 import com.github.familyvault.backend.models.ThreadMessagePrivateMeta
@@ -408,6 +409,14 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             eventName, EventType.ThreadUpdatedEvent
         ) {
             callback(PrivMxThreadToThreadItemMapper.map(it))
+        }
+    }
+
+    override fun registerOnThreadDeleted(eventName: String, callback: (ThreadId) -> Unit) {
+        requireNotNull(connection).registerCallback(
+            eventName, EventType.ThreadDeletedEvent
+        ) {
+            callback(ThreadId(it.threadId))
         }
     }
 

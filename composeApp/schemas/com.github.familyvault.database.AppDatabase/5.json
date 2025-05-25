@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "e57d63ddaf7729b0766f03fdde3a03de",
+    "identityHash": "ff52bf4ff62b42472ceb2d4e669423ba",
     "entities": [
       {
         "tableName": "FamilyGroupCredential",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `familyGroupName` TEXT NOT NULL, `solutionId` TEXT NOT NULL, `contextId` TEXT NOT NULL, `publicKey` TEXT NOT NULL, `encryptedPrivateKey` TEXT NOT NULL, `encryptedPrivateKeyPassword` TEXT NOT NULL, `firstname` TEXT NOT NULL, `lastname` TEXT NOT NULL, `isDefault` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `familyGroupName` TEXT NOT NULL, `solutionId` TEXT NOT NULL, `contextId` TEXT NOT NULL, `publicKey` TEXT NOT NULL, `encryptedPrivateKey` TEXT NOT NULL, `encryptedPrivateKeyPassword` TEXT NOT NULL, `firstname` TEXT NOT NULL, `lastname` TEXT, `isDefault` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -59,8 +59,7 @@
           {
             "fieldPath": "lastname",
             "columnName": "lastname",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "isDefault",
@@ -133,7 +132,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e57d63ddaf7729b0766f03fdde3a03de')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ff52bf4ff62b42472ceb2d4e669423ba')"
     ]
   }
 }

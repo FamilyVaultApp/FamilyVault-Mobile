@@ -13,7 +13,7 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         keyPairs: PublicEncryptedPrivateKeyPair,
         encryptedPrivateKeyPassword: String,
         firstname: String,
-        lastname: String
+        lastname: String?
     ) {
         val credentialDao = appDatabase.credentialDao()
         credentialDao.insertDefaultCredentialAndUnsetOthers(
@@ -30,9 +30,12 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         )
     }
 
-    override suspend fun setDefaultCredentialByContextId(contextId: String) {
+    override suspend fun setDefaultCredential(
+        contextId: String,
+        memberPublicKey: String
+    ) {
         val credentialDao = appDatabase.credentialDao()
-        credentialDao.setCredentialAsDefaultByContextIdAndUnsetOthers(contextId)
+        credentialDao.setCredentialAsDefaultAndUnsetOthers(contextId, memberPublicKey)
     }
 
     override suspend fun getDefaultCredential(): FamilyGroupCredential? {
@@ -40,15 +43,23 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         return credentialDao.getDefault()
     }
 
-    override suspend fun updateCredentialFamilyGroupName(contextId: String, name: String) {
+    override suspend fun updateCredentialFamilyGroupName(
+        contextId: String,
+        name: String
+    ) {
         val credentialDao = appDatabase.credentialDao()
         credentialDao.updateCredentialFamilyGroupName(contextId, name)
     }
 
-    override suspend fun deleteCredential(contextId: String) {
+    override suspend fun deleteCredential(contextId: String, memberPublicKey: String) {
         val credentialDao = appDatabase.credentialDao()
-        val credential = requireNotNull(credentialDao.getByContextId(contextId))
-        credentialDao.deleteCredential(contextId)
+        val credential = requireNotNull(
+            credentialDao.getByContextIdAndMemberPublicKey(
+                contextId,
+                memberPublicKey
+            )
+        )
+        credentialDao.deleteCredential(contextId, memberPublicKey)
 
         if (!credential.isDefault) {
             return
@@ -60,7 +71,11 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
             return
         }
 
-        credentialDao.setCredentialAsDefaultByContextID(credentials.first().contextId)
+        val correctCredential = credentials.first()
+        credentialDao.setCredentialAsDefault(
+            correctCredential.contextId,
+            correctCredential.publicKey
+        )
     }
 
     override suspend fun getAllCredentials(): List<FamilyGroupCredential> {
@@ -68,8 +83,16 @@ class FamilyGroupCredentialsRepository(private val appDatabase: AppDatabase) :
         return credentialDao.getAll()
     }
 
-    override suspend fun getCredentialByContextId(contextId: String): FamilyGroupCredential {
+    override suspend fun getCredential(
+        contextId: String,
+        memberPublicKey: String
+    ): FamilyGroupCredential {
         val credentialDao = appDatabase.credentialDao()
-        return requireNotNull(credentialDao.getByContextId(contextId))
+        return requireNotNull(
+            credentialDao.getByContextIdAndMemberPublicKey(
+                contextId,
+                memberPublicKey
+            )
+        )
     }
 }
