@@ -45,35 +45,39 @@ class MainScreen : Screen {
     override fun Content() {
 
         val familyGroupService = koinInject<IFamilyGroupService>()
-        var currentUserPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest)}
+        var currentUserPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest) }
         var isLoadingCurrentUserInformation by remember { mutableStateOf(true) }
 
         LaunchedEffect(Unit) {
             isLoadingCurrentUserInformation = true
-            currentUserPermissionGroup = familyGroupService.retrieveMyFamilyMemberData().permissionGroup
+            currentUserPermissionGroup =
+                familyGroupService.retrieveMyFamilyMemberData().permissionGroup
             isLoadingCurrentUserInformation = false
         }
-        if (isLoadingCurrentUserInformation) {
-            LoaderWithText(stringResource(Res.string.loading), modifier = Modifier.fillMaxSize())
-        } else {
-            TabNavigator(ChatTab) {
-                // Workaround błędu w Jetpack Compose powodujący to, że ekran nie dostostoswuje się
-                // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
-                // TODO: usunąć po naprawieniu blędu w compose.
-                AppTheme {
-                    Scaffold(
-                        bottomBar = {
-                                NavigationBar(
-                                    ChatTab, TaskTab, FilesCabinetTab
-                                )
-                        },
-                        floatingActionButton = {
-                            FloatingCurrentTabActionButton(currentUserPermissionGroup)
-                        }
-                    ) { paddingValues ->
-                        Box(
-                            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
-                        ) {
+        TabNavigator(ChatTab) {
+            // Workaround błędu w Jetpack Compose powodujący to, że ekran nie dostostoswuje się
+            // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
+            // TODO: usunąć po naprawieniu blędu w compose.
+            AppTheme {
+                Scaffold(
+                    bottomBar = {
+                        NavigationBar(
+                            ChatTab, TaskTab, FilesCabinetTab
+                        )
+                    },
+                    floatingActionButton = {
+                        FloatingCurrentTabActionButton(currentUserPermissionGroup)
+                    }
+                ) { paddingValues ->
+                    Box(
+                        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
+                    ) {
+                        if (isLoadingCurrentUserInformation) {
+                            LoaderWithText(
+                                stringResource(Res.string.loading),
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        } else {
                             CurrentTab()
                         }
                     }
@@ -81,6 +85,7 @@ class MainScreen : Screen {
             }
         }
     }
+
 
     @Composable
     private fun FloatingCurrentTabActionButton(permissionGroup: FamilyGroupMemberPermissionGroup) {
