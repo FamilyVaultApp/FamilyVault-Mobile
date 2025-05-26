@@ -14,6 +14,7 @@
     <string name="everyone">Wszyscy</string>
     <string name="assigned_person">Przypisana osoba</string>
     <string name="as_with_spaces"> jako </string>
+    <string name="documentation">Dokumentacja</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Ikona informacji</string>
@@ -109,6 +110,8 @@
     <!-- Add member to family group-->
     <string name="add_member_to_family_group_header">Dodaj nowego członka</string>
     <string name="add_member_to_family_group_content">Przyłóż swój telefon do telefonu nowego członka, aby dodać go do grupy rodzinnej.</string>
+    <string name="join_infobutton_content">Kliknij tutaj, aby dowiedzieć się więcej o dołączaniu do grupy rodzinnej.</string>
+    <string name="add_member_infobutton_content">Kliknij tutaj, aby dowiedzieć się więcej o dodawaniu nowych członków do grupy rodzinnej.</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera QR</string>
@@ -164,13 +167,17 @@
     <!-- User modification -->
     <string name="user_modification_description">Modyfikuj członka grupy rodzinnej</string>
     <string name="user_permission_group_guardian">Opiekun</string>
+    <string name="user_permission_group_guardian_description">Pełny dostęp do zarządzania zadaniami, szafą, czatami i użytkownikami.</string>
     <string name="user_permission_group_member">Członek</string>
+    <string name="user_permission_group_member_description">Podstawowy dostęp do zadań, szafy i chatów.</string>
     <string name="user_permission_group_guest">Gość</string>
-    <string name="user_modification_choose_permission_content">Wybierz rolę tego użytkownika.</string>
+    <string name="user_permission_group_guest_description">Podstawowy dostęp do zadań i chatów.</string>
+    <string name="user_modification_choose_permission_content">Wybierz grupę uprawnień tego członka.</string>
     <string name="user_modification_remove_user_button_content">Usuń tego członka</string>
     <string name="user_modification_save_button">Zapisz zmiany</string>
-    <string name="user_modification_no_permission">Tylko opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
+    <string name="user_modification_no_permission">Tylko Opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
     <string name="user_modification_last_guardian_error">Jesteś ostatnim Opiekunem w grupie. W grupie musi pozostać co najmniej jeden Opiekun.</string>
+    <string name="permission_group_infobox_content">Kliknij tutaj, aby dowiedzieć się więcej o grupach uprawnień.</string>
 
     <!-- Select family group -->
     <string name="select_family_group_description">Wybierz grupę rodzinną, do której chcesz dołączyć. Możesz też utworzyć nową, korzystając z przycisku na dole ekranu.</string>

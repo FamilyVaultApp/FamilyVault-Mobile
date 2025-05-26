@@ -3,7 +3,6 @@ package com.github.familyvault.ui.screens.main.familyGroupSettings.familyGroupMe
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,9 +19,11 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.enums.InfoBoxType
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
 import com.github.familyvault.ui.components.DangerButton
+import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.components.typography.Headline1
@@ -30,9 +31,11 @@ import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.screens.main.MainScreen
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.add_member_infobutton_content
 import familyvault.composeapp.generated.resources.add_member_to_family_group_content
 import familyvault.composeapp.generated.resources.add_member_to_family_group_header
 import familyvault.composeapp.generated.resources.cancel_button_content
+import familyvault.composeapp.generated.resources.documentation
 import familyvault.composeapp.generated.resources.scan_qr_code_button_content
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -48,7 +51,7 @@ class AddMemberToFamilyGroupScreen : Screen {
             nfcService.registerApp()
             nfcService.setReadMode()
             nfcService.tags.collect { payload ->
-                if (payload.newMemberData.memberIdentifier.surname.isNotEmpty()) {
+                if (payload.newMemberData.memberIdentifier.id.isNotEmpty()) {
                     navigator.replace(AddMemberToFamilyGroupBackendOperationsScreen(payload))
                 } else {
                     println("Error reading data from tag")
@@ -92,6 +95,13 @@ class AddMemberToFamilyGroupScreen : Screen {
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(AdditionalTheme.spacings.normalPadding)
+            )
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
+            InfoBox(
+                title = stringResource(Res.string.documentation),
+                content = stringResource(Res.string.add_member_infobutton_content),
+                type = InfoBoxType.DOCUMENTATION,
+                link = "https://familyvault.pl" // TODO: Ustawienie linku
             )
             AddMemberToFamilyGroupContentButtons()
         }
