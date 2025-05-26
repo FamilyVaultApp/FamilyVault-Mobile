@@ -29,6 +29,7 @@ import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IImagePickerService
 import com.github.familyvault.services.listeners.IChatMessagesListenerService
+import com.github.familyvault.services.listeners.IChatThreadListenerService
 import com.github.familyvault.states.ICurrentChatState
 import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.ui.components.chat.ChatInputField
@@ -36,6 +37,7 @@ import com.github.familyvault.ui.components.chat.ChatThreadSettingsButton
 import com.github.familyvault.ui.components.chat.messageEntry.ChatMessageEntry
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
 import com.github.familyvault.ui.components.overrides.TopAppBar
+import com.github.familyvault.ui.theme.AdditionalTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import familyvault.composeapp.generated.resources.chat_user_not_in_group
@@ -49,6 +51,7 @@ class CurrentChatThreadScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val chatService = koinInject<IChatService>()
         val chatMessageListenerService = koinInject<IChatMessagesListenerService>()
+        val chatThreadListenerService = koinInject<IChatThreadListenerService>()
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
         val currentChatState = koinInject<ICurrentChatState>()
@@ -73,6 +76,15 @@ class CurrentChatThreadScreen : Screen {
                         chatThread.id
                     )
                 )
+                chatThreadListenerService.startListeningForUpdatedChatThread {
+                    coroutineScope.launch {
+                        if (it.id != chatThread.id){
+                            return@launch
+                        }
+
+                        currentChatState.update(it)
+                    }
+                }
                 chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                     coroutineScope.launch {
                         scrollToLastMessage(listState, currentChatState)
@@ -96,6 +108,7 @@ class CurrentChatThreadScreen : Screen {
         DisposableEffect(Unit) {
             onDispose {
                 chatMessageListenerService.unregisterAllListeners()
+                chatThreadListenerService.unregisterAllListeners()
             }
         }
 
@@ -123,7 +136,7 @@ class CurrentChatThreadScreen : Screen {
                     })
             }) { paddingValues ->
             Column(
-                modifier = Modifier.fillMaxSize().padding(paddingValues)
+                modifier = Modifier.fillMaxSize().padding(paddingValues).padding(AdditionalTheme.spacings.medium)
             ) {
                 if (!showErrorDialog) {
                     LazyColumn(

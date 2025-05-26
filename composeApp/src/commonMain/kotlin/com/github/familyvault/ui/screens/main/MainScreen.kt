@@ -136,7 +136,7 @@ class MainScreen : Screen {
         val taskListState = koinInject<ITaskListState>()
         val navigator = LocalNavigator.currentOrThrow
 
-        taskListState.selectedTaskList?.let {
+        if (!taskListState.isEmpty() && taskListState.selectedTaskList != null) {
             FloatingActionButton(onClick = {
                 navigator.parent?.push(TaskNewScreen(requireNotNull(taskListState.selectedTaskList).id))
             }) {
