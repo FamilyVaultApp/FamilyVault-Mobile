@@ -1,6 +1,5 @@
 package com.github.familyvault.services
 
-import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.PrivMxErrorCodes
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
@@ -20,9 +19,9 @@ class FamilyGroupSessionService(
     private var session: FamilyGroupSession? = null
     private var currentUser: FamilyMember? = null
 
-    override fun assignSession(familyGroupCredential: FamilyGroupCredential) {
+    override suspend fun assignSession(familyGroupCredential: FamilyGroupCredential) {
         assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL,
+            familyVaultBackendClient.getBridgeUrl().bridgeUrl,
             familyGroupCredential.familyGroupName,
             familyGroupCredential.solutionId,
             familyGroupCredential.contextId,
