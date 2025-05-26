@@ -62,7 +62,12 @@ class CurrentChatThreadsState() :
         } else {
             groupChatThreads
         }
-        chatThreadList.removeAll { it.id.compareTo(chatThread.id) == 0 }
-        chatThreadList.add(chatThread)
+        val editedChatThread = chatThreadList.firstOrNull { it.id == chatThread.id }
+
+        editedChatThread?.let {
+            chatThreadList.remove(it)
+        }
+
+        chatThreadList.add(if (editedChatThread == null) chatThread else chatThread.copy(lastMessage = editedChatThread.lastMessage))
     }
 }
