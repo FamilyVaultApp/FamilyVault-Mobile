@@ -47,11 +47,12 @@ fun AssignMemberToTaskBottomSheet(task: Task, onDismissRequest: () -> Unit) {
 
     ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
         Column(
-            modifier = Modifier.padding(horizontal = AdditionalTheme.spacings.screenPadding),
+            modifier = Modifier.padding(horizontal = AdditionalTheme.spacings.screenPadding, vertical = AdditionalTheme.spacings.medium),
             verticalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
             Headline3(task.content.title)
             ParagraphMuted(task.content.description)
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.small))
             FamilyMemberPicker(
                 label = stringResource(Res.string.assigned_person),
                 selectedPubKey = selectedPubKey,
@@ -60,7 +61,7 @@ fun AssignMemberToTaskBottomSheet(task: Task, onDismissRequest: () -> Unit) {
                     selectedPubKey = it?.publicKey
                 }
             )
-            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.large))
+            Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 text = stringResource(Res.string.user_modification_save_button),
