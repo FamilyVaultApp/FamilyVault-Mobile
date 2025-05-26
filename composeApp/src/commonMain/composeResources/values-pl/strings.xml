@@ -114,7 +114,7 @@
     <string name="add_member_infobutton_content">Kliknij tutaj, aby dowiedzieć się więcej o dodawaniu nowych członków do grupy rodzinnej.</string>
 
     <!-- QRCode scan  -->
-    <string name="qr_code_scanning">Uruchamianie skanera QR</string>
+    <string name="qr_code_scanning">Uruchamianie skanera kodów QR</string>
     <string name="qr_code_generation_screen_content">Niech opiekun grupy rodzinnej, do której chcesz dołączyć zeskanuje ten kod, aby Cię do niej dodać.</string>
     <string name="invalid_qr_code_label">Nieprawidłowy kod QR</string>
     <string name="qr_code_scanner_not_installed">Skaner kodów QR nadal się instaluje. Spróbuj ponownie za chwilę.</string>
@@ -189,13 +189,13 @@
     <!-- Tasks -->
     <string name="task_add_new_list_short">Dodaj nową</string>
     <string name="task_add_new_list">Nowa lista zadań</string>
-    <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową liste zadań, aby lepiej organizować zadania i przypisywać obowiązki.</string>
+    <string name="task_add_new_list_description">Na tym ekranie możesz utworzyć nową listę zadań, aby lepiej organizować zadania i przypisywać obowiązki.</string>
     <string name="task_edit_list_description">Na tym ekranie możesz edytować listę zadań, aby lepiej organizować obowiązki.</string>
     <string name="task_settings">Konfiguruj</string>
     <string name="task_completed">Ukończone</string>
     <string name="task_assign">Przydziel zadanie</string>
     <string name="no_task_list_title">Brak listy zadań</string>
-    <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając w przycisk poniżej.</string>
+    <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając przycisk poniżej.</string>
     <string name="no_task_list_description_without_permission">Tylko opiekun rodziny może utworzyć nową listę zadań.</string>
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
     <string name="task_new">Nowe zadanie</string>
