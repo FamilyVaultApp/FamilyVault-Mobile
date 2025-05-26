@@ -55,7 +55,7 @@
 
     <!-- Joining family group-->
     <string name="join_family_group_title">Join the family group</string>
-    <string name="join_family_group_content">Tap your phone to your guardian's phone to join the family group.</string>
+    <string name="join_family_group_content">Tap your phone to your Guardian's phone to join the family group.</string>
     <string name="preparing_to_join_family_group_label">Preparing to join family group</string>
 
     <!-- Form validation errors-->
@@ -115,7 +115,7 @@
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Starting QR scanner</string>
-    <string name="qr_code_generation_screen_content">Let the guardian of the family group you want to join scan this code to add you to it.</string>
+    <string name="qr_code_generation_screen_content">Let the Guardian of the family group you want to join scan this code to add you to it.</string>
     <string name="invalid_qr_code_label">Invalid QR code</string>
     <string name="qr_code_scanner_not_installed">QR code scanner is still installing. Please try again shortly.</string>
 
@@ -196,7 +196,7 @@
     <string name="task_assign">Assign a task</string>
     <string name="no_task_list_title">No task list</string>
     <string name="no_task_list_description">Create your first task list by clicking the button below.</string>
-    <string name="no_task_list_description_without_permission">Only the family guardian can create a new task list.</string>
+    <string name="no_task_list_description_without_permission">Only the family Guardian can create a new task list.</string>
     <string name="task_list_creating">Creating a new task list...</string>
     <string name="task_new">New task</string>
     <string name="task_new_description">Create a new task with a description that you can assign to a selected member of your family group.</string>

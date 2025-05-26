@@ -55,7 +55,7 @@
 
     <!-- Joining family group-->
     <string name="join_family_group_title">Dołącz do grupy rodzinnej</string>
-    <string name="join_family_group_content">Przyłóż swój telefon do telefonu opiekuna, aby dołączyć do grupy rodzinnej.</string>
+    <string name="join_family_group_content">Przyłóż swój telefon do telefonu Opiekuna, aby dołączyć do grupy rodzinnej.</string>
     <string name="preparing_to_join_family_group_label">Przygotowanie do dołączenia do grupy rodzinnej</string>
 
     <!-- Form validation errors-->
@@ -64,7 +64,7 @@
     <string name="form_password_not_equal_error">Hasła nie są zgodne ze sobą</string>
     <string name="form_too_short_error">Wprowadzone dane muszą być dłuższe niż %1$d znaków</string>
     <string name="form_creator_not_in_group">Nie możesz utworzyć chatu grupowego, w którym Ciebie nie ma</string>
-    <string name="form_chat_group_members_empty">Nie możesz utworzyć chatu grupowego bez żadnych członków</string>
+    <string name="form_chat_group_members_empty">Nie możesz utworzyć chatu grupowego bez żadnych członków grupy</string>
 
     <!-- Bottom navigation bar items-->
     <string name="chat_tab">Chaty</string>
@@ -89,11 +89,11 @@
     <string name="setting_change_name_description_short">Zmień nazwę aktualnej grupy rodzinnej</string>
     <string name="setting_change_name_description_long">Skorzystaj z formularza, aby nadać grupie rodzinnej nową nazwę. Pamiętaj, że zmiana może nie być widoczna od razu u wszystkich użytkowników.</string>
 
-    <string name="setting_members_title">Członkowie</string>
+    <string name="setting_members_title">Członkowie grupy rodzinnej</string>
     <string name="setting_members_short">Zarządzaj członkami grupy rodzinnej</string>
-    <string name="setting_members_long">Poniżej znajduje się lista członków Twojej grupy rodzinnej. Kliknij ikonę trzech kropek obok wybranego członka, aby nim zarządzać.</string>
+    <string name="setting_members_long">Poniżej znajduje się lista członków Twojej grupy rodzinnej. Kliknij ikonę trzech kropek obok wybranego członka grupy, aby nim zarządzać.</string>
 
-    <string name="setting_add_member_title">Dodaj członka</string>
+    <string name="setting_add_member_title">Dodaj członka do grupy</string>
     <string name="setting_add_member_short">Dodaj nowego członka do grupy rodzinnej</string>
 
     <string name="setting_change_family_group_title">Zmień grupę rodzinną</string>
@@ -103,19 +103,19 @@
     <string name="setting_join_or_create_family_group_short">Przejdź do ekranu dołączenia lub tworzenia nowej grupy rodzinnej</string>
 
     <string name="family_group_members">Członkowie grupy rodzinnej</string>
-    <string name="family_group_add_new_member">Dodaj nowego członka</string>
-    <string name="family_group_delete_member">Usuń członka</string>
+    <string name="family_group_add_new_member">Dodaj nowego członka do grupy</string>
+    <string name="family_group_delete_member">Usuń członka grupy</string>
     <string name="setting_no_permission">Nie masz do tego uprawnień.</string>
 
     <!-- Add member to family group-->
-    <string name="add_member_to_family_group_header">Dodaj nowego członka</string>
+    <string name="add_member_to_family_group_header">Dodaj członka do grupy</string>
     <string name="add_member_to_family_group_content">Przyłóż swój telefon do telefonu nowego członka, aby dodać go do grupy rodzinnej.</string>
     <string name="join_infobutton_content">Kliknij tutaj, aby dowiedzieć się więcej o dołączaniu do grupy rodzinnej.</string>
     <string name="add_member_infobutton_content">Kliknij tutaj, aby dowiedzieć się więcej o dodawaniu nowych członków do grupy rodzinnej.</string>
 
     <!-- QRCode scan  -->
     <string name="qr_code_scanning">Uruchamianie skanera kodów QR</string>
-    <string name="qr_code_generation_screen_content">Niech opiekun grupy rodzinnej, do której chcesz dołączyć zeskanuje ten kod, aby Cię do niej dodać.</string>
+    <string name="qr_code_generation_screen_content">Niech Opiekun grupy rodzinnej, do której chcesz dołączyć, zeskanuje ten kod, aby Cię do niej dodać.</string>
     <string name="invalid_qr_code_label">Nieprawidłowy kod QR</string>
     <string name="qr_code_scanner_not_installed">Skaner kodów QR nadal się instaluje. Spróbuj ponownie za chwilę.</string>
 
@@ -125,7 +125,7 @@
     <string name="chat_set_group_name">Nazwa grupy</string>
     <string name="chat_settings">Ustawienia chatu</string>
     <string name="chat_create_group_default_name">Grupa rodzinna</string>
-    <string name="chat_create_group_members">Członkowie</string>
+    <string name="chat_create_group_members">Członkowie grupy</string>
     <string name="chat_icon_icon_alt">Ikona chatu grupowego</string>
     <string name="chat_icon_icon_picker">Ikona</string>
     <string name="chat_create_group_button_content">Utwórz chat</string>
@@ -153,7 +153,7 @@
     <string name="chat_private_notes">Prywatne notatki</string>
 
     <!-- Remove users -->
-    <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego członka?</string>
+    <string name="remove_user_dialog">Czy na pewno chcesz usunąć tego członka grupy?</string>
 
     <!-- Connection error screen -->
     <string name="connection_error_title">Błąd połączenia</string>
@@ -167,13 +167,13 @@
     <!-- User modification -->
     <string name="user_modification_description">Modyfikuj członka grupy rodzinnej</string>
     <string name="user_permission_group_guardian">Opiekun</string>
-    <string name="user_permission_group_guardian_description">Pełny dostęp do zarządzania zadaniami, szafą, czatami i użytkownikami.</string>
+    <string name="user_permission_group_guardian_description">Pełny dostęp do zarządzania zadaniami, Szufladą, chatami i użytkownikami.</string>
     <string name="user_permission_group_member">Członek</string>
-    <string name="user_permission_group_member_description">Podstawowy dostęp do zadań, szafy i chatów.</string>
+    <string name="user_permission_group_member_description">Podstawowy dostęp do zadań, Szuflady i chatów.</string>
     <string name="user_permission_group_guest">Gość</string>
     <string name="user_permission_group_guest_description">Podstawowy dostęp do zadań i chatów.</string>
-    <string name="user_modification_choose_permission_content">Wybierz grupę uprawnień tego członka.</string>
-    <string name="user_modification_remove_user_button_content">Usuń tego członka</string>
+    <string name="user_modification_choose_permission_content">Wybierz grupę uprawnień tego członka grupy rodzinnej.</string>
+    <string name="user_modification_remove_user_button_content">Usuń tego członka grupy</string>
     <string name="user_modification_save_button">Zapisz zmiany</string>
     <string name="user_modification_no_permission">Tylko Opiekunowie mogą zmieniać role członków grupy rodzinnej.</string>
     <string name="user_modification_last_guardian_error">Jesteś ostatnim Opiekunem w grupie. W grupie musi pozostać co najmniej jeden Opiekun.</string>
@@ -196,11 +196,11 @@
     <string name="task_assign">Przydziel zadanie</string>
     <string name="no_task_list_title">Brak listy zadań</string>
     <string name="no_task_list_description">Stwórz swoją pierwszą listę zadań, klikając przycisk poniżej.</string>
-    <string name="no_task_list_description_without_permission">Tylko opiekun rodziny może utworzyć nową listę zadań.</string>
+    <string name="no_task_list_description_without_permission">Tylko Opiekun rodziny może utworzyć nową listę zadań.</string>
     <string name="task_list_creating">Tworzenie nowej listy zadań...</string>
     <string name="task_new">Nowe zadanie</string>
-    <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi swojej grupy rodzinnej.</string>
-    <string name="task_edit_description">Edytuj opis zadania i w razie potrzeby przypisz je ponownie wybranemu członkowi swojej grupy rodzinnej.</string>
+    <string name="task_new_description">Stwórz nowe zadanie wraz z opisem, które będziesz mógł przydzielić wybranemu członkowi grupy rodzinnej.</string>
+    <string name="task_edit_description">Edytuj opis zadania i w razie potrzeby przypisz je ponownie wybranemu członkowi grupy rodzinnej.</string>
 
     <!-- File Cabinet -->
     <string name="file_cabinet_photos">Zdjęcia</string>
