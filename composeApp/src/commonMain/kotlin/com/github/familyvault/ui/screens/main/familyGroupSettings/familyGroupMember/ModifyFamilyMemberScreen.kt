@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.DocumentationLinks
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.InfoBoxType
@@ -209,7 +210,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         title = stringResource(Res.string.documentation),
                         content = stringResource(Res.string.permission_group_infobox_content),
                         type = InfoBoxType.DOCUMENTATION,
-                        link = "https://familyvault.pl" // TODO: Change URL
+                        link = DocumentationLinks.PERMISSION_GROUPS
                     )
                     Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
                     Button(
