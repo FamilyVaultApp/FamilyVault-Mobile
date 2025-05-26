@@ -26,6 +26,7 @@ import com.github.familyvault.backend.responses.RenameFamilyGroupResponse
 import com.github.familyvault.backend.responses.UpdateJoinStatusResponse
 
 interface IFamilyVaultBackendClient {
+    fun setCustomServerUrl(url: String)
     suspend fun getSolutionId(): PrivMxSolutionIdResponse
     suspend fun createFamilyGroup(req: CreateFamilyGroupRequest): CreateFamilyGroupResponse
     suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest): AddMemberToFamilyGroupResponse

@@ -45,10 +45,16 @@ import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 
 class FamilyVaultBackendClient : IFamilyVaultBackendClient {
+    private var customServerUrl: String? = null
+
     private val client = HttpClient {
         install(ContentNegotiation) {
             json()
         }
+    }
+
+    override fun setCustomServerUrl(url: String) {
+        customServerUrl = url
     }
 
     override suspend fun getSolutionId(): PrivMxSolutionIdResponse {
@@ -114,6 +120,9 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     }
 
     private fun getEndpointUrl(endpoint: String): String {
+        customServerUrl?.let {
+            return "${it}$endpoint"
+        }
         return "${AppConfig.BACKEND_URL}$endpoint"
     }
 
