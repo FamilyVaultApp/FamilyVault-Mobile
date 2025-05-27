@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,6 +31,7 @@ import com.github.familyvault.models.fileCabinet.isImage
 import com.github.familyvault.models.fileCabinet.isPdf
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IFileOpenerService
+import com.github.familyvault.services.listeners.IFileCabinetListenerService
 import com.github.familyvault.ui.components.FullScreenImage
 import com.github.familyvault.ui.components.HeaderIcon
 import com.github.familyvault.ui.components.LoaderWithText
@@ -61,9 +63,10 @@ import org.koin.compose.koinInject
 fun DocumentsTabContent() {
     val fileCabinetService = koinInject<IFileCabinetService>()
     val fileOpener = koinInject<IFileOpenerService>()
+    val fileCabinetListener = koinInject<IFileCabinetListenerService>()
     val coroutineScope = rememberCoroutineScope()
 
-    val documents = remember { mutableListOf<FileCabinetDocument>() }
+    val documents = remember { mutableStateListOf<FileCabinetDocument>() }
     var isLoading by remember { mutableStateOf(true) }
     var isInitializing by remember { mutableStateOf(false) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
@@ -90,6 +93,9 @@ fun DocumentsTabContent() {
 
     LaunchedEffect(Unit) {
         loadDocuments()
+        fileCabinetListener.startListeningForNewDocuments(fileCabinetService.getDocumentsStoreId()) {
+            documents.add(it)
+        }
     }
 
     if (isLoading || isInitializing) {
