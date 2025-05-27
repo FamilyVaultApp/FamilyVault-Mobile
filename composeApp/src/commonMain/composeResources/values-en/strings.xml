@@ -181,7 +181,7 @@
 
     <!-- Select family group -->
     <string name="select_family_group_description">Select a family group to join, or create a new one using the button at the bottom of the screen.</string>
-    <string name="select_family_group_join_or_create_button">Join or create a new family group</string>
+    <string name="select_family_group_join_or_create_button">Join or create family group</string>
     <string name="select_family_group_changing">Changing the family group...</string>
     <string name="family_group_default">Default family group</string>
     <string name="family_group_no_default">Not the default family group</string>
