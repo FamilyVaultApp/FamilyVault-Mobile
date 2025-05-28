@@ -13,14 +13,14 @@ object ChatMessageAdditionalInfoClassifier : IChatMessageAdditionalInfoClassifie
             if (nextMessage != null && senderIsDifferent(message, nextMessage)) {
                 return ChatMessageAdditionalInfo.FULL
             }
-            return ChatMessageAdditionalInfo.SENDER_NAME
+            return ChatMessageAdditionalInfo.SEND_DATE
         }
 
         if (nextMessage == null) {
             if (senderIsDifferent(prevMessage, message)) {
                 return ChatMessageAdditionalInfo.FULL
             }
-            return ChatMessageAdditionalInfo.SEND_DATE
+            return ChatMessageAdditionalInfo.SENDER_NAME
         }
 
         if (
@@ -31,11 +31,11 @@ object ChatMessageAdditionalInfoClassifier : IChatMessageAdditionalInfoClassifie
         }
 
         if (senderIsDifferent(prevMessage, message) && !senderIsDifferent(message, nextMessage)) {
-            return ChatMessageAdditionalInfo.SENDER_NAME
+            return ChatMessageAdditionalInfo.SEND_DATE
         }
 
         if (!senderIsDifferent(prevMessage, message) && senderIsDifferent(message, nextMessage)) {
-            return ChatMessageAdditionalInfo.SEND_DATE
+            return ChatMessageAdditionalInfo.SENDER_NAME
         }
 
         if (!senderIsDifferent(prevMessage, message) && !senderIsDifferent(message, nextMessage)) {
