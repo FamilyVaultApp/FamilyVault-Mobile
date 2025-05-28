@@ -9,36 +9,36 @@ object ChatMessageAdditionalInfoClassifier : IChatMessageAdditionalInfoClassifie
         prevMessage: ChatMessage?,
         nextMessage: ChatMessage?
     ): ChatMessageAdditionalInfo {
-        if (prevMessage == null) {
-            if (nextMessage != null && senderIsDifferent(message, nextMessage)) {
-                return ChatMessageAdditionalInfo.FULL
-            }
-            return ChatMessageAdditionalInfo.SEND_DATE
-        }
-
         if (nextMessage == null) {
-            if (senderIsDifferent(prevMessage, message)) {
+            if (prevMessage != null && senderIsDifferent(message, prevMessage)) {
                 return ChatMessageAdditionalInfo.FULL
             }
             return ChatMessageAdditionalInfo.SENDER_NAME
         }
 
+        if (prevMessage == null) {
+            if (senderIsDifferent(nextMessage, message)) {
+                return ChatMessageAdditionalInfo.FULL
+            }
+            return ChatMessageAdditionalInfo.SEND_DATE
+        }
+
         if (
-            senderIsDifferent(prevMessage, message) &&
-            senderIsDifferent(message, nextMessage)
+            senderIsDifferent(nextMessage, message) &&
+            senderIsDifferent(message, prevMessage)
         ) {
             return ChatMessageAdditionalInfo.FULL
         }
 
-        if (senderIsDifferent(prevMessage, message) && !senderIsDifferent(message, nextMessage)) {
-            return ChatMessageAdditionalInfo.SEND_DATE
-        }
-
-        if (!senderIsDifferent(prevMessage, message) && senderIsDifferent(message, nextMessage)) {
+        if (senderIsDifferent(nextMessage, message) && !senderIsDifferent(message, prevMessage)) {
             return ChatMessageAdditionalInfo.SENDER_NAME
         }
 
-        if (!senderIsDifferent(prevMessage, message) && !senderIsDifferent(message, nextMessage)) {
+        if (!senderIsDifferent(nextMessage, message) && senderIsDifferent(message, prevMessage)) {
+            return ChatMessageAdditionalInfo.SEND_DATE
+        }
+
+        if (!senderIsDifferent(nextMessage, message) && !senderIsDifferent(message, prevMessage)) {
             return ChatMessageAdditionalInfo.EMPTY
         }
 
