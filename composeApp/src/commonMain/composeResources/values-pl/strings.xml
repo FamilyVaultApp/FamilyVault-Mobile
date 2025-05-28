@@ -181,7 +181,7 @@
 
     <!-- Select family group -->
     <string name="select_family_group_description">Wybierz grupę rodzinną, do której chcesz dołączyć. Możesz też utworzyć nową, korzystając z przycisku na dole ekranu.</string>
-    <string name="select_family_group_join_or_create_button">Dołącz lub utwórz grupę rodzinną</string>
+    <string name="select_family_group_join_or_create_button">Dołącz lub utwórz nową</string>
     <string name="select_family_group_changing">Trwa zmiana grupy rodzinnej...</string>
     <string name="family_group_default">Domyślna grupa rodzinna</string>
     <string name="family_group_no_default">Niedomyślna grupa rodzinna</string>
