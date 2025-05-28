@@ -94,7 +94,7 @@ fun DocumentsTabContent() {
     LaunchedEffect(Unit) {
         loadDocuments()
         fileCabinetListener.startListeningForNewDocuments(fileCabinetService.getDocumentsStoreId()) {
-            documents.add(it)
+            documents.add(0, it)
         }
     }
 
