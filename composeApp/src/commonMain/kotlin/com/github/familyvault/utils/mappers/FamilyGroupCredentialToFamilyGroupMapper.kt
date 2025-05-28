@@ -7,6 +7,8 @@ object FamilyGroupCredentialToFamilyGroupMapper {
     fun map(familyGroupCredential: FamilyGroupCredential): FamilyGroup = FamilyGroup(
         contextId = familyGroupCredential.contextId,
         name = familyGroupCredential.familyGroupName,
-        isDefault = familyGroupCredential.isDefault
+        memberPublicKey = familyGroupCredential.publicKey,
+        isDefault = familyGroupCredential.isDefault,
+        firstname = familyGroupCredential.firstname
     )
 }

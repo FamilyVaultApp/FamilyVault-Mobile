@@ -20,4 +20,6 @@ interface IFileCabinetService {
     suspend fun restoreFileCabinetMembership()
 
     fun getGalleryStoreId(): String
+
+    fun getDocumentsStoreId(): String
 }

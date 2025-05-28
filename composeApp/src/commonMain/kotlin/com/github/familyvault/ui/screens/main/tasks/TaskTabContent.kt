@@ -19,6 +19,8 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.loading
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun TaskTabContent() {
@@ -28,6 +30,9 @@ fun TaskTabContent() {
     val taskListListenerService = koinInject<ITaskListListenerService>()
 
     var isLoading by remember { mutableStateOf(true) }
+
+
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         isLoading = true
@@ -39,6 +44,14 @@ fun TaskTabContent() {
         }
         taskListListenerService.startListeningForUpdatedTaskList { updatedList ->
             tasksListState.updateTaskList(updatedList)
+        }
+
+        taskListListenerService.startListeningForDeletedTaskList { deletedListId ->
+            coroutineScope.launch {
+                isLoading = true
+                tasksListState.removeTaskList(deletedListId.threadId)
+                isLoading = false
+            }
         }
 
         isLoading = false

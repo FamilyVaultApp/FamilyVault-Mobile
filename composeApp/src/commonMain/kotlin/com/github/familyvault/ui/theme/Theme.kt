@@ -23,7 +23,10 @@ private val lightScheme = lightColorScheme(
     background = backgroundLight,
     onBackground = onBackgroundLight,
     surface = surfaceLight,
-    surfaceContainer = surfaceContainerLight
+    surfaceContainer = surfaceContainerLight,
+    surfaceContainerLow = surfaceContainerLight,
+    surfaceContainerHigh = surfaceContainerLight,
+    surfaceVariant = surfaceContainerLight,
 )
 
 private val darkScheme = darkColorScheme(
@@ -38,7 +41,10 @@ private val darkScheme = darkColorScheme(
     background = backgroundDark,
     onBackground = onBackgroundDark,
     surface = surfaceDark,
-    surfaceContainer = surfaceContainerDark
+    surfaceContainer = surfaceContainerDark,
+    surfaceContainerLow = surfaceContainerDark,
+    surfaceContainerHigh = surfaceContainerDark,
+    surfaceVariant = surfaceContainerDark,
 )
 
 @Immutable

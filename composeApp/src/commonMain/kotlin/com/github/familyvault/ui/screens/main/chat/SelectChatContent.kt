@@ -26,7 +26,7 @@ import com.github.familyvault.ui.components.ParagraphStickyHeader
 import com.github.familyvault.ui.components.chat.ChatThreadEntry
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.chat_type_group
-import familyvault.composeapp.generated.resources.chat_type_individual
+import familyvault.composeapp.generated.resources.chat_type_personal
 import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -41,7 +41,6 @@ fun SelectChatContent() {
     val chatThreadListenerService = koinInject<IChatThreadListenerService>()
     val chatMessagesListenerService = koinInject<IChatMessagesListenerService>()
     val currentChatThreadsState = koinInject<ICurrentChatThreadsState>()
-    val familyGroupSessionService = koinInject<IFamilyGroupSessionService>()
 
     var isLoading by remember { mutableStateOf(true) }
 
@@ -66,11 +65,17 @@ fun SelectChatContent() {
 
             chatThreadListenerService.startListeningForUpdatedChatThread {
                 currentChatThreadsState.editExistingChatThread(it)
+                chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
+                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+                }
             }
 
             for (chatThread in currentChatThreadsState.allChatThreads) {
                 chatMessagesListenerService.startListeningForNewMessage(chatThread.id) { newMessage ->
-                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, chatThread)
+                    currentChatThreadsState.editExistingChatThreadLastMessage(
+                        newMessage,
+                        chatThread
+                    )
                 }
             }
         }
@@ -92,7 +97,7 @@ fun SelectChatContent() {
     LazyColumn {
         stickyHeader {
             ParagraphStickyHeader(
-                stringResource(Res.string.chat_type_individual)
+                stringResource(Res.string.chat_type_personal)
             )
         }
 

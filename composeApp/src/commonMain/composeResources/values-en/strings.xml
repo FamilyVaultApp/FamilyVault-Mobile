@@ -1,11 +1,11 @@
 <resources>
     <!-- General -->
-    <string name="app_name">Family Vault</string>
+    <string name="app_name">FamilyVault</string>
     <string name="app_icon_alt">FamilyVault icon</string>
     <string name="loading">Loading...</string>
     <string name="saving">Saving...</string>
     <string name="you">You</string>
-    <string name="is_actual">Actual</string>
+    <string name="is_current">Current</string>
     <string name="is_default">Default</string>
     <string name="collapse">Collapse</string>
     <string name="expand">Expand</string>
@@ -13,6 +13,8 @@
     <string name="description">Description</string>
     <string name="everyone">Everyone</string>
     <string name="assigned_person">Assigned person</string>
+    <string name="as_with_spaces"> as </string>
+    <string name="documentation">Documentation</string>
 
     <!-- Icon descriptions -->
     <string name="info_icon_alt">Information icon</string>
@@ -36,13 +38,13 @@
     <string name="cloud_connection_mode_title">Cloud</string>
     <string name="cloud_connection_mode_content">Use our cloud solution. No configuration required.</string>
     <string name="self_hosted_connection_mode_title">PrivMX Bridge</string>
-    <string name="self_hosted_connection_mode_content">Use your own PrivMX Bridge, which you need to configure first.</string>
+    <string name="self_hosted_connection_mode_content">Use your own PrivMX Bridge server, which you need to configure first.</string>
 
     <!-- Family group creation -->
     <string name="create_new_family_group_title">Create a new group</string>
-    <string name="create_new_family_group_content">If you don't have a family group set up in the FamilyVault application yet.</string>
+    <string name="create_new_family_group_content">If you don't have a family group set up in the FamilyVault app yet.</string>
     <string name="join_existing_family_group_title">Join an existing group</string>
-    <string name="join_existing_family_group_content">If you already have a family group set up in the FamilyVault application.</string>
+    <string name="join_existing_family_group_content">If you already have a family group set up in the FamilyVault app.</string>
 
     <string name="family_group_create_screen_title">Creating a family group</string>
 
@@ -52,17 +54,17 @@
     <string name="creating_family_group_label">Creating family group...</string>
 
     <!-- Joining family group-->
-    <string name="join_family_group_title">Join family group</string>
-    <string name="join_family_group_content">Tap your phone to your parent's phone to join the family group.</string>
+    <string name="join_family_group_title">Join the family group</string>
+    <string name="join_family_group_content">Tap your phone to your Guardian's phone to join the family group.</string>
     <string name="preparing_to_join_family_group_label">Preparing to join family group</string>
 
     <!-- Form validation errors-->
     <string name="form_empty_error">This field cannot be empty</string>
     <string name="form_overfill_error">The entered text is too long</string>
-    <string name="form_password_not_equal_error">Passwords are not equal to each other</string>
+    <string name="form_password_not_equal_error">Passwords do not match each other</string>
     <string name="form_too_short_error">Your input must be longer than %1$d characters</string>
-    <string name="form_creator_not_in_group">You cannot create group chat where you're not a member</string>
-    <string name="form_chat_group_members_empty">You cannot create group chat without any members</string>
+    <string name="form_creator_not_in_group">You cannot create a group chat that doesn't include you</string>
+    <string name="form_chat_group_members_empty">You cannot create a group chat without any members</string>
 
     <!-- Bottom navigation bar items-->
     <string name="chat_tab">Chats</string>
@@ -71,7 +73,7 @@
 
     <string name="private_key_assign_password_title">Protect your key</string>
     <string name="private_key_about_title">Private key</string>
-    <string name="private_key_about_content">Private key protects your data through encryption. Set strong password to maintain its security.</string>
+    <string name="private_key_about_content">Your private key protects your data through encryption. Set a strong password to keep it secure.</string>
 
     <string name="password_label">Password</string>
     <string name="repeat_password_label">Repeat password</string>
@@ -84,7 +86,7 @@
     <string name="settings_category_management">Management</string>
 
     <string name="setting_change_name_title">Change name</string>
-    <string name="setting_change_name_description_short">Change the name of the current family group</string>
+    <string name="setting_change_name_description_short">Rename the current family group</string>
     <string name="setting_change_name_description_long">Use the form to give your family group a new name. Keep in mind that the change might not be visible to all users immediately.</string>
 
     <string name="setting_members_title">Members</string>
@@ -101,22 +103,25 @@
     <string name="setting_join_or_create_family_group_short">Go to the screen for joining or creating a new family group</string>
 
     <string name="family_group_members">Family group members</string>
-    <string name="family_group_add_new_member">Add new member</string>
-    <string name="family_group_delete_member">Remove member</string>
+    <string name="family_group_add_new_member">Add a new member</string>
+    <string name="family_group_delete_member">Remove a member</string>
     <string name="setting_no_permission">You don't have permission to do that.</string>
 
     <!-- Add member to family group-->
-    <string name="add_member_to_family_group_header">Add new member</string>
-    <string name="add_member_to_family_group_content">Tap your phone to new member's phone to add them to family group.</string>
+    <string name="add_member_to_family_group_header">Add a new member</string>
+    <string name="add_member_to_family_group_content">Tap your phone to the new member's phone to add them to the family group.</string>
+    <string name="join_infobutton_content">Click here to learn more about joining a family group.</string>
+    <string name="add_member_infobutton_content">Click here to learn more about adding new members to a family group.</string>
 
     <!-- QRCode scan  -->
-    <string name="qr_code_scanning">Initiate QR scanner</string>
-    <string name="qr_code_generation_screen_content">Have your family group guardian scan this code to let you join.</string>
+    <string name="qr_code_scanning">Starting QR scanner</string>
+    <string name="qr_code_generation_screen_content">Let the Guardian of the family group you want to join scan this code to add you to it.</string>
     <string name="invalid_qr_code_label">Invalid QR code</string>
     <string name="qr_code_scanner_not_installed">QR code scanner is still installing. Please try again shortly.</string>
 
     <!-- Chat -->
-    <string name="chat_create_new">Create new chat</string>
+    <string name="chat_top_bar_greeting">Hello, %1$s!</string>
+    <string name="chat_create_new">Create a new chat</string>
     <string name="chat_set_group_name">Group chat name</string>
     <string name="chat_settings">Chat settings</string>
     <string name="chat_create_group_default_name">Family group</string>
@@ -125,12 +130,12 @@
     <string name="chat_icon_icon_picker">Icon</string>
     <string name="chat_create_group_button_content">Create group chat</string>
     <string name="chat_save_edited_group_button_content">Save changes</string>
-    <string name="chat_create_group_user_is_member">Currently a member</string>
-    <string name="chat_create_group_user_is_not_member">Currently not a member</string>
+    <string name="chat_create_group_user_is_member">Currently a chat member</string>
+    <string name="chat_create_group_user_is_not_member">Currently not a chat member</string>
     <string name="chat_send_message">Send message</string>
-    <string name="chat_type_individual">Individual</string>
-    <string name="chat_type_group">Groups</string>
-    <string name="chat_recording_icon">Record voice message</string>
+    <string name="chat_type_personal">Personal</string>
+    <string name="chat_type_group">Group</string>
+    <string name="chat_recording_icon">Record a voice message</string>
     <string name="chat_attach_photo">Attach photo</string>
     <string name="chat_creating">Creating chat...</string>
     <string name="chat_message_type_audio">Voice message</string>
@@ -144,50 +149,54 @@
     <string name="chat_media_full_screen">Full screen</string>
     <string name="chat_remove_multimedia_description">Remove multimedia</string>
     <string name="chat_image_preview">Image preview</string>
-    <string name="chat_user_not_in_group">You have been removed from this group chat</string>
+    <string name="chat_user_not_in_group">You have been removed from this chat room.</string>
     <string name="chat_private_notes">Private notes</string>
 
     <!-- Remove users -->
-    <string name="remove_user_dialog">Are you sure to remove this user?</string>
+    <string name="remove_user_dialog">Are you sure you want to remove this member?</string>
 
     <!-- Connection error screen -->
     <string name="connection_error_title">Connection Error</string>
-    <string name="connection_error_content">Couldn't connect to the server. Please check your internet connection and try again </string>
+    <string name="connection_error_content">Couldn't connect to the server. Please check your internet connection and try again.</string>
     <string name="connection_error_button_content">Retry connection</string>
 
     <string name="user_not_found_title">User not found</string>
-    <string name="user_not_found_content">We couldn't find you in this family group. It's possible that your account has been removed from it. You can remove this family group's data from your device using the button below.</string>
+    <string name="user_not_found_content">We couldn't find you in this family group. It's possible that you have been removed from it. You can remove this family group's data from your device using the button below.</string>
     <string name="user_not_found_button_content">Remove family group data</string>
 
     <!-- User modification -->
     <string name="user_modification_description">Modify family group member</string>
     <string name="user_permission_group_guardian">Guardian</string>
+    <string name="user_permission_group_guardian_description">Full access to managing tasks, file cabinet, chats, and users.</string>
     <string name="user_permission_group_member">Member</string>
+    <string name="user_permission_group_member_description">Basic access to tasks, file cabinet, and chats.</string>
     <string name="user_permission_group_guest">Guest</string>
-    <string name="user_modification_choose_permission_content">Select this user's permission group.</string>
-    <string name="user_modification_remove_user_button_content">Remove this user</string>
+    <string name="user_permission_group_guest_description">Basic access to tasks and chats</string>
+    <string name="user_modification_choose_permission_content">Select this member's permission group.</string>
+    <string name="user_modification_remove_user_button_content">Remove this member</string>
     <string name="user_modification_save_button">Save changes</string>
-    <string name="user_modification_no_permission">Only guardians can change member roles.</string>
+    <string name="user_modification_no_permission">Only Guardians can change member roles.</string>
     <string name="user_modification_last_guardian_error">You are the last Guardian in the group. At least one Guardian must remain.</string>
+    <string name="permission_group_infobox_content">Click here to learn more about permission groups.</string>
 
     <!-- Select family group -->
     <string name="select_family_group_description">Select a family group to join, or create a new one using the button at the bottom of the screen.</string>
-    <string name="select_family_group_join_or_create_button">Join or create a family group</string>
-    <string name="select_family_group_changing">Changing family group...</string>
+    <string name="select_family_group_join_or_create_button">Join or create a new one</string>
+    <string name="select_family_group_changing">Changing the family group...</string>
     <string name="family_group_default">Default family group</string>
-    <string name="family_group_no_default">No default family group</string>
+    <string name="family_group_no_default">Not the default family group</string>
 
     <!-- Tasks -->
-    <string name="task_add_new_list_short">Add new</string>
+    <string name="task_add_new_list_short">Add a new</string>
     <string name="task_add_new_list">New task list</string>
-    <string name="task_add_new_list_description">Here you can create a new list to better organize tasks for your family and assign responsibilities.</string>
-    <string name="task_edit_list_description">On this screen, you can edit a task list to better organize family duties.</string>
+    <string name="task_add_new_list_description">On this screen you can create a new task list to better organize tasks and assign responsibilities.</string>
+    <string name="task_edit_list_description">On this screen, you can edit the task list to better organize responsibilities.</string>
     <string name="task_settings">Configure</string>
     <string name="task_completed">Completed</string>
     <string name="task_assign">Assign a task</string>
     <string name="no_task_list_title">No task list</string>
     <string name="no_task_list_description">Create your first task list by clicking the button below.</string>
-    <string name="no_task_list_description_without_permission">A new task list can only be created by the family guardian.</string>
+    <string name="no_task_list_description_without_permission">Only the family Guardian can create a new task list.</string>
     <string name="task_list_creating">Creating a new task list...</string>
     <string name="task_new">New task</string>
     <string name="task_new_description">Create a new task with a description that you can assign to a selected member of your family group.</string>
@@ -199,9 +208,11 @@
     <string name="file_cabinet_upload">Upload</string>
     <string name="file_cabinet_photo_card">Photo card</string>
     <string name="file_cabinet_sending_files">Uploading files...</string>
+    <string name="file_cabinet_no_images_title">No images</string>
     <string name="file_cabinet_no_images">No images found. Upload some photos using the button below.</string>
     <string name="file_cabinet_retry">Retry</string>
-    <string name="file_cabinet_no_documents">No documents found. Upload documents using the button below.</string>
+    <string name="file_cabinet_no_documents">There are no documents yet. Upload documents using the button below.</string>
+    <string name="file_cabinet_no_documents_title">No documents</string>
     <string name="file_cabinet_download_pdf_title">Download PDF</string>
     <string name="file_cabinet_download_pdf_message">Do you want to download this PDF to your device?</string>
     <string name="file_cabinet_download">Download</string>
@@ -209,6 +220,6 @@
     <string name="file_cabinet_initializing_documents">Initializing documents storage...</string>
     <string name="file_cabinet_error_initialize">Could not initialize documents storage</string>
     <string name="file_cabinet_error_loading">Error loading documents</string>
-    <string name="file_cabinet_permission_denied">You don't have access to File Cabinet as a guest.</string>
+    <string name="file_cabinet_permission_denied">You don't have access to File Cabinet as a Guest.</string>
     <string name="file_cabinet_permission_denied_header">Access denied</string>
 </resources>

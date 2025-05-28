@@ -22,14 +22,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextOverflow
 import com.github.familyvault.models.FamilyGroup
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
+import familyvault.composeapp.generated.resources.as_with_spaces
 import familyvault.composeapp.generated.resources.family_group_default
 import familyvault.composeapp.generated.resources.family_group_no_default
-import familyvault.composeapp.generated.resources.is_actual
+import familyvault.composeapp.generated.resources.is_current
 import familyvault.composeapp.generated.resources.is_default
 import org.jetbrains.compose.resources.stringResource
 
@@ -38,10 +40,10 @@ fun FamilyGroupEntry(
     familyGroup: FamilyGroup,
     isCurrentFamilyGroup: Boolean,
     onSelect: () -> Unit,
-    onSetDefault: () -> Unit
+    onSetDefault: () -> Unit,
 ) {
     val familyGroupInfo = listOfNotNull(
-        if (isCurrentFamilyGroup) stringResource(Res.string.is_actual) else null,
+        if (isCurrentFamilyGroup) stringResource(Res.string.is_current) else null,
         if (familyGroup.isDefault) stringResource(Res.string.is_default) else null
     )
     val backgroundColor = if (isCurrentFamilyGroup) {
@@ -62,6 +64,7 @@ fun FamilyGroupEntry(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
+            modifier = Modifier.weight(1f, fill = true),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(AdditionalTheme.spacings.medium)
         ) {
@@ -79,9 +82,26 @@ fun FamilyGroupEntry(
                 }
             )
             Column {
-                Paragraph(familyGroup.name)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Paragraph(
+                        text = familyGroup.name,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    ParagraphMuted(
+                        text = stringResource(Res.string.as_with_spaces) + familyGroup.firstname,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
                 if (familyGroupInfo.isNotEmpty()) {
-                    ParagraphMuted(familyGroupInfo.joinToString(), fontStyle = FontStyle.Italic)
+                    ParagraphMuted(
+                        text = familyGroupInfo.joinToString(),
+                        fontStyle = FontStyle.Italic,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         }

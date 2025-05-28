@@ -8,5 +8,5 @@ data class AddMemberToFamilyGroupRequest(
     val contextId: String,
     val userId: String,
     val userPubKey: String,
-    val role: FamilyGroupMemberPermissionGroup = FamilyGroupMemberPermissionGroup.Member
+    val role: FamilyGroupMemberPermissionGroup = FamilyGroupMemberPermissionGroup.Guest
 ) : FamilyVaultBackendRequest()

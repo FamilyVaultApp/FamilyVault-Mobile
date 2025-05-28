@@ -61,13 +61,19 @@ class FamilyGroupService(
         )
         familyGroupSessionService.connect()
         familyGroupCredentialsRepository.addDefaultCredential(
-            familyGroupName, solutionId, contextId, pairOfKeys, encryptedPassword
+            familyGroupName,
+            solutionId,
+            contextId,
+            pairOfKeys,
+            encryptedPassword,
+            firstname,
+            surname
         )
     }
 
     override suspend fun joinFamilyGroupAndAssign(
         firstname: String,
-        surname: String,
+        surname: String?,
         encryptedPassword: String,
         keyPair: PublicEncryptedPrivateKeyPair,
         contextId: String
@@ -93,7 +99,9 @@ class FamilyGroupService(
             solutionId,
             contextId,
             keyPair,
-            encryptedPassword
+            encryptedPassword,
+            firstname,
+            surname
         )
     }
 

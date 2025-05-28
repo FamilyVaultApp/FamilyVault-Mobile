@@ -13,13 +13,12 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.familyvault.forms.FamilyGroupNameFormData
-import com.github.familyvault.forms.FamilyMemberFormData
 import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyMemberAdditionService
 import com.github.familyvault.services.IFileCabinetService
+import com.github.familyvault.states.ICurrentDraftFamilyGroupState
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
 import com.github.familyvault.ui.components.dialogs.ErrorDialog
@@ -33,15 +32,13 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
-class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
-    private val familyGroupDraft: FamilyMemberFormData,
-    private val familyGroupNameDraft: FamilyGroupNameFormData
-) : Screen {
+class FamilyGroupCreateAssignPrivateKeyPasswordScreen : Screen {
     @Composable
     override fun Content() {
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyMemberAdditionService = koinInject<IFamilyMemberAdditionService>()
         val fileCabinetService = koinInject<IFileCabinetService>()
+        val familyGroupDraftState = koinInject<ICurrentDraftFamilyGroupState>()
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(PrivateKeyPasswordForm()) }
 
@@ -72,12 +69,14 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                 ) {
                     coroutineScope.launch {
                         createFamilyGroupState = FormSubmitState.PENDING
+                        val draftFamilyGroupName = familyGroupDraftState.getNotNullDraftFamilyGroupName()
+                        val draftFamilyMember = familyGroupDraftState.getNotNullDraftFamilyMember()
                         try {
                             familyGroupService.createFamilyGroupAndAssign(
-                                familyGroupDraft.firstname.value,
-                                familyGroupDraft.surname.value,
+                                draftFamilyMember.firstname.value,
+                                draftFamilyMember.surname.value.ifEmpty { "" },
                                 form.password,
-                                familyGroupNameDraft.familyGroupName.value,
+                                draftFamilyGroupName.familyGroupName.value,
                                 "Description"
                             )
 
@@ -88,7 +87,6 @@ class FamilyGroupCreateAssignPrivateKeyPasswordScreen(
                             createFamilyGroupState = FormSubmitState.IDLE
                         } catch (e: Exception) {
                             createFamilyGroupState = FormSubmitState.ERROR
-//                            println(e)
                             throw e
                         }
                     }

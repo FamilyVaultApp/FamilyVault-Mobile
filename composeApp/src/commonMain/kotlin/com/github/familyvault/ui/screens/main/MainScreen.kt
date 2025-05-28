@@ -22,6 +22,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.github.familyvault.EnabledFeatures
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.chat.ChatThreadType
 import com.github.familyvault.services.IFamilyGroupService
@@ -43,10 +44,14 @@ import org.koin.compose.koinInject
 class MainScreen : Screen {
     @Composable
     override fun Content() {
-
         val familyGroupService = koinInject<IFamilyGroupService>()
         var currentUserPermissionGroup by remember { mutableStateOf(FamilyGroupMemberPermissionGroup.Guest) }
         var isLoadingCurrentUserInformation by remember { mutableStateOf(true) }
+        val mainScreenTabs = listOfNotNull(
+            if (EnabledFeatures.CHAT) ChatTab else null,
+            if (EnabledFeatures.TASKS) TaskTab else null,
+            if (EnabledFeatures.FILES_CABINET) FilesCabinetTab else null,
+        )
 
         LaunchedEffect(Unit) {
             isLoadingCurrentUserInformation = true
@@ -54,6 +59,7 @@ class MainScreen : Screen {
                 familyGroupService.retrieveMyFamilyMemberData().permissionGroup
             isLoadingCurrentUserInformation = false
         }
+        
         TabNavigator(ChatTab) {
             // Workaround błędu w Jetpack Compose powodujący to, że ekran nie dostostoswuje się
             // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
@@ -90,8 +96,7 @@ class MainScreen : Screen {
     @Composable
     private fun FloatingCurrentTabActionButton(permissionGroup: FamilyGroupMemberPermissionGroup) {
         val tabNavigator = LocalTabNavigator.current
-        if (permissionGroup == FamilyGroupMemberPermissionGroup.Guest)
-        {
+        if (permissionGroup == FamilyGroupMemberPermissionGroup.Guest) {
             when (tabNavigator.current) {
                 is TaskTab -> FloatingTaskActionButton()
             }
@@ -136,7 +141,7 @@ class MainScreen : Screen {
         val taskListState = koinInject<ITaskListState>()
         val navigator = LocalNavigator.currentOrThrow
 
-        taskListState.selectedTaskList?.let {
+        if (!taskListState.isEmpty() && taskListState.selectedTaskList != null) {
             FloatingActionButton(onClick = {
                 navigator.parent?.push(TaskNewScreen(requireNotNull(taskListState.selectedTaskList).id))
             }) {

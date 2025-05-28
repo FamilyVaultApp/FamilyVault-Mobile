@@ -21,6 +21,7 @@ class ChatThreadListenerService(
                     participantsIds = it.users,
                     lastMessage = null,
                     type = ChatThreadType.valueOf(it.publicMeta.type),
+                    referenceStoreId = it.privateMeta.referenceStoreId,
                     iconType = it.privateMeta.threadIcon
                 )
             )
@@ -36,6 +37,7 @@ class ChatThreadListenerService(
                     participantsIds = it.users,
                     lastMessage = null,
                     type = ChatThreadType.valueOf(it.publicMeta.type),
+                    referenceStoreId = it.privateMeta.referenceStoreId,
                     iconType = it.privateMeta.threadIcon
                 )
             )

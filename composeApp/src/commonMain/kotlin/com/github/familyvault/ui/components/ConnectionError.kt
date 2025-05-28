@@ -73,8 +73,9 @@ fun ConnectionError(connectionStatus: ConnectionStatus) {
                     when (connectionStatus) {
                         ConnectionStatus.UserNotFound -> {
                             val contextId = familyGroupSessionService.getContextId()
+                            val memberPublicKey = familyGroupSessionService.getPublicKey()
                             coroutineScope.launch {
-                                familyGroupCredentialsRepository.deleteCredential(contextId)
+                                familyGroupCredentialsRepository.deleteCredential(contextId, memberPublicKey)
                             }
                             navigator.replaceAll(ChangeFamilyGroupScreen())
                         }

@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.familyvault.models.fileCabinet.FileCabinetDocument
@@ -29,11 +31,13 @@ import com.github.familyvault.models.fileCabinet.isImage
 import com.github.familyvault.models.fileCabinet.isPdf
 import com.github.familyvault.services.IFileCabinetService
 import com.github.familyvault.services.IFileOpenerService
+import com.github.familyvault.services.listeners.IFileCabinetListenerService
 import com.github.familyvault.ui.components.FullScreenImage
 import com.github.familyvault.ui.components.HeaderIcon
 import com.github.familyvault.ui.components.LoaderWithText
 import com.github.familyvault.ui.components.dialogs.PdfDownloadConfirmationDialog
 import com.github.familyvault.ui.components.filesCabinet.DocumentCard
+import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.ParagraphMuted
 import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
@@ -42,6 +46,7 @@ import familyvault.composeapp.generated.resources.file_cabinet_error_initialize
 import familyvault.composeapp.generated.resources.file_cabinet_error_loading
 import familyvault.composeapp.generated.resources.file_cabinet_initializing_documents
 import familyvault.composeapp.generated.resources.file_cabinet_no_documents
+import familyvault.composeapp.generated.resources.file_cabinet_no_documents_title
 import familyvault.composeapp.generated.resources.file_cabinet_retry
 import familyvault.composeapp.generated.resources.loading
 import kotlinx.coroutines.Dispatchers
@@ -58,9 +63,10 @@ import org.koin.compose.koinInject
 fun DocumentsTabContent() {
     val fileCabinetService = koinInject<IFileCabinetService>()
     val fileOpener = koinInject<IFileOpenerService>()
+    val fileCabinetListener = koinInject<IFileCabinetListenerService>()
     val coroutineScope = rememberCoroutineScope()
 
-    val documents = remember { mutableListOf<FileCabinetDocument>() }
+    val documents = remember { mutableStateListOf<FileCabinetDocument>() }
     var isLoading by remember { mutableStateOf(true) }
     var isInitializing by remember { mutableStateOf(false) }
     var fullScreenImage by remember { mutableStateOf<ImageBitmap?>(null) }
@@ -87,6 +93,9 @@ fun DocumentsTabContent() {
 
     LaunchedEffect(Unit) {
         loadDocuments()
+        fileCabinetListener.startListeningForNewDocuments(fileCabinetService.getDocumentsStoreId()) {
+            documents.add(0, it)
+        }
     }
 
     if (isLoading || isInitializing) {
@@ -134,6 +143,10 @@ fun DocumentsTabContent() {
                 HeaderIcon(
                     Icons.Outlined.Folder,
                     size = AdditionalTheme.sizing.headerIconNormal
+                )
+                Headline3(
+                    stringResource(Res.string.file_cabinet_no_documents_title),
+                    fontWeight = FontWeight.SemiBold
                 )
                 ParagraphMuted(
                     stringResource(Res.string.file_cabinet_no_documents),
