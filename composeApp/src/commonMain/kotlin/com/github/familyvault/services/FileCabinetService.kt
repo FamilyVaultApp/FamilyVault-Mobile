@@ -6,6 +6,7 @@ import com.github.familyvault.backend.models.StoreItem
 import com.github.familyvault.models.enums.StoreType
 import com.github.familyvault.models.fileCabinet.FileCabinetDocument
 import com.github.familyvault.utils.FamilyMembersSplitter
+import com.github.familyvault.utils.mappers.StoreByteArrayToDocumentsFileMapper
 import kotlinx.serialization.json.Json
 
 class FileCabinetService(
@@ -60,7 +61,7 @@ class FileCabinetService(
         val store = retrieveFileCabinetDocumentsStore()
 
         return privMxClient.getFilesAsByteArrayFromStore(store.id, 100, 0).map {
-            Json.decodeFromString<FileCabinetDocument>(it.decodeToString())
+            StoreByteArrayToDocumentsFileMapper.map(it)
         }
     }
 
@@ -80,6 +81,7 @@ class FileCabinetService(
     }
 
     override fun getGalleryStoreId(): String = retrieveFileCabinetGalleryStore().id
+    override fun getDocumentsStoreId(): String = retrieveFileCabinetDocumentsStore().id
 
     private fun createFileCabinetGalleryStore(
         contextId: String, users: List<PrivMxUser>, managers: List<PrivMxUser>
@@ -110,5 +112,4 @@ class FileCabinetService(
             contextId, StoreType.FILE_CABINET_DOCUMENTS.toString(), 0, 100
         ).first()
     }
-
 }
