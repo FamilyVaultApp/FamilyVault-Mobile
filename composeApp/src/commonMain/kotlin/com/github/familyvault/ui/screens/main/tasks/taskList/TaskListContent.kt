@@ -83,7 +83,7 @@ fun TaskListContent() {
             taskListState.taskLists.forEach {
                 TaskListButton(
                     title = it.name,
-                    selected = it == taskListState.selectedTaskList
+                    selected = it.id == taskListState.selectedTaskList?.id
                 ) {
                     coroutineScope.launch {
                         taskListState.selectTaskList(it.id)
