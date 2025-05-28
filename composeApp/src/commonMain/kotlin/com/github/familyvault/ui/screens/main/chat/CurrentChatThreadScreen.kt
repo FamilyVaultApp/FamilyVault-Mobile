@@ -61,7 +61,12 @@ class CurrentChatThreadScreen : Screen {
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
         val isAtBottom by remember { derivedStateOf { 
-            listState.firstVisibleItemIndex <= 2 && listState.firstVisibleItemScrollOffset < 100
+            val layoutInfo = listState.layoutInfo
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+            val totalItemsCount = layoutInfo.totalItemsCount
+            
+            lastVisibleItemIndex == 0 || 
+            (totalItemsCount > 0 && listState.firstVisibleItemIndex <= (totalItemsCount * 0.05).toInt())
         } }
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
