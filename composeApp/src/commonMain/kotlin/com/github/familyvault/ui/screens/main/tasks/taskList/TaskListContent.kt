@@ -106,11 +106,12 @@ fun TaskListContent() {
                 .verticalScroll(scrollState)
         ) {
             taskListState.selectedTaskList?.let { taskList ->
+                val currentTaskList = taskListState.taskLists.find { it.id == taskList.id } ?: taskList
                 TaskGroupPending(
-                    categoryTitle = taskList.name,
+                    categoryTitle = currentTaskList.name,
                     tasks = taskListState.tasks.filter { !it.content.completed },
                     onEditClick = {
-                        localNavigator.parent?.push(TaskListEditScreen(taskList))
+                        localNavigator.parent?.push(TaskListEditScreen(currentTaskList))
                     },
                     permissionGroup = currentUserPermissionGroup
                 )
