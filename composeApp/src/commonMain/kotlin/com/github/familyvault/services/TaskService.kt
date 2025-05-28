@@ -37,17 +37,22 @@ class TaskService(
         )
     }
 
-    override suspend fun updateTaskList(taskListId: String, name: String) {
-        val splitFamilyMembers = FamilyMembersSplitter.split(
-            familyGroupService.retrieveFamilyGroupMembersList()
-        )
+    override suspend fun updateTaskList(taskListId: String, name: String): Boolean {
+        return try {
+            val splitFamilyMembers = FamilyMembersSplitter.split(
+                familyGroupService.retrieveFamilyGroupMembersList()
+            )
 
-        privMxClient.updateThread(
-            taskListId,
-            users = splitFamilyMembers.members.map { it.toPrivMxUser() },
-            managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() },
-            newName = name,
-        )
+            privMxClient.updateThread(
+                taskListId,
+                users = splitFamilyMembers.members.map { it.toPrivMxUser() },
+                managers = splitFamilyMembers.guardians.map { it.toPrivMxUser() },
+                newName = name,
+            )
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     override suspend fun deleteTaskList(taskListId: String) {
