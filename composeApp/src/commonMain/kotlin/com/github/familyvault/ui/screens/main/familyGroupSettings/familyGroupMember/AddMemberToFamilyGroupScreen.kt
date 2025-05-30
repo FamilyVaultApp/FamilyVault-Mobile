@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.DocumentationLinks
 import com.github.familyvault.models.enums.InfoBoxType
 import com.github.familyvault.services.INfcService
 import com.github.familyvault.ui.components.AnimatedNfcBeam
@@ -101,7 +102,7 @@ class AddMemberToFamilyGroupScreen : Screen {
                 title = stringResource(Res.string.documentation),
                 content = stringResource(Res.string.add_member_infobutton_content),
                 type = InfoBoxType.DOCUMENTATION,
-                link = "https://familyvault.pl" // TODO: Ustawienie linku
+                link = DocumentationLinks.JOIN
             )
             AddMemberToFamilyGroupContentButtons()
         }

@@ -31,7 +31,7 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.as_with_spaces
 import familyvault.composeapp.generated.resources.family_group_default
 import familyvault.composeapp.generated.resources.family_group_no_default
-import familyvault.composeapp.generated.resources.is_actual
+import familyvault.composeapp.generated.resources.is_current
 import familyvault.composeapp.generated.resources.is_default
 import org.jetbrains.compose.resources.stringResource
 
@@ -43,7 +43,7 @@ fun FamilyGroupEntry(
     onSetDefault: () -> Unit,
 ) {
     val familyGroupInfo = listOfNotNull(
-        if (isCurrentFamilyGroup) stringResource(Res.string.is_actual) else null,
+        if (isCurrentFamilyGroup) stringResource(Res.string.is_current) else null,
         if (familyGroup.isDefault) stringResource(Res.string.is_default) else null
     )
     val backgroundColor = if (isCurrentFamilyGroup) {

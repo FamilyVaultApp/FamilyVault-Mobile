@@ -60,6 +60,14 @@ class CurrentChatThreadScreen : Screen {
         val listState = rememberLazyListState()
         val coroutineScope = rememberCoroutineScope()
         val isAtTop by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0 } }
+        val isAtBottom by remember { derivedStateOf { 
+            val layoutInfo = listState.layoutInfo
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+            val totalItemsCount = layoutInfo.totalItemsCount
+            
+            lastVisibleItemIndex == 0 || 
+            (totalItemsCount > 0 && listState.firstVisibleItemIndex <= (totalItemsCount * 0.05).toInt())
+        } }
         val chatThreadManagers = remember { mutableListOf<String>() }
         var myUserData: FamilyMember? by remember { mutableStateOf(null) }
         var showErrorDialog by remember { mutableStateOf(false) }
@@ -87,7 +95,12 @@ class CurrentChatThreadScreen : Screen {
                 }
                 chatMessageListenerService.startListeningForNewMessage(chatThread.id) { _ ->
                     coroutineScope.launch {
-                        scrollToLastMessage(listState, currentChatState)
+                        val wasAtBottom = isAtBottom
+                        currentChatState.populateStateFromService()
+                        if (wasAtBottom) {
+                            kotlinx.coroutines.delay(50)
+                            scrollToLastMessage(listState, currentChatState)
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -101,7 +114,10 @@ class CurrentChatThreadScreen : Screen {
                 val currentLookingMessage =
                     currentChatState.messages[listState.firstVisibleItemIndex]
                 currentChatState.getNextPageFromService()
-                listState.scrollToItem(currentChatState.messages.indexOf(currentLookingMessage))
+                val newIndex = currentChatState.messages.indexOf(currentLookingMessage)
+                if (newIndex != -1) {
+                    listState.scrollToItem(newIndex)
+                }
             }
         }
 
@@ -142,14 +158,16 @@ class CurrentChatThreadScreen : Screen {
                     LazyColumn(
                         modifier = Modifier.weight(1f),
                         state = listState,
+                        reverseLayout = true
                     ) {
                         itemsIndexed(
-                            items = currentChatState.messages,
+                            items = currentChatState.messages.reversed(),
                             key = { _, message -> message.id }) { index, message ->
+                            val originalIndex = currentChatState.messages.lastIndex - index
                             ChatMessageEntry(
                                 message,
-                                prevMessage = currentChatState.messages.getOrNull(index - 1),
-                                nextMessage = currentChatState.messages.getOrNull(index + 1)
+                                prevMessage = currentChatState.messages.getOrNull(originalIndex + 1),
+                                nextMessage = currentChatState.messages.getOrNull(originalIndex - 1)
                             )
                         }
                     }
@@ -160,12 +178,18 @@ class CurrentChatThreadScreen : Screen {
                             }
 
                             chatService.sendTextMessage(chatThread.id, it, respondToMessageId = "")
+                            coroutineScope.launch {
+                                scrollToLastMessage(listState, currentChatState)
+                            }
                         },
                         onVoiceMessageSend = {
                             if (it.isEmpty()) {
                                 return@ChatInputField
                             }
                             chatService.sendVoiceMessage(chatThread.id, it)
+                            coroutineScope.launch {
+                                scrollToLastMessage(listState, currentChatState)
+                            }
                         },
                         onImageMessageSend = {
                             if (it.isEmpty()) {
@@ -174,6 +198,9 @@ class CurrentChatThreadScreen : Screen {
 
                             it.forEach { mediaByteArray ->
                                 chatService.sendImageMessage(chatThread.id, mediaByteArray)
+                            }
+                            coroutineScope.launch {
+                                scrollToLastMessage(listState, currentChatState)
                             }
                         }
                     )
@@ -192,7 +219,7 @@ class CurrentChatThreadScreen : Screen {
         listState: LazyListState, chatState: ICurrentChatState
     ) {
         if (chatState.messages.isNotEmpty()) {
-            listState.scrollToItem(chatState.messages.lastIndex)
+            listState.animateScrollToItem(0)
         }
     }
 }

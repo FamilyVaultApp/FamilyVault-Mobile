@@ -39,19 +39,29 @@ fun TaskTabContent() {
         tasksCategoriesState.populateTaskListFromServices()
         familyMembersState.populateFamilyGroupMembersFromService()
 
-        taskListListenerService.startListeningForNewTaskList { newList ->
-            tasksListState.taskLists.add(newList)
-        }
-        taskListListenerService.startListeningForUpdatedTaskList { updatedList ->
-            tasksListState.updateTaskList(updatedList)
+        try {
+            taskListListenerService.startListeningForNewTaskList { newList ->
+                tasksListState.taskLists.add(newList)
+            }
+        } catch (_: Exception) {
         }
 
-        taskListListenerService.startListeningForDeletedTaskList { deletedListId ->
-            coroutineScope.launch {
-                isLoading = true
-                tasksListState.removeTaskList(deletedListId.threadId)
-                isLoading = false
+        try {
+            taskListListenerService.startListeningForUpdatedTaskList { updatedList ->
+                tasksListState.updateTaskList(updatedList)
             }
+        } catch (_: Exception) {
+        }
+
+        try {
+            taskListListenerService.startListeningForDeletedTaskList { deletedListId ->
+                coroutineScope.launch {
+                    isLoading = true
+                    tasksListState.removeTaskList(deletedListId.threadId)
+                    isLoading = false
+                }
+            }
+        } catch (_: Exception) {
         }
 
         isLoading = false

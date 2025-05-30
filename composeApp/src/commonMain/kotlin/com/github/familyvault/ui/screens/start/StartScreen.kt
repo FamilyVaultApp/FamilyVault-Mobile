@@ -18,6 +18,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.models.OptionType
+import com.github.familyvault.DocumentationLinks
 import com.github.familyvault.models.enums.ConnectionMode
 import com.github.familyvault.ui.components.AppIconAndName
 import com.github.familyvault.ui.components.BottomNextButton
@@ -71,7 +72,8 @@ class StartScreen : Screen {
     private fun InfoBoxComponent() {
         InfoBox(
             title = stringResource(Res.string.connection_modes_title),
-            content = stringResource(Res.string.connection_modes_content)
+            content = stringResource(Res.string.connection_modes_content),
+            link = DocumentationLinks.SELF_HOSTING
         )
     }
 

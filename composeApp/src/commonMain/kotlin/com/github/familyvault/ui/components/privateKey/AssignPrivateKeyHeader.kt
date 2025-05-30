@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.runtime.Composable
+import com.github.familyvault.DocumentationLinks
 import com.github.familyvault.ui.components.HeaderWithIcon
 import com.github.familyvault.ui.components.InfoBox
 import familyvault.composeapp.generated.resources.Res
@@ -24,7 +25,8 @@ fun PrivateKeyAssignPasswordHeader() {
         )
         InfoBox(
             title = stringResource(Res.string.private_key_about_title),
-            content = stringResource(Res.string.private_key_about_content)
+            content = stringResource(Res.string.private_key_about_content),
+            link = DocumentationLinks.PRIVATE_KEY
         )
     }
 }

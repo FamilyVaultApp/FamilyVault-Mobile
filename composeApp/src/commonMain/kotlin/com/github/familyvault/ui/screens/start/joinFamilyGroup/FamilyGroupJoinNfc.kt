@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.DocumentationLinks
 import com.github.familyvault.models.enums.InfoBoxType
 import com.github.familyvault.services.IJoinStatusService
 import com.github.familyvault.services.INfcService
@@ -103,7 +104,7 @@ class FamilyGroupJoinNfc() : Screen {
                 title = stringResource(Res.string.documentation),
                 content = stringResource(Res.string.join_infobutton_content),
                 type = InfoBoxType.DOCUMENTATION,
-                link = "https://familyvault.pl" // TODO: Zmiana url
+                link = DocumentationLinks.JOIN
             )
             Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
             JoinFamilyGroupContentButtons()

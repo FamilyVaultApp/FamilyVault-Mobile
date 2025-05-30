@@ -14,12 +14,12 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.backend.client.IPrivMxClient
-import com.github.familyvault.forms.FamilyMemberFormData
 import com.github.familyvault.forms.PrivateKeyPasswordForm
 import com.github.familyvault.models.MemberIdentifier
 import com.github.familyvault.models.NewFamilyMemberData
 import com.github.familyvault.models.enums.FormSubmitState
 import com.github.familyvault.services.IJoinStatusService
+import com.github.familyvault.states.ICurrentDraftFamilyMemberState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.dialogs.CircularProgressIndicatorDialog
@@ -35,14 +35,14 @@ import org.koin.compose.koinInject
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberDraft: FamilyMemberFormData) :
-    Screen {
+class FamilyGroupJoinAssignPrivateKeyPasswordScreen : Screen {
     @OptIn(ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
         val joinFamilyGroupPayloadState = koinInject<IJoinFamilyGroupPayloadState>()
         val joinStatusService = koinInject<IJoinStatusService>()
         val privMxClient = koinInject<IPrivMxClient>()
+        val draftFamilyMemberState = koinInject<ICurrentDraftFamilyMemberState>()
         val coroutineScope = rememberCoroutineScope()
         val form by remember { mutableStateOf(PrivateKeyPasswordForm()) }
         val navigator = LocalNavigator.currentOrThrow
@@ -79,12 +79,13 @@ class FamilyGroupJoinAssignPrivateKeyPasswordScreen(private val newFamilyMemberD
                             val encryptedPassword =
                                 privMxClient.encryptPrivateKeyPassword(form.password)
                             val joinStatus = joinStatusService.generateJoinStatus()
+                            val familyMemberDraft = draftFamilyMemberState.getNotNullFamilyMember()
 
                             val newFamilyMemberData = NewFamilyMemberData(
                                 memberIdentifier = MemberIdentifier(
                                     Uuid.random().toString(),
-                                    newFamilyMemberDraft.firstname.value,
-                                    newFamilyMemberDraft.surname.value
+                                    familyMemberDraft.firstname.value,
+                                    familyMemberDraft.surname.value
                                 ),
                                 keyPair = keyPair
                             )

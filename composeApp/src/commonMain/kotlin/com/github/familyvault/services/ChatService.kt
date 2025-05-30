@@ -63,6 +63,7 @@ class ChatService(
             (users.map { it.userId } + managers.map { it.userId }).distinct(),
             lastMessage = null,
             ChatThreadType.GROUP,
+            referenceStoreId = storeId,
             chatIcon
         )
     }
@@ -90,6 +91,10 @@ class ChatService(
         val users = splitFamilyGroupMembersList.members.map { it.toPrivMxUser() }
         val managers = splitFamilyGroupMembersList.guardians.map { it.toPrivMxUser() }
         privMxClient.updateThread(thread.id, users, managers, newName, chatIcon ?: thread.iconType)
+        thread.referenceStoreId?.let {
+            privMxClient.updateStore(it, users, managers)
+        }
+
     }
 
     override fun retrieveAllChatThreads(): List<ChatThread> {
@@ -104,6 +109,7 @@ class ChatService(
                 (it.managers + it.users).distinct(),
                 retrieveLastMessage(it.threadId),
                 ChatThreadType.valueOf(it.publicMeta.type),
+                it.privateMeta.referenceStoreId,
                 it.privateMeta.threadIcon
             )
         }

@@ -7,7 +7,7 @@ import com.github.familyvault.models.tasks.TaskList
 interface ITaskService {
     suspend fun getTaskLists(): List<TaskList>
     suspend fun createNewTaskList(name: String)
-    suspend fun updateTaskList(taskListId: String, name: String)
+    suspend fun updateTaskList(taskListId: String, name: String): Boolean
     suspend fun deleteTaskList(taskListId: String)
 
     suspend fun createNewTask(

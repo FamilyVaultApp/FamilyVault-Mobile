@@ -15,6 +15,7 @@ data class ChatThread(
     val participantsIds: List<String>,
     val lastMessage: ChatMessage?,
     val type: ChatThreadType,
+    val referenceStoreId: String?,
     val iconType: ThreadIconType? = null
 ) {
     fun isPrivateNote(): Boolean =
