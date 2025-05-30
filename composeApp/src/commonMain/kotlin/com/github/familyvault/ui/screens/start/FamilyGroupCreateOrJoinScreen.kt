@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.models.OptionType
 import com.github.familyvault.ui.components.AppIconAndName
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.OptionButton
-import com.github.familyvault.ui.components.OptionButtonType
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
 import com.github.familyvault.ui.screens.start.createFamilyGroup.FamilyGroupCreateMemberAndNameScreen
 import com.github.familyvault.ui.screens.start.joinFamilyGroup.FamilyGroupJoinNewMemberScreen
@@ -77,7 +77,7 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                 title = stringResource(Res.string.join_existing_family_group_title),
                 content = stringResource(Res.string.join_existing_family_group_content),
                 icon = Icons.AutoMirrored.Outlined.Login,
-                type = OptionButtonType.First,
+                type = OptionType.First,
                 isSelected = selectedAction == FamilyGroupAction.Join,
                 onClick = { onActionSelected(FamilyGroupAction.Join) }
             )
@@ -85,7 +85,7 @@ class FamilyGroupCreateOrJoinScreen : Screen {
                 title = stringResource(Res.string.create_new_family_group_title),
                 content = stringResource(Res.string.create_new_family_group_content),
                 icon = Icons.Outlined.GroupAdd,
-                type = OptionButtonType.Second,
+                type = OptionType.Second,
                 isSelected = selectedAction == FamilyGroupAction.Create,
                 onClick = { onActionSelected(FamilyGroupAction.Create) }
             )
