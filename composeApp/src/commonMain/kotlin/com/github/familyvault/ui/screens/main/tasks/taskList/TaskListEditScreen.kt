@@ -83,13 +83,18 @@ class TaskListEditScreen(private val taskList: TaskList) : Screen {
                             ) {
                                 coroutineScope.launch {
                                     isEditing = true
-                                    taskService.updateTaskList(taskList.id, taskListForm.name)
-                                    taskListState.populateTaskListFromServices()
-                                    if (taskList.id == taskListState.selectedTaskList?.id) {
-                                        taskListState.selectTaskList(taskList.id)
+                                    val updateResult = taskService.updateTaskList(taskList.id, taskListForm.name)
+                                    
+                                    if (updateResult) {
+                                        taskListState.populateTaskListFromServices()
+                                        if (taskList.id == taskListState.selectedTaskList?.id) {
+                                            taskListState.selectTaskList(taskList.id)
+                                        }
+                                        isEditing = false
+                                        localNavigator.pop()
+                                    } else {
+                                        isEditing = false
                                     }
-                                    isEditing = false
-                                    localNavigator.pop()
                                 }
                             }
                             DangerButton(

@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.DocumentationLinks
 import com.github.familyvault.models.FamilyMember
 import com.github.familyvault.models.enums.FamilyGroupMemberPermissionGroup
 import com.github.familyvault.models.enums.InfoBoxType
@@ -34,6 +35,8 @@ import com.github.familyvault.services.IChatService
 import com.github.familyvault.services.IFamilyGroupService
 import com.github.familyvault.services.IFamilyGroupSessionService
 import com.github.familyvault.services.IFamilyMemberPermissionGroupService
+import com.github.familyvault.services.IFileCabinetService
+import com.github.familyvault.services.ITaskService
 import com.github.familyvault.ui.components.DangerButton
 import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.dialogs.RemoveFamilyMemberDialog
@@ -78,6 +81,8 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
         val familyGroupService = koinInject<IFamilyGroupService>()
         val familyGroupCredentialsRepository = koinInject<IFamilyGroupCredentialsRepository>()
         val chatService = koinInject<IChatService>()
+        val fileCabinetService = koinInject<IFileCabinetService>()
+        val tasksService = koinInject<ITaskService>()
 
         var currentUserPermissionGroup by remember {
             mutableStateOf<FamilyGroupMemberPermissionGroup?>(
@@ -209,35 +214,37 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         title = stringResource(Res.string.documentation),
                         content = stringResource(Res.string.permission_group_infobox_content),
                         type = InfoBoxType.DOCUMENTATION,
-                        link = "https://familyvault.pl" // TODO: Change URL
+                        link = DocumentationLinks.PERMISSION_GROUPS
                     )
                     Spacer(modifier = Modifier.height(AdditionalTheme.spacings.medium))
-                    Button(
-                        text = stringResource(Res.string.user_modification_save_button),
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = isGuardian &&
-                                !savingChanges &&
-                                !(isLastGuardian &&
-                                        selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
-                        onClick = {
-                            coroutineScope.launch {
-                                savingChanges = true
-                                permissionGroupService.changeFamilyMemberPermissionGroup(
-                                    familyMember.id,
-                                    selectedPermissionGroup
-                                )
-                                val updatedUser =
-                                    familyGroupService.retrieveFamilyMemberDataByPublicKey(
-                                        familyMember.publicKey
+                        Button(
+                            text = stringResource(Res.string.user_modification_save_button),
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = isGuardian &&!savingChanges &&
+                                    !(isLastGuardian &&
+                                            selectedPermissionGroup != FamilyGroupMemberPermissionGroup.Guardian),
+                            onClick = {
+                                coroutineScope.launch {
+                                    savingChanges = true
+                                    permissionGroupService.changeFamilyMemberPermissionGroup(
+                                        familyMember.id,
+                                        selectedPermissionGroup
                                     )
-                                if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
-                                    chatService.updateGroupChatThreadsAfterUserPermissionChange(
-                                        updatedUser,
-                                        familyGroupService.retrieveFamilyGroupMembersList()
-                                    )
-                                }
-                                savingChanges = false
-                                navigator.pop()
+                                    val updatedUser =
+                                        familyGroupService.retrieveFamilyMemberDataByPublicKey(
+                                            familyMember.publicKey
+                                        )
+                                    if (updatedUser.permissionGroup == selectedPermissionGroup && selectedPermissionGroup != familyMember.permissionGroup) {
+                                        chatService.updateGroupChatThreadsAfterUserPermissionChange(
+                                            updatedUser,
+                                            familyGroupService.retrieveFamilyGroupMembersList()
+                                        )
+                                        fileCabinetService.restoreFileCabinetMembership()
+                                        tasksService.restoreTaskListsMembership()
+                                    }
+                                    savingChanges = false
+                                    navigator.pop()
+
                             }
                         }
                     )
@@ -261,8 +268,7 @@ class ModifyFamilyMemberScreen(private val familyMember: FamilyMember) : Screen 
                         if (familyMember.publicKey == familyGroupSessionService.getPublicKey()) {
                             familyGroupCredentialsRepository.deleteCredential(
                                 familyGroupSessionService.getContextId(),
-                                familyGroupSessionService.getPublicKey()
-                            )
+                            familyGroupSessionService.getPublicKey())
                             familyGroupSessionService.disconnect()
                             navigator.replaceAll(ChangeFamilyGroupScreen())
                         } else {

@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.familyvault.forms.FamilyGroupMemberForm
+import com.github.familyvault.states.ICurrentDraftFamilyMemberState
 import com.github.familyvault.ui.components.BottomNextButton
 import com.github.familyvault.ui.components.HeaderWithIcon
 import com.github.familyvault.ui.components.formsContent.FamilyMemberFormContent
@@ -22,12 +23,14 @@ import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.join_family_group_title
 import familyvault.composeapp.generated.resources.next_button_content
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 
 class FamilyGroupJoinNewMemberScreen : Screen {
 
     @Composable
     override fun Content() {
+        val draftFamilyMemberState = koinInject<ICurrentDraftFamilyMemberState>()
         val navigator = LocalNavigator.currentOrThrow
         val form by remember { mutableStateOf(FamilyGroupMemberForm()) }
 
@@ -42,10 +45,9 @@ class FamilyGroupJoinNewMemberScreen : Screen {
                     text = stringResource(Res.string.next_button_content),
                     enabled = form.isFormValid()
                 ) {
-                    navigator.replaceAll(
-                        FamilyGroupJoinAssignPrivateKeyPasswordScreen(
-                            form.formData,
-                        )
+                    draftFamilyMemberState.setFamilyMember(form.formData)
+                    navigator.push(
+                        FamilyGroupJoinAssignPrivateKeyPasswordScreen()
                     )
                 }
             }
