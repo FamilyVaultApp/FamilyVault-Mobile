@@ -6,7 +6,7 @@ import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.ConnectionStatus
 
 interface IFamilyGroupSessionService {
-    fun assignSession(
+    suspend fun assignSession(
         familyGroupCredential: FamilyGroupCredential
     )
     fun assignSession(

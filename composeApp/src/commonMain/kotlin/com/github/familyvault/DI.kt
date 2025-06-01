@@ -49,8 +49,10 @@ import com.github.familyvault.states.ICurrentDraftFamilyMemberState
 import com.github.familyvault.states.ICurrentEditChatState
 import com.github.familyvault.states.IFamilyMembersState
 import com.github.familyvault.states.IJoinFamilyGroupPayloadState
+import com.github.familyvault.states.ISelfHostedAddressState
 import com.github.familyvault.states.ITaskListState
 import com.github.familyvault.states.JoinFamilyGroupPayloadState
+import com.github.familyvault.states.SelfHostedAddressState
 import com.github.familyvault.states.TaskListState
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -70,6 +72,7 @@ val sharedModules = module {
     single { FamilyGroupSessionService(get(), get()) }.bind<IFamilyGroupSessionService>()
     single {
         FamilyGroupService(
+            get(),
             get(),
             get(),
             get(),
@@ -128,6 +131,7 @@ val sharedModules = module {
     single { CurrentEditChatState() }.bind<ICurrentEditChatState>()
     single { CurrentDraftFamilyMemberState() }.bind<ICurrentDraftFamilyMemberState>()
     single { CurrentDraftFamilyGroupState() }.bind<ICurrentDraftFamilyGroupState>()
+    single { SelfHostedAddressState() }.bind<ISelfHostedAddressState>()
 }
 
 

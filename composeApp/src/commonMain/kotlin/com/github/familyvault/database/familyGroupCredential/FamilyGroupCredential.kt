@@ -15,5 +15,6 @@ data class FamilyGroupCredential(
     val encryptedPrivateKeyPassword: String,
     val firstname: String,
     val lastname: String?,
-    val isDefault: Boolean = false
+    val backendUrl: String?,
+    val isDefault: Boolean = false,
 )
