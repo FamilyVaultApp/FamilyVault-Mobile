@@ -230,4 +230,5 @@
     <string name="connection_checking">Sprawdzam połączenie</string>
     <string name="connection_ok">Poprawny serwer FamilyVault</string>
     <string name="connection_failed">Nieudany test połączenia</string>
+    <string name="self_hosting_infobox_content">Kliknij tutaj, aby dowiedzieć się więcej o własnym serwerze FamilyVault.</string>
 </resources>

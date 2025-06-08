@@ -96,7 +96,7 @@ class ChangeFamilyGroupScreen : Screen {
                         Column {
                             familyGroups.map {
                                 val isCurrentFamilyGroup =
-                                it.contextId == currentContextId && it.memberPublicKey == currentMemberPublicKey
+                                    it.contextId == currentContextId && it.memberPublicKey == currentMemberPublicKey
 
                                 FamilyGroupEntry(
                                     it,

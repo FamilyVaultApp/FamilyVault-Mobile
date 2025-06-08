@@ -1,6 +1,5 @@
 package com.github.familyvault.services
 
-import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
 import com.github.familyvault.backend.exceptions.FamilyVaultBackendNoConnectionException
@@ -61,6 +60,7 @@ class FamilyGroupService(
 
         familyGroupSessionService.assignSession(
             familyVaultBackendClient.getBridgeUrl().bridgeUrl,
+            selfHostedAddressState.get(),
             familyGroupName,
             solutionId,
             contextId,
@@ -96,6 +96,7 @@ class FamilyGroupService(
 
         familyGroupSessionService.assignSession(
             familyVaultBackendClient.getBridgeUrl().bridgeUrl,
+            selfHostedAddressState.get(),
             familyGroupInformation.familyGroupName,
             solutionId,
             contextId,
@@ -118,7 +119,14 @@ class FamilyGroupService(
         val credential = familyGroupCredentialsRepository.getDefaultCredential()
             ?: return ConnectionStatus.NoCredentials
 
+        if (credential.backendUrl != null) {
+            familyVaultBackendClient.setCustomBackendUrl(credential.backendUrl)
+        } else {
+            familyVaultBackendClient.removeCustomBackendUrl()
+        }
+
         val familyGroupInformation: GetFamilyGroupNameResponse
+
 
         try {
             familyGroupInformation =
@@ -129,6 +137,7 @@ class FamilyGroupService(
 
         familyGroupSessionService.assignSession(
             familyVaultBackendClient.getBridgeUrl().bridgeUrl,
+            credential.backendUrl,
             familyGroupInformation.familyGroupName,
             credential.solutionId,
             credential.contextId,

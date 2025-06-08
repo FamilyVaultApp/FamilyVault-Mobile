@@ -230,5 +230,5 @@
     <string name="connection_checking">Checking connection</string>
     <string name="connection_ok">Valid FamilyVault server</string>
     <string name="connection_failed">Connection test failed</string>
-
+    <string name="self_hosting_infobox_content">Click here to learn more about your own FamilyVault server.</string>
 </resources>

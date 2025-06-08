@@ -83,7 +83,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
 
     override fun disconnect() {
         connection?.unregisterAll()
-        container.disconnectAll()
+        connection?.close()
     }
 
     override fun createThread(

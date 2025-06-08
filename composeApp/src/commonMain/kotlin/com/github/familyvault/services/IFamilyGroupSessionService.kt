@@ -11,6 +11,7 @@ interface IFamilyGroupSessionService {
     )
     fun assignSession(
         bridgeUrl: String,
+        backendUrl: String?,
         familyGroupName: String,
         solutionId: String,
         contextId: String,

@@ -79,7 +79,7 @@ val sharedModules = module {
             get(),
         )
     }.bind<IFamilyGroupService>()
-    single { JoinStatusService() }.bind<IJoinStatusService>()
+    single { JoinStatusService(get()) }.bind<IJoinStatusService>()
     single {
         ChatService(
             get(),

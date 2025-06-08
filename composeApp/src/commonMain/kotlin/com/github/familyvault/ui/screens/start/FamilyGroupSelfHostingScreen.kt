@@ -18,14 +18,17 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.github.familyvault.DocumentationLinks
 import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.forms.SelfHostingAddressForm
 import com.github.familyvault.models.OptionType
+import com.github.familyvault.models.enums.InfoBoxType
 import com.github.familyvault.states.ISelfHostedAddressState
 import com.github.familyvault.ui.components.ConnectionStatus
 import com.github.familyvault.ui.components.ConnectionStatusIndicator
 import com.github.familyvault.ui.components.HeaderWithIcon
+import com.github.familyvault.ui.components.InfoBox
 import com.github.familyvault.ui.components.formsContent.SelfHostingAddressFormContent
 import com.github.familyvault.ui.components.overrides.Button
 import com.github.familyvault.ui.components.screen.StartScreenScaffold
@@ -33,7 +36,9 @@ import com.github.familyvault.ui.theme.AdditionalTheme
 import familyvault.composeapp.generated.resources.Res
 import familyvault.composeapp.generated.resources.check_connection
 import familyvault.composeapp.generated.resources.custom_server
+import familyvault.composeapp.generated.resources.documentation
 import familyvault.composeapp.generated.resources.next_button_content
+import familyvault.composeapp.generated.resources.self_hosting_infobox_content
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -55,10 +60,17 @@ class FamilyGroupSelfHostingScreen : Screen {
                 icon = Icons.Outlined.Home,
                 type = OptionType.Second
             )
+            InfoBox(
+                title = stringResource(Res.string.documentation),
+                content = stringResource(Res.string.self_hosting_infobox_content),
+                type = InfoBoxType.DOCUMENTATION,
+                link = DocumentationLinks.SELF_HOSTING
+            )
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
+                Spacer(modifier = Modifier.height(AdditionalTheme.spacings.small))
                 SelfHostingAddressFormContent(form) {
                     connectionStatus = null
                 }
@@ -78,8 +90,9 @@ class FamilyGroupSelfHostingScreen : Screen {
                             try {
                                 testFamilyVaultBackendClient.getSolutionId()
                                 connectionStatus = ConnectionStatus.OK
-                            } catch (_: Exception) {
+                            } catch (e: Exception) {
                                 connectionStatus = ConnectionStatus.FAILED
+                                println(e)
                             }
                         }
                     }

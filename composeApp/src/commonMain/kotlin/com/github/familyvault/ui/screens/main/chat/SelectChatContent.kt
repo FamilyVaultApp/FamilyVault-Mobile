@@ -59,14 +59,20 @@ fun SelectChatContent() {
             chatThreadListenerService.startListeningForNewChatThread {
                 currentChatThreadsState.addNewChatThread(it)
                 chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
-                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+                    currentChatThreadsState.editExistingChatThreadLastMessage(
+                        newMessage,
+                        it
+                    )
                 }
             }
 
             chatThreadListenerService.startListeningForUpdatedChatThread {
                 currentChatThreadsState.editExistingChatThread(it)
                 chatMessagesListenerService.startListeningForNewMessage(it.id) { newMessage ->
-                    currentChatThreadsState.editExistingChatThreadLastMessage(newMessage, it)
+                    currentChatThreadsState.editExistingChatThreadLastMessage(
+                        newMessage,
+                        it
+                    )
                 }
             }
 
