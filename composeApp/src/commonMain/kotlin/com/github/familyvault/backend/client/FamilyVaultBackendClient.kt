@@ -21,6 +21,7 @@ import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
 import com.github.familyvault.backend.responses.DeleteJoinStatusResponse
 import com.github.familyvault.backend.responses.FamilyVaultBackendResponse
 import com.github.familyvault.backend.responses.GenerateJoinStatusResponse
+import com.github.familyvault.backend.responses.GetBridgeUrlResponse
 import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.backend.responses.GetJoinStatusResponse
 import com.github.familyvault.backend.responses.GetMemberFromFamilyGroupResponse
@@ -45,14 +46,28 @@ import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 
 class FamilyVaultBackendClient : IFamilyVaultBackendClient {
+    private var customServerUrl: String? = null
+
     private val client = HttpClient {
         install(ContentNegotiation) {
             json()
         }
     }
 
+    override fun setCustomBackendUrl(url: String) {
+        customServerUrl = url
+    }
+
+    override fun removeCustomBackendUrl() {
+        customServerUrl = null
+    }
+
     override suspend fun getSolutionId(): PrivMxSolutionIdResponse {
         return getRequest("/ApplicationConfig/GetSolutionId")
+    }
+
+    override suspend fun getBridgeUrl(): GetBridgeUrlResponse {
+        return getRequest("/ApplicationConfig/GetBridgeUrl")
     }
 
     override suspend fun createFamilyGroup(req: CreateFamilyGroupRequest): CreateFamilyGroupResponse {
@@ -114,6 +129,9 @@ class FamilyVaultBackendClient : IFamilyVaultBackendClient {
     }
 
     private fun getEndpointUrl(endpoint: String): String {
+        customServerUrl?.let {
+            return "${it}$endpoint"
+        }
         return "${AppConfig.BACKEND_URL}$endpoint"
     }
 

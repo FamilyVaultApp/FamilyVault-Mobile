@@ -19,50 +19,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.github.familyvault.models.OptionType
+import com.github.familyvault.models.backgroundColor
+import com.github.familyvault.models.borderColor
+import com.github.familyvault.models.iconTint
 import com.github.familyvault.ui.components.typography.Headline3
 import com.github.familyvault.ui.components.typography.Paragraph
 import com.github.familyvault.ui.theme.AdditionalTheme
-
-enum class OptionButtonType {
-    First,
-    Second
-}
 
 @Composable
 fun OptionButton(
     title: String,
     content: String,
     icon: ImageVector,
-    type: OptionButtonType = OptionButtonType.First,
+    type: OptionType = OptionType.First,
     isSelected: Boolean = false,
     onClick: () -> Unit
 ) {
-    val borderColor = if (isSelected)
-        if (type == OptionButtonType.First)
-            AdditionalTheme.colors.firstOptionPrimaryColor
-        else AdditionalTheme.colors.secondOptionPrimaryColor
-    else
-        if (type == OptionButtonType.First)
-            AdditionalTheme.colors.borderColor
-        else AdditionalTheme.colors.borderColor
-
-    val backgroundColor = if (isSelected)
-        if (type == OptionButtonType.First)
-            AdditionalTheme.colors.firstOptionPrimaryColor
-        else AdditionalTheme.colors.secondOptionPrimaryColor
-    else
-        if (type == OptionButtonType.First)
-            AdditionalTheme.colors.firstOptionSecondaryColor
-        else AdditionalTheme.colors.secondOptionSecondaryColor
-
-    val iconTint = if (isSelected)
-        if (type == OptionButtonType.First)
-            AdditionalTheme.colors.firstOptionSecondaryColor
-        else AdditionalTheme.colors.secondOptionSecondaryColor
-    else
-        if (type == OptionButtonType.First)
-            AdditionalTheme.colors.firstOptionPrimaryColor
-        else AdditionalTheme.colors.secondOptionPrimaryColor
+    val borderColor = type.borderColor(isSelected)
+    val backgroundColor = type.backgroundColor(isSelected)
+    val iconTint = type.iconTint(isSelected)
 
     Row(
         modifier = Modifier

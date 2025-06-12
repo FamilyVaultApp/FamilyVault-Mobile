@@ -16,6 +16,7 @@ import com.github.familyvault.backend.responses.ChangeFamilyMemberPermissionGrou
 import com.github.familyvault.backend.responses.CreateFamilyGroupResponse
 import com.github.familyvault.backend.responses.DeleteJoinStatusResponse
 import com.github.familyvault.backend.responses.GenerateJoinStatusResponse
+import com.github.familyvault.backend.responses.GetBridgeUrlResponse
 import com.github.familyvault.backend.responses.GetFamilyGroupNameResponse
 import com.github.familyvault.backend.responses.GetJoinStatusResponse
 import com.github.familyvault.backend.responses.GetMemberFromFamilyGroupResponse
@@ -26,7 +27,10 @@ import com.github.familyvault.backend.responses.RenameFamilyGroupResponse
 import com.github.familyvault.backend.responses.UpdateJoinStatusResponse
 
 interface IFamilyVaultBackendClient {
+    fun setCustomBackendUrl(url: String)
+    fun removeCustomBackendUrl()
     suspend fun getSolutionId(): PrivMxSolutionIdResponse
+    suspend fun getBridgeUrl(): GetBridgeUrlResponse
     suspend fun createFamilyGroup(req: CreateFamilyGroupRequest): CreateFamilyGroupResponse
     suspend fun addMemberToFamilyGroup(req: AddMemberToFamilyGroupRequest): AddMemberToFamilyGroupResponse
     suspend fun changeFamilyMemberPermissionGroup(req: ChangeFamilyMemberPermissionGroupRequest): ChangeFamilyMemberPermissionGroupResponse

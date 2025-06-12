@@ -1,6 +1,5 @@
 package com.github.familyvault.services
 
-import com.github.familyvault.AppConfig
 import com.github.familyvault.backend.PrivMxErrorCodes
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
 import com.github.familyvault.backend.client.IPrivMxClient
@@ -20,9 +19,10 @@ class FamilyGroupSessionService(
     private var session: FamilyGroupSession? = null
     private var currentUser: FamilyMember? = null
 
-    override fun assignSession(familyGroupCredential: FamilyGroupCredential) {
+    override suspend fun assignSession(familyGroupCredential: FamilyGroupCredential) {
         assignSession(
-            AppConfig.PRIVMX_BRIDGE_URL,
+            familyVaultBackendClient.getBridgeUrl().bridgeUrl,
+            familyGroupCredential.backendUrl,
             familyGroupCredential.familyGroupName,
             familyGroupCredential.solutionId,
             familyGroupCredential.contextId,
@@ -35,13 +35,14 @@ class FamilyGroupSessionService(
 
     override fun assignSession(
         bridgeUrl: String,
+        backendUrl: String?,
         familyGroupName: String,
         solutionId: String,
         contextId: String,
         keyPair: PublicEncryptedPrivateKeyPair
     ) {
         session = FamilyGroupSession(
-            bridgeUrl, familyGroupName, solutionId, contextId, PublicPrivateKeyPair(
+            bridgeUrl, backendUrl, familyGroupName, solutionId, contextId, PublicPrivateKeyPair(
                 keyPair.publicKey,
                 privMxClient.decryptPrivateKeyPassword(keyPair.encryptedPrivateKey)
             )
@@ -51,8 +52,13 @@ class FamilyGroupSessionService(
     override suspend fun connect(): ConnectionStatus {
         requireNotNull(session)
         try {
+            if (session?.backendUrl != null) {
+                familyVaultBackendClient.setCustomBackendUrl(requireNotNull(session?.backendUrl))
+            } else {
+                familyVaultBackendClient.removeCustomBackendUrl()
+            }
             privMxClient.establishConnection(
-                getBridgeUrl(), getSolutionId(), getPrivateKey()
+                familyVaultBackendClient.getBridgeUrl().bridgeUrl, getSolutionId(), getPrivateKey()
             )
             currentUser = familyVaultBackendClient.getMemberFromFamilyGroup(
                 GetMemberFromFamilyGroupRequest(

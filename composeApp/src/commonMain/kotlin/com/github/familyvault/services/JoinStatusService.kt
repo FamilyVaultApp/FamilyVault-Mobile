@@ -9,8 +9,8 @@ import com.github.familyvault.models.JoinStatusInfo
 import com.github.familyvault.models.enums.JoinStatusState
 import kotlinx.coroutines.delay
 
-class JoinStatusService : IJoinStatusService {
-    private val familyVaultBackendProxy = FamilyVaultBackendClient()
+class JoinStatusService(private val familyVaultBackendProxy: FamilyVaultBackendClient) :
+    IJoinStatusService {
 
     override suspend fun generateJoinStatus(): JoinStatus {
         return familyVaultBackendProxy.generateJoinStatus().joinStatus

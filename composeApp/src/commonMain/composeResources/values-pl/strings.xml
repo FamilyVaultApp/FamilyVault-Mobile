@@ -222,4 +222,13 @@
     <string name="file_cabinet_error_loading">Błąd podczas ładowania dokumentów</string>
     <string name="file_cabinet_permission_denied">Nie masz dostępu do Szuflady jako Gość.</string>
     <string name="file_cabinet_permission_denied_header">Brak dostępu</string>
+
+    <!-- Self Hosting -->
+    <string name="custom_server">Własny serwer</string>
+    <string name="check_connection">Sprawdź połączenie</string>
+    <string name="server_url">URL serwera</string>
+    <string name="connection_checking">Sprawdzam połączenie</string>
+    <string name="connection_ok">Poprawny serwer FamilyVault</string>
+    <string name="connection_failed">Nieudany test połączenia</string>
+    <string name="self_hosting_infobox_content">Kliknij tutaj, aby dowiedzieć się więcej o własnym serwerze FamilyVault.</string>
 </resources>

@@ -222,4 +222,13 @@
     <string name="file_cabinet_error_loading">Error loading documents</string>
     <string name="file_cabinet_permission_denied">You don't have access to File Cabinet as a Guest.</string>
     <string name="file_cabinet_permission_denied_header">Access denied</string>
+
+    <!-- Self Hosting -->
+    <string name="custom_server">Custom server</string>
+    <string name="check_connection">Check connection</string>
+    <string name="server_url">Server URL</string>
+    <string name="connection_checking">Checking connection</string>
+    <string name="connection_ok">Valid FamilyVault server</string>
+    <string name="connection_failed">Connection test failed</string>
+    <string name="self_hosting_infobox_content">Click here to learn more about your own FamilyVault server.</string>
 </resources>
