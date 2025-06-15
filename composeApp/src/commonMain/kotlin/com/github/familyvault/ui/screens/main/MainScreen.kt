@@ -59,8 +59,8 @@ class MainScreen : Screen {
                 familyGroupService.retrieveMyFamilyMemberData().permissionGroup
             isLoadingCurrentUserInformation = false
         }
-        
-        TabNavigator(ChatTab) {
+
+        TabNavigator(mainScreenTabs.first()) {
             // Workaround błędu w Jetpack Compose powodujący to, że ekran nie dostostoswuje się
             // dynamicznie do motywu systemu. Zostanie naprawiony w jetpack compose 1.8.0-alpha06.
             // TODO: usunąć po naprawieniu blędu w compose.
@@ -68,7 +68,7 @@ class MainScreen : Screen {
                 Scaffold(
                     bottomBar = {
                         NavigationBar(
-                            ChatTab, TaskTab, FilesCabinetTab
+                            *remember { mainScreenTabs.toTypedArray() }
                         )
                     },
                     floatingActionButton = {
