@@ -2,6 +2,8 @@ package com.github.familyvault
 
 import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
+import com.github.familyvault.database.AppDatabase
+import com.github.familyvault.database.familyGroupCredential.FamilyGroupCredentialDao
 import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IFamilyGroupCredentialsRepository
 import com.github.familyvault.repositories.IStoredChatMessageRepository
@@ -67,6 +69,8 @@ val sharedModules = module {
     // Repositories
     single { FamilyGroupCredentialsRepository(get()) }.bind<IFamilyGroupCredentialsRepository>()
     single { StoredChatMessageRepository(get()) }.bind<IStoredChatMessageRepository>()
+
+    single<FamilyGroupCredentialDao> { get<AppDatabase>().credentialDao() }
 
     // Services
     single { FamilyGroupSessionService(get(), get()) }.bind<IFamilyGroupSessionService>()

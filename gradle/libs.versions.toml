@@ -3,21 +3,21 @@ agp = "8.5.2"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.3"
-compose-multiplatform = "1.7.0"
-koin = "3.6.0-Beta4"
+androidx-activityCompose = "1.10.1"
+compose-multiplatform = "1.8.2"
+koin = "4.1.0"
 koinComposeMultiplatform = "1.2.0-Beta4"
-kotlin = "2.0.21"
+kotlin = "2.2.0"
 kotlinxDatetime = "0.6.2"
 kotlinxSerializationProtobuf = "1.6.0"
-ksp = "2.0.21-1.0.28"
-ktor = "3.1.0"
-lifecycleViewModel = "2.8.2"
-navigationCompose = "2.8.0-alpha02"
+ksp = "2.1.21-2.0.1"
+ktor = "3.2.2"
+lifecycleViewModel = "2.9.1"
+navigationCompose = "2.8.0-alpha13"
 playServicesCodeScanner = "16.1.0"
-privmxEndpoint = "2.2.2"
-room = "2.7.0-rc01"
-sqlite = "2.5.0-SNAPSHOT"
+privmxEndpoint = "2.5.0-rc1"
+room = "2.7.2"
+sqlite = "2.5.2"
 voyagerVersion = "1.1.0-beta02"
 zxing = "3.4.0"
 
@@ -37,8 +37,8 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewModel" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 play-services-code-scanner = { module = "com.google.android.gms:play-services-code-scanner", version.ref = "playServicesCodeScanner" }
-privmx-endpoint = { module = "com.simplito.java:privmx-endpoint", version.ref = "privmxEndpoint" }
-privmx-endpoint-extra = { module = "com.simplito.java:privmx-endpoint-extra", version.ref = "privmxEndpoint" }
+privmx-endpoint = { module = "com.simplito.kotlin:privmx-endpoint", version.ref = "privmxEndpoint" }
+privmx-endpoint-extra = { module = "com.simplito.kotlin:privmx-endpoint-extra", version.ref = "privmxEndpoint" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }

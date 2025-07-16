@@ -21,18 +21,22 @@ import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxStoreToStoreItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
-import com.simplito.java.privmx_endpoint.model.UserWithPubKey
-import com.simplito.java.privmx_endpoint.model.exceptions.PrivmxException
-import com.simplito.java.privmx_endpoint.modules.store.StoreApi
-import com.simplito.java.privmx_endpoint.modules.thread.ThreadApi
-import com.simplito.java.privmx_endpoint_extra.events.EventType
-import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpoint
-import com.simplito.java.privmx_endpoint_extra.lib.PrivmxEndpointContainer
-import com.simplito.java.privmx_endpoint_extra.model.Modules
-import com.simplito.java.privmx_endpoint_extra.model.SortOrder
-import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStream
-import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamReader
-import com.simplito.java.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
+import com.simplito.kotlin.privmx_endpoint.model.UserWithPubKey
+import com.simplito.kotlin.privmx_endpoint.model.exceptions.PrivmxException
+import com.simplito.kotlin.privmx_endpoint.modules.store.StoreApi
+import com.simplito.kotlin.privmx_endpoint.modules.thread.ThreadApi
+import com.simplito.kotlin.privmx_endpoint_extra.events.EventType
+import com.simplito.kotlin.privmx_endpoint_extra.lib.PrivmxEndpoint
+import com.simplito.kotlin.privmx_endpoint_extra.lib.PrivmxEndpointContainer
+import com.simplito.kotlin.privmx_endpoint_extra.model.Modules
+import com.simplito.kotlin.privmx_endpoint_extra.model.SortOrder
+import com.simplito.kotlin.privmx_endpoint_extra.storeFileStream.StoreFileStream
+import com.simplito.kotlin.privmx_endpoint_extra.storeFileStream.StoreFileStreamReader
+import com.simplito.kotlin.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 class PrivMxClient : IPrivMxClient, AutoCloseable {
@@ -75,15 +79,17 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
                 initModules, privateKey, solutionId, bridgeUrl
             )
         } catch (e: PrivmxException) {
-            throw FamilyVaultPrivMxException(e.code, e.message ?: "")
+            throw FamilyVaultPrivMxException(e.getCode().toInt(), e.message ?: "")
         }
         threadApi = connection!!.threadApi
         storeApi = connection!!.storeApi
     }
 
     override fun disconnect() {
-        connection?.unregisterAll()
-        connection?.close()
+        GlobalScope.async {
+            connection?.unregisterAll()
+            connection?.close()
+        }
     }
 
     override fun createThread(
@@ -176,7 +182,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             managerList,
             thread.publicMeta,
             privateMeta,
-            thread.version,
+            thread.version!!,
             false
         )
     }
@@ -201,7 +207,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
             managerList,
             store.publicMeta,
             store.privateMeta,
-            store.version,
+            store.version!!,
             true,
             false
         )
@@ -290,7 +296,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         var data = ByteArray(0)
 
         StoreFileStreamReader.openFile(
-            storeApi,
+            storeApi!!,
             fileId,
         ).also {
             do {
@@ -306,7 +312,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         storeId: String?, limit: Long, skip: Long
     ): List<ByteArray> {
         val files = storeApi!!.listFiles(
-            storeId, skip, limit, SortOrder.DESC
+            storeId!!, skip, limit, SortOrder.DESC
         )
 
         return files.readItems.mapNotNull { file ->
@@ -323,7 +329,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         storeId: String, content: ByteArray
     ): String {
         val fileId = StoreFileStreamWriter.createFile(
-            storeApi,
+            storeApi!!,
             storeId,
             ByteArray(0),
             ByteArray(0),
@@ -373,65 +379,85 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
 
     /* Listeners */
     override fun unregisterAllEvents(eventName: String) {
-        requireNotNull(connection).unregisterCallbacks(eventName)
+       runBlocking {  requireNotNull(connection).unregisterCallbacks(eventName) }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun registerOnMessageCreated(
         eventName: String, threadId: String, callback: (ThreadMessageItem) -> Unit
     ) {
-        requireNotNull(connection).registerCallback(
-            eventName, EventType.ThreadNewMessageEvent(threadId)
-        ) {
-            callback(PrivMxMessageToMessageItemMapper.map(it))
+        GlobalScope.async {
+            requireNotNull(connection).registerCallback(
+                eventName, EventType.ThreadNewMessageEvent(threadId)
+            ) {
+                callback(PrivMxMessageToMessageItemMapper.map(it))
+            }
         }
     }
 
     override fun registerOnMessageUpdate(
         eventName: String, threadId: String, callback: (ThreadMessageItem) -> Unit
     ) {
-        requireNotNull(connection).registerCallback(
-            eventName, EventType.ThreadMessageUpdatedEvent(threadId)
-        ) {
-            callback(PrivMxMessageToMessageItemMapper.map(it))
+        GlobalScope.async {
+            requireNotNull(connection).registerCallback(
+                eventName, EventType.ThreadMessageUpdatedEvent(threadId)
+            ) {
+                callback(PrivMxMessageToMessageItemMapper.map(it))
+            }
         }
     }
 
     override fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit) {
-        requireNotNull(connection).registerCallback(
-            eventName, EventType.ThreadCreatedEvent
-        ) {
-            callback(PrivMxThreadToThreadItemMapper.map(it))
+        GlobalScope.async {
+            requireNotNull(connection).registerCallback(
+                eventName, EventType.ThreadCreatedEvent
+            ) {
+                callback(PrivMxThreadToThreadItemMapper.map(it))
+            }
         }
     }
 
     override fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit) {
-        requireNotNull(connection).registerCallback(
-            eventName, EventType.ThreadUpdatedEvent
-        ) {
-            callback(PrivMxThreadToThreadItemMapper.map(it))
+        GlobalScope.async {
+            requireNotNull(connection).registerCallback(
+                eventName, EventType.ThreadUpdatedEvent
+            ) {
+                callback(PrivMxThreadToThreadItemMapper.map(it))
+            }
         }
     }
 
-    override fun registerOnThreadDeleted(eventName: String, callback: (ThreadId) -> Unit) {
-        requireNotNull(connection).registerCallback(
-            eventName, EventType.ThreadDeletedEvent
-        ) {
-            callback(ThreadId(it.threadId))
+    override fun registerOnThreadDeleted(
+        eventName: String,
+        callback: (ThreadId) -> Unit
+    ) {
+        GlobalScope.async {
+            requireNotNull(connection).registerCallback(
+                eventName, EventType.ThreadDeletedEvent
+            ) {
+                callback(ThreadId(it.threadId))
+            }
         }
     }
 
     override fun registerOnStoreFileCreated(
-        eventName: String, storeId: String, callback: (ByteArray) -> Unit
+        eventName: String,
+        storeId: String,
+        callback: (ByteArray) -> Unit
     ) {
-        requireNotNull(connection).registerCallback(
-            eventName, EventType.StoreFileCreatedEvent(storeId)
-        ) { newFile ->
-            callback(getFileAsByteArrayFromStore(newFile.info.fileId))
+        GlobalScope.async {
+            requireNotNull(connection).registerCallback(
+                eventName, EventType.StoreFileCreatedEvent(storeId)
+            ) { newFile ->
+                callback(getFileAsByteArrayFromStore(newFile.info.fileId))
+            }
         }
     }
 
     override fun close() {
-        requireNotNull(connection).unregisterAll()
-        requireNotNull(connection).close()
+        runBlocking {
+            requireNotNull(connection).unregisterAll()
+            requireNotNull(connection).close()
+        }
     }
 }

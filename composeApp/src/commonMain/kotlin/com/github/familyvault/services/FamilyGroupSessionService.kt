@@ -66,7 +66,7 @@ class FamilyGroupSessionService(
                 )
             ).member
         } catch (e: FamilyVaultPrivMxException) {
-            if (e.errorCode == PrivMxErrorCodes.USER_NOT_IN_CONTEXT) {
+            if (e.errorCode == PrivMxErrorCodes.USER_NOT_IN_CONTEXT.toInt()) {
                 return ConnectionStatus.UserNotFound
             }
         }
