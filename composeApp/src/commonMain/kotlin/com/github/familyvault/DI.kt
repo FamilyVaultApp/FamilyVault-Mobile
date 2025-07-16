@@ -2,6 +2,8 @@ package com.github.familyvault
 
 import com.github.familyvault.backend.client.FamilyVaultBackendClient
 import com.github.familyvault.backend.client.IFamilyVaultBackendClient
+import com.github.familyvault.backend.client.IPrivMxClient
+import com.github.familyvault.backend.client.PrivMxClient
 import com.github.familyvault.database.AppDatabase
 import com.github.familyvault.database.familyGroupCredential.FamilyGroupCredentialDao
 import com.github.familyvault.repositories.FamilyGroupCredentialsRepository
@@ -65,6 +67,8 @@ import org.koin.dsl.module
 expect fun getPlatformModules(): Module
 
 val sharedModules = module {
+    /* PrivMx */
+    single { PrivMxClient() }.bind<IPrivMxClient>()
 
     // Repositories
     single { FamilyGroupCredentialsRepository(get()) }.bind<IFamilyGroupCredentialsRepository>()
