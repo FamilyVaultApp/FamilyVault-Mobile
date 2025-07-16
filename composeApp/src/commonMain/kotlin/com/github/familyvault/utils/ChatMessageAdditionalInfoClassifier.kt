@@ -46,7 +46,7 @@ object ChatMessageAdditionalInfoClassifier : IChatMessageAdditionalInfoClassifie
     }
 
 
-    private inline fun senderIsDifferent(firstMessage: ChatMessage, secondMessage: ChatMessage) =
+    private fun senderIsDifferent(firstMessage: ChatMessage, secondMessage: ChatMessage) =
         firstMessage.senderPubKey != secondMessage.senderPubKey
 
 }

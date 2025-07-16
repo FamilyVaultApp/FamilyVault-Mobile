@@ -2,6 +2,7 @@ package com.github.familyvault.database
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 
@@ -16,4 +17,14 @@ fun createAppDatabase(context: Context): AppDatabase {
         .fallbackToDestructiveMigration(false)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
+}
+
+fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppDatabase> {
+    val appContext = context.applicationContext
+    val dbFile = appContext.getDatabasePath("fv.db")
+
+    return Room.databaseBuilder<AppDatabase>(
+        context = appContext,
+        name = dbFile.absolutePath,
+    )
 }

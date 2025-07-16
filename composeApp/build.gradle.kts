@@ -20,25 +20,31 @@ kotlin {
     }
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            linkerOpts.add("-lsqlite3")
         }
     }
 
     sourceSets {
+//        listOf(
+//            iosArm64Main.get(),
+//            iosSimulatorArm64Main.get()
+//        ).forEach {
+//            it.dependsOn(iosMain.get())
+//        }
+//
+//        iosMain.get().dependsOn(commonMain.get())
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.koin.android)
-
-            implementation(libs.privmx.endpoint.extra)
-            implementation(libs.privmx.endpoint)
 
             implementation(libs.ktor.client.okhttp)
             implementation(libs.play.services.code.scanner)
@@ -76,6 +82,9 @@ kotlin {
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            implementation(libs.privmx.endpoint.extra)
+            implementation(libs.privmx.endpoint)
         }
     }
 }
@@ -116,6 +125,5 @@ dependencies {
     debugImplementation(compose.uiTooling)
     add("kspAndroid", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
-    add("kspIosX64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
 }

@@ -1,6 +1,6 @@
 package com.github.familyvault.backend.exceptions
 
 class FamilyVaultPrivMxException(
-    val errorCode: Long,
+    val errorCode: Int,
     val errorMessage: String
 ) : RuntimeException("$errorCode - $errorMessage")
