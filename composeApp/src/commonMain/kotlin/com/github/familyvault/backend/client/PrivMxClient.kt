@@ -17,7 +17,7 @@ import com.github.familyvault.backend.utils.ThreadMetaDecoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.chat.ThreadIconType
-import com.github.familyvault.utils.EncryptUtils
+//import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxStoreToStoreItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
@@ -55,22 +55,25 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     ): PublicEncryptedPrivateKeyPair {
         val privateKey = container.cryptoApi.generatePrivateKey(Random.nextBits(32).toString())
         val publicKey = container.cryptoApi.derivePublicKey(privateKey)
-        val encryptedPrivateKey = EncryptUtils.encryptData(
-            privateKey, AppConfig.SECRET
-        )
-        return PublicEncryptedPrivateKeyPair(publicKey, encryptedPrivateKey)
+//        val encryptedPrivateKey = EncryptUtils.encryptData(
+//            privateKey, AppConfig.SECRET
+//        )
+//        return PublicEncryptedPrivateKeyPair(publicKey, encryptedPrivateKey)
+        TODO("Method is not implemented")
     }
 
     override fun encryptPrivateKeyPassword(password: String): String {
-        return EncryptUtils.encryptData(
-            password, AppConfig.SECRET
-        )
+        TODO("Method is not implemented")
+//        return EncryptUtils.encryptData(
+//            password, AppConfig.SECRET
+//        )
     }
 
     override fun decryptPrivateKeyPassword(encryptedPassword: String): String {
-        return EncryptUtils.decryptData(
-            encryptedPassword, AppConfig.SECRET
-        )
+        TODO("Method is not implemented")
+//        return EncryptUtils.decryptData(
+//            encryptedPassword, AppConfig.SECRET
+//        )
     }
 
     override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
@@ -86,7 +89,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun disconnect() {
-        GlobalScope.async {
+        runBlocking {
             connection?.unregisterAll()
             connection?.close()
         }
@@ -386,7 +389,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     override fun registerOnMessageCreated(
         eventName: String, threadId: String, callback: (ThreadMessageItem) -> Unit
     ) {
-        GlobalScope.async {
+        runBlocking {
             requireNotNull(connection).registerCallback(
                 eventName, EventType.ThreadNewMessageEvent(threadId)
             ) {
@@ -398,7 +401,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     override fun registerOnMessageUpdate(
         eventName: String, threadId: String, callback: (ThreadMessageItem) -> Unit
     ) {
-        GlobalScope.async {
+        runBlocking {
             requireNotNull(connection).registerCallback(
                 eventName, EventType.ThreadMessageUpdatedEvent(threadId)
             ) {
@@ -408,7 +411,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun registerOnThreadCreated(eventName: String, callback: (ThreadItem) -> Unit) {
-        GlobalScope.async {
+        runBlocking {
             requireNotNull(connection).registerCallback(
                 eventName, EventType.ThreadCreatedEvent
             ) {
@@ -418,7 +421,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     }
 
     override fun registerOnThreadUpdated(eventName: String, callback: (ThreadItem) -> Unit) {
-        GlobalScope.async {
+        runBlocking {
             requireNotNull(connection).registerCallback(
                 eventName, EventType.ThreadUpdatedEvent
             ) {
@@ -431,7 +434,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         eventName: String,
         callback: (ThreadId) -> Unit
     ) {
-        GlobalScope.async {
+        runBlocking {
             requireNotNull(connection).registerCallback(
                 eventName, EventType.ThreadDeletedEvent
             ) {
@@ -445,7 +448,7 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
         storeId: String,
         callback: (ByteArray) -> Unit
     ) {
-        GlobalScope.async {
+        runBlocking {
             requireNotNull(connection).registerCallback(
                 eventName, EventType.StoreFileCreatedEvent(storeId)
             ) { newFile ->
