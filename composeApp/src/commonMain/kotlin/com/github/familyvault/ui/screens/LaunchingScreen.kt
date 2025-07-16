@@ -31,9 +31,10 @@ class LaunchingScreen : Screen {
 
         LaunchedEffect(Unit) {
             coroutineScope.launch {
-                if (!notificationService.checkNotificationPermission()) {
-                    notificationService.requestNotificationsPermission()
-                }
+                //TODO: Uncomment notification permission check after implement NotificationService on iOS
+//                if (!notificationService.checkNotificationPermission()) {
+//                    notificationService.requestNotificationsPermission()
+//                }
                 when (val connectionStatus = familyGroupService.assignDefaultStoredFamilyGroup()) {
                     ConnectionStatus.Success -> {
                         navigator.replaceAll(MainScreen())
