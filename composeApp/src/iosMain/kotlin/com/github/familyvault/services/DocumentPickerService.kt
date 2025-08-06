@@ -2,6 +2,11 @@ package com.github.familyvault.services
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.ImageBitmap
+import platform.UIKit.UIApplication
+import platform.UIKit.UIDocumentPickerMode
+import platform.UIKit.UIDocumentPickerViewController
+import platform.UIKit.UIDocumentViewController
+import platform.UniformTypeIdentifiers.UTType
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -10,21 +15,40 @@ class DocumentPickerService : IDocumentPickerService {
     private var continuation: Continuation<List<ByteArray>>? = null
     private val selectedDocumentUrls = mutableStateListOf<String>()
     private var isInitialized = false
+    private val documentPickerController = UIDocumentPickerViewController(
+        documentTypes = listOf("public.jpeg"),
+        UIDocumentPickerMode.UIDocumentPickerModeOpen
+    )
 
     companion object {
         private const val TAG = "DocumentPickerService"
     }
 
     fun initializeWithActivity() {
-        TODO("Method not yet implemented")
     }
 
     override fun openDocumentPicker() {
-        TODO("Method not yet implemented")
+        UIApplication.sharedApplication.keyWindow?.rootViewController?.presentViewController(
+            documentPickerController,
+            false
+        ) {
+
+        }
     }
 
     override suspend fun pickDocumentsAndReturnByteArrays(): List<ByteArray> =
-        TODO("Method not yet implemented")
+        suspendCoroutine { cont ->
+//            Log.d(TAG, "Called pickDocumentsAndReturnByteArrays")
+            println("Open documentPicker")
+            continuation = cont
+            try {
+                println("Open documentPicker")
+                openDocumentPicker()
+            } catch (e: Exception) {
+//                Log.e(TAG, "Error in pickDocumentsAndReturnByteArrays", e)
+                cont.resume(emptyList())
+            }
+        }
 
     override fun getBytesFromUri(uriString: String): ByteArray? {
         TODO("Method not yet implemented")
@@ -37,7 +61,6 @@ class DocumentPickerService : IDocumentPickerService {
     override fun getSelectedDocumentUrls(): List<String> = selectedDocumentUrls
 
     override fun clearSelectedDocuments() {
-        TODO("Method not yet implemented")
     }
 
     override fun removeSelectedDocument(uri: String) {
