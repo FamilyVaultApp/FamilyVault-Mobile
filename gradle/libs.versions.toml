@@ -1,6 +1,6 @@
 [versions]
-agp = "8.5.2"
-android-compileSdk = "34"
+agp = "8.6.0"
+android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "34"
 androidx-activityCompose = "1.10.1"
@@ -58,3 +58,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
+privmxEndpoint = {id ="com.simplito.privmx-endpoint-install-native", version.ref = "privmxEndpointPlugin"}
