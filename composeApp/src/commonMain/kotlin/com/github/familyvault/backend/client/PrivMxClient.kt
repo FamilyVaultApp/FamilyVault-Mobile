@@ -17,12 +17,16 @@ import com.github.familyvault.backend.utils.ThreadMetaDecoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.chat.ThreadIconType
+import com.github.familyvault.utils.EncryptUtils
+import com.github.familyvault.utils.EncryptUtils.decryptData
+import com.github.familyvault.utils.EncryptUtils.encryptData
 //import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxStoreToStoreItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
 import com.simplito.kotlin.privmx_endpoint.model.UserWithPubKey
 import com.simplito.kotlin.privmx_endpoint.model.exceptions.PrivmxException
+import com.simplito.kotlin.privmx_endpoint.modules.crypto.CryptoApi
 import com.simplito.kotlin.privmx_endpoint.modules.store.StoreApi
 import com.simplito.kotlin.privmx_endpoint.modules.thread.ThreadApi
 import com.simplito.kotlin.privmx_endpoint_extra.events.EventType
@@ -49,31 +53,29 @@ class PrivMxClient : IPrivMxClient, AutoCloseable {
     private var connection: PrivmxEndpoint? = null
     private var threadApi: ThreadApi? = null
     private var storeApi: StoreApi? = null
+    val cryptoApi: CryptoApi get() = container.cryptoApi
 
     override fun generatePairOfPrivateAndPublicKey(
         password: String,
     ): PublicEncryptedPrivateKeyPair {
         val privateKey = container.cryptoApi.generatePrivateKey(Random.nextBits(32).toString())
         val publicKey = container.cryptoApi.derivePublicKey(privateKey)
-//        val encryptedPrivateKey = EncryptUtils.encryptData(
-//            privateKey, AppConfig.SECRET
-//        )
-//        return PublicEncryptedPrivateKeyPair(publicKey, encryptedPrivateKey)
-        TODO("Method is not implemented")
+        val encryptedPrivateKey = encryptData(
+            privateKey, AppConfig.SECRET
+        )
+        return PublicEncryptedPrivateKeyPair(publicKey, encryptedPrivateKey)
     }
 
     override fun encryptPrivateKeyPassword(password: String): String {
-        TODO("Method is not implemented")
-//        return EncryptUtils.encryptData(
-//            password, AppConfig.SECRET
-//        )
+        return encryptData(
+            password, AppConfig.SECRET
+        )
     }
 
     override fun decryptPrivateKeyPassword(encryptedPassword: String): String {
-        TODO("Method is not implemented")
-//        return EncryptUtils.decryptData(
-//            encryptedPassword, AppConfig.SECRET
-//        )
+        return decryptData(
+            encryptedPassword, AppConfig.SECRET
+        )
     }
 
     override fun establishConnection(bridgeUrl: String, solutionId: String, privateKey: String) {
