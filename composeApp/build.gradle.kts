@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+//    alias(libs.plugins.privmxEndpoint)
 }
 
 kotlin {
@@ -93,7 +94,7 @@ android {
     namespace = "com.github.familyvault"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    sourceSets["main"].jniLibs.srcDirs("src/main/jniLibs")
+    sourceSets["main"].jniLibs.srcDirs("src/jniLibs")
     defaultConfig {
         applicationId = "com.github.familyvault"
         minSdk = libs.versions.android.minSdk.get().toInt()
