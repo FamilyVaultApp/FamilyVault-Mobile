@@ -5,31 +5,42 @@ import androidx.compose.ui.graphics.ImageBitmap
 import com.github.familyvault.AppConfig
 import com.github.familyvault.models.ImageSize
 import org.jetbrains.skia.Bitmap
+import platform.Foundation.NSCoder
+import platform.UIKit.UIApplication
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import platform.UIKit.UIImagePickerController
+import platform.UIKit.UIViewController
 
 class ImagePickerService : IImagePickerService {
     private var continuation: Continuation<List<ByteArray>>? = null
     private val selectedImageUrls = mutableStateListOf<String>()
-
+    private val pickerController = UIImagePickerController()
     fun initializeWithActivity() {
-        TODO("Method not yet implemented")
+
     }
 
     override fun openMediaPickerForSelectingImages() {
-        TODO("Method not yet implemented")
+        UIApplication.sharedApplication.keyWindow?.rootViewController?.presentViewController(
+            pickerController,
+            false
+        ) {
+
+        }
     }
 
-    override suspend fun pickImagesAndReturnByteArrays(): List<ByteArray> = suspendCoroutine { cont ->
-        TODO("Method not yet implemented")
-    }
+    override suspend fun pickImagesAndReturnByteArrays(): List<ByteArray> =
+        suspendCoroutine { cont ->
+        }
 
     override fun getBytesFromUri(uriString: String): ByteArray? {
+        return null
         TODO("Method not yet implemented")
     }
 
     override fun getSelectedImageAsByteArrays(): List<ByteArray> {
+//        emptyList()
         TODO("Method not yet implemented")
     }
 
@@ -40,7 +51,6 @@ class ImagePickerService : IImagePickerService {
     }
 
     override fun clearSelectedImages() {
-        TODO("Method not yet implemented")
     }
 
     override fun removeSelectedImage(uri: String) {
