@@ -7,6 +7,7 @@ import platform.UIKit.UIDocumentPickerMode
 import platform.UIKit.UIDocumentPickerViewController
 import platform.UIKit.UIDocumentViewController
 import platform.UniformTypeIdentifiers.UTType
+import platform.UniformTypeIdentifiers.UTTypeText
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -16,8 +17,10 @@ class DocumentPickerService : IDocumentPickerService {
     private val selectedDocumentUrls = mutableStateListOf<String>()
     private var isInitialized = false
     private val documentPickerController = UIDocumentPickerViewController(
-        documentTypes = listOf("public.jpeg"),
-        UIDocumentPickerMode.UIDocumentPickerModeOpen
+        documentTypes = listOf(
+            UTTypeText
+        ),
+        UIDocumentPickerMode.UIDocumentPickerModeImport
     )
 
     companion object {
