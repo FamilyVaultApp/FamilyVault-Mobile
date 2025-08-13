@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import com.github.familyvault.AppConfig
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +36,7 @@ class AudioRecorderService(
         private val SAMPLE_RATE = AppConfig.AUDIO_SAMPLE_RATE
     }
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     override fun start() {
         if (isRecording || !haveRecordingPermission())
         {
