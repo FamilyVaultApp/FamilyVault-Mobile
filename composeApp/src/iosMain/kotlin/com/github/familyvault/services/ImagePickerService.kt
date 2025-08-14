@@ -37,7 +37,11 @@ class ImagePickerService : IImagePickerService {
     private var continuation: Continuation<List<ByteArray>>? = null
 
     private val selectedImages = mutableStateListOf<PHPickerResult>()
-    private val pickerController = PickerController(selectedImages)
+    private val pickerController = PickerController(selectedImages) {
+        continuation?.resume(getSelectedImageAsByteArrays())
+        continuation = null
+        cont = null
+    }
     private val config = PHPickerConfiguration().apply {
         selectionLimit = 0
         filter = PHPickerFilter.imagesFilter
@@ -145,7 +149,8 @@ class ImagePickerService : IImagePickerService {
 
 @OptIn(BetaInteropApi::class)
 class PickerController(
-    val selectedUris: MutableList<PHPickerResult>
+    val selectedUris: MutableList<PHPickerResult>,
+    val onFinish: () -> Unit
 ) : NSObject(),
     PHPickerViewControllerDelegateProtocol {
 
@@ -160,7 +165,10 @@ class PickerController(
         }
         selectedUris.clear()
         selectedUris.addAll(itemsToAdd)
-        picker.dismissViewControllerAnimated(true,null)
+
+        picker.dismissViewControllerAnimated(true) {
+            onFinish()
+        }
     }
 }
 
