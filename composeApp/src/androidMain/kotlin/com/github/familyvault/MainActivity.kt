@@ -1,5 +1,6 @@
 package com.github.familyvault
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -13,14 +14,16 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.familyvault.services.ImagePickerService
 import com.github.familyvault.services.DocumentPickerService
+import com.github.familyvault.utils.UnpackCerts
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
+import java.net.URI
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        initKoin {
+        val path = extractCerts(this)
+        initKoin(path) {
             androidContext(this@MainActivity)
         }
 
@@ -60,6 +63,14 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun extractCerts(context: Context): String {
+        return URI(context.filesDir.path).resolve("files/cacert.pem").path.also { path ->
+            println(path)
+            UnpackCerts.extractCerts(path)
+        }
+    }
+
 }
 
 @Preview

@@ -17,10 +17,8 @@ import com.github.familyvault.backend.utils.ThreadMetaDecoder
 import com.github.familyvault.backend.utils.ThreadMetaEncoder
 import com.github.familyvault.models.PublicEncryptedPrivateKeyPair
 import com.github.familyvault.models.enums.chat.ThreadIconType
-import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.EncryptUtils.decryptData
 import com.github.familyvault.utils.EncryptUtils.encryptData
-//import com.github.familyvault.utils.EncryptUtils
 import com.github.familyvault.utils.mappers.PrivMxMessageToMessageItemMapper
 import com.github.familyvault.utils.mappers.PrivMxStoreToStoreItemMapper
 import com.github.familyvault.utils.mappers.PrivMxThreadToThreadItemMapper
@@ -38,16 +36,17 @@ import com.simplito.kotlin.privmx_endpoint_extra.storeFileStream.StoreFileStream
 import com.simplito.kotlin.privmx_endpoint_extra.storeFileStream.StoreFileStreamReader
 import com.simplito.kotlin.privmx_endpoint_extra.storeFileStream.StoreFileStreamWriter
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
-class PrivMxClient : IPrivMxClient, AutoCloseable {
+class PrivMxClient(
+    val certsPath: String,
+) : IPrivMxClient, AutoCloseable {
     private val initModules = setOf(
         Modules.THREAD, Modules.STORE, Modules.INBOX
     )
     private val container: PrivmxEndpointContainer = PrivmxEndpointContainer().also {
+        it.setCertsPath(certsPath)
         it.startListening()
     }
     private var connection: PrivmxEndpoint? = null
