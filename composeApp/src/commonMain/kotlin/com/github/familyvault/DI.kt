@@ -66,9 +66,9 @@ import org.koin.dsl.module
 
 expect fun getPlatformModules(): Module
 
-val sharedModules = module {
+private fun getSharedModules(certsPath: String) = module {
     /* PrivMx */
-    single { PrivMxClient() }.bind<IPrivMxClient>()
+    single { PrivMxClient(certsPath) }.bind<IPrivMxClient>()
 
     // Repositories
     single { FamilyGroupCredentialsRepository(get()) }.bind<IFamilyGroupCredentialsRepository>()
@@ -143,11 +143,15 @@ val sharedModules = module {
 }
 
 
-fun initKoin(config: KoinAppDeclaration? = null) {
+fun initKoin(
+    certsPath: String = "",
+    config: KoinAppDeclaration? = null
+) {
     startKoin {
         config?.invoke(this)
         modules(
-            sharedModules, getPlatformModules()
+            getSharedModules(certsPath),
+            getPlatformModules()
         )
     }
 }
