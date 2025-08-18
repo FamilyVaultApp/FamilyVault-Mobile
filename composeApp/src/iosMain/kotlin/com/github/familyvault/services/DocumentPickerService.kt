@@ -52,7 +52,8 @@ class DocumentPickerService : IDocumentPickerService {
                     UTTypePDF,
                     UTTypeText,
                     UTTypeMovie,
-                    UTTypeArchive
+                    UTTypeArchive,
+                    UTTypeImage
                 )
             )
         documentPickerViewController?.allowsMultipleSelection = true
