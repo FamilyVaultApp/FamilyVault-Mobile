@@ -1,6 +1,7 @@
 package com.github.familyvault.services
 
 import androidx.compose.runtime.mutableStateListOf
+import com.github.familyvault.utils.MimeTypeParser
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +14,7 @@ import platform.UIKit.UIApplication
 import platform.UIKit.UIDocumentPickerDelegateProtocol
 import platform.UIKit.UIDocumentPickerViewController
 import platform.UniformTypeIdentifiers.UTTypeArchive
+import platform.UniformTypeIdentifiers.UTTypeImage
 import platform.UniformTypeIdentifiers.UTTypeMovie
 import platform.UniformTypeIdentifiers.UTTypePDF
 import platform.UniformTypeIdentifiers.UTTypePresentation
@@ -112,7 +114,9 @@ class DocumentPickerService : IDocumentPickerService {
     }
 
     override fun getDocumentMimeTypeFromUri(uriString: String): String? {
-        return "unknown"
+        return MimeTypeParser.getMimeType(
+            NSURL.fileURLWithPath(uriString).pathExtension().toString()
+        )
     }
 
     override fun getDocumentPreviewPageFromUri(uriString: String): ByteArray {
