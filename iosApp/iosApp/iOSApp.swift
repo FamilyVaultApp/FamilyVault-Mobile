@@ -5,9 +5,13 @@ import ComposeApp
 struct iOSApp: App {
 
     init(){
-        let path = try? FileManager.default.url(for: .applicationDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("certs/cacert.pem")
-        UnpackCerts.shared.extractCerts(toFile: path!.path)
-        DIKt.doInitKoin(certsPath: path!.path)
+        do {
+            let path = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("certs/cacert.pem")
+            UnpackCerts.shared.extractCerts(toFile: path.path)
+            DIKt.doInitKoin(certsPath: path.path)
+        }catch let e{
+            print(e)
+        }
     }
 
     var body: some Scene {
