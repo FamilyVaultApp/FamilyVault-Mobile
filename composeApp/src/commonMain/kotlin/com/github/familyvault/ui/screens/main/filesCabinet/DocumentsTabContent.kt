@@ -166,8 +166,9 @@ fun DocumentsTabContent() {
         items(documents) {
             DocumentCard(it) {
                 if (it.isPdf()) {
-                    pdfToDownload = Pair(it.content, it.name)
-                    showDownloadConfirmation = true
+//                    pdfToDownload = Pair(it.content, it.name)
+//                    showDownloadConfirmation = true
+                    fileOpener.openFileWithExternalViewer(it.content, it.mimeType, it.name)
                 }
 
                 if (it.isImage()) {
