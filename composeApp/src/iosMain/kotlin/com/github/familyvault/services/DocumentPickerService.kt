@@ -4,15 +4,24 @@ import androidx.compose.runtime.mutableStateListOf
 import com.github.familyvault.utils.MimeTypeParser
 import io.ktor.utils.io.core.toByteArray
 import kotlinx.cinterop.BetaInteropApi
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.useContents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.runBlocking
+import platform.CoreGraphics.CGContextScaleCTM
+import platform.CoreGraphics.CGContextTranslateCTM
 import platform.Foundation.NSData
 import platform.Foundation.NSURL
 import platform.Foundation.dataWithContentsOfURL
+import platform.PDFKit.PDFDocument
+import platform.PDFKit.kPDFDisplayBoxMediaBox
 import platform.UIKit.UIApplication
+import platform.UIKit.UIColor
 import platform.UIKit.UIDocumentPickerDelegateProtocol
 import platform.UIKit.UIDocumentPickerViewController
+import platform.UIKit.UIGraphicsImageRenderer
+import platform.UIKit.UIImageJPEGRepresentation
 import platform.UniformTypeIdentifiers.UTTypeArchive
 import platform.UniformTypeIdentifiers.UTTypeImage
 import platform.UniformTypeIdentifiers.UTTypeMovie
@@ -120,13 +129,26 @@ class DocumentPickerService : IDocumentPickerService {
         )
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun getDocumentPreviewPageFromUri(uriString: String): ByteArray {
-        return runBlocking {
-            suspendCoroutine { cont ->
-                val data: NSData = NSData.dataWithContentsOfURL(NSURL.fileURLWithPath(uriString))!!
-                cont.resume(data.toByteArray())
-            }
+        val url = NSURL.fileURLWithPath(uriString)
+        val pdf = PDFDocument(url)
+        val page = pdf.pageAtIndex(0u)
+        val bounds = page?.boundsForBox(kPDFDisplayBoxMediaBox)
+
+        val renderer = UIGraphicsImageRenderer(bounds!!)
+        val image = renderer.imageWithActions { it ->
+            UIColor.whiteColor.set()
+            it?.fillRect(page.boundsForBox(kPDFDisplayBoxMediaBox))
+
+            val context = it!!.CGContext
+            CGContextTranslateCTM(context, 0.0, (bounds.useContents { size.height }))
+            CGContextScaleCTM(context, 1.0, (-1.0))
+            page.drawWithBox(kPDFDisplayBoxMediaBox, context)
         }
+
+        val data = UIImageJPEGRepresentation(image, 0.95)
+        return data?.toByteArray()!!
     }
 }
 
